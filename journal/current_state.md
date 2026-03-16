@@ -3,6 +3,6 @@
 - Date: 2026-03-16
 - Repo: standalone and initialized
 - Branch: `wip/resattn-scaffold`
-- Focus: scaffold recreation and thesis alignment
+- Focus: methodology hardening, local paper cache, and implementation-readiness review
 - Experimental status: no model runs yet
-- Critical reminder: keep the oracle-alpha framing honest and keep the missing thesis lanes visible
+- Critical reminder: keep the oracle-alpha framing honest, preserve the methodology-audit corrections, and start implementation with reconstruction sanity checks

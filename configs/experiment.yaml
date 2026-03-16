@@ -20,6 +20,12 @@ runtime:
   fallback: cpu
   no_modal: true
 
+implementation:
+  cache_granularity: sublayer_outputs
+  smoke_test_cache_granularity: resid_post
+  final_norm_decomposition: shared_final_factor_from_full_routed_mixture
+  uniform_reconstruction_target: original_logits_after_final_norm
+
 models:
   development:
     name: gpt2-xl
@@ -81,6 +87,9 @@ block_structure:
 
 statistics:
   clustering_distance: jensen_shannon_divergence
+  clustering_linkage: average
+  significance_unit: sequence_mean_delta
+  token_level_significance_requires_dependence_model: true
   report_effect_sizes: true
   report_bootstrap_confidence_intervals: true
 

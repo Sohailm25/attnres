@@ -17,6 +17,7 @@ class ScaffoldTests(unittest.TestCase):
             "journal",
             "knowledge",
             "notebooks",
+            "background-work/papers",
             "prompts",
             "results",
             "scratch",
@@ -41,12 +42,15 @@ class ScaffoldTests(unittest.TestCase):
             "configs/experiment.yaml",
             "background-work/PROPOSAL_REVIEW.md",
             "background-work/RESEARCH_POSITIONING.md",
+            "background-work/papers/DOWNLOAD_MANIFEST.md",
             "history/PREREG.md",
             "history/20260316-thesis-alignment-and-gap-closure.md",
             "history/20260316-second-review-readiness.md",
+            "history/20260316-methodology-gap-audit.md",
             "journal/current_state.md",
             "sessions/SESSION_TEMPLATE.md",
             "results/RESULTS_INDEX.md",
+            "scripts/download_reference_papers.py",
         }
         missing = sorted(path for path in expected if not (ROOT / path).is_file())
         self.assertEqual([], missing)
@@ -71,6 +75,13 @@ class ScaffoldTests(unittest.TestCase):
             "inferred",
             "unknown",
             "LessWrong",
+            "Epistemic Standards",
+            "Adversarial self-questioning",
+            "Implementation skepticism",
+            "Research Navigation Guide",
+            "Document Discipline",
+            "Session Check-In Protocol",
+            "background-work/papers",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)
@@ -122,6 +133,47 @@ class ScaffoldTests(unittest.TestCase):
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, prereg)
+
+    def test_methodology_audit_captures_known_subtle_hazards(self) -> None:
+        audit = (ROOT / "history/20260316-methodology-gap-audit.md").read_text()
+        required_snippets = [
+            "Ward linkage",
+            'only "euclidean" is accepted',
+            "Jensen-Shannon",
+            "RMSNorm",
+            "match the original logits",
+            "not logits / L",
+            "shared final normalization factor",
+            "per-source LayerNorm",
+            "sequence-level",
+            "pseudoreplication",
+            "resid_post",
+            "sublayer outputs",
+            "public preregistration",
+            "dependency freeze",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, audit)
+
+    def test_paper_manifest_has_core_reference_set(self) -> None:
+        manifest = (ROOT / "background-work/papers/DOWNLOAD_MANIFEST.md").read_text()
+        required_snippets = [
+            "Attention Residuals",
+            "DeepCrossAttention",
+            "DenseFormer",
+            "Hyper-Connections",
+            "MUDDFormer",
+            "The Curse of Depth in Large Language Models",
+            "ShortGPT",
+            "Pythia",
+            "Gemma Scope",
+            "Route Sparse Autoencoder",
+            "Backward Lens",
+            "Tuned Lens",
+            "LayerSkip",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, manifest)
 
     def test_results_scaffold_covers_all_major_lanes(self) -> None:
         expected = {

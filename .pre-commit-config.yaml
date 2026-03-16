@@ -3,7 +3,7 @@ repos:
     rev: v5.0.0
     hooks:
       - id: check-added-large-files
-        exclude: ^research/
+        exclude: ^(research/|background-work/papers/files/)
       - id: check-merge-conflict
       - id: check-json
       - id: check-toml

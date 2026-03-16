@@ -3,7 +3,7 @@
 **Last updated:** 2026-03-16
 **Updated by:** codex-gpt5
 **Status:** in_progress
-**Current phase:** Phase 0 - Scaffold and prereg alignment
+**Current phase:** Phase 0 - Scaffold, prereg alignment, and methodology hardening
 
 ## Active Thesis Lock
 
@@ -18,13 +18,20 @@
   - `w_l` analog geometry for learned router queries
   - block-structure test around the `8 clusters` hypothesis
   - safety analysis around refusal or honesty-related routing differences
+- `known`: the local methodology audit surfaced non-trivial implementation hazards that must remain fixed in all future code:
+  - no Ward linkage directly on Jensen-Shannon distances
+  - uniform routing should reconstruct the original logits after final normalization, not `logits / L`
+  - exact per-source routed-logit decomposition must use the shared final normalization factor from the full mixture
+  - claim-bearing significance should default to the sequence-level unit
+  - `resid_post` is insufficient for final Figure 8 claims; use sublayer outputs
+- `known`: the local paper cache now exists under `background-work/papers/files` and is indexed in `background-work/papers/DOWNLOAD_MANIFEST.md`
 
 ## Immediate Next Steps
 
-1. Keep the scaffold verification green after the second-pass thesis alignment changes.
-2. Publicly pre-register the analysis plan on LessWrong before claim-bearing runs.
+1. Publicly pre-register the analysis plan on LessWrong before claim-bearing runs.
+2. Freeze dependencies before claim-bearing scientific execution.
 3. Build the first implementation slice for Phase 1 oracle-alpha infrastructure on local MPS.
-4. Preserve the upper-bound and lower-bound framing split in all future docs and summaries.
+4. Start with reconstruction and cache-validity tests before any claim-bearing oracle-alpha optimization.
 
 ## Phase 1 Gate
 
@@ -45,3 +52,6 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: tool-breakage requires a non-monotonic logit-lens demonstration on factual recall, with a target of non-monotonic curves on `>50%` of prompts before making a strong breakage claim.
 - `known`: router training success is not just "it trains"; the local target gate is `R^2 > 0.5` when approximating oracle-alpha.
 - `known`: clustering must be informative enough to clear `silhouette > 0.2` before we claim task-structured routing.
+- `known`: if hierarchical clustering is run on Jensen-Shannon distances directly, use average or complete linkage rather than Ward.
+- `known`: any paired t-test gate is interpreted over per-sequence mean deltas unless a stronger dependence-aware method is written down first.
+- `known`: authored control documents and the local paper cache passed a final existence audit on 2026-03-16.

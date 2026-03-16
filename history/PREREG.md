@@ -54,13 +54,15 @@ Standard transformer residual streams contain latent, input-dependent depth-rout
 - Minimum sample size: `100` sequences
 - Acceptance gate: mean cross-entropy improvement greater than `0.01` nats over uniform
 - Significance gate: `p < 0.01`
-- Test: paired t-test
+- Test: paired t-test over per-sequence mean loss deltas
 - All null models must be reported
 - Small-scale scale-up gate: `d > 0.2` versus the random baseline
 
 ### Phase 2: Pattern Analysis
 
 - Primary routing distance: Jensen-Shannon divergence
+- If hierarchical clustering is run directly on Jensen-Shannon distances, use average or complete linkage
+- Ward linkage is only allowed after an explicit Euclidean embedding step
 - Routing clusters must beat the random-baseline structure check
 - Token-position alignment must be preserved when correlating routing with SAE activations
 - Primary clustering threshold: `silhouette > 0.2`
@@ -115,6 +117,13 @@ Do not claim:
 - that frozen-model oracle-alpha reveals what co-adapted AttnRes layers would necessarily learn
 - that visual resemblance to Figure 8 is enough by itself
 - that safety-relevant routing patterns imply practical control without causal evidence
+
+## Implementation Constraints
+
+- Uniform-routing reconstruction sanity checks target agreement with the model's original logits after the model's own final normalization, not `logits / L`.
+- Exact per-source routed-logit decomposition must use the shared final normalization factor from the full routed mixture. Per-source LayerNorm or per-source RMSNorm is not exact.
+- Claim-bearing Figure 8 and layer-type-specialization analyses require sublayer outputs rather than `resid_post`-only caches.
+- Token-level significance tests require explicit dependence-aware justification. The default unit for claim-bearing tests is the sequence.
 
 ## Reproducibility
 

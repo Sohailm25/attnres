@@ -41,3 +41,6 @@ Optional setup:
 - `THOUGHT_LOG.md` captures open questions, risks, and new ideas.
 - `history/PREREG.md` is the preregistered claim and gate document.
 - `history/20260316-thesis-alignment-and-gap-closure.md` records how this scaffold was adapted from `braindstorms`.
+- `history/20260316-methodology-gap-audit.md` records the implementation hazards that were found after the second review.
+- `background-work/papers/DOWNLOAD_MANIFEST.md` indexes the local paper cache used throughout the experiment.
+- `scripts/download_reference_papers.py` refreshes the local paper cache.

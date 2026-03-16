@@ -34,3 +34,10 @@
 - Decision: add the missing research-positioning docs, correct the upper-bound/lower-bound framing split, and operationalize the main prereg metrics and gates.
 - Rationale: implementation errors tend to come from vague research scaffolding, not just vague code.
 - Impact: the repo now encodes Figure 8 metrics, comparison-regime definitions, tool-breakage thresholds, router training targets, and the public prereg requirement directly in the control docs.
+
+## [2026-03-16T13:45:00-0500] DECISION: Promote the methodology audit and source-style operating rigor to first-class control docs
+
+- Trigger: the third review found that the current `AGENTS.md` was materially leaner than the source experiment and that several hidden implementation hazards were still only implicit in the research docs.
+- Decision: expand `AGENTS.md` with adapted operating discipline from `braindstorms` and encode the newly surfaced hazards in a dedicated methodology audit plus the prereg, config, and guidance docs.
+- Rationale: the next failure mode is no longer a missing thesis lane; it is a technically plausible but invalid implementation.
+- Impact: future implementation must respect the JSD-versus-Ward correction, the final-normalization decomposition rule, the sequence-level statistical unit, and the sublayer-output requirement.
