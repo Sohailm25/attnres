@@ -122,6 +122,31 @@ PAPERS: list[PaperSpec] = [
         note="Dynamic depth-use comparison and early-exit baseline.",
     ),
     PaperSpec(
+        title="Interpretability in the Wild",
+        slug="interpretability_in_the_wild_a_circuit_for_indirect_object_identification_in_gpt_2_small",
+        url="https://arxiv.org/pdf/2211.00593.pdf",
+        note="Canonical known-circuit reference for IOI and circuit-level sanity checks.",
+    ),
+    PaperSpec(
+        title="In-context Learning and Induction Heads",
+        slug="in_context_learning_and_induction_heads",
+        url="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html",
+        suffix=".html",
+        note="Primary induction-heads reference if the tool-breakage lane uses a known transformer circuit.",
+    ),
+    PaperSpec(
+        title="Measuring Faithfulness in Chain-of-Thought Reasoning",
+        slug="measuring_faithfulness_in_chain_of_thought_reasoning",
+        url="https://arxiv.org/pdf/2307.13702.pdf",
+        note="Supports caution when interpreting surface-visible reasoning traces or simple lens plots.",
+    ),
+    PaperSpec(
+        title="Refusal in Language Models Is Mediated by a Single Direction",
+        slug="refusal_in_language_models_is_mediated_by_a_single_direction",
+        url="https://arxiv.org/pdf/2406.11717.pdf",
+        note="High-value safety-lane prior and comparison point for refusal-feature discovery.",
+    ),
+    PaperSpec(
         title="Root Mean Square Layer Normalization",
         slug="root_mean_square_layer_normalization",
         url="https://arxiv.org/pdf/1910.07467.pdf",

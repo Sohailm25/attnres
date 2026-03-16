@@ -25,13 +25,19 @@
   - claim-bearing significance should default to the sequence-level unit
   - `resid_post` is insufficient for final Figure 8 claims; use sublayer outputs
 - `known`: the local paper cache now exists under `background-work/papers/files` and is indexed in `background-work/papers/DOWNLOAD_MANIFEST.md`
+- `known`: a second red-team review identified four additional publishability risks that must stay fixed:
+  - tool-breakage cannot rely on raw logit-lens monotonicity as the vanilla baseline
+  - claim-bearing work needs a pilot/confirmatory split
+  - router input wording must stay explicitly per-token, e.g. `h_1[t]`
+  - refusal-feature discovery must precede safety-lane causal claims
 
 ## Immediate Next Steps
 
 1. Publicly pre-register the analysis plan on LessWrong before claim-bearing runs.
 2. Freeze dependencies before claim-bearing scientific execution.
-3. Build the first implementation slice for Phase 1 oracle-alpha infrastructure on local MPS.
-4. Start with reconstruction and cache-validity tests before any claim-bearing oracle-alpha optimization.
+3. Define and save the pilot/confirmatory split before any method-tuning runs.
+4. Build the first implementation slice for Phase 1 oracle-alpha infrastructure on local MPS.
+5. Start with reconstruction and cache-validity tests before any claim-bearing oracle-alpha optimization.
 
 ## Phase 1 Gate
 
@@ -50,8 +56,10 @@ The first execution gate remains the preregistered one from `research/decision-m
   - `Entropy(pre-attn) > Entropy(pre-MLP)`
   - off-diagonal peaks above `2/L`
 - `known`: tool-breakage requires a non-monotonic logit-lens demonstration on factual recall, with a target of non-monotonic curves on `>50%` of prompts before making a strong breakage claim.
+- `known`: raw logit lens is not assumed monotonic in the vanilla model; the strong tool-breakage claim requires additional instability under routing relative to the original-model baseline and a tuned-lens-aware comparison.
 - `known`: router training success is not just "it trains"; the local target gate is `R^2 > 0.5` when approximating oracle-alpha.
 - `known`: clustering must be informative enough to clear `silhouette > 0.2` before we claim task-structured routing.
 - `known`: if hierarchical clustering is run on Jensen-Shannon distances directly, use average or complete linkage rather than Ward.
 - `known`: any paired t-test gate is interpreted over per-sequence mean deltas unless a stronger dependence-aware method is written down first.
 - `known`: authored control documents and the local paper cache passed a final existence audit on 2026-03-16.
+- `known`: claim-bearing prompts and thresholds must come from a pilot/confirmatory split rather than one blended prompt pool.

@@ -55,3 +55,10 @@
 - Decision: require `tmux` for long-running jobs and require explicit checkpoint paths, checkpoint cadence, log paths, and a resume command before launch.
 - Rationale: local-only research is not operationally serious unless long jobs survive normal laptop interruptions.
 - Impact: future agents should default to resumability rather than terminal persistence.
+
+## [2026-03-16T14:35:00-0500] DECISION: Tighten the publishability constraints after a second red-team review
+
+- Trigger: a secondary review found four remaining ways the experiment could produce a technically interesting but publication-weak result.
+- Decision: add a pilot/confirmatory split, make the tool-breakage lane tuned-lens-aware, clarify router input as per-token `h_1[t]`, and require refusal-feature discovery before safety-lane claims.
+- Rationale: these are the remaining places where a competent implementation could still tell the wrong story.
+- Impact: the prereg, state docs, references, and review history now better protect the paper-quality interpretation.

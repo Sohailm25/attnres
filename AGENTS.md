@@ -131,6 +131,7 @@ The source material is split across a long master document plus three supporting
 4. `DECISIONS.md`
 5. `history/PREREG.md`
 6. `history/20260316-methodology-gap-audit.md`
+7. `history/20260316-secondary-red-team-review.md`
 
 ### Read by question
 
@@ -260,6 +261,10 @@ Do not skip ahead to result interpretation until the reconstruction and null-mod
 - Never validate the uniform-routing reconstruction against `logits / L`; the check is agreement with the model's original logits after the model's own final normalization.
 - Never compute per-source logit contributions by applying LayerNorm or RMSNorm to each source independently; use the shared final normalization factor from the full routed mixture.
 - Never report a paired significance test over token-level points as if they were independent examples; the default unit for claim-bearing significance is the sequence-level aggregate unless a stronger dependence-aware method is documented.
+- Never assume raw logit lens is a clean monotonic baseline; tool-breakage claims must compare routed behavior against the original model and a tuned-lens-aware baseline.
+- Never run claim-bearing analysis on the same prompts used to tune the method. Use a pilot/confirmatory split for thresholds, prompt curation, and design choices.
+- Never describe the router as if it consumes a single global `h_1`; the intended object is a per-token early hidden state such as `h_1[t]`, unless a different design is explicitly logged.
+- Never assume refusal-feature labels are already available in GemmaScope. The safety lane requires a discovery and validation phase before causal claims.
 
 ### 7. Required Experiment Lanes
 

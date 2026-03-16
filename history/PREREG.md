@@ -57,6 +57,7 @@ Standard transformer residual streams contain latent, input-dependent depth-rout
 - Test: paired t-test over per-sequence mean loss deltas
 - All null models must be reported
 - Small-scale scale-up gate: `d > 0.2` versus the random baseline
+- Use a pilot tranche for method selection and debugging, and hold out a confirmatory tranche for claim-bearing statistics
 
 ### Phase 2: Pattern Analysis
 
@@ -93,13 +94,17 @@ The tool-breakage lane is mandatory.
 
 - preferred demonstration: factual recall on Gemma-2-2B
 - required outputs: routing-aware lens comparison and intervention sensitivity analysis
-- primary figure: standard versus oracle-alpha logit-lens traces
-- success threshold for the strong claim: non-monotonic curves on >50% of prompts
-- failure condition: if reweighting leaves standard tool outputs qualitatively unchanged, the breakage claim must be weakened
+- primary figure: original-model versus routed-model traces under both raw logit lens and tuned lens
+- raw logit lens is not assumed to be smooth or monotonic in the original model
+- retain the legacy threshold language for continuity: `non-monotonic curves on >50% of prompts`, but only interpret it relative to the original-model baseline and tuned-lens-aware comparison
+- success threshold for the strong claim: routing increases non-monotonicity or rank-instability relative to the original-model baseline on >50% of prompts, with tuned-lens-aware comparison reported alongside raw logit lens
+- failure condition: if routing leaves raw and tuned-lens behavior qualitatively unchanged relative to the original-model baseline, the breakage claim must be weakened
 
 ### Phase 6: Router Training and Geometry
 
-- router architecture: 2-layer MLP on h_1
+- router architecture: 2-layer MLP on h_1[t]
+- router input is per-token, not a single global sequence vector
+- pilot comparison: test `h_1[t]` against an early contextual state such as `h_4[t]` on the pilot tranche, then lock the choice before confirmatory training
 - training plan: oracle-alpha distillation, then end-to-end refinement
 - learned router query vectors must be analyzed as a w_l analog
 - geometry outputs must include cosine structure and layer-function hypotheses
@@ -109,6 +114,7 @@ The tool-breakage lane is mandatory.
 
 - explicitly test whether approximately 8 clusters emerge
 - run the safety lane on refusal or honesty-related features
+- safety lane begins with refusal-feature discovery and validation; do not assume pre-labeled refusal features already exist in the local SAE workflow
 
 ## Overclaim Guardrails
 
@@ -124,10 +130,12 @@ Do not claim:
 - Exact per-source routed-logit decomposition must use the shared final normalization factor from the full routed mixture. Per-source LayerNorm or per-source RMSNorm is not exact.
 - Claim-bearing Figure 8 and layer-type-specialization analyses require sublayer outputs rather than `resid_post`-only caches.
 - Token-level significance tests require explicit dependence-aware justification. The default unit for claim-bearing tests is the sequence.
+- Tool-breakage claims must compare against the original-model baseline and include a tuned lens comparison; raw logit lens behavior alone is insufficient.
 
 ## Reproducibility
 
 - Fix random seeds before running claim-bearing experiments.
 - Log hyperparameters before runs.
+- Save a pilot/confirmatory split before tuning prompts, thresholds, or architecture choices.
 - Freeze the local dependency set before scientific runs.
 - Publicly pre-register this plan on LessWrong before claim-bearing execution.

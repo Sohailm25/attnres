@@ -47,6 +47,7 @@ class ScaffoldTests(unittest.TestCase):
             "history/20260316-thesis-alignment-and-gap-closure.md",
             "history/20260316-second-review-readiness.md",
             "history/20260316-methodology-gap-audit.md",
+            "history/20260316-secondary-red-team-review.md",
             "journal/current_state.md",
             "sessions/SESSION_TEMPLATE.md",
             "results/RESULTS_INDEX.md",
@@ -130,13 +131,16 @@ class ScaffoldTests(unittest.TestCase):
             "Cohen's d",
             "bootstrap",
             "paired t-test",
+            "pilot",
+            "confirmatory",
             "locality score > 1/L",
             "above-uniform weight",
             "Entropy(pre-attn) > Entropy(pre-MLP)",
             "α* > 2/L",
             "k ∈ {2,4,8",
             "non-monotonic curves on >50% of prompts",
-            "2-layer MLP on h_1",
+            "tuned lens",
+            "2-layer MLP on h_1[t]",
             "pre-register",
         ]
         for snippet in required_snippets:
@@ -179,9 +183,28 @@ class ScaffoldTests(unittest.TestCase):
             "Backward Lens",
             "Tuned Lens",
             "LayerSkip",
+            "Refusal in Language Models Is Mediated by a Single Direction",
+            "Interpretability in the Wild",
+            "In-context Learning and Induction Heads",
+            "Measuring Faithfulness in Chain-of-Thought Reasoning",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, manifest)
+
+    def test_secondary_red_team_review_captures_remaining_publishability_risks(
+        self,
+    ) -> None:
+        review = (ROOT / "history/20260316-secondary-red-team-review.md").read_text()
+        required_snippets = [
+            "raw logit lens",
+            "often brittle",
+            "tuned lens",
+            "pilot/confirmatory split",
+            "h_1[t]",
+            "refusal-feature discovery",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, review)
 
     def test_results_scaffold_covers_all_major_lanes(self) -> None:
         expected = {
