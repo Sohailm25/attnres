@@ -27,6 +27,8 @@ Execute the depth-routing research defined by:
 
 The goal is to show, as rigorously as possible, whether standard transformers expose latent depth-routing structure that becomes visible under oracle-alpha analysis and whether that structure supports the interpretability thesis motivated by Attention Residuals.
 
+The strongest default frozen-model framing is recovery of an `effective depth mixture` or latent routing signal, not proof that the model contains a literal trained router variable.
+
 ## Thesis Locks
 
 These are not optional. Every implementation and write-up must preserve them.
@@ -39,6 +41,7 @@ These are not optional. Every implementation and write-up must preserve them.
 6. The learned router query vectors are the closest available `w_l` analogs and must be analyzed as first-class objects.
 7. The block-structure hypothesis requires an explicit test for whether roughly 8 clusters emerge.
 8. The safety angle is in scope: depth-routing differences tied to refusal or honesty-related features must be checked.
+9. Figure 8 refers to Figure 8 in `research/Attention_Residuals.pdf`; strong alignment claims against trained routing require a reproducible proxy if direct trained-routing comparisons are unavailable locally.
 
 ## Runtime Assumptions
 
@@ -132,6 +135,7 @@ The source material is split across a long master document plus three supporting
 5. `history/PREREG.md`
 6. `history/20260316-methodology-gap-audit.md`
 7. `history/20260316-secondary-red-team-review.md`
+8. `history/20260316-deepresearch-review-and-actions.md`
 
 ### Read by question
 
@@ -151,6 +155,7 @@ The source material is split across a long master document plus three supporting
 - `background-work/papers/*` when you need to read a paper directly without going back to the web
 - `background-work/MECH_INTERP_GUIDANCE.md` when results are unexpected or implementation details feel shaky
 - `background-work/GAPS_SYNTHESIS.md` when you need the short list of thesis-level non-negotiables
+- `background-work/SAFETY_PUBLICATION_POLICY.md` before writing about refusal, jailbreaks, or other dual-use safety findings
 
 ## Operating Rules
 
@@ -234,7 +239,7 @@ Do not re-explore the whole repo if the state docs already answer the question.
 Use this as the default phase flow:
 
 1. Phase 0: scaffold, prereg, methodology hardening, and paper archive
-2. Phase 1: oracle-alpha infrastructure and reconstruction sanity checks
+2. Phase 1: oracle-alpha infrastructure, reconstruction sanity checks, and stability gates
 3. Phase 2: pattern analysis, Figure 8 validation, and regime comparisons
 4. Phase 3: tool-breakage and safety routing analysis
 5. Phase 4: training-dynamics extension and router training with `w_l` analog geometry
@@ -250,9 +255,14 @@ Do not skip ahead to result interpretation until the reconstruction and null-mod
 - Start with the smallest experiment that can genuinely falsify or support the idea. Do not scale up before the tiny version shows signs of life.
 - Prefer tight feedback loops. A five-minute run is excellent, an hour is acceptable, and anything longer than a day requires explicit justification in `DECISIONS.md`.
 - Treat most early-stage work as exploratory: the goal is often to gain surface area, expose unknown unknowns, and sharpen the ontology before expensive runs.
+- Use MIB as a benchmark anchor or sanity control when the task-model pair fits it. If a lane cannot use MIB, record the reason in `DECISIONS.md`.
+- Before making a high-claim interpretation, clear a stability suite and an out-of-sample predictiveness check on the confirmatory split rather than trusting a descriptive fit.
+- Treat a controlled dynamic-routing counterfactual as the preferred confirmatory control for the tool-breakage lane.
+- Treat strong AttnRes-alignment language as gated on a reproducible proxy, such as a small local reproduction or another open depth-mixing model, if direct trained-routing comparisons are not locally available.
 
 ### 6. Run Design Guardrails
 
+- Never overclaim beyond an effective depth mixture unless stronger causal validation justifies richer router language.
 - Never imply that frozen-model oracle-alpha proves how a trained Attention Residuals model would behave after co-adaptation.
 - Never treat visual similarity to Figure 8 as evidence by itself; operationalize each prediction before looking at aggregate heatmaps.
 - Never skip the preregistered null models.
@@ -262,9 +272,11 @@ Do not skip ahead to result interpretation until the reconstruction and null-mod
 - Never compute per-source logit contributions by applying LayerNorm or RMSNorm to each source independently; use the shared final normalization factor from the full routed mixture.
 - Never report a paired significance test over token-level points as if they were independent examples; the default unit for claim-bearing significance is the sequence-level aggregate unless a stronger dependence-aware method is documented.
 - Never assume raw logit lens is a clean monotonic baseline; tool-breakage claims must compare routed behavior against the original model and a tuned-lens-aware baseline.
+- Never present a strong tool-breakage claim without a controlled dynamic-routing counterfactual or an equally explicit failure metric.
 - Never run claim-bearing analysis on the same prompts used to tune the method. Use a pilot/confirmatory split for thresholds, prompt curation, and design choices.
 - Never describe the router as if it consumes a single global `h_1`; the intended object is a per-token early hidden state such as `h_1[t]`, unless a different design is explicitly logged.
 - Never assume refusal-feature labels are already available in GemmaScope. The safety lane requires a discovery and validation phase before causal claims.
+- Never collapse harmfulness and refusal into one safety signal. Localize candidate safety layers first and separate harmfulness-encoding from refusal-execution before causal routing claims.
 
 ### 7. Required Experiment Lanes
 

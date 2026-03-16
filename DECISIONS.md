@@ -62,3 +62,22 @@
 - Decision: add a pilot/confirmatory split, make the tool-breakage lane tuned-lens-aware, clarify router input as per-token `h_1[t]`, and require refusal-feature discovery before safety-lane claims.
 - Rationale: these are the remaining places where a competent implementation could still tell the wrong story.
 - Impact: the prereg, state docs, references, and review history now better protect the paper-quality interpretation.
+
+## [2026-03-16T15:30:00-0500] DECISION: Adopt the deep-research deltas that materially harden methodology, not the ones that only add scope
+
+- Trigger: Sohail added `research/deepresearch1.md` and `research/deepresearch2.md` and asked for a thorough review against the current repo setup.
+- Decision: adopt five spec-level changes:
+  - treat `effective depth mixture` as the strongest default frozen-model claim
+  - use MIB as a benchmark anchor or sanity control when the task-model pair fits it
+  - require a stability suite plus out-of-sample predictiveness before high-claim interpretation
+  - require a controlled dynamic-routing counterfactual for the strong tool-breakage claim
+  - strengthen the safety lane to separate harmfulness from refusal after layer localization
+- Rationale: these changes materially reduce reviewer-credible failure modes without dragging the repo into unnecessary new infrastructure.
+- Impact: `AGENTS.md`, `CURRENT_STATE.md`, `history/PREREG.md`, `configs/experiment.yaml`, `background-work/RESEARCH_POSITIONING.md`, `background-work/MECH_INTERP_GUIDANCE.md`, and the paper cache now encode the updated scientific floor.
+
+## [2026-03-16T15:35:00-0500] DECISION: Resolve the Figure 8 ambiguity directly from the local AttnRes PDF
+
+- Trigger: `deepresearch1.md` flagged uncertainty about which paper and figure the current Figure 8 lane actually referred to.
+- Decision: treat Lane 2 as validation against Figure 8 in `research/Attention_Residuals.pdf`, whose text explicitly names diagonal dominance, embedding persistence, layer specialization, learned skip connections, and Block AttnRes with `N = 8` preserving the structure.
+- Rationale: leaving the figure ambiguous would make the lane easy to misimplement and easy to overclaim from.
+- Impact: the repo can now use a precise Figure 8 reference while still requiring a reproducible proxy before making strong trained-routing alignment claims.

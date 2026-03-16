@@ -33,7 +33,11 @@ How to use this file:
 | Interpretability in the Wild: a Circuit for Indirect Object Identification in GPT-2 small | https://arxiv.org/abs/2211.00593 | `background-work/papers/files/interpretability_in_the_wild_a_circuit_for_indirect_object_identification_in_gpt_2_small.pdf` | Canonical known-circuit reference if the tool-breakage lane uses IOI or induction-style tracing. |
 | In-context Learning and Induction Heads | https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html | `background-work/papers/files/in_context_learning_and_induction_heads.html` | Primary induction-heads reference if the tool-breakage lane pivots to a known transformer circuit rather than factual recall. |
 | Measuring Faithfulness in Chain-of-Thought Reasoning | https://arxiv.org/abs/2307.13702 | `background-work/papers/files/measuring_faithfulness_in_chain_of_thought_reasoning.pdf` | Useful for not overclaiming from surface-visible reasoning traces or simple lens plots. |
+| MIB: A Mechanistic Interpretability Benchmark | https://arxiv.org/abs/2504.13151 | `background-work/papers/files/mib_a_mechanistic_interpretability_benchmark.pdf` | Benchmark and sanity-control anchor for causal-localization claims. |
+| Weight-sparse transformers have interpretable circuits | https://arxiv.org/abs/2511.13653 | `background-work/papers/files/weight_sparse_transformers_have_interpretable_circuits.pdf` | Strong faithfulness and tool-breakage-adjacent reference from interpretability-by-design work. |
 | Refusal in Language Models Is Mediated by a Single Direction | https://arxiv.org/abs/2406.11717 | `background-work/papers/files/refusal_in_language_models_is_mediated_by_a_single_direction.pdf` | Strong prior for the safety lane and a concrete comparison point for refusal-feature discovery. |
+| Safety Layers in Aligned LLMs | https://arxiv.org/abs/2408.17003 | `background-work/papers/files/safety_layers_in_aligned_large_language_models.pdf` | Safety-layer localization reference for the three-stage safety protocol. |
+| LLMs Encode Harmfulness and Refusal Separately | https://arxiv.org/abs/2507.11878 | `background-work/papers/files/llms_encode_harmfulness_and_refusal_separately.pdf` | Forces harmfulness-versus-refusal separation in safety routing analysis. |
 
 ## Methodology and Numerical References
 
@@ -41,6 +45,8 @@ How to use this file:
 |---|---|---|---|
 | Root Mean Square Layer Normalization | https://arxiv.org/abs/1910.07467 | `background-work/papers/files/root_mean_square_layer_normalization.pdf` | Final-norm handling and the uniform-routing reconstruction sanity check. |
 | scikit-learn AgglomerativeClustering documentation | https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html | none | Confirms that Ward linkage is only valid with Euclidean distances. |
+| OLMo 2: The best fully open language model to date | https://arxiv.org/abs/2501.00656 | `background-work/papers/files/olmo_2_the_best_fully_open_language_model_to_date.pdf` | Secondary open checkpoint suite for training-dynamics validation. |
+| EvoLM: Measuring if intermediate checkpoints are good proxies for future models | https://arxiv.org/abs/2506.16029 | `background-work/papers/files/evolm_measuring_if_intermediate_checkpoints_are_good_proxies_for_future_models.pdf` | Caution against overstating what checkpoint series can prove. |
 
 ## Local Cache
 

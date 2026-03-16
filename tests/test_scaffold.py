@@ -42,8 +42,10 @@ class ScaffoldTests(unittest.TestCase):
             "configs/experiment.yaml",
             "background-work/PROPOSAL_REVIEW.md",
             "background-work/RESEARCH_POSITIONING.md",
+            "background-work/SAFETY_PUBLICATION_POLICY.md",
             "background-work/papers/DOWNLOAD_MANIFEST.md",
             "history/PREREG.md",
+            "history/20260316-deepresearch-review-and-actions.md",
             "history/20260316-thesis-alignment-and-gap-closure.md",
             "history/20260316-second-review-readiness.md",
             "history/20260316-methodology-gap-audit.md",
@@ -91,6 +93,13 @@ class ScaffoldTests(unittest.TestCase):
             "tmux",
             "checkpoint",
             "resume command",
+            "effective depth mixture",
+            "MIB",
+            "stability",
+            "predictiveness",
+            "controlled dynamic-routing counterfactual",
+            "harmfulness",
+            "reproducible proxy",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)
@@ -120,6 +129,12 @@ class ScaffoldTests(unittest.TestCase):
             "silhouette > 0.2",
             "d > 0.2",
             "LessWrong",
+            "MIB",
+            "stability",
+            "out-of-sample",
+            "controlled dynamic-routing counterfactual",
+            "harmfulness",
+            "reproducible proxy",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, combined)
@@ -142,6 +157,11 @@ class ScaffoldTests(unittest.TestCase):
             "tuned lens",
             "2-layer MLP on h_1[t]",
             "pre-register",
+            "MIB",
+            "out-of-sample",
+            "controlled dynamic-routing counterfactual",
+            "harmfulness",
+            "reproducible proxy",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, prereg)
@@ -183,6 +203,12 @@ class ScaffoldTests(unittest.TestCase):
             "Backward Lens",
             "Tuned Lens",
             "LayerSkip",
+            "MIB",
+            "Safety Layers in Aligned LLMs",
+            "LLMs Encode Harmfulness and Refusal Separately",
+            "Weight-sparse transformers have interpretable circuits",
+            "OLMo 2",
+            "EvoLM",
             "Refusal in Language Models Is Mediated by a Single Direction",
             "Interpretability in the Wild",
             "In-context Learning and Induction Heads",
@@ -205,6 +231,19 @@ class ScaffoldTests(unittest.TestCase):
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, review)
+
+    def test_safety_publication_policy_exists_and_forbids_dual_use_sloppiness(
+        self,
+    ) -> None:
+        policy = (ROOT / "background-work/SAFETY_PUBLICATION_POLICY.md").read_text()
+        required_snippets = [
+            "jailbreak",
+            "confirmatory",
+            "dual-use",
+            "do not publish",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, policy)
 
     def test_results_scaffold_covers_all_major_lanes(self) -> None:
         expected = {

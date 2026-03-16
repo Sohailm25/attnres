@@ -141,10 +141,34 @@ PAPERS: list[PaperSpec] = [
         note="Supports caution when interpreting surface-visible reasoning traces or simple lens plots.",
     ),
     PaperSpec(
+        title="MIB: A Mechanistic Interpretability Benchmark",
+        slug="mib_a_mechanistic_interpretability_benchmark",
+        url="https://arxiv.org/pdf/2504.13151.pdf",
+        note="Benchmark and sanity-control anchor for causal-localization claims.",
+    ),
+    PaperSpec(
+        title="Weight-sparse transformers have interpretable circuits",
+        slug="weight_sparse_transformers_have_interpretable_circuits",
+        url="https://arxiv.org/pdf/2511.13653.pdf",
+        note="Interpretability-by-design reference with strong faithfulness discussion.",
+    ),
+    PaperSpec(
         title="Refusal in Language Models Is Mediated by a Single Direction",
         slug="refusal_in_language_models_is_mediated_by_a_single_direction",
         url="https://arxiv.org/pdf/2406.11717.pdf",
         note="High-value safety-lane prior and comparison point for refusal-feature discovery.",
+    ),
+    PaperSpec(
+        title="Safety Layers in Aligned LLMs",
+        slug="safety_layers_in_aligned_large_language_models",
+        url="https://arxiv.org/pdf/2408.17003.pdf",
+        note="Safety-layer localization reference for the three-stage safety protocol.",
+    ),
+    PaperSpec(
+        title="LLMs Encode Harmfulness and Refusal Separately",
+        slug="llms_encode_harmfulness_and_refusal_separately",
+        url="https://arxiv.org/pdf/2507.11878.pdf",
+        note="Requires harmfulness-versus-refusal separation in the safety lane.",
     ),
     PaperSpec(
         title="Root Mean Square Layer Normalization",
@@ -158,6 +182,18 @@ PAPERS: list[PaperSpec] = [
         url="https://transformer-circuits.pub/2025/attribution-graphs/biology.html",
         suffix=".html",
         note="Tool-breakage and attribution-graph baseline for the dynamic-routing claim.",
+    ),
+    PaperSpec(
+        title="OLMo 2: The best fully open language model to date",
+        slug="olmo_2_the_best_fully_open_language_model_to_date",
+        url="https://arxiv.org/pdf/2501.00656.pdf",
+        note="Secondary open checkpoint suite for training-dynamics validation.",
+    ),
+    PaperSpec(
+        title="EvoLM: Measuring if intermediate checkpoints are good proxies for future models",
+        slug="evolm_measuring_if_intermediate_checkpoints_are_good_proxies_for_future_models",
+        url="https://arxiv.org/pdf/2506.16029.pdf",
+        note="Caution against overstating what checkpoint series can prove.",
     ),
 ]
 

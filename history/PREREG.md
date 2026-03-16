@@ -14,6 +14,7 @@ This preregistration covers the local depth-routing experiment defined by:
 - Oracle-alpha is an upper bound on the routing signal available in standard architectures, more precisely the routing signal recoverable from fixed standard-model representations.
 - Oracle-alpha is a lower bound on the benefit of depth routing once routing and computation can co-adapt.
 - Oracle-alpha is not a trained AttnRes simulation and does not include the co-adaptation feedback loop.
+- The strongest frozen-model claim is recovery of an effective depth mixture; stronger language about an internal router requires additional causal validation.
 - Any claim about trained Attention Residuals beyond comparison or motivation must be marked as inference.
 
 ## Primary Hypothesis
@@ -49,7 +50,7 @@ Standard transformer residual streams contain latent, input-dependent depth-rout
 
 ## Phase Gates
 
-### Phase 1: Oracle-Alpha Feasibility
+### Phase 1: Oracle-Alpha Feasibility and Stability
 
 - Minimum sample size: `100` sequences
 - Acceptance gate: mean cross-entropy improvement greater than `0.01` nats over uniform
@@ -58,6 +59,10 @@ Standard transformer residual streams contain latent, input-dependent depth-rout
 - All null models must be reported
 - Small-scale scale-up gate: `d > 0.2` versus the random baseline
 - Use a pilot tranche for method selection and debugging, and hold out a confirmatory tranche for claim-bearing statistics
+- Use bootstrap confidence intervals with at least `1000` resamples for claim-bearing estimates
+- Run a stability suite over optimization restarts and prompt resamples or paraphrases before moving to pattern interpretation
+- Run an out-of-sample predictiveness check on the confirmatory tranche; if recovered alpha structure does not generalize beyond descriptive fitting, weaken the claim accordingly
+- Use MIB as a benchmark anchor or sanity control when the task-model pair is compatible; if omitted, document why
 
 ### Phase 2: Pattern Analysis
 
@@ -71,12 +76,15 @@ Standard transformer residual streams contain latent, input-dependent depth-rout
 
 ### Phase 3: Figure 8 Validation
 
+`Figure 8` here refers to Figure 8 in `research/Attention_Residuals.pdf`.
+
 Each pattern must be operationalized before inspecting aggregate heatmaps:
 
 - diagonal dominance: `locality score > 1/L`
 - embedding persistence: `alpha_0` shows above-uniform weight at deep layers
 - layer-type specialization: `Entropy(pre-attn) > Entropy(pre-MLP)`
 - learned skip connections: structural off-diagonal peaks where `α* > 2/L`
+- Strong claims that frozen-model routing matches trained routing require a reproducible proxy, such as a small local AttnRes reproduction or another open depth-mixing comparison. Without that, this lane is interpreted as comparison against the published pattern surface only.
 
 ### Phase 4: Comparison Regimes
 
@@ -95,10 +103,13 @@ The tool-breakage lane is mandatory.
 - preferred demonstration: factual recall on Gemma-2-2B
 - required outputs: routing-aware lens comparison and intervention sensitivity analysis
 - primary figure: original-model versus routed-model traces under both raw logit lens and tuned lens
+- if Gemma-2 lacks an off-the-shelf tuned lens, train a custom lens or move the tuned-lens comparison to a secondary model rather than silently dropping it
 - raw logit lens is not assumed to be smooth or monotonic in the original model
 - retain the legacy threshold language for continuity: `non-monotonic curves on >50% of prompts`, but only interpret it relative to the original-model baseline and tuned-lens-aware comparison
 - success threshold for the strong claim: routing increases non-monotonicity or rank-instability relative to the original-model baseline on >50% of prompts, with tuned-lens-aware comparison reported alongside raw logit lens
 - failure condition: if routing leaves raw and tuned-lens behavior qualitatively unchanged relative to the original-model baseline, the breakage claim must be weakened
+- controlled dynamic-routing counterfactual required as a confirmatory control
+- MIB-compatible or other benchmarked causal-localization controls should be used where the task-model pair permits them
 
 ### Phase 6: Router Training and Geometry
 
@@ -114,7 +125,10 @@ The tool-breakage lane is mandatory.
 
 - explicitly test whether approximately 8 clusters emerge
 - run the safety lane on refusal or honesty-related features
+- safety lane runs as three stages: layer localization, feature discovery and validation, then mediator-conditioned routing analysis
 - safety lane begins with refusal-feature discovery and validation; do not assume pre-labeled refusal features already exist in the local SAE workflow
+- distinguish harmfulness-encoding features from refusal-execution features before causal interpretation
+- follow `background-work/SAFETY_PUBLICATION_POLICY.md` for any external write-up touching refusal or jailbreak-adjacent findings
 
 ## Overclaim Guardrails
 
@@ -131,6 +145,7 @@ Do not claim:
 - Claim-bearing Figure 8 and layer-type-specialization analyses require sublayer outputs rather than `resid_post`-only caches.
 - Token-level significance tests require explicit dependence-aware justification. The default unit for claim-bearing tests is the sequence.
 - Tool-breakage claims must compare against the original-model baseline and include a tuned lens comparison; raw logit lens behavior alone is insufficient.
+- Claim-bearing pattern interpretation requires stability reporting and out-of-sample alpha predictiveness rather than descriptive reconstruction alone.
 
 ## Reproducibility
 
@@ -138,4 +153,5 @@ Do not claim:
 - Log hyperparameters before runs.
 - Save a pilot/confirmatory split before tuning prompts, thresholds, or architecture choices.
 - Freeze the local dependency set before scientific runs.
+- Treat training-dynamics claims from checkpoints as within-run evolution claims unless stronger counterfactual evidence is recorded.
 - Publicly pre-register this plan on LessWrong before claim-bearing execution.

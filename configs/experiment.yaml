@@ -36,12 +36,16 @@ models:
   training_dynamics:
     name: EleutherAI/pythia-2.8b
     purpose: checkpoint_evolution
+    secondary_reference: allenai/OLMo-2
 
 framing:
   oracle_alpha_statement: upper_bound_on_routing_signal_recoverable_from_fixed_standard_model_representations
   depth_routing_benefit_statement: lower_bound_on_the_benefit_of_depth_routing_once_coadaptation_exists
   coadaptation_statement: not_measured_directly_in_frozen_model_analysis
   attnres_claim_boundary: use_attnres_as_thesis_motivation_not_as_empirical_proxy
+  strongest_frozen_model_claim: effective_depth_mixture
+  figure8_reference: attention_residuals_figure_8
+  strong_attnres_alignment_requires_reproducible_proxy: true
 
 hypotheses:
   primary: >
@@ -69,6 +73,16 @@ figure8_predictions:
   - layer_type_specialization
   - learned_skip_connections
 
+evaluation:
+  benchmark_anchor: MIB_when_compatible
+  requires_stability_suite: true
+  requires_out_of_sample_predictiveness: true
+
+tool_breakage:
+  tuned_lens_required: true
+  controlled_dynamic_routing_counterfactual: true
+  gemma2_tuned_lens_requires_explicit_plan: true
+
 required_lanes:
   - oracle_alpha
   - pattern_analysis
@@ -94,10 +108,16 @@ statistics:
   report_bootstrap_confidence_intervals: true
 
 safety_alignment:
+  protocol:
+    - layer_localization
+    - feature_discovery_and_validation
+    - mediator_conditioned_routing_analysis
   focus_features:
     - refusal
     - honesty
   compare_feature_active_vs_inactive: true
+  distinguish_harmfulness_from_refusal: true
+  publication_policy: background-work/SAFETY_PUBLICATION_POLICY.md
 
 gates:
   phase1:
@@ -115,6 +135,7 @@ gates:
 reproducibility:
   prereg_publication_target: LessWrong
   freeze_dependencies_before_claim_bearing_runs: true
+  training_dynamics_claim_scope: within_run_evolution_only
 
 results:
   directories:
