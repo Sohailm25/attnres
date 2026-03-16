@@ -17,10 +17,10 @@ This memo records the second-pass review against the full local `research/` dire
 
 ## Remaining Non-Structural Preconditions Before Claim-Bearing Implementation
 
-- Publicly pre-register the plan on LessWrong.
+- Keep the local prereg in `history/PREREG.md` as the claim-bearing prereg artifact.
 - Freeze the dependency set used for scientific runs.
 - Keep the `.venv` versus conda divergence explicit; `.venv` is the local workspace standard.
 
 ## Readiness Verdict
 
-The experiment shape is now structurally aligned with the local research documents. Implementation can begin once the public preregistration and environment freeze steps are done.
+The experiment shape is now structurally aligned with the local research documents. Implementation can begin once the environment freeze and other active Phase 0 blockers are done.

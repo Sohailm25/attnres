@@ -46,4 +46,4 @@ Remaining follow-up after this review:
 
 - decide the tuned-lens path for Gemma-2 tool-breakage
 - define a reproducible proxy for strong Figure 8 alignment claims
-- keep the public prereg, dependency freeze, pilot/confirmatory split, and refusal-feature workflow as blockers before claim-bearing runs
+- keep the dependency freeze, pilot/confirmatory split, and refusal-feature workflow as blockers before claim-bearing runs

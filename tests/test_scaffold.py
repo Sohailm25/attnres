@@ -77,7 +77,6 @@ class ScaffoldTests(unittest.TestCase):
             "observed",
             "inferred",
             "unknown",
-            "LessWrong",
             "Epistemic Standards",
             "Adversarial self-questioning",
             "Implementation skepticism",
@@ -103,6 +102,7 @@ class ScaffoldTests(unittest.TestCase):
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)
+        self.assertNotIn("LessWrong", content)
 
     def test_current_state_and_prereg_encode_thesis_corrections(self) -> None:
         current_state = (ROOT / "CURRENT_STATE.md").read_text()
@@ -128,7 +128,6 @@ class ScaffoldTests(unittest.TestCase):
             "R^2 > 0.5",
             "silhouette > 0.2",
             "d > 0.2",
-            "LessWrong",
             "MIB",
             "stability",
             "out-of-sample",
@@ -138,6 +137,7 @@ class ScaffoldTests(unittest.TestCase):
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, combined)
+        self.assertNotIn("LessWrong", combined)
 
     def test_prereg_has_operationalized_metrics_and_gates(self) -> None:
         prereg = (ROOT / "history/PREREG.md").read_text()
@@ -165,6 +165,7 @@ class ScaffoldTests(unittest.TestCase):
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, prereg)
+        self.assertNotIn("LessWrong", prereg)
 
     def test_methodology_audit_captures_known_subtle_hazards(self) -> None:
         audit = (ROOT / "history/20260316-methodology-gap-audit.md").read_text()
@@ -181,11 +182,11 @@ class ScaffoldTests(unittest.TestCase):
             "pseudoreplication",
             "resid_post",
             "sublayer outputs",
-            "public preregistration",
             "dependency freeze",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, audit)
+        self.assertNotIn("public preregistration on LessWrong", audit)
 
     def test_paper_manifest_has_core_reference_set(self) -> None:
         manifest = (ROOT / "background-work/papers/DOWNLOAD_MANIFEST.md").read_text()

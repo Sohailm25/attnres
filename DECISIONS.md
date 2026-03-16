@@ -81,3 +81,10 @@
 - Decision: treat Lane 2 as validation against Figure 8 in `research/Attention_Residuals.pdf`, whose text explicitly names diagonal dominance, embedding persistence, layer specialization, learned skip connections, and Block AttnRes with `N = 8` preserving the structure.
 - Rationale: leaving the figure ambiguous would make the lane easy to misimplement and easy to overclaim from.
 - Impact: the repo can now use a precise Figure 8 reference while still requiring a reproducible proxy before making strong trained-routing alignment claims.
+
+## [2026-03-16T16:00:00-0500] DECISION: Drop the public LessWrong prereg requirement and keep the local prereg as the only mandatory prereg artifact
+
+- Trigger: Sohail explicitly requested removal of `resattn-c12` and the public LessWrong prereg requirement.
+- Decision: the repo no longer treats public preregistration as a blocker. `history/PREREG.md` remains the mandatory prereg artifact for claim-bearing work in this workspace.
+- Rationale: the scientific guardrail we actually need here is a stable local prereg plus the pilot/confirmatory split and dependency freeze, not publication on a specific external platform.
+- Impact: active control docs no longer list LessWrong as a prerequisite, and the corresponding tracker issue should be retired.

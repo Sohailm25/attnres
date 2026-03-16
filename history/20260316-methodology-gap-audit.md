@@ -92,8 +92,7 @@ The research documents remain the source material, but the control documents in 
 
 These are not methodology bugs, but they still block claim-bearing execution:
 
-1. public preregistration on LessWrong
-2. dependency freeze before scientific runs
+1. dependency freeze before scientific runs
 
 ## Applied Repo-Level Corrections
 

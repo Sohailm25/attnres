@@ -40,12 +40,11 @@
 
 ## Immediate Next Steps
 
-1. Publicly pre-register the analysis plan on LessWrong before claim-bearing runs.
-2. Freeze dependencies before claim-bearing scientific execution.
-3. Define and save the pilot/confirmatory split before any method-tuning runs.
-4. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
-5. Build the first implementation slice for Phase 1 oracle-alpha infrastructure on local MPS.
-6. Start with reconstruction, stability, and cache-validity tests before any claim-bearing oracle-alpha optimization.
+1. Freeze dependencies before claim-bearing scientific execution.
+2. Define and save the pilot/confirmatory split before any method-tuning runs.
+3. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
+4. Build the first implementation slice for Phase 1 oracle-alpha infrastructure on local MPS.
+5. Start with reconstruction, stability, and cache-validity tests before any claim-bearing oracle-alpha optimization.
 
 ## Phase 1 Gate
 

@@ -149,9 +149,9 @@ Do not claim:
 
 ## Reproducibility
 
+- pre-register locally in this document before claim-bearing execution.
 - Fix random seeds before running claim-bearing experiments.
 - Log hyperparameters before runs.
 - Save a pilot/confirmatory split before tuning prompts, thresholds, or architecture choices.
 - Freeze the local dependency set before scientific runs.
 - Treat training-dynamics claims from checkpoints as within-run evolution claims unless stronger counterfactual evidence is recorded.
-- Publicly pre-register this plan on LessWrong before claim-bearing execution.

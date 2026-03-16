@@ -133,7 +133,7 @@ gates:
     min_r_squared: 0.5
 
 reproducibility:
-  prereg_publication_target: LessWrong
+  prereg_publication_target: local_only
   freeze_dependencies_before_claim_bearing_runs: true
   training_dynamics_claim_scope: within_run_evolution_only
 

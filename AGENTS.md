@@ -65,7 +65,7 @@ You are doing scientific work. Act like it.
    - What is the simplest confound that could explain a positive result?
    - What would failure look like, and is the run designed to detect it?
    - If the expected result appears immediately, what is the probability the implementation is wrong?
-6. Pre-register before running. The local prereg lives in `history/PREREG.md`. The public prereg target is LessWrong before claim-bearing execution.
+6. Pre-register before running. The local prereg lives in `history/PREREG.md` and is the mandatory prereg artifact for this repo.
 7. Skepticism toward clean results. A result that looks too neat on the first pass deserves extra scrutiny, not celebration.
 8. Implementation skepticism is critical. A script that runs and emits plausible numbers has not been validated. Validation requires an independent check.
 
