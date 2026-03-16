@@ -1,0 +1,105 @@
+# ABOUTME: Source-of-truth configuration for the depth-routing spectroscopy experiment.
+# ABOUTME: This file encodes local runtime assumptions, preregistered lanes, and thesis locks.
+
+experiment:
+  name: depth-routing-spectroscopy
+  thesis: latent_depth_routing_in_standard_transformers
+
+research_sources:
+  master_document: research/master-research-document.docx
+  decision_matrix: research/decision-matrix.md
+  supporting_artifacts:
+    - research/artifact1.md
+    - research/artifact2.md
+    - research/artifact3.md
+
+runtime:
+  platform: macbook_pro_local
+  python_env: .venv
+  accelerator: mps
+  fallback: cpu
+  no_modal: true
+
+models:
+  development:
+    name: gpt2-xl
+    purpose: fast_method_iteration
+  primary:
+    name: google/gemma-2-2b
+    purpose: main_results_plus_sae_and_circuit_tooling
+  training_dynamics:
+    name: EleutherAI/pythia-2.8b
+    purpose: checkpoint_evolution
+
+framing:
+  oracle_alpha_statement: upper_bound_on_routing_signal_available_in_standard_architectures
+  coadaptation_statement: not_measured_directly_in_frozen_model_analysis
+  attnres_claim_boundary: use_attnres_as_thesis_motivation_not_as_empirical_proxy
+
+hypotheses:
+  primary: >
+    Standard transformer residual streams contain latent, input-dependent depth-routing
+    structure: there exist non-uniform softmax-constrained layer weights that improve
+    next-token prediction loss relative to uniform routing.
+  secondary: >
+    The optimal routing patterns are structured, correlate with input characteristics,
+    and recover the qualitative Figure 8 patterns reported for trained Attention Residuals models.
+
+null_models:
+  - uniform
+  - random_dirichlet
+  - magnitude_proportional
+  - last_layer_only
+
+regimes:
+  - softmax-constrained
+  - unconstrained
+  - top-k
+
+figure8_predictions:
+  - diagonal_dominance
+  - embedding_persistence
+  - layer_type_specialization
+  - learned_skip_connections
+
+required_lanes:
+  - oracle_alpha
+  - pattern_analysis
+  - figure8_validation
+  - block_structure
+  - comparison_regimes
+  - tool_breakage
+  - training_dynamics
+  - router_training
+  - w_l_analog_geometry
+  - safety_alignment
+
+block_structure:
+  target_cluster_count: 8
+  method: hierarchical_clustering_plus_elbow_checks
+
+safety_alignment:
+  focus_features:
+    - refusal
+    - honesty
+  compare_feature_active_vs_inactive: true
+
+gates:
+  phase1:
+    min_sequences: 100
+    min_cross_entropy_delta_nats: 0.01
+    max_p_value: 0.01
+
+results:
+  directories:
+    - infrastructure
+    - oracle_alpha
+    - pattern_analysis
+    - figure8_validation
+    - block_structure
+    - comparison_regimes
+    - tool_breakage
+    - training_dynamics
+    - router_training
+    - safety_alignment
+    - figures

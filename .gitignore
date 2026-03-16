@@ -1,0 +1,13 @@
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyc
+*.pyo
+*.pyd
+configs/.env
+scratch/*
+!scratch/.gitkeep
+notebooks/.ipynb_checkpoints/

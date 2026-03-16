@@ -1,0 +1,23 @@
+# ABOUTME: Base dependencies for the depth-routing spectroscopy experiment.
+# ABOUTME: Install into `.venv` and keep local execution compatible with MPS-first workflows.
+
+torch>=2.4
+torchvision
+transformer-lens
+sae-lens
+nnsight
+pyvene
+circuitsvis
+datasets
+wandb
+plotly
+jupyter
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+pyyaml
+pre-commit
+ruff
