@@ -16,6 +16,7 @@ This workspace mirrors the operating scaffold used in `~/braindstorms`, but it i
 - Python runs through `.venv`.
 - The expected accelerator is PyTorch MPS with CPU fallback when needed.
 - No Modal, no remote container assumptions, and no inherited persona-circuits runtime shortcuts.
+- `research/artifact3.md` discusses a conda setup, but this workspace intentionally standardizes on `.venv` to match the local operating rules.
 
 ## Quick Start
 

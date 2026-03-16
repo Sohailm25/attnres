@@ -29,7 +29,7 @@ The goal is to show, as rigorously as possible, whether standard transformers ex
 These are not optional. Every implementation and write-up must preserve them.
 
 1. `oracle-alpha` on frozen models is a post-hoc analysis, not a simulation of co-adapted AttnRes training.
-2. Treat oracle-alpha as an upper bound on the routing signal available in standard architectures under fixed representations.
+2. Treat oracle-alpha as an upper bound on the routing signal recoverable from fixed standard-model representations and a lower bound on the benefit of depth routing once routing and computation can co-adapt.
 3. The experiment must explicitly test Figure 8 predictions rather than merely reference them.
 4. The tool-breakage demonstration is a first-class lane, not a future nice-to-have.
 5. The comparison between softmax, unconstrained, and top-k routing is mandatory.
@@ -44,6 +44,7 @@ These are not optional. Every implementation and write-up must preserve them.
 - Primary backend: PyTorch + MPS
 - Fallback tooling: CPU where MPS coverage is incomplete
 - no Modal
+- `research/artifact3.md` discusses conda, but this workspace standard is `.venv` and that supersedes the document for local execution here.
 
 ## Directory Map
 
@@ -110,8 +111,16 @@ For a fresh session or after context loss, read in this order:
 - Never imply that frozen-model oracle-alpha proves how a trained Attention Residuals model would behave after co-adaptation.
 - Never treat visual similarity to Figure 8 as evidence by itself; operationalize each prediction before looking at results.
 - Never skip the null models from `research/decision-matrix.md`.
+- Pre-register before running experiments. The local prereg lives in `history/PREREG.md`, and the public prereg target is LessWrong before claim-bearing runs.
 
-### 2. Required Experiment Lanes
+### 2. Epistemic Standards
+
+- Label empirical claims with one of: `known`, `observed`, `inferred`, `unknown`.
+- Strong claims require matching evidence strength. Do not write `validated`, `confirmed`, or `significant` without the supporting metric and threshold.
+- Before each substantial run, ask what the most likely confound is and how failure would present.
+- A script producing plausible numbers is not validation by itself; implementation skepticism is mandatory.
+
+### 3. Required Experiment Lanes
 
 The following lanes must remain visible in `CURRENT_STATE.md`, `history/PREREG.md`, and `results/RESULTS_INDEX.md`:
 
@@ -125,16 +134,16 @@ The following lanes must remain visible in `CURRENT_STATE.md`, `history/PREREG.m
 - router training plus `w_l` analog geometry
 - safety analysis focused on routing differences around refusal or honesty features
 
-### 3. Run Logging
+### 4. Run Logging
 
 Before any substantial local run, write a pre-run checkpoint to `SCRATCHPAD.md`.
 Immediately after completion or failure, write a post-run checkpoint.
 
-### 4. Decision Logging
+### 5. Decision Logging
 
 Any non-obvious methodological decision or pivot goes to `DECISIONS.md` before proceeding.
 
-### 5. Results Registration
+### 6. Results Registration
 
 Every saved artifact belongs in `results/RESULTS_INDEX.md`.
 Do not delete old entries; mark them superseded.

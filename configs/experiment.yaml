@@ -32,7 +32,8 @@ models:
     purpose: checkpoint_evolution
 
 framing:
-  oracle_alpha_statement: upper_bound_on_routing_signal_available_in_standard_architectures
+  oracle_alpha_statement: upper_bound_on_routing_signal_recoverable_from_fixed_standard_model_representations
+  depth_routing_benefit_statement: lower_bound_on_the_benefit_of_depth_routing_once_coadaptation_exists
   coadaptation_statement: not_measured_directly_in_frozen_model_analysis
   attnres_claim_boundary: use_attnres_as_thesis_motivation_not_as_empirical_proxy
 
@@ -78,6 +79,11 @@ block_structure:
   target_cluster_count: 8
   method: hierarchical_clustering_plus_elbow_checks
 
+statistics:
+  clustering_distance: jensen_shannon_divergence
+  report_effect_sizes: true
+  report_bootstrap_confidence_intervals: true
+
 safety_alignment:
   focus_features:
     - refusal
@@ -89,6 +95,17 @@ gates:
     min_sequences: 100
     min_cross_entropy_delta_nats: 0.01
     max_p_value: 0.01
+    min_cohens_d_vs_random: 0.2
+  pattern_analysis:
+    min_silhouette: 0.2
+  tool_breakage:
+    min_fraction_non_monotonic_prompts: 0.5
+  router_training:
+    min_r_squared: 0.5
+
+reproducibility:
+  prereg_publication_target: LessWrong
+  freeze_dependencies_before_claim_bearing_runs: true
 
 results:
   directories:

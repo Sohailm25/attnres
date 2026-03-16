@@ -39,8 +39,11 @@ class ScaffoldTests(unittest.TestCase):
             ".pre-commit-config.yaml",
             "requirements.txt",
             "configs/experiment.yaml",
+            "background-work/PROPOSAL_REVIEW.md",
+            "background-work/RESEARCH_POSITIONING.md",
             "history/PREREG.md",
             "history/20260316-thesis-alignment-and-gap-closure.md",
+            "history/20260316-second-review-readiness.md",
             "journal/current_state.md",
             "sessions/SESSION_TEMPLATE.md",
             "results/RESULTS_INDEX.md",
@@ -63,6 +66,11 @@ class ScaffoldTests(unittest.TestCase):
             "softmax",
             "top-k",
             "safety",
+            "known",
+            "observed",
+            "inferred",
+            "unknown",
+            "LessWrong",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)
@@ -73,6 +81,7 @@ class ScaffoldTests(unittest.TestCase):
         combined = current_state + "\n" + prereg
         required_snippets = [
             "upper bound on the routing signal available in standard architectures",
+            "lower bound on the benefit of depth routing",
             "co-adaptation",
             "tool-breakage",
             "w_l analog",
@@ -82,9 +91,37 @@ class ScaffoldTests(unittest.TestCase):
             "top-k",
             "Figure 8",
             "refusal",
+            "locality score",
+            "alpha_0",
+            "Entropy",
+            "2/L",
+            "non-monotonic",
+            "R^2 > 0.5",
+            "silhouette > 0.2",
+            "d > 0.2",
+            "LessWrong",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, combined)
+
+    def test_prereg_has_operationalized_metrics_and_gates(self) -> None:
+        prereg = (ROOT / "history/PREREG.md").read_text()
+        required_snippets = [
+            "Jensen-Shannon",
+            "Cohen's d",
+            "bootstrap",
+            "paired t-test",
+            "locality score > 1/L",
+            "above-uniform weight",
+            "Entropy(pre-attn) > Entropy(pre-MLP)",
+            "α* > 2/L",
+            "k ∈ {2,4,8",
+            "non-monotonic curves on >50% of prompts",
+            "2-layer MLP on h_1",
+            "pre-register",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, prereg)
 
     def test_results_scaffold_covers_all_major_lanes(self) -> None:
         expected = {

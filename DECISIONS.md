@@ -27,3 +27,10 @@
 - Decision: make the following mandatory: Figure 8 validation, block-structure testing, softmax vs unconstrained vs top-k comparison, tool-breakage demonstration, `w_l` analog geometry, and safety routing analysis.
 - Rationale: without these lanes, the project drifts away from the claim that AttnRes creates a new interpretability surface.
 - Impact: directory layout, prereg, current state tracking, and results indexing all expose these lanes explicitly.
+
+## [2026-03-16T00:30:00-0500] DECISION: Tighten the scaffold after the second-pass review against the full research set
+
+- Trigger: the second review found that the scaffold was directionally correct but too coarse in its operational detail.
+- Decision: add the missing research-positioning docs, correct the upper-bound/lower-bound framing split, and operationalize the main prereg metrics and gates.
+- Rationale: implementation errors tend to come from vague research scaffolding, not just vague code.
+- Impact: the repo now encodes Figure 8 metrics, comparison-regime definitions, tool-breakage thresholds, router training targets, and the public prereg requirement directly in the control docs.
