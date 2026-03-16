@@ -168,16 +168,29 @@ During work:
 - Update `CURRENT_STATE.md` whenever the actual project state changes.
 - Register durable outputs in `results/RESULTS_INDEX.md`.
 
+Long-running process rules:
+
+- Any run that is expensive enough to care about surviving laptop movement, terminal closure, Wi-Fi changes, or disconnects must run inside `tmux`.
+- Long-running runs must save resumable checkpoints to disk on a defined cadence. If the code cannot checkpoint, add checkpointing before launch rather than hoping the run survives.
+- Before launch, record the `tmux` session name, checkpoint path, checkpoint cadence, log path, and resume command in `SCRATCHPAD.md`.
+- After launch, verify that checkpoints are actually being written and that the resume command works against the latest checkpoint.
+- Prefer durable checkpoint locations under the relevant `results/` lane rather than ephemeral temp directories.
+
 Pre-run checkpoint format for `SCRATCHPAD.md`:
 
 ```text
 ## [TIMESTAMP] PRE-RUN: [run name]
+- tmux session: [session name or N/A]
 - Script: scripts/[filename].py
 - Command: [exact command]
 - Config: [key hyperparameters]
 - What I'm testing: [one-sentence hypothesis]
 - Expected outcome: [what success looks like]
 - Expected duration: ~X minutes
+- Checkpoint path: [path or N/A]
+- Checkpoint cadence: [every N steps / minutes / epochs]
+- Log path: [path]
+- Resume command: [exact command]
 - Main confound to watch: [one sentence]
 - Implementation verified: YES/NO - [what independent check was run]
 - Status: LAUNCHING
@@ -190,6 +203,7 @@ Post-run checkpoint format for `SCRATCHPAD.md`:
 - Outcome: SUCCESS / FAILURE / PARTIAL
 - Key metric: [the number that matters]
 - Artifacts saved: [paths]
+- Latest checkpoint: [path or none]
 - Anomalies: [anything unexpected, or none]
 - Next step: [what follows from this result]
 ```

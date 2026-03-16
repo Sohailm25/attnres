@@ -48,3 +48,10 @@
 - Decision: import the smallest-experiment-first heuristic, the explicit target-plot planning step, the tight-feedback-loop preference, the structured experiment write-up, and the requirement to route approved new sprints through a bd issue.
 - Rationale: these rules improve research taste and visibility without importing incompatible assumptions like `uv`, monorepo sprint directories, or fresh branch-per-run workflow.
 - Impact: future experimental planning should be more explicit and cheaper to iterate on before large runs.
+
+## [2026-03-16T14:15:00-0500] DECISION: Make tmux plus resumable checkpoints mandatory for long-running local work
+
+- Trigger: Sohail called out the risk of losing hours or days of work when moving locations or getting disconnected while running experiments on the MacBook Pro.
+- Decision: require `tmux` for long-running jobs and require explicit checkpoint paths, checkpoint cadence, log paths, and a resume command before launch.
+- Rationale: local-only research is not operationally serious unless long jobs survive normal laptop interruptions.
+- Impact: future agents should default to resumability rather than terminal persistence.

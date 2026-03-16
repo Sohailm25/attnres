@@ -87,6 +87,9 @@ class ScaffoldTests(unittest.TestCase):
             "mock-up of the main plot",
             "Motivation / Methods / Results / Limitations / Next Steps",
             "bd issue",
+            "tmux",
+            "checkpoint",
+            "resume command",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)
