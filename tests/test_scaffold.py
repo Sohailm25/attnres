@@ -82,6 +82,11 @@ class ScaffoldTests(unittest.TestCase):
             "Document Discipline",
             "Session Check-In Protocol",
             "background-work/papers",
+            "smallest experiment",
+            "tight feedback loops",
+            "mock-up of the main plot",
+            "Motivation / Methods / Results / Limitations / Next Steps",
+            "bd issue",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)

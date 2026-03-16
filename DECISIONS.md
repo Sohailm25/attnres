@@ -41,3 +41,10 @@
 - Decision: expand `AGENTS.md` with adapted operating discipline from `braindstorms` and encode the newly surfaced hazards in a dedicated methodology audit plus the prereg, config, and guidance docs.
 - Rationale: the next failure mode is no longer a missing thesis lane; it is a technically plausible but invalid implementation.
 - Impact: future implementation must respect the JSD-versus-Ward correction, the final-normalization decomposition rule, the sequence-level statistical unit, and the sublayer-output requirement.
+
+## [2026-03-16T14:05:00-0500] DECISION: Adopt the high-signal research-taste rules from the external sprint prompt, but only in adapted form
+
+- Trigger: Sohail provided an external "vibe research" prompt and asked whether any of it was worth incorporating into `AGENTS.md`.
+- Decision: import the smallest-experiment-first heuristic, the explicit target-plot planning step, the tight-feedback-loop preference, the structured experiment write-up, and the requirement to route approved new sprints through a bd issue.
+- Rationale: these rules improve research taste and visibility without importing incompatible assumptions like `uv`, monorepo sprint directories, or fresh branch-per-run workflow.
+- Impact: future experimental planning should be more explicit and cheaper to iterate on before large runs.

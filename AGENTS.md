@@ -227,7 +227,16 @@ Use this as the default phase flow:
 
 Do not skip ahead to result interpretation until the reconstruction and null-model checks are green.
 
-### 5. Run Design Guardrails
+### 5. Experiment Design Defaults
+
+- When a question is materially underspecified or multiple experimental approaches seem plausible, draft a short plan collaboratively with Sohail before execution.
+- That plan should include the motivation, the concrete comparison or measurement, and a mock-up of the main plot or table using fake numbers if needed.
+- Approved non-trivial new sprints should create or update a bd issue before execution so the work is visible to future sessions and parallel copies.
+- Start with the smallest experiment that can genuinely falsify or support the idea. Do not scale up before the tiny version shows signs of life.
+- Prefer tight feedback loops. A five-minute run is excellent, an hour is acceptable, and anything longer than a day requires explicit justification in `DECISIONS.md`.
+- Treat most early-stage work as exploratory: the goal is often to gain surface area, expose unknown unknowns, and sharpen the ontology before expensive runs.
+
+### 6. Run Design Guardrails
 
 - Never imply that frozen-model oracle-alpha proves how a trained Attention Residuals model would behave after co-adaptation.
 - Never treat visual similarity to Figure 8 as evidence by itself; operationalize each prediction before looking at aggregate heatmaps.
@@ -238,7 +247,7 @@ Do not skip ahead to result interpretation until the reconstruction and null-mod
 - Never compute per-source logit contributions by applying LayerNorm or RMSNorm to each source independently; use the shared final normalization factor from the full routed mixture.
 - Never report a paired significance test over token-level points as if they were independent examples; the default unit for claim-bearing significance is the sequence-level aggregate unless a stronger dependence-aware method is documented.
 
-### 6. Required Experiment Lanes
+### 7. Required Experiment Lanes
 
 The following lanes must remain visible in `CURRENT_STATE.md`, `history/PREREG.md`, and `results/RESULTS_INDEX.md`:
 
@@ -252,10 +261,18 @@ The following lanes must remain visible in `CURRENT_STATE.md`, `history/PREREG.m
 - router training plus `w_l` analog geometry
 - safety analysis focused on routing differences around refusal or honesty features
 
-### 7. Results Registration
+### 8. Results Registration
 
 Every saved artifact belongs in `results/RESULTS_INDEX.md`.
 Do not delete old entries; mark them superseded.
+
+### 9. Experiment Write-Ups
+
+Every non-trivial experiment should end with a concise technical write-up stored near the relevant artifacts. The default structure is:
+
+- Motivation / Methods / Results / Limitations / Next Steps
+
+The main figure or table should be easy to identify from a quick scan of the directory.
 
 ## Landing the Plane (Session Completion)
 
