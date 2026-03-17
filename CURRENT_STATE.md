@@ -152,14 +152,19 @@
   - the best oracle clustering result is weakly above the matched random control but still below the prereg block-structure gate: best silhouette `= 0.1428` at `k = 2` versus random-control `0.1093`
   - the apparent structure is outlier-driven rather than broad block structure: cluster sizes are `126 / 2` at `k = 2`, `119 / 5 / 2 / 2` at `k = 4`, and `114 / 4 / 3 / 2 / 2 / 1 / 1 / 1` at `k = 8`
   - interpretation: this is a valid Phase 2 entry artifact showing weak above-random routing structure on the development model, but it does not clear the prereg `silhouette > 0.2` gate and does not support a clean `~8`-cluster claim
+- `known`: `resattn-qm4` is now resolved at the decision level:
+  - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
+  - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
+  - strong Figure 8 / trained-routing alignment claims require a small local AttnRes reproduction as the reproducible proxy
+  - until that proxy exists, the Figure 8 lane is limited to comparison against the published AttnRes pattern surface rather than claims of direct trained-routing alignment
 
 ## Immediate Next Steps
 
 1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
-2. Decide the tuned-lens path for Gemma-2 tool-breakage in `resattn-qm4`: custom lens training versus a secondary-model comparison.
-3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
-4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
-5. Land `resattn-9co` so future prereg-scale campaigns expose progress during the long summary stage instead of only at the final write.
+2. Take `resattn-5k9` to train and validate the custom Gemma-2 tuned lens for the tool-breakage lane.
+3. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
+4. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
+5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
 ## Phase 1 Gate
 

@@ -88,7 +88,9 @@ registry:
 tool_breakage:
   tuned_lens_required: true
   controlled_dynamic_routing_counterfactual: true
-  gemma2_tuned_lens_requires_explicit_plan: true
+  gemma2_tuned_lens_plan: custom_local_training
+  secondary_model_tuned_lens_comparison: supplementary_only
+  figure8_strong_claim_proxy: small_local_attnres_reproduction
 
 required_lanes:
   - oracle_alpha

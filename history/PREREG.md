@@ -84,7 +84,7 @@ Each pattern must be operationalized before inspecting aggregate heatmaps:
 - embedding persistence: `alpha_0` shows above-uniform weight at deep layers
 - layer-type specialization: `Entropy(pre-attn) > Entropy(pre-MLP)`
 - learned skip connections: structural off-diagonal peaks where `α* > 2/L`
-- Strong claims that frozen-model routing matches trained routing require a reproducible proxy, such as a small local AttnRes reproduction or another open depth-mixing comparison. Without that, this lane is interpreted as comparison against the published pattern surface only.
+- Strong claims that frozen-model routing matches trained routing require a reproducible proxy. The default proxy is a small local AttnRes reproduction. Another open depth-mixing comparison is fallback-only if local AttnRes reproduction proves infeasible and that deviation is logged explicitly. Without a reproducible proxy, this lane is interpreted as comparison against the published pattern surface only.
 
 ### Phase 4: Comparison Regimes
 
@@ -103,7 +103,8 @@ The tool-breakage lane is mandatory.
 - preferred demonstration: factual recall on Gemma-2-2B
 - required outputs: routing-aware lens comparison and intervention sensitivity analysis
 - primary figure: original-model versus routed-model traces under both raw logit lens and tuned lens
-- if Gemma-2 lacks an off-the-shelf tuned lens, train a custom lens or move the tuned-lens comparison to a secondary model rather than silently dropping it
+- Gemma-2 lacks an off-the-shelf tuned lens, so the default path is to train a custom Gemma-2 tuned lens locally
+- a secondary-model tuned-lens comparison is supplementary only and does not satisfy the primary tuned-lens requirement for the Gemma-2 tool-breakage lane
 - raw logit lens is not assumed to be smooth or monotonic in the original model
 - retain the legacy threshold language for continuity: `non-monotonic curves on >50% of prompts`, but only interpret it relative to the original-model baseline and tuned-lens-aware comparison
 - success threshold for the strong claim: routing increases non-monotonicity or rank-instability relative to the original-model baseline on >50% of prompts, with tuned-lens-aware comparison reported alongside raw logit lens

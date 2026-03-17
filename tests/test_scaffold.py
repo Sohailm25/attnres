@@ -194,6 +194,24 @@ class ScaffoldTests(unittest.TestCase):
         for snippet in required_snippets:
             self.assertIn(snippet, config)
 
+    def test_qm4_decisions_are_encoded_in_prereg_and_config(self) -> None:
+        prereg = (ROOT / "history/PREREG.md").read_text()
+        config = (ROOT / "configs/experiment.yaml").read_text()
+        prereg_required_snippets = [
+            "small local AttnRes reproduction",
+            "train a custom Gemma-2 tuned lens locally",
+            "supplementary only",
+        ]
+        config_required_snippets = [
+            "gemma2_tuned_lens_plan: custom_local_training",
+            "secondary_model_tuned_lens_comparison: supplementary_only",
+            "figure8_strong_claim_proxy: small_local_attnres_reproduction",
+        ]
+        for snippet in prereg_required_snippets:
+            self.assertIn(snippet, prereg)
+        for snippet in config_required_snippets:
+            self.assertIn(snippet, config)
+
     def test_methodology_audit_captures_known_subtle_hazards(self) -> None:
         audit = (ROOT / "history/20260316-methodology-gap-audit.md").read_text()
         required_snippets = [

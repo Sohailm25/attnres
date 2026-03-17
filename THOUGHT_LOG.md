@@ -376,6 +376,23 @@ Suggested entry format:
   - `k = 2` gives cluster sizes `126 / 2`; `k = 8` still gives one huge cluster of `114`.
   - `pos_embed` is the top-1 source on `36 / 128` confirm prompts, and attention mass still dominates MLP mass on average (`0.5560` vs `0.4090`).
 
+## [2026-03-17T12:34:00-0500] The Decision Lane Is Less Ambiguous Than It Looked
+- Stage: planning
+- Feel of the Experiment: This one looked like a fork on paper, but the repo’s evidence is mostly one-sided. The secondary-model tuned-lens path reads like a convenience escape hatch, not like the strongest scientific design.
+- Working Hypotheses:
+  - Tool-breakage only really means what we want if the tuned-lens-aware comparison is on the same Gemma-2 model as the routed-versus-original claim.
+  - Strong Figure 8 language will keep sounding slippery until there is a small trained depth-routing model in the repo, not just a figure-matching story.
+- Hunches and Guesses:
+  - Training a small custom Gemma-2 tuned lens will be annoying operationally but conceptually clean.
+  - The small local AttnRes reproduction is likely the right proxy even if an open depth-mixing alternative might be easier, because it addresses the exact co-adaptation objection instead of only approximating it.
+- Predictions:
+  - Once these choices are recorded, the next blockers will feel more like concrete implementation work and less like “we still haven’t decided what evidence would count.”
+- Surprises and Tensions:
+  - The repo had already mostly made this decision in prose; what was missing was the final step of deleting the ambiguous branch language from the prereg.
+- Confidence:
+  - high that custom Gemma-2 tuned lens is the right primary path
+  - medium-to-high that small local AttnRes reproduction is the right Figure 8 default proxy
+
 ## [2026-03-17T17:15:00-0500] Compression Fixed The Shape Story But Not The Loss Story
 - Stage: analysis
 - Feel of the Experiment: This is the cleanest tradeoff we have seen so far. Compression made the predictor look saner in the descriptive metrics and stopped the pathological regularization choice, but it also gave back the one concrete win the full logit target had earned, which was positive held-out routed loss.
