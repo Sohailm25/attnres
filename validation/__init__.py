@@ -33,6 +33,7 @@ from .oracle_alpha_controls import (
     ridge_regression_predictions,
 )
 from .oracle_alpha_runner import (
+    OracleAlphaPredictivenessFeatureCandidate,
     OracleAlphaPredictivenessSequenceResult,
     OracleAlphaPredictivenessSummary,
     OracleAlphaRunSummary,
@@ -52,6 +53,7 @@ __all__ = [
     "ModelBackedReconstructionMetrics",
     "OracleAlphaControlPlan",
     "OracleAlphaControlRegistry",
+    "OracleAlphaPredictivenessFeatureCandidate",
     "OracleAlphaPredictivenessSequenceResult",
     "OracleAlphaPredictivenessSummary",
     "OracleAlphaRunSummary",

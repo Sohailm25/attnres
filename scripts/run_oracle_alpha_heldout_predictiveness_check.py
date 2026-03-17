@@ -44,6 +44,16 @@ def parse_args() -> argparse.Namespace:
         nargs="+",
         default=(1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
     )
+    parser.add_argument(
+        "--candidate-feature-sources",
+        nargs="+",
+        default=(
+            "mean_pooled_h_1[t]_resid_post_layer_0",
+            "mean_pooled_h_4[t]_resid_post_layer_3",
+            "mean_pooled_h_1[t]_plus_h_4[t]_concat",
+            "final_token_h_1[t]_plus_h_4[t]_concat",
+        ),
+    )
     parser.add_argument("--model-name", default=None)
     parser.add_argument("--device", default=None)
     parser.add_argument("--output", required=True)
@@ -91,6 +101,7 @@ def main() -> int:
         learning_rate=args.learning_rate,
         seed=args.seed,
         regularization_grid=tuple(args.regularization_grid),
+        candidate_feature_sources=tuple(args.candidate_feature_sources),
     )
     output_path.write_text(json.dumps(asdict(summary), separators=(",", ":")) + "\n")
     return 0

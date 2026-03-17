@@ -108,12 +108,20 @@ class OracleAlphaPredictivenessSummary:
     feature_source: str
     selected_regularization_strength: float
     tuning_mean_js_divergence: float
+    candidate_feature_summaries: tuple["OracleAlphaPredictivenessFeatureCandidate", ...]
     predictiveness_summary: PredictivenessSummary
     train_run: OracleAlphaRunSummary
     eval_run: OracleAlphaRunSummary
     eval_predictions: tuple[OracleAlphaPredictivenessSequenceResult, ...]
     mib_status: str
     mib_rationale: str
+
+
+@dataclass(frozen=True)
+class OracleAlphaPredictivenessFeatureCandidate:
+    feature_source: str
+    selected_regularization_strength: float
+    tuning_mean_js_divergence: float
 
 
 def _apply_final_norm_and_unembed(
@@ -241,12 +249,12 @@ def _fixed_residual_sources(
     return residual_stack[:, 0].detach(), tuple(labels), tokens[0].detach()
 
 
-def _mean_pooled_h1_feature(
+def _resid_post_states(
     *,
     model: HookedTransformer,
     prompt: str,
     prepend_bos: bool | None,
-) -> list[float]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     tokens = model.to_tokens(prompt, prepend_bos=prepend_bos)
     with torch.no_grad():
         _, cache = model.run_with_cache(
@@ -255,7 +263,33 @@ def _mean_pooled_h1_feature(
             names_filter=lambda name: name.endswith("hook_resid_post"),
         )
     h_1 = cache[("resid_post", 0)][0]
-    return [float(value) for value in h_1.mean(dim=0).detach().cpu().tolist()]
+    h_4 = cache[("resid_post", min(3, model.cfg.n_layers - 1))][0]
+    return h_1, h_4
+
+
+def _feature_vector_for_source(
+    *,
+    model: HookedTransformer,
+    prompt: str,
+    prepend_bos: bool | None,
+    feature_source: str,
+) -> list[float]:
+    h_1, h_4 = _resid_post_states(
+        model=model,
+        prompt=prompt,
+        prepend_bos=prepend_bos,
+    )
+    if feature_source == "mean_pooled_h_1[t]_resid_post_layer_0":
+        feature = h_1.mean(dim=0)
+    elif feature_source == "mean_pooled_h_4[t]_resid_post_layer_3":
+        feature = h_4.mean(dim=0)
+    elif feature_source == "mean_pooled_h_1[t]_plus_h_4[t]_concat":
+        feature = torch.cat((h_1.mean(dim=0), h_4.mean(dim=0)))
+    elif feature_source == "final_token_h_1[t]_plus_h_4[t]_concat":
+        feature = torch.cat((h_1[-1], h_4[-1]))
+    else:
+        raise ValueError(f"unsupported feature source {feature_source!r}")
+    return [float(value) for value in feature.detach().cpu().tolist()]
 
 
 def _normalize_predicted_alpha(
@@ -717,6 +751,7 @@ def run_oracle_alpha_predictiveness_check(
     learning_rate: float = 0.1,
     seed: int = 0,
     regularization_grid: Sequence[float] = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
+    candidate_feature_sources: Sequence[str] | None = None,
     prepend_bos: bool | None = None,
 ) -> OracleAlphaPredictivenessSummary:
     control_registry = load_oracle_alpha_control_registry()
@@ -747,6 +782,11 @@ def run_oracle_alpha_predictiveness_check(
         raise ValueError("predictiveness training requires at least two pilot prompts")
     if not eval_entries:
         raise ValueError("predictiveness evaluation requires confirm prompts")
+    feature_sources = tuple(
+        candidate_feature_sources or ("mean_pooled_h_1[t]_resid_post_layer_0",)
+    )
+    if not feature_sources:
+        raise ValueError("candidate_feature_sources must not be empty")
 
     train_run = run_oracle_alpha_collection(
         model=model,
@@ -771,41 +811,65 @@ def run_oracle_alpha_predictiveness_check(
         prepend_bos=prepend_bos,
     )
 
-    train_features = [
-        _mean_pooled_h1_feature(
-            model=model,
-            prompt=entry.text,
-            prepend_bos=prepend_bos,
+    train_targets = [list(result.final_alpha) for result in train_run.sequence_results]
+    eval_targets = [list(result.final_alpha) for result in eval_run.sequence_results]
+    candidate_feature_summaries = []
+    selected_feature_source = None
+    selected_regularization_strength = None
+    tuning_mean_js_divergence = None
+    selected_train_features = None
+    for feature_source in feature_sources:
+        train_features = [
+            _feature_vector_for_source(
+                model=model,
+                prompt=entry.text,
+                prepend_bos=prepend_bos,
+                feature_source=feature_source,
+            )
+            for entry in train_entries
+        ]
+        (
+            candidate_regularization_strength,
+            candidate_tuning_mean_js,
+        ) = _tuned_ridge_regularization(
+            train_features=train_features,
+            train_targets=train_targets,
+            regularization_grid=regularization_grid,
         )
-        for entry in train_entries
-    ]
+        candidate_feature_summaries.append(
+            OracleAlphaPredictivenessFeatureCandidate(
+                feature_source=feature_source,
+                selected_regularization_strength=candidate_regularization_strength,
+                tuning_mean_js_divergence=candidate_tuning_mean_js,
+            )
+        )
+        if (
+            tuning_mean_js_divergence is None
+            or candidate_tuning_mean_js < tuning_mean_js_divergence
+        ):
+            selected_feature_source = feature_source
+            selected_regularization_strength = candidate_regularization_strength
+            tuning_mean_js_divergence = candidate_tuning_mean_js
+            selected_train_features = train_features
+
     eval_features = [
-        _mean_pooled_h1_feature(
+        _feature_vector_for_source(
             model=model,
             prompt=entry.text,
             prepend_bos=prepend_bos,
+            feature_source=selected_feature_source,
         )
         for entry in eval_entries
     ]
-    train_targets = [list(result.final_alpha) for result in train_run.sequence_results]
-    eval_targets = [list(result.final_alpha) for result in eval_run.sequence_results]
-    (
-        selected_regularization_strength,
-        tuning_mean_js_divergence,
-    ) = _tuned_ridge_regularization(
-        train_features=train_features,
-        train_targets=train_targets,
-        regularization_grid=regularization_grid,
-    )
     predictiveness_summary = ridge_alpha_predictiveness_summary(
-        train_features=train_features,
+        train_features=selected_train_features,
         train_targets=train_targets,
         eval_features=eval_features,
         eval_targets=eval_targets,
         regularization_strength=selected_regularization_strength,
     )
     predicted_eval_alphas = ridge_regression_predictions(
-        train_features=train_features,
+        train_features=selected_train_features,
         train_targets=train_targets,
         eval_features=eval_features,
         regularization_strength=selected_regularization_strength,
@@ -852,9 +916,10 @@ def run_oracle_alpha_predictiveness_check(
         eval_split=predictiveness_plan.eval_split,
         control_plan_id=control_plan.plan_id,
         control_registry_id=control_registry.registry_id,
-        feature_source="mean_pooled_h_1[t]_resid_post_layer_0",
+        feature_source=selected_feature_source,
         selected_regularization_strength=selected_regularization_strength,
         tuning_mean_js_divergence=tuning_mean_js_divergence,
+        candidate_feature_summaries=tuple(candidate_feature_summaries),
         predictiveness_summary=predictiveness_summary,
         train_run=train_run,
         eval_run=eval_run,
