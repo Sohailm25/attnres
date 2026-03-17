@@ -560,3 +560,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/checkpoints/prompt_results/`
 - Anomalies: the non-monotonicity-increase metric stayed `0 / 8` under both raw and tuned lens, so the confirm read still depends on the codified rank-instability surface rather than the legacy boolean
 - Next step: use `resattn-g09` to add the controlled dynamic-routing counterfactual before making the strong Gemma tool-breakage claim
+
+## [2026-03-17T14:14:28-0500] PRE-RUN: Gemma-2 tool-breakage counterfactual smoke
+- tmux session: N/A
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --model-name google/gemma-2-2b --device mps --baseline-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/summary.json --fixed-alpha-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/summary.json --max-prompts 2 --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke`
+- Config: `collection=tool_breakage_factual_recall_v1`, `split=confirm source of truth from resattn-6te`, `controls=prompt_permuted_alpha + pilot_mean_alpha`, `tuned_lens_checkpoint=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`, `device=mps fallback cpu`
+- What I'm testing: whether the new counterfactual runner reuses the saved baseline prompt results, writes checkpointed control-arm artifacts, and produces sane routed-versus-control deltas on a tiny confirm subset.
+- Expected outcome: `summary.json` plus per-prompt checkpoint files appear under the output directory, and routed traces are measurably worse than at least one control on tuned KL / tuned rank metrics.
+- Expected duration: ~5-10 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke/checkpoints/prompt_results`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke/smoke.log`
+- Resume command: `.venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --model-name google/gemma-2-2b --device mps --baseline-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/summary.json --fixed-alpha-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/summary.json --max-prompts 2 --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke`
+- Main confound to watch: with only two prompts, the prompt-permuted control is a single swap, so a weird donor pairing could exaggerate or suppress the routed-versus-control gap.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_tool_breakage` passed before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T14:15:35-0500] POST-RUN: Gemma-2 tool-breakage counterfactual smoke
+- Outcome: SUCCESS
+- Key metric: on the `2`-prompt smoke subset, routed tuned KL stayed worse than the fixed `pilot_mean_alpha` control (`routed minus control = +1.2240`) but was better than the prompt-permuted swap control (`routed minus control = -0.7417`)
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke/summary.json`, `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke/checkpoints/prompt_results/`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke/checkpoints/prompt_results/`
+- Anomalies: the `2`-prompt prompt-permuted control is just a single donor swap, so it is too pairing-sensitive to interpret as anything except runner smoke.
+- Next step: launch the full locked confirm counterfactual artifact in `tmux` and judge the prompt-permuted control only on the full `8`-prompt confirm set.
+
+## [2026-03-17T14:16:06-0500] PRE-RUN: Gemma-2 tool-breakage counterfactual confirm v1
+- tmux session: `gemma-tb-counterfactual-v1`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --model-name google/gemma-2-2b --device mps --baseline-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/summary.json --fixed-alpha-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/summary.json --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1`
+- Config: `collection=tool_breakage_factual_recall_v1`, `split=confirm (8 prompts, locked)`, `source_of_truth=resattn-6te baseline summary`, `controls=prompt_permuted_alpha + pilot_mean_alpha`, `tuned_lens_checkpoint=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`, `device=mps fallback cpu`
+- What I'm testing: whether the saved Gemma routed traces remain more damaging than both a prompt-permuted dynamic control and a fixed pilot-mean alpha control on the locked factual-recall confirm split.
+- Expected outcome: prompt-level counterfactual checkpoints appear after each prompt, the run writes a reusable `summary.json`, and the tuned routed-vs-control deltas stay positive on KL and mostly positive on the relative rank-instability metrics.
+- Expected duration: ~20-35 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1/checkpoints/prompt_results`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1/confirm.log`
+- Resume command: `.venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --model-name google/gemma-2-2b --device mps --baseline-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/summary.json --fixed-alpha-summary results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/summary.json --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1`
+- Main confound to watch: if prompt-permuted alphas are almost as damaging as the prompt-matched route, the strong Gemma claim weakens from “input-dependent routing specifically breaks the lens traces” to “non-uniform routed mixtures often break them.”
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_tool_breakage` passed and the `2`-prompt smoke wrote reusable control-arm checkpoints before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T14:18:38-0500] POST-RUN: Gemma-2 tool-breakage counterfactual confirm v1
+- Outcome: SUCCESS
+- Key metric: routed tuned KL remained worse than the fixed `pilot_mean_alpha` control (`routed minus control = +0.6091`), but the prompt-permuted dynamic control was more damaging than the prompt-matched routed trace on average (`routed minus control = -0.3082`)
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1/summary.json`, `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1/checkpoints/prompt_results/`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1/checkpoints/prompt_results/`
+- Anomalies: the dynamic control answers the prereg question cleanly but weakens the strong same-model claim boundary, because prompt-misaligned dynamic routing is at least as damaging as the prompt-matched route on the primary tuned-KL metric.
+- Next step: register `resattn-g09` as a mixed / negative control result, keep the strong Gemma tool-breakage claim blocked, and decide whether the next highest-value work is the Figure 8 proxy lane or a finer-grained follow-up control.

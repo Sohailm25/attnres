@@ -316,3 +316,26 @@
   - raw final-target-rank worsening is `6 / 8`
   At the same time, routed-versus-original non-monotonicity increase remains `0 / 8` under both raw and tuned lens, so the confirm result still does not rescue the old absolute boolean story. The honest confirm read is “routing increases rank instability and often worsens answer-token rank,” not “routing newly induces non-monotonic curves.”
 - Impact: the next tool-breakage issue should focus on the prereg-required controlled dynamic-routing counterfactual rather than on re-running the same confirm baseline or revisiting the metric surface again.
+
+## [2026-03-17T14:07:00-0500] DECISION: Use two controlled alpha baselines in `resattn-g09`, with prompt-permuted confirm alphas as the primary counterfactual
+
+- Trigger: `resattn-g09` is the next live blocker for the Gemma tool-breakage lane, and the repo needs a concrete counterfactual design before any implementation starts.
+- Decision: implement the controlled dynamic-routing counterfactual with two saved control arms in one runner:
+  - a primary prompt-permuted confirm-alpha control built by deterministic cyclic reassignment of the saved `resattn-6te` confirm oracle alphas
+  - a secondary fixed-alpha control built from the mean oracle alpha over the saved `resattn-28b` pilot prompts
+- Rationale: the prompt-permuted control is the cleanest way to preserve non-uniform routed mixtures while breaking prompt alignment, which is the actual causal question behind the strong claim. The pilot-mean alpha control is cheaper to add in the same pass and answers the simpler static-routing objection without needing a second run. Reusing the saved baseline oracle alphas keeps the counterfactual artifact anchored to the already-registered Gemma baseline instead of silently re-optimizing a nearby variant.
+- Impact: `resattn-g09` should compare routed traces against the original baseline and both control arms on the existing tuned-KL and relative target-rank metrics. If routed degradation remains stronger than both controls, the tool-breakage lane clears a much stronger confirmatory bar; if not, the strong claim boundary tightens immediately.
+
+## [2026-03-17T14:19:00-0500] DECISION: Treat `resattn-g09` as a mixed / negative control result that blocks the strongest same-model Gemma claim
+
+- Trigger: the locked `resattn-g09` confirm artifact completed on the `8`-prompt Gemma factual-recall confirm split with both the prompt-permuted and fixed-alpha controls saved.
+- Decision: close `resattn-g09` as a successful implementation of the preregistered dynamic counterfactual and record the scientific outcome as mixed:
+  - the fixed `pilot_mean_alpha` control is weaker than the prompt-matched routed trace
+  - the prompt-permuted dynamic control is more damaging than the prompt-matched routed trace on the tuned primary KL metric
+  - the strong same-model Gemma tool-breakage claim therefore stays blocked
+- Rationale: the new artifact answers the preregistered control question directly. On the tuned primary metric:
+  - routed minus `pilot_mean_alpha` mean KL is `+0.6091`
+  - routed minus `prompt_permuted_alpha` mean KL is `-0.3082`
+  - routed minus `prompt_permuted_alpha` final-position tuned KL is `-0.6541`
+  The rank-based confirm read points in the same direction: routed worsens tuned final target rank versus the prompt-permuted control on only `4 / 8` prompts and increases tuned rank range on only `2 / 8`. That is not enough to say the prompt-matched route is uniquely responsible for the observed lens damage.
+- Impact: the Gemma lane should now be written up as a routed-versus-original degradation that is stronger than a fixed non-uniform control but not stronger than the current prompt-misaligned dynamic control. The next highest-value implementation step should move to another lane, while any future Gemma follow-up must be framed as a new control-design question rather than a missing prerequisite.

@@ -106,6 +106,97 @@ class ToolBreakageRunSummary:
     prompt_results: tuple[ToolBreakagePromptResult, ...]
 
 
+@dataclass(frozen=True)
+class ToolBreakageCounterfactualControl:
+    arm_name: str
+    alpha: tuple[float, ...]
+    alpha_source_prompt_id: str | None
+
+
+@dataclass(frozen=True)
+class ToolBreakageCounterfactualLayerTrace:
+    layer: int
+    raw_mean_kl_to_final: float
+    tuned_mean_kl_to_final: float
+    raw_mean_top1_agreement: float
+    tuned_mean_top1_agreement: float
+    raw_final_position_kl_to_final: float
+    tuned_final_position_kl_to_final: float
+    raw_final_position_top1_agreement: float
+    tuned_final_position_top1_agreement: float
+    raw_final_position_target_probability: float
+    tuned_final_position_target_probability: float
+    raw_final_position_target_rank: int
+    tuned_final_position_target_rank: int
+
+
+@dataclass(frozen=True)
+class ToolBreakageCounterfactualArmResult:
+    arm_name: str
+    alpha: tuple[float, ...]
+    alpha_source_prompt_id: str | None
+    raw_non_monotonic: bool
+    tuned_non_monotonic: bool
+    layer_traces: tuple[ToolBreakageCounterfactualLayerTrace, ...]
+
+
+@dataclass(frozen=True)
+class ToolBreakageCounterfactualPromptResult:
+    baseline_prompt_result: ToolBreakagePromptResult
+    counterfactual_results: tuple[ToolBreakageCounterfactualArmResult, ...]
+
+
+@dataclass(frozen=True)
+class ToolBreakageCounterfactualArmSummary:
+    arm_name: str
+    mean_raw_kl_to_final: float
+    mean_tuned_kl_to_final: float
+    mean_tuned_kl_delta_arm_minus_original: float
+    mean_tuned_kl_delta_routed_minus_arm: float
+    final_position_mean_raw_kl_to_final: float
+    final_position_mean_tuned_kl_to_final: float
+    final_position_mean_tuned_kl_delta_arm_minus_original: float
+    final_position_mean_tuned_kl_delta_routed_minus_arm: float
+    mean_raw_top1_agreement: float
+    mean_tuned_top1_agreement: float
+    mean_tuned_top1_delta_arm_minus_original: float
+    mean_tuned_top1_delta_routed_minus_arm: float
+    final_position_mean_raw_top1_agreement: float
+    final_position_mean_tuned_top1_agreement: float
+    final_position_mean_tuned_top1_delta_arm_minus_original: float
+    final_position_mean_tuned_top1_delta_routed_minus_arm: float
+    fraction_raw_arm_increases_non_monotonicity_vs_original_prompts: float
+    fraction_tuned_arm_increases_non_monotonicity_vs_original_prompts: float
+    fraction_raw_routed_increases_non_monotonicity_vs_arm_prompts: float
+    fraction_tuned_routed_increases_non_monotonicity_vs_arm_prompts: float
+    fraction_raw_arm_worsens_final_target_rank_vs_original_prompts: float
+    fraction_tuned_arm_worsens_final_target_rank_vs_original_prompts: float
+    fraction_raw_routed_worsens_final_target_rank_vs_arm_prompts: float
+    fraction_tuned_routed_worsens_final_target_rank_vs_arm_prompts: float
+    fraction_raw_arm_worsens_best_target_rank_vs_original_prompts: float
+    fraction_tuned_arm_worsens_best_target_rank_vs_original_prompts: float
+    fraction_raw_routed_worsens_best_target_rank_vs_arm_prompts: float
+    fraction_tuned_routed_worsens_best_target_rank_vs_arm_prompts: float
+    fraction_raw_arm_increases_target_rank_range_vs_original_prompts: float
+    fraction_tuned_arm_increases_target_rank_range_vs_original_prompts: float
+    fraction_raw_routed_increases_target_rank_range_vs_arm_prompts: float
+    fraction_tuned_routed_increases_target_rank_range_vs_arm_prompts: float
+
+
+@dataclass(frozen=True)
+class ToolBreakageCounterfactualRunSummary:
+    model_name: str
+    collection_id: str
+    split: str
+    exploratory: bool
+    tuned_lens_checkpoint_path: str
+    baseline_summary_path: str
+    fixed_alpha_summary_path: str
+    num_prompts: int
+    control_summaries: tuple[ToolBreakageCounterfactualArmSummary, ...]
+    prompt_results: tuple[ToolBreakageCounterfactualPromptResult, ...]
+
+
 def _safe_key(raw: str) -> str:
     normalized = re.sub(r"[^A-Za-z0-9._-]+", "_", raw).strip("_")
     digest = hashlib.sha1(raw.encode("utf-8")).hexdigest()[:10]
@@ -329,6 +420,55 @@ def build_routed_residual_traces(
     return torch.stack(traces)
 
 
+def build_counterfactual_alpha_controls(
+    *,
+    confirm_prompt_results: Sequence[ToolBreakagePromptResult],
+    fixed_alpha_prompt_results: Sequence[ToolBreakagePromptResult],
+) -> dict[str, dict[str, ToolBreakageCounterfactualControl]]:
+    if len(confirm_prompt_results) < 2:
+        raise ValueError("confirm_prompt_results must contain at least two prompts")
+    if not fixed_alpha_prompt_results:
+        raise ValueError("fixed_alpha_prompt_results must not be empty")
+
+    sorted_confirm = sorted(confirm_prompt_results, key=lambda result: result.prompt_id)
+    alpha_length = len(sorted_confirm[0].oracle_alpha)
+    source_labels = sorted_confirm[0].source_labels
+    for result in sorted_confirm:
+        if len(result.oracle_alpha) != alpha_length:
+            raise ValueError("confirm oracle_alpha vectors must have matching length")
+        if result.source_labels != source_labels:
+            raise ValueError("confirm source labels must match across prompts")
+
+    fixed_source_labels = fixed_alpha_prompt_results[0].source_labels
+    fixed_alpha_length = len(fixed_alpha_prompt_results[0].oracle_alpha)
+    if fixed_source_labels != source_labels or fixed_alpha_length != alpha_length:
+        raise ValueError("fixed alpha source labels must align with confirm prompts")
+
+    fixed_alpha = tuple(
+        float(
+            sum(result.oracle_alpha[index] for result in fixed_alpha_prompt_results)
+            / len(fixed_alpha_prompt_results)
+        )
+        for index in range(alpha_length)
+    )
+    controls = {}
+    for index, result in enumerate(sorted_confirm):
+        donor = sorted_confirm[(index + 1) % len(sorted_confirm)]
+        controls[result.prompt_id] = {
+            "prompt_permuted_alpha": ToolBreakageCounterfactualControl(
+                arm_name="prompt_permuted_alpha",
+                alpha=tuple(float(value) for value in donor.oracle_alpha),
+                alpha_source_prompt_id=donor.prompt_id,
+            ),
+            "pilot_mean_alpha": ToolBreakageCounterfactualControl(
+                arm_name="pilot_mean_alpha",
+                alpha=fixed_alpha,
+                alpha_source_prompt_id=None,
+            ),
+        }
+    return controls
+
+
 def target_token_for_entry(
     *,
     model: HookedTransformer,
@@ -352,6 +492,102 @@ def target_token_for_entry(
     target_token_id = int(full_tokens[0, prompt_length].detach().cpu().item())
     target_token_text = model.to_string(torch.tensor([target_token_id]))
     return target_token_id, target_token_text
+
+
+def _summarize_counterfactual_arm(
+    *,
+    arm_name: str,
+    alpha: Sequence[float],
+    alpha_source_prompt_id: str | None,
+    target_token_id: int,
+    final_logits: torch.Tensor,
+    raw_logits: torch.Tensor,
+    tuned_logits: torch.Tensor,
+) -> ToolBreakageCounterfactualArmResult:
+    if raw_logits.ndim != 3:
+        raise ValueError("raw_logits must have shape [layers, pos, vocab]")
+    if tuned_logits.shape != raw_logits.shape:
+        raise ValueError("tuned_logits must match raw_logits shape")
+    if final_logits.ndim != 2:
+        raise ValueError("final_logits must have shape [pos, vocab]")
+
+    final_position_index = final_logits.shape[0] - 1
+    layer_traces: list[ToolBreakageCounterfactualLayerTrace] = []
+    for layer in range(raw_logits.shape[0]):
+        raw_layer_logits = raw_logits[layer]
+        tuned_layer_logits = tuned_logits[layer]
+        target_final_position = final_logits[final_position_index]
+        raw_final_position = raw_layer_logits[final_position_index]
+        tuned_final_position = tuned_layer_logits[final_position_index]
+
+        layer_traces.append(
+            ToolBreakageCounterfactualLayerTrace(
+                layer=layer,
+                raw_mean_kl_to_final=_mean_kl_to_final(
+                    target_logits=final_logits,
+                    candidate_logits=raw_layer_logits,
+                ),
+                tuned_mean_kl_to_final=_mean_kl_to_final(
+                    target_logits=final_logits,
+                    candidate_logits=tuned_layer_logits,
+                ),
+                raw_mean_top1_agreement=_top1_agreement(
+                    target_logits=final_logits,
+                    candidate_logits=raw_layer_logits,
+                ),
+                tuned_mean_top1_agreement=_top1_agreement(
+                    target_logits=final_logits,
+                    candidate_logits=tuned_layer_logits,
+                ),
+                raw_final_position_kl_to_final=_mean_kl_to_final(
+                    target_logits=target_final_position.unsqueeze(0),
+                    candidate_logits=raw_final_position.unsqueeze(0),
+                ),
+                tuned_final_position_kl_to_final=_mean_kl_to_final(
+                    target_logits=target_final_position.unsqueeze(0),
+                    candidate_logits=tuned_final_position.unsqueeze(0),
+                ),
+                raw_final_position_top1_agreement=_top1_agreement(
+                    target_logits=target_final_position.unsqueeze(0),
+                    candidate_logits=raw_final_position.unsqueeze(0),
+                ),
+                tuned_final_position_top1_agreement=_top1_agreement(
+                    target_logits=target_final_position.unsqueeze(0),
+                    candidate_logits=tuned_final_position.unsqueeze(0),
+                ),
+                raw_final_position_target_probability=_target_probability(
+                    raw_final_position,
+                    target_token_id=target_token_id,
+                ),
+                tuned_final_position_target_probability=_target_probability(
+                    tuned_final_position,
+                    target_token_id=target_token_id,
+                ),
+                raw_final_position_target_rank=_target_rank(
+                    raw_final_position,
+                    target_token_id=target_token_id,
+                ),
+                tuned_final_position_target_rank=_target_rank(
+                    tuned_final_position,
+                    target_token_id=target_token_id,
+                ),
+            )
+        )
+
+    raw_target_probabilities = [
+        trace.raw_final_position_target_probability for trace in layer_traces
+    ]
+    tuned_target_probabilities = [
+        trace.tuned_final_position_target_probability for trace in layer_traces
+    ]
+    return ToolBreakageCounterfactualArmResult(
+        arm_name=arm_name,
+        alpha=tuple(float(value) for value in alpha),
+        alpha_source_prompt_id=alpha_source_prompt_id,
+        raw_non_monotonic=_is_non_monotonic(raw_target_probabilities),
+        tuned_non_monotonic=_is_non_monotonic(tuned_target_probabilities),
+        layer_traces=tuple(layer_traces),
+    )
 
 
 def summarize_tool_breakage_prompt(
@@ -748,6 +984,544 @@ def summarize_tool_breakage_run(
     )
 
 
+def summarize_tool_breakage_counterfactual_run(
+    *,
+    model_name: str,
+    collection_id: str,
+    split: str,
+    tuned_lens_checkpoint_path: str,
+    baseline_summary_path: str,
+    fixed_alpha_summary_path: str,
+    prompt_results: Sequence[ToolBreakageCounterfactualPromptResult],
+    exploratory: bool = False,
+) -> ToolBreakageCounterfactualRunSummary:
+    if not prompt_results:
+        raise ValueError("prompt_results must not be empty")
+
+    def mean(values: Sequence[float]) -> float:
+        return float(sum(values) / len(values))
+
+    arm_names = [
+        arm_result.arm_name for arm_result in prompt_results[0].counterfactual_results
+    ]
+    for result in prompt_results[1:]:
+        current_arm_names = [arm.arm_name for arm in result.counterfactual_results]
+        if current_arm_names != arm_names:
+            raise ValueError("counterfactual arms must align across prompts")
+
+    def baseline_target_ranks(
+        result: ToolBreakageCounterfactualPromptResult,
+        *,
+        lens_name: str,
+        routed: bool,
+    ) -> list[int]:
+        traces = result.baseline_prompt_result.layer_traces
+        if lens_name == "raw" and not routed:
+            return [trace.raw_original_final_position_target_rank for trace in traces]
+        if lens_name == "raw" and routed:
+            return [trace.raw_routed_final_position_target_rank for trace in traces]
+        if lens_name == "tuned" and not routed:
+            return [trace.tuned_original_final_position_target_rank for trace in traces]
+        if lens_name == "tuned" and routed:
+            return [trace.tuned_routed_final_position_target_rank for trace in traces]
+        raise ValueError(f"unsupported lens name {lens_name!r}")
+
+    def control_target_ranks(
+        result: ToolBreakageCounterfactualPromptResult,
+        *,
+        arm_name: str,
+        lens_name: str,
+    ) -> list[int]:
+        for arm_result in result.counterfactual_results:
+            if arm_result.arm_name != arm_name:
+                continue
+            if lens_name == "raw":
+                return [
+                    trace.raw_final_position_target_rank
+                    for trace in arm_result.layer_traces
+                ]
+            if lens_name == "tuned":
+                return [
+                    trace.tuned_final_position_target_rank
+                    for trace in arm_result.layer_traces
+                ]
+            raise ValueError(f"unsupported lens name {lens_name!r}")
+        raise ValueError(f"missing control arm {arm_name!r}")
+
+    control_summaries = []
+    for arm_name in arm_names:
+        arm_results = []
+        for result in prompt_results:
+            matching = [
+                arm_result
+                for arm_result in result.counterfactual_results
+                if arm_result.arm_name == arm_name
+            ]
+            if len(matching) != 1:
+                raise ValueError(f"expected one control arm named {arm_name!r}")
+            arm_results.append(matching[0])
+
+        arm_traces = [trace for result in arm_results for trace in result.layer_traces]
+        baseline_traces = [
+            trace
+            for result in prompt_results
+            for trace in result.baseline_prompt_result.layer_traces
+        ]
+        if len(arm_traces) != len(baseline_traces):
+            raise ValueError("control traces must align with baseline traces")
+
+        control_summaries.append(
+            ToolBreakageCounterfactualArmSummary(
+                arm_name=arm_name,
+                mean_raw_kl_to_final=mean(
+                    [trace.raw_mean_kl_to_final for trace in arm_traces]
+                ),
+                mean_tuned_kl_to_final=mean(
+                    [trace.tuned_mean_kl_to_final for trace in arm_traces]
+                ),
+                mean_tuned_kl_delta_arm_minus_original=mean(
+                    [
+                        arm_trace.tuned_mean_kl_to_final
+                        - baseline_trace.tuned_original_mean_kl_to_final
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                mean_tuned_kl_delta_routed_minus_arm=mean(
+                    [
+                        baseline_trace.tuned_routed_mean_kl_to_final
+                        - arm_trace.tuned_mean_kl_to_final
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                final_position_mean_raw_kl_to_final=mean(
+                    [trace.raw_final_position_kl_to_final for trace in arm_traces]
+                ),
+                final_position_mean_tuned_kl_to_final=mean(
+                    [trace.tuned_final_position_kl_to_final for trace in arm_traces]
+                ),
+                final_position_mean_tuned_kl_delta_arm_minus_original=mean(
+                    [
+                        arm_trace.tuned_final_position_kl_to_final
+                        - baseline_trace.tuned_original_final_position_kl_to_final
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                final_position_mean_tuned_kl_delta_routed_minus_arm=mean(
+                    [
+                        baseline_trace.tuned_routed_final_position_kl_to_final
+                        - arm_trace.tuned_final_position_kl_to_final
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                mean_raw_top1_agreement=mean(
+                    [trace.raw_mean_top1_agreement for trace in arm_traces]
+                ),
+                mean_tuned_top1_agreement=mean(
+                    [trace.tuned_mean_top1_agreement for trace in arm_traces]
+                ),
+                mean_tuned_top1_delta_arm_minus_original=mean(
+                    [
+                        arm_trace.tuned_mean_top1_agreement
+                        - baseline_trace.tuned_original_mean_top1_agreement
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                mean_tuned_top1_delta_routed_minus_arm=mean(
+                    [
+                        baseline_trace.tuned_routed_mean_top1_agreement
+                        - arm_trace.tuned_mean_top1_agreement
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                final_position_mean_raw_top1_agreement=mean(
+                    [trace.raw_final_position_top1_agreement for trace in arm_traces]
+                ),
+                final_position_mean_tuned_top1_agreement=mean(
+                    [trace.tuned_final_position_top1_agreement for trace in arm_traces]
+                ),
+                final_position_mean_tuned_top1_delta_arm_minus_original=mean(
+                    [
+                        arm_trace.tuned_final_position_top1_agreement
+                        - baseline_trace.tuned_original_final_position_top1_agreement
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                final_position_mean_tuned_top1_delta_routed_minus_arm=mean(
+                    [
+                        baseline_trace.tuned_routed_final_position_top1_agreement
+                        - arm_trace.tuned_final_position_top1_agreement
+                        for arm_trace, baseline_trace in zip(
+                            arm_traces,
+                            baseline_traces,
+                        )
+                    ]
+                ),
+                fraction_raw_arm_increases_non_monotonicity_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if arm_result.raw_non_monotonic
+                        and not result.baseline_prompt_result.raw_original_non_monotonic
+                        else 0.0
+                        for result, arm_result in zip(prompt_results, arm_results)
+                    ]
+                ),
+                fraction_tuned_arm_increases_non_monotonicity_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if arm_result.tuned_non_monotonic
+                        and not result.baseline_prompt_result.tuned_original_non_monotonic
+                        else 0.0
+                        for result, arm_result in zip(prompt_results, arm_results)
+                    ]
+                ),
+                fraction_raw_routed_increases_non_monotonicity_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if result.baseline_prompt_result.raw_routed_non_monotonic
+                        and not arm_result.raw_non_monotonic
+                        else 0.0
+                        for result, arm_result in zip(prompt_results, arm_results)
+                    ]
+                ),
+                fraction_tuned_routed_increases_non_monotonicity_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if result.baseline_prompt_result.tuned_routed_non_monotonic
+                        and not arm_result.tuned_non_monotonic
+                        else 0.0
+                        for result, arm_result in zip(prompt_results, arm_results)
+                    ]
+                ),
+                fraction_raw_arm_worsens_final_target_rank_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if control_target_ranks(
+                            result,
+                            arm_name=arm_name,
+                            lens_name="raw",
+                        )[-1]
+                        > baseline_target_ranks(
+                            result,
+                            lens_name="raw",
+                            routed=False,
+                        )[-1]
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_tuned_arm_worsens_final_target_rank_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if control_target_ranks(
+                            result,
+                            arm_name=arm_name,
+                            lens_name="tuned",
+                        )[-1]
+                        > baseline_target_ranks(
+                            result,
+                            lens_name="tuned",
+                            routed=False,
+                        )[-1]
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_raw_routed_worsens_final_target_rank_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if baseline_target_ranks(
+                            result,
+                            lens_name="raw",
+                            routed=True,
+                        )[-1]
+                        > control_target_ranks(
+                            result,
+                            arm_name=arm_name,
+                            lens_name="raw",
+                        )[-1]
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_tuned_routed_worsens_final_target_rank_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if baseline_target_ranks(
+                            result,
+                            lens_name="tuned",
+                            routed=True,
+                        )[-1]
+                        > control_target_ranks(
+                            result,
+                            arm_name=arm_name,
+                            lens_name="tuned",
+                        )[-1]
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_raw_arm_worsens_best_target_rank_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="raw",
+                            )
+                        )
+                        > min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="raw",
+                                routed=False,
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_tuned_arm_worsens_best_target_rank_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="tuned",
+                            )
+                        )
+                        > min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="tuned",
+                                routed=False,
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_raw_routed_worsens_best_target_rank_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="raw",
+                                routed=True,
+                            )
+                        )
+                        > min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="raw",
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_tuned_routed_worsens_best_target_rank_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="tuned",
+                                routed=True,
+                            )
+                        )
+                        > min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="tuned",
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_raw_arm_increases_target_rank_range_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if max(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="raw",
+                            )
+                        )
+                        - min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="raw",
+                            )
+                        )
+                        > max(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="raw",
+                                routed=False,
+                            )
+                        )
+                        - min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="raw",
+                                routed=False,
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_tuned_arm_increases_target_rank_range_vs_original_prompts=mean(
+                    [
+                        1.0
+                        if max(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="tuned",
+                            )
+                        )
+                        - min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="tuned",
+                            )
+                        )
+                        > max(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="tuned",
+                                routed=False,
+                            )
+                        )
+                        - min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="tuned",
+                                routed=False,
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_raw_routed_increases_target_rank_range_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if max(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="raw",
+                                routed=True,
+                            )
+                        )
+                        - min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="raw",
+                                routed=True,
+                            )
+                        )
+                        > max(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="raw",
+                            )
+                        )
+                        - min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="raw",
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+                fraction_tuned_routed_increases_target_rank_range_vs_arm_prompts=mean(
+                    [
+                        1.0
+                        if max(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="tuned",
+                                routed=True,
+                            )
+                        )
+                        - min(
+                            baseline_target_ranks(
+                                result,
+                                lens_name="tuned",
+                                routed=True,
+                            )
+                        )
+                        > max(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="tuned",
+                            )
+                        )
+                        - min(
+                            control_target_ranks(
+                                result,
+                                arm_name=arm_name,
+                                lens_name="tuned",
+                            )
+                        )
+                        else 0.0
+                        for result in prompt_results
+                    ]
+                ),
+            )
+        )
+
+    return ToolBreakageCounterfactualRunSummary(
+        model_name=model_name,
+        collection_id=collection_id,
+        split=split,
+        exploratory=exploratory,
+        tuned_lens_checkpoint_path=tuned_lens_checkpoint_path,
+        baseline_summary_path=baseline_summary_path,
+        fixed_alpha_summary_path=fixed_alpha_summary_path,
+        num_prompts=len(prompt_results),
+        control_summaries=tuple(control_summaries),
+        prompt_results=tuple(prompt_results),
+    )
+
+
 def _load_tuned_lens_checkpoint(
     *,
     checkpoint_path: Path,
@@ -903,12 +1677,104 @@ def _load_prompt_result_cache(
     return loaded
 
 
+def _load_prompt_results_from_summary(
+    summary_path: Path,
+) -> tuple[Mapping[str, object], dict[str, ToolBreakagePromptResult]]:
+    raw_summary = json.loads(summary_path.read_text())
+    prompt_results = {
+        str(raw_result["prompt_id"]): _prompt_result_from_cache(raw_result)
+        for raw_result in raw_summary["prompt_results"]
+    }
+    return raw_summary, prompt_results
+
+
+def _counterfactual_prompt_result_from_cache(
+    raw: Mapping[str, object],
+) -> ToolBreakageCounterfactualPromptResult:
+    return ToolBreakageCounterfactualPromptResult(
+        baseline_prompt_result=_prompt_result_from_cache(raw["baseline_prompt_result"]),
+        counterfactual_results=tuple(
+            ToolBreakageCounterfactualArmResult(
+                arm_name=str(arm_result["arm_name"]),
+                alpha=tuple(float(value) for value in arm_result["alpha"]),
+                alpha_source_prompt_id=(
+                    None
+                    if arm_result["alpha_source_prompt_id"] is None
+                    else str(arm_result["alpha_source_prompt_id"])
+                ),
+                raw_non_monotonic=bool(arm_result["raw_non_monotonic"]),
+                tuned_non_monotonic=bool(arm_result["tuned_non_monotonic"]),
+                layer_traces=tuple(
+                    ToolBreakageCounterfactualLayerTrace(
+                        layer=int(trace["layer"]),
+                        raw_mean_kl_to_final=float(trace["raw_mean_kl_to_final"]),
+                        tuned_mean_kl_to_final=float(trace["tuned_mean_kl_to_final"]),
+                        raw_mean_top1_agreement=float(trace["raw_mean_top1_agreement"]),
+                        tuned_mean_top1_agreement=float(
+                            trace["tuned_mean_top1_agreement"]
+                        ),
+                        raw_final_position_kl_to_final=float(
+                            trace["raw_final_position_kl_to_final"]
+                        ),
+                        tuned_final_position_kl_to_final=float(
+                            trace["tuned_final_position_kl_to_final"]
+                        ),
+                        raw_final_position_top1_agreement=float(
+                            trace["raw_final_position_top1_agreement"]
+                        ),
+                        tuned_final_position_top1_agreement=float(
+                            trace["tuned_final_position_top1_agreement"]
+                        ),
+                        raw_final_position_target_probability=float(
+                            trace["raw_final_position_target_probability"]
+                        ),
+                        tuned_final_position_target_probability=float(
+                            trace["tuned_final_position_target_probability"]
+                        ),
+                        raw_final_position_target_rank=int(
+                            trace["raw_final_position_target_rank"]
+                        ),
+                        tuned_final_position_target_rank=int(
+                            trace["tuned_final_position_target_rank"]
+                        ),
+                    )
+                    for trace in arm_result["layer_traces"]
+                ),
+            )
+            for arm_result in raw["counterfactual_results"]
+        ),
+    )
+
+
+def _load_counterfactual_prompt_result_cache(
+    checkpoint_dir: Path,
+) -> dict[str, ToolBreakageCounterfactualPromptResult]:
+    if not checkpoint_dir.is_dir():
+        return {}
+
+    loaded = {}
+    for path in sorted(checkpoint_dir.glob("*.json")):
+        raw = json.loads(path.read_text())
+        result = _counterfactual_prompt_result_from_cache(raw)
+        loaded[result.baseline_prompt_result.prompt_id] = result
+    return loaded
+
+
 def _save_prompt_result(
     checkpoint_dir: Path,
     result: ToolBreakagePromptResult,
 ) -> None:
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     path = checkpoint_dir / f"{_safe_key(result.prompt_id)}.json"
+    path.write_text(json.dumps(asdict(result), indent=2) + "\n")
+
+
+def _save_counterfactual_prompt_result(
+    checkpoint_dir: Path,
+    result: ToolBreakageCounterfactualPromptResult,
+) -> None:
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    path = checkpoint_dir / f"{_safe_key(result.baseline_prompt_result.prompt_id)}.json"
     path.write_text(json.dumps(asdict(result), indent=2) + "\n")
 
 
@@ -920,6 +1786,20 @@ def save_tool_breakage_artifacts(
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "summary.json").write_text(
         json.dumps(asdict(summary), indent=2) + "\n"
+    )
+    return summary
+
+
+def save_tool_breakage_counterfactual_artifacts(
+    *,
+    output_dir: Path,
+    summary: ToolBreakageCounterfactualRunSummary,
+) -> ToolBreakageCounterfactualRunSummary:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    summary_payload = asdict(summary)
+    summary_payload.pop("prompt_results", None)
+    (output_dir / "summary.json").write_text(
+        json.dumps(summary_payload, indent=2) + "\n"
     )
     return summary
 
@@ -1050,3 +1930,135 @@ def run_tool_breakage_factual_recall_baseline(
         prompt_results=tuple(prompt_results),
     )
     return save_tool_breakage_artifacts(output_dir=output_dir, summary=summary)
+
+
+def run_tool_breakage_dynamic_counterfactual(
+    *,
+    model: HookedTransformer,
+    tuned_lens_checkpoint_path: Path,
+    baseline_summary_path: Path,
+    fixed_alpha_summary_path: Path,
+    output_dir: Path,
+    prepend_bos: bool | None = None,
+    max_prompts: int | None = None,
+) -> ToolBreakageCounterfactualRunSummary:
+    baseline_summary_raw, baseline_prompt_results = _load_prompt_results_from_summary(
+        baseline_summary_path
+    )
+    fixed_alpha_summary_raw, fixed_alpha_prompt_results = (
+        _load_prompt_results_from_summary(fixed_alpha_summary_path)
+    )
+    collection_id = str(baseline_summary_raw["collection_id"])
+    split = str(baseline_summary_raw["split"])
+    exploratory = bool(baseline_summary_raw["exploratory"])
+
+    prompt_entries = list(
+        resolve_prompt_entries(
+            collection_id=collection_id,
+            split=split,
+            exploratory=exploratory,
+        )
+    )
+    if max_prompts is not None:
+        prompt_entries = prompt_entries[:max_prompts]
+    if len(prompt_entries) < 2:
+        raise ValueError("tool-breakage counterfactual requires at least two prompts")
+
+    selected_baseline_prompt_results = []
+    for entry in prompt_entries:
+        if entry.prompt_id not in baseline_prompt_results:
+            raise ValueError(f"baseline summary is missing prompt {entry.prompt_id!r}")
+        selected_baseline_prompt_results.append(
+            baseline_prompt_results[entry.prompt_id]
+        )
+
+    control_lookup = build_counterfactual_alpha_controls(
+        confirm_prompt_results=selected_baseline_prompt_results,
+        fixed_alpha_prompt_results=tuple(fixed_alpha_prompt_results.values()),
+    )
+    lens = _load_tuned_lens_checkpoint(
+        checkpoint_path=tuned_lens_checkpoint_path,
+        device=str(model.cfg.device),
+    )
+    checkpoint_dir = output_dir / "checkpoints" / "prompt_results"
+    cached_results = _load_counterfactual_prompt_result_cache(checkpoint_dir)
+
+    prompt_results = []
+    for entry in prompt_entries:
+        cached = cached_results.get(entry.prompt_id)
+        if cached is not None:
+            prompt_results.append(cached)
+            continue
+
+        baseline_prompt_result = baseline_prompt_results[entry.prompt_id]
+        target_token_id, _ = target_token_for_entry(
+            model=model,
+            entry=entry,
+            prepend_bos=prepend_bos,
+        )
+        residual_stack, source_labels, _, final_logits, _ = _tool_breakage_cache(
+            model=model,
+            prompt=entry.text,
+            prepend_bos=prepend_bos,
+        )
+        residual_stack = residual_stack.to(str(model.cfg.device))
+        final_logits = final_logits.to(str(model.cfg.device))
+        if tuple(source_labels) != baseline_prompt_result.source_labels:
+            raise ValueError("source labels must match the baseline prompt result")
+        if target_token_id != baseline_prompt_result.target_token_id:
+            raise ValueError("target token id must match the baseline prompt result")
+
+        arm_results = []
+        for control in control_lookup[entry.prompt_id].values():
+            control_resid_post = build_routed_residual_traces(
+                residual_stack=residual_stack,
+                source_labels=source_labels,
+                alpha=control.alpha,
+                num_layers=model.cfg.n_layers,
+            )
+            with torch.no_grad():
+                tuned_control_resid_post = torch.stack(
+                    [
+                        lens.forward_layer(layer, control_resid_post[layer])
+                        for layer in range(model.cfg.n_layers)
+                    ]
+                )
+                arm_results.append(
+                    _summarize_counterfactual_arm(
+                        arm_name=control.arm_name,
+                        alpha=control.alpha,
+                        alpha_source_prompt_id=control.alpha_source_prompt_id,
+                        target_token_id=target_token_id,
+                        final_logits=final_logits,
+                        raw_logits=_apply_final_norm_and_unembed(
+                            model,
+                            control_resid_post,
+                        ),
+                        tuned_logits=_apply_final_norm_and_unembed(
+                            model,
+                            tuned_control_resid_post,
+                        ),
+                    )
+                )
+
+        prompt_result = ToolBreakageCounterfactualPromptResult(
+            baseline_prompt_result=baseline_prompt_result,
+            counterfactual_results=tuple(arm_results),
+        )
+        _save_counterfactual_prompt_result(checkpoint_dir, prompt_result)
+        prompt_results.append(prompt_result)
+
+    summary = summarize_tool_breakage_counterfactual_run(
+        model_name=model.cfg.model_name,
+        collection_id=collection_id,
+        split=split,
+        exploratory=exploratory,
+        tuned_lens_checkpoint_path=str(tuned_lens_checkpoint_path),
+        baseline_summary_path=str(baseline_summary_path),
+        fixed_alpha_summary_path=str(fixed_alpha_summary_path),
+        prompt_results=tuple(prompt_results),
+    )
+    return save_tool_breakage_counterfactual_artifacts(
+        output_dir=output_dir,
+        summary=summary,
+    )

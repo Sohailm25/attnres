@@ -1,5 +1,5 @@
-# ABOUTME: Runs the first same-model Gemma factual-recall tool-breakage baseline.
-# ABOUTME: Compares original-versus-routed traces under raw and tuned lens with KL-primary metric discipline.
+# ABOUTME: Runs the controlled dynamic-routing counterfactual for the Gemma factual-recall lane.
+# ABOUTME: Reuses the saved baseline oracle alphas and compares routed traces against prompt-permuted and fixed-alpha controls.
 
 from __future__ import annotations
 
@@ -39,23 +39,39 @@ DEFAULT_TUNED_LENS_CHECKPOINT = (
     / "20260317-gemma2-tuned-lens-viability-pilot-v1"
     / "checkpoint.pt"
 )
+DEFAULT_BASELINE_SUMMARY = (
+    ROOT
+    / "results"
+    / "tool_breakage"
+    / "20260317-gemma2-tool-breakage-baseline-confirm-v1"
+    / "summary.json"
+)
+DEFAULT_FIXED_ALPHA_SUMMARY = (
+    ROOT
+    / "results"
+    / "tool_breakage"
+    / "20260317-gemma2-tool-breakage-baseline-pilot-v1"
+    / "summary.json"
+)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--collection-id", default="tool_breakage_factual_recall_v1")
-    parser.add_argument("--split", default="pilot")
-    parser.add_argument("--exploratory", action="store_true")
-    parser.add_argument("--max-prompts", type=int, default=None)
-    parser.add_argument("--optimization-steps", type=int, default=20)
-    parser.add_argument("--learning-rate", type=float, default=0.1)
-    parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--model-name", default=None)
     parser.add_argument("--device", default=None)
     parser.add_argument(
         "--tuned-lens-checkpoint",
         default=str(DEFAULT_TUNED_LENS_CHECKPOINT),
     )
+    parser.add_argument(
+        "--baseline-summary",
+        default=str(DEFAULT_BASELINE_SUMMARY),
+    )
+    parser.add_argument(
+        "--fixed-alpha-summary",
+        default=str(DEFAULT_FIXED_ALPHA_SUMMARY),
+    )
+    parser.add_argument("--max-prompts", type=int, default=None)
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args()
 
@@ -75,7 +91,7 @@ def _resolve_device(requested_device: str | None) -> str:
 
 
 def main() -> int:
-    from validation.tool_breakage import run_tool_breakage_factual_recall_baseline
+    from validation.tool_breakage import run_tool_breakage_dynamic_counterfactual
 
     args = parse_args()
     config = _load_repo_config()
@@ -92,16 +108,12 @@ def main() -> int:
                 dtype=torch.float32,
             )
 
-    run_tool_breakage_factual_recall_baseline(
+    run_tool_breakage_dynamic_counterfactual(
         model=model,
         tuned_lens_checkpoint_path=Path(args.tuned_lens_checkpoint),
-        collection_id=args.collection_id,
-        split=args.split,
-        exploratory=args.exploratory,
+        baseline_summary_path=Path(args.baseline_summary),
+        fixed_alpha_summary_path=Path(args.fixed_alpha_summary),
         output_dir=output_dir,
-        optimization_steps=args.optimization_steps,
-        learning_rate=args.learning_rate,
-        seed=args.seed,
         max_prompts=args.max_prompts,
     )
     return 0

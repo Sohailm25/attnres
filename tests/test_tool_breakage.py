@@ -6,11 +6,17 @@ from __future__ import annotations
 import contextlib
 import io
 import unittest
+import warnings
 
 import torch
 from transformer_lens import HookedTransformer
 
 from prompts import PromptEntry
+
+warnings.filterwarnings(
+    "ignore",
+    message=r"`torch_dtype` is deprecated! Use `dtype` instead!",
+)
 
 
 class ToolBreakageTests(unittest.TestCase):
@@ -20,8 +26,13 @@ class ToolBreakageTests(unittest.TestCase):
             ToolBreakageLayerTrace,
             ToolBreakagePromptResult,
             ToolBreakageRunSummary,
+            ToolBreakageCounterfactualArmResult,
+            ToolBreakageCounterfactualLayerTrace,
+            ToolBreakageCounterfactualPromptResult,
             build_routed_residual_traces,
+            build_counterfactual_alpha_controls,
             summarize_tool_breakage_prompt,
+            summarize_tool_breakage_counterfactual_run,
             summarize_tool_breakage_run,
             target_token_for_entry,
         )
@@ -29,9 +40,20 @@ class ToolBreakageTests(unittest.TestCase):
         cls.ToolBreakageLayerTrace = ToolBreakageLayerTrace
         cls.ToolBreakagePromptResult = ToolBreakagePromptResult
         cls.ToolBreakageRunSummary = ToolBreakageRunSummary
+        cls.ToolBreakageCounterfactualArmResult = ToolBreakageCounterfactualArmResult
+        cls.ToolBreakageCounterfactualLayerTrace = ToolBreakageCounterfactualLayerTrace
+        cls.ToolBreakageCounterfactualPromptResult = (
+            ToolBreakageCounterfactualPromptResult
+        )
         cls.build_routed_residual_traces = staticmethod(build_routed_residual_traces)
+        cls.build_counterfactual_alpha_controls = staticmethod(
+            build_counterfactual_alpha_controls
+        )
         cls.summarize_tool_breakage_prompt = staticmethod(
             summarize_tool_breakage_prompt
+        )
+        cls.summarize_tool_breakage_counterfactual_run = staticmethod(
+            summarize_tool_breakage_counterfactual_run
         )
         cls.summarize_tool_breakage_run = staticmethod(summarize_tool_breakage_run)
         cls.target_token_for_entry = staticmethod(target_token_for_entry)
@@ -41,7 +63,7 @@ class ToolBreakageTests(unittest.TestCase):
                 cls.model = HookedTransformer.from_pretrained(
                     "tiny-stories-1M",
                     device="cpu",
-                    dtype="float32",
+                    dtype=torch.float32,
                 )
 
     def test_build_routed_residual_traces_respects_prefix_alpha(self) -> None:
@@ -305,6 +327,233 @@ class ToolBreakageTests(unittest.TestCase):
 
         self.assertEqual(expected_token_id, token_id)
         self.assertTrue(token_text)
+
+    def test_build_counterfactual_alpha_controls_uses_cyclic_shift_and_fixed_mean(
+        self,
+    ) -> None:
+        def make_prompt_result(prompt_id: str, alpha: tuple[float, ...]) -> object:
+            return self.ToolBreakagePromptResult(
+                prompt_id=prompt_id,
+                prompt=f"Prompt {prompt_id}",
+                split="confirm",
+                target_text="answer",
+                target_token_id=1,
+                target_token_text=" answer",
+                source_labels=("embed", "0_attn_out"),
+                oracle_alpha=alpha,
+                raw_original_non_monotonic=False,
+                raw_routed_non_monotonic=True,
+                tuned_original_non_monotonic=False,
+                tuned_routed_non_monotonic=True,
+                layer_traces=(),
+            )
+
+        confirm_prompt_results = (
+            make_prompt_result("tb-confirm-001", (0.9, 0.1)),
+            make_prompt_result("tb-confirm-002", (0.2, 0.8)),
+            make_prompt_result("tb-confirm-003", (0.6, 0.4)),
+        )
+        pilot_prompt_results = (
+            make_prompt_result("tb-pilot-001", (0.8, 0.2)),
+            make_prompt_result("tb-pilot-002", (0.4, 0.6)),
+        )
+
+        controls = self.build_counterfactual_alpha_controls(
+            confirm_prompt_results=confirm_prompt_results,
+            fixed_alpha_prompt_results=pilot_prompt_results,
+        )
+
+        self.assertEqual(
+            ("pilot_mean_alpha", "prompt_permuted_alpha"),
+            tuple(sorted(controls["tb-confirm-001"].keys())),
+        )
+        self.assertEqual(
+            "tb-confirm-002",
+            controls["tb-confirm-001"]["prompt_permuted_alpha"].alpha_source_prompt_id,
+        )
+        self.assertEqual(
+            (0.2, 0.8),
+            controls["tb-confirm-001"]["prompt_permuted_alpha"].alpha,
+        )
+        self.assertEqual(
+            (0.6, 0.4),
+            controls["tb-confirm-002"]["prompt_permuted_alpha"].alpha,
+        )
+        self.assertEqual(
+            (0.9, 0.1),
+            controls["tb-confirm-003"]["prompt_permuted_alpha"].alpha,
+        )
+        self.assertAlmostEqual(
+            0.6,
+            controls["tb-confirm-001"]["pilot_mean_alpha"].alpha[0],
+            places=6,
+        )
+        self.assertAlmostEqual(
+            0.4,
+            controls["tb-confirm-001"]["pilot_mean_alpha"].alpha[1],
+            places=6,
+        )
+        self.assertIsNone(
+            controls["tb-confirm-001"]["pilot_mean_alpha"].alpha_source_prompt_id
+        )
+
+    def test_summarize_tool_breakage_counterfactual_run_tracks_routed_vs_control_metrics(
+        self,
+    ) -> None:
+        def make_baseline_trace(
+            *,
+            layer: int,
+            raw_original_rank: int,
+            raw_routed_rank: int,
+            tuned_original_rank: int,
+            tuned_routed_rank: int,
+            tuned_original_kl: float,
+            tuned_routed_kl: float,
+        ) -> object:
+            return self.ToolBreakageLayerTrace(
+                layer=layer,
+                raw_original_mean_kl_to_final=0.0,
+                raw_routed_mean_kl_to_final=0.0,
+                tuned_original_mean_kl_to_final=tuned_original_kl,
+                tuned_routed_mean_kl_to_final=tuned_routed_kl,
+                raw_original_mean_top1_agreement=0.0,
+                raw_routed_mean_top1_agreement=0.0,
+                tuned_original_mean_top1_agreement=0.5,
+                tuned_routed_mean_top1_agreement=0.2,
+                raw_original_final_position_kl_to_final=0.0,
+                raw_routed_final_position_kl_to_final=0.0,
+                tuned_original_final_position_kl_to_final=tuned_original_kl + 0.5,
+                tuned_routed_final_position_kl_to_final=tuned_routed_kl + 0.5,
+                raw_original_final_position_top1_agreement=0.0,
+                raw_routed_final_position_top1_agreement=0.0,
+                tuned_original_final_position_top1_agreement=0.0,
+                tuned_routed_final_position_top1_agreement=0.0,
+                raw_original_final_position_target_probability=0.2,
+                raw_routed_final_position_target_probability=0.1,
+                tuned_original_final_position_target_probability=0.2,
+                tuned_routed_final_position_target_probability=0.1,
+                raw_original_final_position_target_rank=raw_original_rank,
+                raw_routed_final_position_target_rank=raw_routed_rank,
+                tuned_original_final_position_target_rank=tuned_original_rank,
+                tuned_routed_final_position_target_rank=tuned_routed_rank,
+            )
+
+        def make_control_trace(
+            *,
+            layer: int,
+            raw_rank: int,
+            tuned_rank: int,
+            tuned_kl: float,
+        ) -> object:
+            return self.ToolBreakageCounterfactualLayerTrace(
+                layer=layer,
+                raw_mean_kl_to_final=0.0,
+                tuned_mean_kl_to_final=tuned_kl,
+                raw_mean_top1_agreement=0.0,
+                tuned_mean_top1_agreement=0.4,
+                raw_final_position_kl_to_final=0.0,
+                tuned_final_position_kl_to_final=tuned_kl + 0.5,
+                raw_final_position_top1_agreement=0.0,
+                tuned_final_position_top1_agreement=0.0,
+                raw_final_position_target_probability=0.15,
+                tuned_final_position_target_probability=0.12,
+                raw_final_position_target_rank=raw_rank,
+                tuned_final_position_target_rank=tuned_rank,
+            )
+
+        baseline_prompt_result = self.ToolBreakagePromptResult(
+            prompt_id="tb-confirm-xyz",
+            prompt="Synthetic prompt",
+            split="confirm",
+            target_text="answer",
+            target_token_id=1,
+            target_token_text=" answer",
+            source_labels=("embed", "0_attn_out"),
+            oracle_alpha=(0.4, 0.6),
+            raw_original_non_monotonic=True,
+            raw_routed_non_monotonic=True,
+            tuned_original_non_monotonic=False,
+            tuned_routed_non_monotonic=True,
+            layer_traces=(
+                make_baseline_trace(
+                    layer=0,
+                    raw_original_rank=4,
+                    raw_routed_rank=7,
+                    tuned_original_rank=3,
+                    tuned_routed_rank=8,
+                    tuned_original_kl=1.0,
+                    tuned_routed_kl=3.0,
+                ),
+                make_baseline_trace(
+                    layer=1,
+                    raw_original_rank=2,
+                    raw_routed_rank=9,
+                    tuned_original_rank=2,
+                    tuned_routed_rank=10,
+                    tuned_original_kl=1.2,
+                    tuned_routed_kl=3.2,
+                ),
+            ),
+        )
+        prompt_result = self.ToolBreakageCounterfactualPromptResult(
+            baseline_prompt_result=baseline_prompt_result,
+            counterfactual_results=(
+                self.ToolBreakageCounterfactualArmResult(
+                    arm_name="prompt_permuted_alpha",
+                    alpha=(0.6, 0.4),
+                    alpha_source_prompt_id="tb-confirm-abc",
+                    raw_non_monotonic=True,
+                    tuned_non_monotonic=False,
+                    layer_traces=(
+                        make_control_trace(
+                            layer=0,
+                            raw_rank=5,
+                            tuned_rank=5,
+                            tuned_kl=2.0,
+                        ),
+                        make_control_trace(
+                            layer=1,
+                            raw_rank=4,
+                            tuned_rank=6,
+                            tuned_kl=2.1,
+                        ),
+                    ),
+                ),
+            ),
+        )
+
+        summary = self.summarize_tool_breakage_counterfactual_run(
+            model_name="synthetic",
+            collection_id="tool_breakage_factual_recall_v1",
+            split="confirm",
+            tuned_lens_checkpoint_path="checkpoint.pt",
+            baseline_summary_path="baseline-summary.json",
+            fixed_alpha_summary_path="pilot-summary.json",
+            prompt_results=(prompt_result,),
+        )
+
+        self.assertEqual(1, summary.num_prompts)
+        self.assertEqual(1, len(summary.control_summaries))
+        control_summary = summary.control_summaries[0]
+        self.assertEqual("prompt_permuted_alpha", control_summary.arm_name)
+        self.assertAlmostEqual(
+            0.95,
+            control_summary.mean_tuned_kl_delta_arm_minus_original,
+            places=6,
+        )
+        self.assertAlmostEqual(
+            1.05,
+            control_summary.mean_tuned_kl_delta_routed_minus_arm,
+            places=6,
+        )
+        self.assertEqual(
+            1.0,
+            control_summary.fraction_tuned_routed_worsens_final_target_rank_vs_arm_prompts,
+        )
+        self.assertEqual(
+            1.0,
+            control_summary.fraction_tuned_routed_increases_target_rank_range_vs_arm_prompts,
+        )
 
 
 if __name__ == "__main__":
