@@ -165,3 +165,10 @@
 - Decision: rank candidate feature sources on pilot leave-one-out mean JS only, select `mean_pooled_h_4[t]_resid_post_layer_3` as the best tested internal-state summary, and keep the confirm split for a single held-out rerun.
 - Rationale: using confirm to compare feature families would quietly contaminate the gate. The pilot-only ranking improved the predictor modestly, which is useful information, but the confirm result stayed too weak to justify locking the feature source as solved.
 - Impact: future predictiveness work should treat mean-pooled `h_4[t]` as the current best internal baseline and move next to token-aware or prompt-level features rather than continuing to iterate tiny pooled-state variants.
+
+## [2026-03-16T22:59:08-0500] DECISION: Treat token-aware `position_thirds` pooling over `h_4[t]` as the current best alpha-shape predictor, but keep the blocker open
+
+- Trigger: `resattn-7ve` tested whether minimal token-aware sequence summaries could recover held-out oracle-alpha structure better than the current mean-pooled `h_4[t]` baseline.
+- Decision: keep pilot-only feature selection, adopt `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat` as the best tested token-aware internal summary by pilot leave-one-out mean JS, and keep strong interpretation blocked because confirm-split predicted loss stayed slightly below uniform on average.
+- Rationale: the token-aware summary improved confirm `R^2` and mean JS modestly, which is real signal, but it did not translate into a positive routed-loss advantage. That is not enough to treat the predictor as substantively recovered.
+- Impact: future predictiveness work should move to prompt-level or hybrid feature surfaces rather than continuing to search within `h_4[t]`-only token-aware pooling variants.
