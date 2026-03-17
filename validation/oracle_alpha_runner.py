@@ -16,6 +16,8 @@ from .model_backed import cache_name_filter
 from .oracle_alpha_controls import (
     BootstrapMeanInterval,
     PredictivenessSummary,
+    alpha_target_matrix,
+    alpha_target_predictions_to_distributions,
     bootstrap_mean_confidence_interval,
     compare_predictiveness_metric_values,
     jensen_shannon_divergence,
@@ -25,7 +27,6 @@ from .oracle_alpha_controls import (
     mean_topk_jaccard_similarity,
     predictiveness_metric_value,
     predictiveness_summary_from_predictions,
-    ridge_alpha_predictiveness_summary,
     ridge_regression_predictions,
 )
 
@@ -117,6 +118,7 @@ class OracleAlphaPredictivenessSummary:
     collection_id: str
     train_split: str
     eval_split: str
+    target: str
     control_plan_id: str
     control_registry_id: str
     feature_source: str
@@ -432,16 +434,6 @@ def _feature_vector_for_source(
     else:
         raise ValueError(f"unsupported feature source {feature_source!r}")
     return [float(value) for value in feature.detach().cpu().tolist()]
-
-
-def _normalize_predicted_alpha(
-    predicted_values: Sequence[float],
-) -> list[float]:
-    clipped = [max(0.0, float(value)) for value in predicted_values]
-    total = sum(clipped)
-    if total <= 0.0:
-        return [1.0 / len(clipped)] * len(clipped)
-    return [value / total for value in clipped]
 
 
 def _loss_for_predicted_alpha(
@@ -927,6 +919,7 @@ def _tuned_ridge_regularization(
     *,
     train_features: Sequence[Sequence[float]],
     train_targets: Sequence[Sequence[float]],
+    target_name: str,
     regularization_grid: Sequence[float],
     primary_metric: str,
     secondary_metric: str,
@@ -953,13 +946,21 @@ def _tuned_ridge_regularization(
                 for index, target in enumerate(train_targets)
                 if index != holdout_index
             ]
-            predicted = ridge_regression_predictions(
+            fold_train_target_matrix = alpha_target_matrix(
+                target_name=target_name,
+                distributions=fold_train_targets,
+            )
+            predicted_target = ridge_regression_predictions(
                 train_features=fold_train_features,
-                train_targets=fold_train_targets,
+                train_targets=fold_train_target_matrix.tolist(),
                 eval_features=[train_features[holdout_index]],
                 regularization_strength=regularization_strength,
             )
-            fold_predictions.append(predicted[0].tolist())
+            predicted_distribution = alpha_target_predictions_to_distributions(
+                target_name=target_name,
+                predictions=predicted_target.tolist(),
+            )
+            fold_predictions.append(predicted_distribution[0].tolist())
             fold_targets.append(train_targets[holdout_index])
 
         candidate_summary = predictiveness_summary_from_predictions(
@@ -1098,6 +1099,7 @@ def run_oracle_alpha_predictiveness_check(
         ) = _tuned_ridge_regularization(
             train_features=train_features,
             train_targets=train_targets,
+            target_name=predictiveness_plan.target,
             regularization_grid=regularization_grid,
             primary_metric=predictiveness_plan.primary_metric,
             secondary_metric=predictiveness_plan.secondary_metric,
@@ -1160,24 +1162,28 @@ def run_oracle_alpha_predictiveness_check(
         )
         for entry in eval_entries
     ]
-    predictiveness_summary = ridge_alpha_predictiveness_summary(
+    selected_train_target_matrix = alpha_target_matrix(
+        target_name=predictiveness_plan.target,
+        distributions=train_targets,
+    )
+    predicted_eval_targets = ridge_regression_predictions(
         train_features=selected_train_features,
-        train_targets=train_targets,
+        train_targets=selected_train_target_matrix.tolist(),
         eval_features=eval_features,
-        eval_targets=eval_targets,
         regularization_strength=selected_regularization_strength,
     )
-    predicted_eval_alphas = ridge_regression_predictions(
-        train_features=selected_train_features,
+    predicted_eval_alphas = alpha_target_predictions_to_distributions(
+        target_name=predictiveness_plan.target,
+        predictions=predicted_eval_targets.tolist(),
+    )
+    predictiveness_summary = predictiveness_summary_from_predictions(
         train_targets=train_targets,
-        eval_features=eval_features,
-        regularization_strength=selected_regularization_strength,
+        eval_targets=eval_targets,
+        predictions=predicted_eval_alphas.tolist(),
     )
     eval_predictions = []
     for index, result in enumerate(eval_run.sequence_results):
-        normalized_predicted_alpha = _normalize_predicted_alpha(
-            predicted_eval_alphas[index].tolist()
-        )
+        normalized_predicted_alpha = predicted_eval_alphas[index].tolist()
         eval_predictions.append(
             OracleAlphaPredictivenessSequenceResult(
                 prompt_id=result.prompt_id,
@@ -1213,6 +1219,7 @@ def run_oracle_alpha_predictiveness_check(
         collection_id=collection_id,
         train_split=predictiveness_plan.train_split,
         eval_split=predictiveness_plan.eval_split,
+        target=predictiveness_plan.target,
         control_plan_id=control_plan.plan_id,
         control_registry_id=control_registry.registry_id,
         feature_source=selected_feature_source,

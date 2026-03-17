@@ -29,6 +29,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | GPT-2 XL held-out predictiveness feature comparison | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-feature-comparison.md` |
 | GPT-2 XL held-out predictiveness token-aware comparison | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-token-aware-comparison.md` |
 | GPT-2 XL held-out predictiveness prompt-hybrid comparison | oracle_alpha | fail | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.md` |
+| GPT-2 XL held-out predictiveness logit-target check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-logit-target-check.md` |
 
 ## Pattern Analysis
 

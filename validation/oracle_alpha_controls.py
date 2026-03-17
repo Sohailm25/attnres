@@ -21,6 +21,11 @@ DEFAULT_CONTROL_REGISTRY_PATH = ROOT / "configs" / "oracle_alpha_controls_v1.yam
 ALLOWED_SPLITS = {"pilot", "confirm"}
 ALLOWED_MIB_STATUSES = {"planned", "omitted"}
 ALLOWED_PREDICTIVENESS_METRICS = {"r_squared", "mean_js_divergence"}
+ALLOWED_PREDICTIVENESS_TARGETS = {
+    "oracle_alpha_vector",
+    "oracle_alpha_logit_vector",
+}
+ALPHA_TARGET_EPSILON = 1e-12
 
 
 @dataclass(frozen=True)
@@ -87,6 +92,63 @@ class PredictivenessSummary:
     mean_js_divergence: float
     num_train_examples: int
     num_eval_examples: int
+
+
+def _validated_distribution_matrix(
+    distributions: Sequence[Sequence[float]],
+) -> np.ndarray:
+    matrix = np.asarray(distributions, dtype=float)
+    if matrix.ndim != 2:
+        raise ValueError("distributions must be rank-2")
+    if matrix.shape[1] < 1:
+        raise ValueError("distributions must contain at least one source")
+    if np.any(matrix < 0.0):
+        raise ValueError("distribution values must be non-negative")
+    row_sums = matrix.sum(axis=1, keepdims=True)
+    if np.any(row_sums <= 0.0):
+        raise ValueError("each distribution must sum to a positive value")
+    return matrix / row_sums
+
+
+def alpha_target_matrix(
+    *,
+    target_name: str,
+    distributions: Sequence[Sequence[float]],
+) -> np.ndarray:
+    matrix = _validated_distribution_matrix(distributions)
+    if target_name == "oracle_alpha_vector":
+        return matrix
+    if target_name == "oracle_alpha_logit_vector":
+        stabilized = np.clip(matrix, a_min=ALPHA_TARGET_EPSILON, a_max=None)
+        logits = np.log(stabilized)
+        return logits - logits.mean(axis=1, keepdims=True)
+    raise ValueError(f"unsupported predictiveness target {target_name!r}")
+
+
+def alpha_target_predictions_to_distributions(
+    *,
+    target_name: str,
+    predictions: Sequence[Sequence[float]],
+) -> np.ndarray:
+    matrix = np.asarray(predictions, dtype=float)
+    if matrix.ndim != 2:
+        raise ValueError("predictions must be rank-2")
+    if matrix.shape[1] < 1:
+        raise ValueError("predictions must contain at least one source")
+
+    if target_name == "oracle_alpha_vector":
+        clipped = np.clip(matrix, a_min=0.0, a_max=None)
+        row_sums = clipped.sum(axis=1, keepdims=True)
+        zero_rows = row_sums.squeeze(axis=1) <= 0.0
+        if np.any(zero_rows):
+            clipped[zero_rows] = 1.0 / clipped.shape[1]
+            row_sums = clipped.sum(axis=1, keepdims=True)
+        return clipped / row_sums
+    if target_name == "oracle_alpha_logit_vector":
+        shifted = matrix - matrix.max(axis=1, keepdims=True)
+        exponentiated = np.exp(shifted)
+        return exponentiated / exponentiated.sum(axis=1, keepdims=True)
+    raise ValueError(f"unsupported predictiveness target {target_name!r}")
 
 
 def predictiveness_metric_value(
@@ -456,6 +518,8 @@ def _validate_predictiveness_plan(
         raise ValueError(f"unknown train collection {plan.train_collection_id!r}")
     if plan.eval_collection_id not in prompt_registry.collections:
         raise ValueError(f"unknown eval collection {plan.eval_collection_id!r}")
+    if plan.target not in ALLOWED_PREDICTIVENESS_TARGETS:
+        raise ValueError(f"unsupported predictiveness target {plan.target!r}")
     if plan.primary_metric not in ALLOWED_PREDICTIVENESS_METRICS:
         raise ValueError(f"unsupported primary metric {plan.primary_metric!r}")
     if plan.secondary_metric not in ALLOWED_PREDICTIVENESS_METRICS:

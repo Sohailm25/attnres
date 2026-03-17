@@ -164,6 +164,7 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         self.assertEqual("pilot", summary.train_run.split)
         self.assertEqual("confirm", summary.eval_run.split)
         self.assertFalse(summary.eval_run.exploratory)
+        self.assertEqual("oracle_alpha_logit_vector", summary.target)
         self.assertEqual(3, summary.predictiveness_summary.num_train_examples)
         self.assertEqual(2, summary.predictiveness_summary.num_eval_examples)
         self.assertEqual("r_squared", summary.tuning_primary_metric)
@@ -197,6 +198,7 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         )
         for prediction in summary.eval_predictions:
             self.assertEqual(prediction.num_sources, len(prediction.predicted_alpha))
+            self.assertAlmostEqual(1.0, sum(prediction.predicted_alpha), places=6)
             self.assertGreaterEqual(prediction.predicted_loss, 0.0)
             self.assertGreaterEqual(prediction.js_divergence_to_oracle, 0.0)
 

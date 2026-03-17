@@ -186,3 +186,10 @@
 - Decision: keep the current predictor family for now, but make the runner consult the saved primary/secondary predictiveness metrics and add prompt-matched per-sequence alpha stability metrics for restart/paraphrase/resample runs.
 - Rationale: these changes improve methodological honesty without prejudging the larger redesign choice between constrained alpha coordinates and compressed target objects.
 - Impact: the next real redesign step can now focus on geometry and target formulation rather than on config drift or overly weak stability reporting.
+
+## [2026-03-17T16:35:00-0500] DECISION: Land alpha-logit coordinates as the first constrained predictiveness target and treat the result as mixed
+
+- Trigger: `resattn-qq2` was the smallest direct response to the design-review critique that the predictiveness runner was learning simplex-valued alpha targets in the wrong geometry.
+- Decision: add `oracle_alpha_logit_vector` as the first constrained target, keep evaluation on recovered simplex alpha distributions, and rerun the held-out check with the current best token-aware feature source fixed.
+- Rationale: geometry mismatch was the clearest no-regret design flaw, and changing only the target coordinates isolates that fix from further feature-family churn.
+- Impact: the held-out routed-loss metric improved to `+0.0693` nats over uniform on average, but confirm `R^2` and mean JS both regressed and the selected ridge penalty remained `100.0`; the next issue should test compressed or lower-dimensional targets rather than iterating this raw logit-target path further.
