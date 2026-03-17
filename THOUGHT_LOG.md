@@ -646,3 +646,25 @@ Suggested entry format:
 - Interesting facts:
   - The widened run improved deep embedding persistence from `0.1364` to `0.1515`.
   - The widened loss delta worsened to `+0.0598`, because the matched baseline improved from `6.6463` to `6.5899` while the AttnRes proxy improved only to `6.6496`.
+
+## [2026-03-17T17:15:00-0500] More Steps Changed Almost Nothing Important
+- Stage: implementation
+- Feel of the Experiment: This is a useful dead end. I do not like negative results operationally, but this one is clean enough that it saves us from wasting another evening nudging the same regime.
+- Working Hypotheses:
+  - The widened compact-subword proxy is not primarily blocked on optimization horizon.
+  - The next Figure 8 move needs to change the regime more substantively than “same setup, more steps.”
+- Hunches and Guesses:
+  - The local proxy may need a different corpus or a more faithful local objective before it starts looking like the paper rather than just a workable tiny routed LM.
+  - The fact that deep embedding persistence drifted back down a bit makes me less optimistic that the current Wikitext setup will eventually self-correct into the Figure with enough steps alone.
+- Predictions:
+  - The next honest Figure 8 issue is a redesign decision, not another rerun.
+  - The overall repo priority should probably swing back to `resattn-3f1` until we have a better Figure 8 proxy hypothesis than “train the same tiny regime longer.”
+- Surprises and Tensions:
+  - I expected at least a small improvement in best routed loss from `1500` to `4500` steps, but it stayed exactly flat.
+  - The training losses kept falling hard while the best eval losses stayed frozen, which makes the overfitting / wrong-regime interpretation harder to ignore.
+- Confidence:
+  - high that `resattn-jci` is a real negative result
+  - medium-high that the next Figure 8 task should be a bounded redesign decision rather than more scaling
+- Interesting facts:
+  - The widened baseline and widened AttnRes proxy kept the exact same best eval losses from `1500` through `4500` total steps.
+  - The final eval losses were much worse than the best saved losses for both models, even though final train loss kept falling, which is another sign that longer horizon on this regime is not giving useful generalization.

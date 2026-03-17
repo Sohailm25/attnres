@@ -268,6 +268,31 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: the initial launch used the wrong compact-subword vocabulary size; rerunning the exact final command after completion reused the saved checkpoints and finished in `7.52` seconds
 - Next step: close `resattn-111` as a useful capacity-isolation result and move the Figure 8 lane to `resattn-jci`, which tests optimization horizon on the widened compact-subword regime
 
+## [2026-03-17T17:05:00-0500] PRE-RUN: widened compact-subword Figure 8 horizon follow-up
+- tmux session: `attnres-jci-horizon`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 4500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1`
+- Config: `tokenizer_mode=compact_subword`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `steps=4500`, `batch_size=16`, `seed=11`
+- What I'm testing: whether longer optimization horizon, rather than more width or another tokenization change, is the next credible lever for the widened compact-subword Figure 8 proxy.
+- Expected outcome: the widened AttnRes proxy should close or reverse the negative loss gap versus the matched baseline while preserving or improving the compact-subword Figure-8-facing metrics.
+- Expected duration: ~10-20 minutes from the resumed `1500`-step checkpoints
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1/checkpoints/`
+- Checkpoint cadence: every `50` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the widened baseline keeps improving faster than the routed proxy even over a much longer horizon, the next blocker is unlikely to be training budget alone.
+- Implementation verified: YES - the horizon run will reuse the saved widened compact-subword checkpoints from the prior artifact, so it isolates optimization horizon without reopening tokenization or width.
+- Status: LAUNCHING
+
+## [2026-03-17T17:13:00-0500] POST-RUN: widened compact-subword Figure 8 horizon follow-up
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 4500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1`
+- Outcome: SUCCESS
+- Key metric: baseline best eval loss `6.5899`, AttnRes best eval loss `6.6496`, delta `+0.0598`; deep embedding persistence `0.1415`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1/`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1.md`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: the longer-horizon run resumed correctly from the saved `1500`-step checkpoints, but the best routed proxy loss did not improve at all over the earlier widened artifact; rerunning the exact final command after completion reused the saved checkpoints and finished in `7.96` seconds
+- Next step: close `resattn-jci` as a negative result for the “it just needs more optimization budget” hypothesis and move the Figure 8 lane to the bounded redesign issue `resattn-du2`
+
 ## [2026-03-17T14:50:52-0500] PRE-RUN: small local Block AttnRes viability smoke
 - tmux session: `attnres-proxy-smoke-v1`
 - Script: `scripts/run_attnres_proxy_viability.py`

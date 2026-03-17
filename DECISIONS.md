@@ -397,3 +397,18 @@
   - the entropy gap regressed from `-0.0349` to `-0.0561`, leaving the ordering inverted
   This is enough to say capacity alone is not the full fix at the fixed `1500`-step horizon. The remaining clean next question is whether the widened proxy is simply under-optimized.
 - Impact: `resattn-111` can close once the artifact and state docs land, and the next Figure 8 issue becomes `resattn-jci` rather than another width or tokenization sweep.
+
+## [2026-03-17T17:15:00-0500] DECISION: Treat the widened compact-subword horizon follow-up as a negative result and stop scaling the same regime blindly
+
+- Trigger: `resattn-jci` resumed the widened compact-subword Figure 8 proxy from `1500` to `4500` total steps without changing width, tokenization, corpus, or seed.
+- Decision: close the horizon-only follow-up as a negative result for the “it just needs more optimization budget” hypothesis, and move the next Figure 8 task to a bounded redesign decision instead of another width or horizon rerun on the same local regime.
+- Rationale: the longer run did not improve the best widened comparison at all:
+  - baseline best eval loss stayed `6.5899`
+  - AttnRes best eval loss stayed `6.6496`
+  - the loss delta stayed `+0.0598`
+  The Figure-8-facing read also remained mixed:
+  - deep embedding persistence softened from `0.1515` to `0.1415`
+  - the entropy gap remained negative (`-0.0460`)
+  - the entropy ordering stayed inverted
+  That is enough evidence to stop treating optimization horizon as the obvious next lever on this exact widened compact-subword setup.
+- Impact: `resattn-jci` can close once the artifact and state docs land, and the next Figure 8 issue becomes `resattn-du2`, which should choose one redesign lever explicitly instead of extending the current regime again.

@@ -190,6 +190,17 @@
     - the entropy gap regressed from `-0.0349` to `-0.0561`
     - the entropy ordering remained inverted
   - interpretation: width alone is not enough to recover the compact-subword baseline comparison or the prereg layer-type-specialization signature at the fixed `1500`-step horizon; the next likely bottleneck is optimization horizon on the widened regime rather than more tokenization or width changes
+- `known`: `resattn-jci` has now tested optimization horizon on that widened compact-subword regime and returned a negative result:
+  - `results/figure8_validation/20260317-attnres-proxy-compact-subword-horizon-v1.md` resumes the widened `d_model=160`, `d_ff=640` compact-subword proxy from `1500` to `4500` total steps while keeping tokenization, corpus, and seed fixed
+  - the longer horizon did not improve the best widened loss comparison at all:
+    - baseline best eval loss stayed `6.5899`
+    - AttnRes best eval loss stayed `6.6496`
+    - the widened loss delta stayed `+0.0598`
+  - the Figure-8-facing read remained mixed:
+    - deep embedding persistence softened from `0.1515` to `0.1415`
+    - the entropy gap remained negative at `-0.0460`
+    - the entropy ordering stayed inverted
+  - interpretation: the current widened compact-subword proxy is not primarily blocked on optimization horizon; the next Figure 8 follow-up should be a bounded redesign decision rather than another horizon or width rerun on the same regime
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -265,8 +276,8 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-jci` to test optimization horizon on the widened compact-subword Figure 8 proxy without changing tokenization or width again.
-2. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
+1. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
+2. Use `resattn-du2` to make one bounded redesign decision for the Figure 8 proxy lane after the negative width and horizon follow-ups.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
