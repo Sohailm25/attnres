@@ -6,8 +6,10 @@ from __future__ import annotations
 import argparse
 import contextlib
 from dataclasses import asdict
+from huggingface_hub import logging as huggingface_logging
 import io
 import json
+import logging
 from pathlib import Path
 import sys
 import warnings
@@ -27,6 +29,8 @@ warnings.filterwarnings(
     "ignore",
     message=r"`torch_dtype` is deprecated! Use `dtype` instead!",
 )
+huggingface_logging.set_verbosity_error()
+logging.getLogger("huggingface_hub.file_download").setLevel(logging.CRITICAL)
 transformers_logging.set_verbosity_error()
 
 

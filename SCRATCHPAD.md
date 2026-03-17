@@ -273,3 +273,28 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: the compressed target improved descriptive alpha metrics and broke the earlier `lambda=100.0` saturation by selecting `0.0001`, but it lost the positive held-out routed-loss gain of the full-source logit target
 - Next step: follow `resattn-xaa` with loss-aware target and regularization selection rather than another blind target swap
+
+## [2026-03-17T08:26:23-0500] PRE-RUN: development-model oracle-alpha loss-aware target comparison
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_heldout_predictiveness_check.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-loss-aware-target-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector oracle_alpha_depth_type_band_logit_vector`
+- Config: `model=gpt2-xl`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_split=confirm`, `selection_metric=pilot_leave_one_out_mean_predicted_improvement_over_uniform`, `secondary_metric=mean_js_divergence`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`, `device=mps fallback cpu`
+- What I'm testing: whether loss-aware pilot tuning over the current raw-simplex, full-logit, and compressed-logit targets picks a held-out predictiveness path that preserves routed-loss recovery better than the earlier descriptive-metric-first comparisons.
+- Expected outcome: the run completes on the saved split, writes one comparison artifact, and clarifies whether the target tradeoff was mainly a metric-selection problem or a deeper predictor limitation.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-loss-aware-target-comparison.json`
+- Resume command: rerun the command above
+- Main confound to watch: with only `8` pilot prompts, loss-aware leave-one-out tuning may still be noisy enough to over-select a target that looks good on pilot but does not hold up on confirm.
+- Implementation verified: YES - `tests/test_oracle_alpha_controls.py` and `tests/test_oracle_alpha_runner.py` pass with the loss-aware tuning path and multi-target comparison before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T08:28:00-0500] POST-RUN: development-model oracle-alpha loss-aware target comparison
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-loss-aware-target-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector oracle_alpha_depth_type_band_logit_vector`
+- Outcome: FAILURE
+- Key metric: selected target `oracle_alpha_vector`; `confirm_r_squared=-0.2154`; `confirm_mean_js=0.2377`; `predicted_mean_improvement=-0.0011` nats versus `oracle_mean_improvement=+1.3409`
+- Artifacts saved: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-loss-aware-target-comparison.json`
+- Latest checkpoint: none
+- Anomalies: loss-aware pilot tuning still preferred the raw-simplex target (`pilot mean improvement=+0.0990` nats) over the full-logit and compressed-logit alternatives, so the confirm result reverted to the same slightly negative raw-simplex baseline rather than recovering the earlier positive full-logit confirm result
+- Next step: stop treating target/regularization selection as the main blocker and move to `resattn-7mb` for a more fundamental predictiveness redesign

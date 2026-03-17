@@ -56,7 +56,10 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.assertIn("random_dirichlet", plan.null_models)
         self.assertIn("prompt_paraphrase", plan.stability_suite.prompt_perturbations)
         self.assertEqual("oracle_alpha_logit_vector", plan.predictiveness.target)
-        self.assertEqual("r_squared", plan.predictiveness.primary_metric)
+        self.assertEqual(
+            "mean_predicted_improvement_over_uniform",
+            plan.predictiveness.primary_metric,
+        )
         self.assertEqual("mean_js_divergence", plan.predictiveness.secondary_metric)
 
     def test_alpha_logit_target_round_trips_simplex_distributions(self) -> None:
@@ -159,6 +162,14 @@ class OracleAlphaControlTests(unittest.TestCase):
                 metric_name="mean_js_divergence",
                 left=0.1,
                 right=0.3,
+            ),
+            0.0,
+        )
+        self.assertGreater(
+            self.compare_predictiveness_metric_values(
+                metric_name="mean_predicted_improvement_over_uniform",
+                left=0.3,
+                right=0.1,
             ),
             0.0,
         )
@@ -295,7 +306,7 @@ plans:
       model_family: ridge_regression
       target: oracle_alpha_logit_vector
       features: cached_early_hidden_state_summary
-      primary_metric: r_squared
+      primary_metric: mean_predicted_improvement_over_uniform
       secondary_metric: mean_js_divergence
       failure_action: weaken_claim
     mib_anchor:

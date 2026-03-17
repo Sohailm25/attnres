@@ -219,6 +219,27 @@ Suggested entry format:
 - Confidence:
   - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
 
+## [2026-03-17T08:28:00-0500] Loss-Aware Tuning Still Didn’t Rescue Predictiveness
+- Stage: implementation
+- Feel of the Experiment: This is a useful failure. The metric-governance fix landed cleanly, but it did not change the scientific answer. That makes the blocker feel less like a runner bug and more like a mismatch between the supervised object and the amount of data we are giving it.
+- Working Hypotheses:
+  - The current `8 / 8` pilot-confirm split is too small to select among sequence-level alpha targets reliably, even when the tuning metric is routed loss rather than alpha similarity.
+  - The stronger problem may still be target coarseness: one full alpha vector per sequence may not be the right object to predict from these summaries.
+- Hunches and Guesses:
+  - The raw-simplex target winning the pilot loss-aware comparison but failing again on confirm makes me suspect pilot selection noise more than subtle regularization nuance.
+  - The full-logit target may still be the most interesting path empirically, but the repo now has evidence that the current pilot surface cannot pick it consistently.
+- Predictions:
+  - A larger saved pilot surface or a token/span-level target will move the held-out story more than another target-selection tweak.
+- Surprises and Tensions:
+  - I expected loss-aware pilot tuning to at least keep the full-logit target competitive enough to win; instead the raw-simplex path edged it out and reproduced the old negative confirm result almost exactly.
+  - That makes the project feel more bottlenecked by experimental scale and target object than by metric governance.
+- Confidence:
+  - high that `resattn-xaa` should be treated as a real negative result for the “selection metric alone fixes it” hypothesis
+  - medium that the next correct move is a deeper predictiveness redesign rather than another bounded tuning pass
+- Interesting facts:
+  - All three target candidates chose `lambda=100.0` under the new loss-aware pilot rule, so the selection change by itself did not escape the strong-shrinkage regime.
+  - The selected confirm result was effectively identical to the earlier raw-simplex token-aware baseline: `R^2 = -0.2154`, mean JS `= 0.2377`, predicted mean improvement `= -0.0011` nats.
+
 ## [2026-03-17T16:35:00-0500] Geometry Helped The Loss Metric More Than The Alpha Metric
 - Stage: analysis
 - Feel of the Experiment: This result is more interesting than another clean negative. Changing only the target geometry finally made the held-out routed-loss delta positive on average, but it did it in a way that made the descriptive alpha metrics uglier rather than cleaner.

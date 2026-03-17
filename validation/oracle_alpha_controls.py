@@ -8,7 +8,7 @@ import itertools
 import math
 from pathlib import Path
 import random
-from typing import Sequence
+from typing import Mapping, Sequence
 
 import numpy as np
 import yaml
@@ -20,7 +20,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONTROL_REGISTRY_PATH = ROOT / "configs" / "oracle_alpha_controls_v1.yaml"
 ALLOWED_SPLITS = {"pilot", "confirm"}
 ALLOWED_MIB_STATUSES = {"planned", "omitted"}
-ALLOWED_PREDICTIVENESS_METRICS = {"r_squared", "mean_js_divergence"}
+ALLOWED_PREDICTIVENESS_METRICS = {
+    "r_squared",
+    "mean_js_divergence",
+    "mean_predicted_improvement_over_uniform",
+}
 ALLOWED_PREDICTIVENESS_TARGETS = {
     "oracle_alpha_vector",
     "oracle_alpha_logit_vector",
@@ -309,9 +313,16 @@ def predictiveness_metric_value(
     *,
     summary: PredictivenessSummary,
     metric_name: str,
+    metric_overrides: Mapping[str, float] | None = None,
 ) -> float:
     if metric_name not in ALLOWED_PREDICTIVENESS_METRICS:
         raise ValueError(f"unsupported predictiveness metric {metric_name!r}")
+    if metric_overrides is not None and metric_name in metric_overrides:
+        return float(metric_overrides[metric_name])
+    if metric_name == "mean_predicted_improvement_over_uniform":
+        raise ValueError(
+            "mean_predicted_improvement_over_uniform requires a metric override"
+        )
     return float(getattr(summary, metric_name))
 
 
@@ -325,6 +336,8 @@ def compare_predictiveness_metric_values(
         return left - right
     if metric_name == "mean_js_divergence":
         return right - left
+    if metric_name == "mean_predicted_improvement_over_uniform":
+        return left - right
     raise ValueError(f"unsupported predictiveness metric {metric_name!r}")
 
 

@@ -200,3 +200,10 @@
 - Decision: add `oracle_alpha_depth_type_band_logit_vector`, which compresses oracle alpha into deterministic depth-band-by-source-type group logits and lifts those predictions back to full-source alpha using train-only within-group templates.
 - Rationale: this is the smallest lower-dimensional target that is architecture-grounded, reproducible across runs, and consistent with the current constraint that claim-bearing statistics still operate at the sequence level.
 - Impact: the compressed target improved confirm `R^2` and mean JS and eliminated the `lambda=100` shrinkage regime, but routed-loss recovery fell back slightly below uniform; the next issue should make selection explicitly loss-aware rather than assume the descriptive alpha metrics are enough.
+
+## [2026-03-17T08:20:00-0500] DECISION: Make held-out predictiveness tuning loss-aware, then treat a negative result as evidence against selection-only fixes
+
+- Trigger: `resattn-xaa` followed the mixed raw-logit-versus-compressed-target result and the external review that said the runner was still asking the right question in the wrong selection geometry.
+- Decision: change the saved predictiveness control plan so pilot tuning is governed first by mean predicted routed-loss improvement over uniform and secondarily by mean JS divergence, and extend the runner to compare multiple target parameterizations directly on one fixed feature surface.
+- Rationale: routed-loss recovery is the actual claim-bearing objective for this lane, so pilot tuning should stop pretending that descriptive alpha metrics alone are the primary decision rule.
+- Impact: the resulting `gpt2-xl` comparison still selected the raw-simplex target and reverted to the same slightly negative confirm result, which means the next issue should stop focusing on target/regularization selection and move to a more fundamental redesign such as a larger pilot surface or a different target object.

@@ -102,10 +102,16 @@
   - on `gpt2-xl`, that compressed target improved confirm descriptive alpha recovery relative to the full-source logit target (`R^2 = -0.2241`, mean JS `= 0.2380`) and broke the previous `100.0` ridge-saturation pattern by selecting `0.0001`
   - the held-out routed-loss metric fell back slightly below uniform (`-0.0031` nats, `3 / 8` prompts positive), so compression helped the descriptive side but not the current primary claim-bearing objective
   - the next follow-up is to make target and regularization selection loss-aware rather than to keep swapping targets blindly
+- `known`: the loss-aware target-selection follow-up has now landed, and it did not clear the blocker:
+  - `resattn-xaa` changed the saved predictiveness control plan so pilot tuning is now governed first by mean predicted routed-loss improvement over uniform and only secondarily by mean JS divergence
+  - `validation/oracle_alpha_runner.py` can now compare multiple target parameterizations on the same feature surface during pilot tuning, and `scripts/run_oracle_alpha_heldout_predictiveness_check.py` exposes that path directly
+  - on `gpt2-xl`, loss-aware pilot tuning across the raw-simplex, full-logit, and compressed-logit targets still selected the raw-simplex target with `lambda=100.0`
+  - the confirm result reverted to the earlier raw-simplex token-aware baseline (`R^2 = -0.2154`, mean JS `= 0.2377`, predicted mean improvement `= -0.0011` nats, `4 / 8` prompts positive), while oracle alpha itself remained strong at `+1.3409` nats over uniform
+  - the blocker is now sharper: target/regularization selection alone does not solve held-out predictiveness on the current `8 / 8` prompt split
 
 ## Immediate Next Steps
 
-1. Make oracle-alpha predictiveness selection loss-aware in `resattn-xaa`.
+1. Probe the next oracle-alpha predictiveness redesign in `resattn-7mb`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
