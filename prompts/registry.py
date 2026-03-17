@@ -25,6 +25,7 @@ class PromptEntry:
     split: str
     tags: tuple[str, ...]
     perturbations: dict[str, str]
+    target_text: str | None = None
 
 
 @dataclass(frozen=True)
@@ -66,6 +67,10 @@ def _validate_collection(collection: PromptCollection) -> None:
                 raise ValueError(
                     f"perturbation {perturbation_name!r} must have text content"
                 )
+        if collection.lane == "tool_breakage" and not entry.target_text:
+            raise ValueError(
+                f"{collection.collection_id} prompt {entry.prompt_id!r} must define target_text"
+            )
         prompt_ids.add(entry.prompt_id)
 
     if not collection.objective_families:
@@ -94,6 +99,7 @@ def load_prompt_registry(path: Path | None = None) -> PromptRegistry:
                 split=entry["split"],
                 tags=tuple(entry.get("tags", [])),
                 perturbations=dict(entry.get("perturbations", {})),
+                target_text=entry.get("target_text"),
             )
             for entry in collection_raw["prompts"]
         )
@@ -147,6 +153,7 @@ def perturb_prompt_entry(
         split=entry.split,
         tags=entry.tags + (perturbation_name,),
         perturbations={},
+        target_text=entry.target_text,
     )
 
 

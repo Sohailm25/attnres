@@ -452,6 +452,24 @@ Suggested entry format:
   - high that KL-primary is the right control decision
   - medium-to-high that answer-token-facing claims should stay gated until a sharper lens objective exists or later routed results make the final-position story much stronger
 
+## [2026-03-17T13:45:00-0500] The Tool-Breakage Runner Worked, But The Legacy Boolean Broke First
+- Stage: analysis
+- Feel of the Experiment: This is the right kind of frustrating. The implementation did what it needed to do, and the pilot is clearly not noise. But the first clean read is also that the old “non-monotonic on >50%” shorthand is too blunt for Gemma factual recall because the original baseline already maxes it out.
+- Working Hypotheses:
+  - The routed-versus-original Gemma story is real at the KL-primary level, not yet sharp at the legacy boolean level.
+  - The next honest metric surface is something explicitly relative, probably target-rank degradation or another routed-versus-original instability summary, not another absolute non-monotonicity count.
+- Hunches and Guesses:
+  - If we jump straight to confirm with the current boolean, we will spend compute to rediscover that the threshold is uninformative.
+  - The saved prompt-level checkpoints are now the important asset. They let us redesign the summary metric without paying another Gemma rerun tax first.
+- Predictions:
+  - A better relative metric will keep the broad KL degradation signal and split the prompts more meaningfully than `8 / 8` versus `8 / 8`.
+- Surprises and Tensions:
+  - The tuned-lens degradation under routing is broader than I expected on the pilot: mean KL worsened on all `8 / 8` prompts and final-position KL also worsened on all `8 / 8`.
+  - Final-layer target-rank degradation is only `4 / 8`, which is exactly the kind of mixed read that says “use a stronger metric,” not “declare victory.”
+- Confidence:
+  - high that `resattn-28b` is a real baseline pass
+  - high that `resattn-ypj` is the right next blocker before any confirmatory factual-recall run
+
 ## [2026-03-16T22:59:08-0500] Token Awareness Helped The Shape More Than The Outcome
 - Stage: implementation
 - Feel of the Experiment: This result is more interesting than the raw delta suggests. Preserving coarse position structure in `h_4[t]` did seem to help the predictor find alpha vectors that look a bit more like the oracle ones, but that shape improvement still refused to turn into a real routed-loss gain.

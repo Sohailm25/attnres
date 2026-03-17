@@ -277,3 +277,15 @@
 - Decision: use held-out KL to the model's final output distribution as the primary tuned-lens baseline metric for Gemma-2 factual recall, require mean top-1 agreement plus final-position KL/top-1 as secondary diagnostics, and do not delay the routed lane to re-optimize the tuned lens for final-position answer-token recovery right now.
 - Rationale: the saved pilot is strongest on distributional fidelity, not final answer-token recovery. `25 / 26` layers improved on held-out KL, `25 / 26` improved on mean top-1, `25 / 26` improved on final-position KL, but only `4 / 26` improved on final-position top-1. That is enough to trust KL as the cleaner same-model tuned-lens baseline for later lens-breakage comparisons, while also making it explicit that answer-token-facing claims need direct final-position evidence.
 - Impact: the tool-breakage lane can move forward on Gemma-2 without re-opening the tuned-lens feasibility question, but later routed-versus-original write-ups must report the secondary final-position diagnostics and avoid letting KL improvements stand in for answer-token claims.
+
+## [2026-03-17T13:45:00-0500] DECISION: Treat `resattn-28b` as a baseline implementation pass and block confirm on stronger relative tool-breakage metrics
+
+- Trigger: the first same-model Gemma routed-versus-original factual-recall pilot finished on the saved `8`-prompt pilot split with prompt-level checkpoints and a complete `summary.json`.
+- Decision: land `resattn-28b` as the first baseline implementation pass, keep the resulting pilot artifact as valid evidence of routed-versus-original degradation on the KL-primary metrics, and block any confirmatory factual-recall run on the new follow-up `resattn-ypj` rather than interpreting the current non-monotonicity boolean directly.
+- Rationale: the pilot shows broad same-model degradation under routing:
+  - tuned mean KL worsened on `8 / 8` prompts
+  - tuned final-position KL worsened on `8 / 8` prompts
+  - raw mean KL worsened on `7 / 8` prompts
+  - raw and tuned mean top-1 both worsened on `8 / 8` prompts
+  That is enough to say the runner works and the routed-versus-original baseline is scientifically useful. But the prereg legacy threshold is phrased around non-monotonicity relative to the original baseline, and the boolean version of that metric is already saturated here: original-model raw and tuned traces are non-monotonic on all `8 / 8` pilot prompts before routing is applied. A blind confirm run would therefore ask the wrong decision question.
+- Impact: the next tool-breakage issue should codify stronger relative success metrics from the saved pilot traces, likely using target-rank degradation or another routed-versus-original instability summary, and only then move to a confirmatory Gemma factual-recall run. The current pilot remains a real baseline artifact, not a strong-claim pass.
