@@ -11,3 +11,8 @@ configs/.env
 scratch/*
 !scratch/.gitkeep
 notebooks/.ipynb_checkpoints/
+results/**/checkpoints/
+results/**/*.log
+results/oracle_alpha/*/oracle_train_run.json
+results/oracle_alpha/*/oracle_eval_run.json
+results/oracle_alpha/*/predictiveness_summary.json

@@ -1,0 +1,1462 @@
+{
+  "bootstrap_interval": {
+    "confidence_level": 0.95,
+    "lower": 1.2292264327406883,
+    "mean": 1.2707887353996437,
+    "num_resamples": 1000,
+    "upper": 1.3153448030352592
+  },
+  "collection_id": "oracle_alpha_phase1_v1",
+  "model_name": "gpt2-xl",
+  "null_model_mean_losses": {
+    "last_layer_only": 10.719737241665522,
+    "magnitude_proportional": 5.837502459685008,
+    "random_dirichlet": 5.196550317108631,
+    "uniform": 4.7588000446558
+  },
+  "num_sequences": 96,
+  "sequence_mean_improvement": 1.2707887353996437,
+  "sequence_metrics": [
+    {
+      "best_alpha_entropy": 3.9375722408294678,
+      "improvement_over_uniform": 1.4052059650421143,
+      "null_losses": {
+        "last_layer_only": 10.51136302947998,
+        "magnitude_proportional": 6.433221340179443,
+        "random_dirichlet": 5.821422100067139,
+        "uniform": 4.550486087799072
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.145280122756958,
+      "prompt_id": "oa-pilot-001",
+      "split": "pilot",
+      "uniform_loss": 4.550486087799072
+    },
+    {
+      "best_alpha_entropy": 4.037266731262207,
+      "improvement_over_uniform": 1.0227336883544922,
+      "null_losses": {
+        "last_layer_only": 12.165852546691895,
+        "magnitude_proportional": 4.933849334716797,
+        "random_dirichlet": 3.639094591140747,
+        "uniform": 3.479809284210205
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.457075595855713,
+      "prompt_id": "oa-pilot-002",
+      "split": "pilot",
+      "uniform_loss": 3.479809284210205
+    },
+    {
+      "best_alpha_entropy": 3.9961090087890625,
+      "improvement_over_uniform": 1.1423051357269287,
+      "null_losses": {
+        "last_layer_only": 11.473875045776367,
+        "magnitude_proportional": 6.368677139282227,
+        "random_dirichlet": 5.003583908081055,
+        "uniform": 4.551365375518799
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.40906023979187,
+      "prompt_id": "oa-pilot-003",
+      "split": "pilot",
+      "uniform_loss": 4.551365375518799
+    },
+    {
+      "best_alpha_entropy": 3.8856425285339355,
+      "improvement_over_uniform": 1.1395347118377686,
+      "null_losses": {
+        "last_layer_only": 11.588095664978027,
+        "magnitude_proportional": 4.789496898651123,
+        "random_dirichlet": 4.092854976654053,
+        "uniform": 3.3543965816497803
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.2148618698120117,
+      "prompt_id": "oa-pilot-004",
+      "split": "pilot",
+      "uniform_loss": 3.3543965816497803
+    },
+    {
+      "best_alpha_entropy": 3.973623275756836,
+      "improvement_over_uniform": 1.3909924030303955,
+      "null_losses": {
+        "last_layer_only": 9.530308723449707,
+        "magnitude_proportional": 5.430216312408447,
+        "random_dirichlet": 3.682058572769165,
+        "uniform": 3.632502555847168
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.2415101528167725,
+      "prompt_id": "oa-pilot-005",
+      "split": "pilot",
+      "uniform_loss": 3.632502555847168
+    },
+    {
+      "best_alpha_entropy": 4.058742523193359,
+      "improvement_over_uniform": 1.3859648704528809,
+      "null_losses": {
+        "last_layer_only": 10.057109832763672,
+        "magnitude_proportional": 6.366433620452881,
+        "random_dirichlet": 4.77847146987915,
+        "uniform": 4.430020809173584
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.044055938720703,
+      "prompt_id": "oa-pilot-006",
+      "split": "pilot",
+      "uniform_loss": 4.430020809173584
+    },
+    {
+      "best_alpha_entropy": 3.974637031555176,
+      "improvement_over_uniform": 1.288222074508667,
+      "null_losses": {
+        "last_layer_only": 10.599181175231934,
+        "magnitude_proportional": 5.465954303741455,
+        "random_dirichlet": 4.751869201660156,
+        "uniform": 3.595428228378296
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.307206153869629,
+      "prompt_id": "oa-pilot-007",
+      "split": "pilot",
+      "uniform_loss": 3.595428228378296
+    },
+    {
+      "best_alpha_entropy": 4.059972763061523,
+      "improvement_over_uniform": 1.1709327697753906,
+      "null_losses": {
+        "last_layer_only": 10.4847412109375,
+        "magnitude_proportional": 5.100277423858643,
+        "random_dirichlet": 4.736875534057617,
+        "uniform": 3.37922739982605
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.208294630050659,
+      "prompt_id": "oa-pilot-008",
+      "split": "pilot",
+      "uniform_loss": 3.37922739982605
+    },
+    {
+      "best_alpha_entropy": 4.028748989105225,
+      "improvement_over_uniform": 1.0149388313293457,
+      "null_losses": {
+        "last_layer_only": 10.483118057250977,
+        "magnitude_proportional": 6.574135780334473,
+        "random_dirichlet": 4.4258856773376465,
+        "uniform": 3.855541944503784
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.8406031131744385,
+      "prompt_id": "oa-pilot-009",
+      "split": "pilot",
+      "uniform_loss": 3.855541944503784
+    },
+    {
+      "best_alpha_entropy": 3.961421489715576,
+      "improvement_over_uniform": 0.8890132904052734,
+      "null_losses": {
+        "last_layer_only": 9.909149169921875,
+        "magnitude_proportional": 5.189852237701416,
+        "random_dirichlet": 4.875224590301514,
+        "uniform": 4.344868183135986
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.455854892730713,
+      "prompt_id": "oa-pilot-010",
+      "split": "pilot",
+      "uniform_loss": 4.344868183135986
+    },
+    {
+      "best_alpha_entropy": 4.00237512588501,
+      "improvement_over_uniform": 0.9073917865753174,
+      "null_losses": {
+        "last_layer_only": 10.461528778076172,
+        "magnitude_proportional": 5.74970817565918,
+        "random_dirichlet": 5.280969619750977,
+        "uniform": 4.418555736541748
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.5111639499664307,
+      "prompt_id": "oa-pilot-011",
+      "split": "pilot",
+      "uniform_loss": 4.418555736541748
+    },
+    {
+      "best_alpha_entropy": 4.123753070831299,
+      "improvement_over_uniform": 1.040470838546753,
+      "null_losses": {
+        "last_layer_only": 10.855804443359375,
+        "magnitude_proportional": 5.436334133148193,
+        "random_dirichlet": 4.623579025268555,
+        "uniform": 4.159975051879883
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.11950421333313,
+      "prompt_id": "oa-pilot-012",
+      "split": "pilot",
+      "uniform_loss": 4.159975051879883
+    },
+    {
+      "best_alpha_entropy": 4.062089920043945,
+      "improvement_over_uniform": 0.9001381397247314,
+      "null_losses": {
+        "last_layer_only": 11.158058166503906,
+        "magnitude_proportional": 5.686294078826904,
+        "random_dirichlet": 4.200585842132568,
+        "uniform": 3.786656141281128
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.8865180015563965,
+      "prompt_id": "oa-pilot-013",
+      "split": "pilot",
+      "uniform_loss": 3.786656141281128
+    },
+    {
+      "best_alpha_entropy": 4.037867546081543,
+      "improvement_over_uniform": 1.3814680576324463,
+      "null_losses": {
+        "last_layer_only": 9.485640525817871,
+        "magnitude_proportional": 5.438103675842285,
+        "random_dirichlet": 4.523702621459961,
+        "uniform": 4.4380717277526855
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.0566036701202393,
+      "prompt_id": "oa-pilot-014",
+      "split": "pilot",
+      "uniform_loss": 4.4380717277526855
+    },
+    {
+      "best_alpha_entropy": 3.995805263519287,
+      "improvement_over_uniform": 0.9164505004882812,
+      "null_losses": {
+        "last_layer_only": 10.002507209777832,
+        "magnitude_proportional": 5.407081604003906,
+        "random_dirichlet": 4.834115505218506,
+        "uniform": 4.16777229309082
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.251321792602539,
+      "prompt_id": "oa-pilot-015",
+      "split": "pilot",
+      "uniform_loss": 4.16777229309082
+    },
+    {
+      "best_alpha_entropy": 3.932579517364502,
+      "improvement_over_uniform": 1.0539841651916504,
+      "null_losses": {
+        "last_layer_only": 10.766845703125,
+        "magnitude_proportional": 5.4616618156433105,
+        "random_dirichlet": 4.702314376831055,
+        "uniform": 4.327572822570801
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2735886573791504,
+      "prompt_id": "oa-pilot-016",
+      "split": "pilot",
+      "uniform_loss": 4.327572822570801
+    },
+    {
+      "best_alpha_entropy": 3.939882278442383,
+      "improvement_over_uniform": 1.3604891300201416,
+      "null_losses": {
+        "last_layer_only": 11.358192443847656,
+        "magnitude_proportional": 6.22182035446167,
+        "random_dirichlet": 5.679721355438232,
+        "uniform": 4.781142234802246
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.4206531047821045,
+      "prompt_id": "oa-pilot-017",
+      "split": "pilot",
+      "uniform_loss": 4.781142234802246
+    },
+    {
+      "best_alpha_entropy": 4.037487983703613,
+      "improvement_over_uniform": 1.1412482261657715,
+      "null_losses": {
+        "last_layer_only": 11.333786964416504,
+        "magnitude_proportional": 7.717649459838867,
+        "random_dirichlet": 6.193762302398682,
+        "uniform": 5.636634826660156
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.495386600494385,
+      "prompt_id": "oa-pilot-018",
+      "split": "pilot",
+      "uniform_loss": 5.636634826660156
+    },
+    {
+      "best_alpha_entropy": 3.9541079998016357,
+      "improvement_over_uniform": 1.3536715507507324,
+      "null_losses": {
+        "last_layer_only": 11.398533821105957,
+        "magnitude_proportional": 5.589613914489746,
+        "random_dirichlet": 4.628069877624512,
+        "uniform": 4.383231163024902
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.02955961227417,
+      "prompt_id": "oa-pilot-019",
+      "split": "pilot",
+      "uniform_loss": 4.383231163024902
+    },
+    {
+      "best_alpha_entropy": 3.9695215225219727,
+      "improvement_over_uniform": 1.1479706764221191,
+      "null_losses": {
+        "last_layer_only": 11.21949291229248,
+        "magnitude_proportional": 5.1362199783325195,
+        "random_dirichlet": 4.3570756912231445,
+        "uniform": 4.226127624511719
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.0781569480895996,
+      "prompt_id": "oa-pilot-020",
+      "split": "pilot",
+      "uniform_loss": 4.226127624511719
+    },
+    {
+      "best_alpha_entropy": 3.9194555282592773,
+      "improvement_over_uniform": 1.133450984954834,
+      "null_losses": {
+        "last_layer_only": 9.324975967407227,
+        "magnitude_proportional": 5.089998722076416,
+        "random_dirichlet": 4.247837066650391,
+        "uniform": 4.031399726867676
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.897948741912842,
+      "prompt_id": "oa-pilot-021",
+      "split": "pilot",
+      "uniform_loss": 4.031399726867676
+    },
+    {
+      "best_alpha_entropy": 3.763817071914673,
+      "improvement_over_uniform": 1.58347749710083,
+      "null_losses": {
+        "last_layer_only": 9.521392822265625,
+        "magnitude_proportional": 4.7920823097229,
+        "random_dirichlet": 4.894801139831543,
+        "uniform": 4.320103645324707
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.736626148223877,
+      "prompt_id": "oa-pilot-022",
+      "split": "pilot",
+      "uniform_loss": 4.320103645324707
+    },
+    {
+      "best_alpha_entropy": 3.92354154586792,
+      "improvement_over_uniform": 1.3066167831420898,
+      "null_losses": {
+        "last_layer_only": 12.094124794006348,
+        "magnitude_proportional": 5.584184646606445,
+        "random_dirichlet": 5.128911018371582,
+        "uniform": 4.387657642364502
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.081040859222412,
+      "prompt_id": "oa-pilot-023",
+      "split": "pilot",
+      "uniform_loss": 4.387657642364502
+    },
+    {
+      "best_alpha_entropy": 4.020145416259766,
+      "improvement_over_uniform": 1.407141923904419,
+      "null_losses": {
+        "last_layer_only": 11.296204566955566,
+        "magnitude_proportional": 5.897003650665283,
+        "random_dirichlet": 3.606656312942505,
+        "uniform": 3.7015042304992676
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.2943623065948486,
+      "prompt_id": "oa-pilot-024",
+      "split": "pilot",
+      "uniform_loss": 3.7015042304992676
+    },
+    {
+      "best_alpha_entropy": 3.949671745300293,
+      "improvement_over_uniform": 1.0235042572021484,
+      "null_losses": {
+        "last_layer_only": 10.734391212463379,
+        "magnitude_proportional": 4.674367904663086,
+        "random_dirichlet": 4.713287830352783,
+        "uniform": 3.9530999660491943
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.929595708847046,
+      "prompt_id": "oa-pilot-025",
+      "split": "pilot",
+      "uniform_loss": 3.9530999660491943
+    },
+    {
+      "best_alpha_entropy": 3.896022319793701,
+      "improvement_over_uniform": 1.0741963386535645,
+      "null_losses": {
+        "last_layer_only": 8.735994338989258,
+        "magnitude_proportional": 5.065840721130371,
+        "random_dirichlet": 4.334609031677246,
+        "uniform": 4.007885932922363
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.933689594268799,
+      "prompt_id": "oa-pilot-026",
+      "split": "pilot",
+      "uniform_loss": 4.007885932922363
+    },
+    {
+      "best_alpha_entropy": 4.088370323181152,
+      "improvement_over_uniform": 1.1867913007736206,
+      "null_losses": {
+        "last_layer_only": 10.128520011901855,
+        "magnitude_proportional": 4.733055591583252,
+        "random_dirichlet": 3.626206159591675,
+        "uniform": 3.154608964920044
+      },
+      "num_sources": 98,
+      "optimized_loss": 1.9678176641464233,
+      "prompt_id": "oa-pilot-027",
+      "split": "pilot",
+      "uniform_loss": 3.154608964920044
+    },
+    {
+      "best_alpha_entropy": 3.959787130355835,
+      "improvement_over_uniform": 1.069232702255249,
+      "null_losses": {
+        "last_layer_only": 10.072379112243652,
+        "magnitude_proportional": 5.754098892211914,
+        "random_dirichlet": 4.964488506317139,
+        "uniform": 4.354653358459473
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2854206562042236,
+      "prompt_id": "oa-pilot-028",
+      "split": "pilot",
+      "uniform_loss": 4.354653358459473
+    },
+    {
+      "best_alpha_entropy": 3.971254348754883,
+      "improvement_over_uniform": 2.07650089263916,
+      "null_losses": {
+        "last_layer_only": 12.373857498168945,
+        "magnitude_proportional": 7.40775203704834,
+        "random_dirichlet": 5.244527339935303,
+        "uniform": 5.186042785644531
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.109541893005371,
+      "prompt_id": "oa-pilot-029",
+      "split": "pilot",
+      "uniform_loss": 5.186042785644531
+    },
+    {
+      "best_alpha_entropy": 3.9362473487854004,
+      "improvement_over_uniform": 1.1727571487426758,
+      "null_losses": {
+        "last_layer_only": 11.032866477966309,
+        "magnitude_proportional": 5.63287353515625,
+        "random_dirichlet": 5.10511589050293,
+        "uniform": 4.877388954162598
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.704631805419922,
+      "prompt_id": "oa-pilot-030",
+      "split": "pilot",
+      "uniform_loss": 4.877388954162598
+    },
+    {
+      "best_alpha_entropy": 4.045544624328613,
+      "improvement_over_uniform": 1.5725970268249512,
+      "null_losses": {
+        "last_layer_only": 11.297789573669434,
+        "magnitude_proportional": 6.392191410064697,
+        "random_dirichlet": 5.919734477996826,
+        "uniform": 4.756265163421631
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.1836681365966797,
+      "prompt_id": "oa-pilot-031",
+      "split": "pilot",
+      "uniform_loss": 4.756265163421631
+    },
+    {
+      "best_alpha_entropy": 4.002053260803223,
+      "improvement_over_uniform": 1.2158937454223633,
+      "null_losses": {
+        "last_layer_only": 11.651123046875,
+        "magnitude_proportional": 5.956087589263916,
+        "random_dirichlet": 4.592855930328369,
+        "uniform": 4.53502082824707
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.319127082824707,
+      "prompt_id": "oa-pilot-032",
+      "split": "pilot",
+      "uniform_loss": 4.53502082824707
+    },
+    {
+      "best_alpha_entropy": 3.9402637481689453,
+      "improvement_over_uniform": 1.2629892826080322,
+      "null_losses": {
+        "last_layer_only": 11.006425857543945,
+        "magnitude_proportional": 6.1866455078125,
+        "random_dirichlet": 5.3419928550720215,
+        "uniform": 4.961359024047852
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.6983697414398193,
+      "prompt_id": "oa-pilot-033",
+      "split": "pilot",
+      "uniform_loss": 4.961359024047852
+    },
+    {
+      "best_alpha_entropy": 3.8601059913635254,
+      "improvement_over_uniform": 1.5685720443725586,
+      "null_losses": {
+        "last_layer_only": 12.830373764038086,
+        "magnitude_proportional": 6.284416675567627,
+        "random_dirichlet": 5.671818733215332,
+        "uniform": 5.578732013702393
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.010159969329834,
+      "prompt_id": "oa-pilot-034",
+      "split": "pilot",
+      "uniform_loss": 5.578732013702393
+    },
+    {
+      "best_alpha_entropy": 3.9330902099609375,
+      "improvement_over_uniform": 1.1705615520477295,
+      "null_losses": {
+        "last_layer_only": 10.909303665161133,
+        "magnitude_proportional": 5.910181045532227,
+        "random_dirichlet": 5.523968696594238,
+        "uniform": 4.79987096786499
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.6293094158172607,
+      "prompt_id": "oa-pilot-035",
+      "split": "pilot",
+      "uniform_loss": 4.79987096786499
+    },
+    {
+      "best_alpha_entropy": 3.928305149078369,
+      "improvement_over_uniform": 1.2032530307769775,
+      "null_losses": {
+        "last_layer_only": 10.73202133178711,
+        "magnitude_proportional": 5.7817230224609375,
+        "random_dirichlet": 4.994644641876221,
+        "uniform": 4.780097961425781
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.5768449306488037,
+      "prompt_id": "oa-pilot-036",
+      "split": "pilot",
+      "uniform_loss": 4.780097961425781
+    },
+    {
+      "best_alpha_entropy": 3.8944602012634277,
+      "improvement_over_uniform": 1.259361982345581,
+      "null_losses": {
+        "last_layer_only": 10.473968505859375,
+        "magnitude_proportional": 4.947476863861084,
+        "random_dirichlet": 5.015174865722656,
+        "uniform": 4.54611873626709
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.286756753921509,
+      "prompt_id": "oa-pilot-037",
+      "split": "pilot",
+      "uniform_loss": 4.54611873626709
+    },
+    {
+      "best_alpha_entropy": 3.82501220703125,
+      "improvement_over_uniform": 1.1425251960754395,
+      "null_losses": {
+        "last_layer_only": 11.832181930541992,
+        "magnitude_proportional": 4.860692501068115,
+        "random_dirichlet": 4.554733753204346,
+        "uniform": 3.9814939498901367
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.8389687538146973,
+      "prompt_id": "oa-pilot-038",
+      "split": "pilot",
+      "uniform_loss": 3.9814939498901367
+    },
+    {
+      "best_alpha_entropy": 3.9239954948425293,
+      "improvement_over_uniform": 1.2790024280548096,
+      "null_losses": {
+        "last_layer_only": 11.913769721984863,
+        "magnitude_proportional": 5.885784149169922,
+        "random_dirichlet": 4.56975793838501,
+        "uniform": 4.280574798583984
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.001572370529175,
+      "prompt_id": "oa-pilot-039",
+      "split": "pilot",
+      "uniform_loss": 4.280574798583984
+    },
+    {
+      "best_alpha_entropy": 3.918576717376709,
+      "improvement_over_uniform": 1.303175687789917,
+      "null_losses": {
+        "last_layer_only": 10.759591102600098,
+        "magnitude_proportional": 5.678232669830322,
+        "random_dirichlet": 5.456416606903076,
+        "uniform": 5.0365376472473145
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.7333619594573975,
+      "prompt_id": "oa-pilot-040",
+      "split": "pilot",
+      "uniform_loss": 5.0365376472473145
+    },
+    {
+      "best_alpha_entropy": 4.011964321136475,
+      "improvement_over_uniform": 1.0394783020019531,
+      "null_losses": {
+        "last_layer_only": 9.137418746948242,
+        "magnitude_proportional": 5.730864524841309,
+        "random_dirichlet": 4.358166694641113,
+        "uniform": 4.3607025146484375
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.3212242126464844,
+      "prompt_id": "oa-pilot-041",
+      "split": "pilot",
+      "uniform_loss": 4.3607025146484375
+    },
+    {
+      "best_alpha_entropy": 3.8225975036621094,
+      "improvement_over_uniform": 1.2442426681518555,
+      "null_losses": {
+        "last_layer_only": 10.868864059448242,
+        "magnitude_proportional": 4.888983726501465,
+        "random_dirichlet": 4.77023458480835,
+        "uniform": 4.6015143394470215
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.357271671295166,
+      "prompt_id": "oa-pilot-042",
+      "split": "pilot",
+      "uniform_loss": 4.6015143394470215
+    },
+    {
+      "best_alpha_entropy": 3.8915047645568848,
+      "improvement_over_uniform": 1.1635489463806152,
+      "null_losses": {
+        "last_layer_only": 9.362573623657227,
+        "magnitude_proportional": 5.42747163772583,
+        "random_dirichlet": 5.110321998596191,
+        "uniform": 4.226702690124512
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.0631537437438965,
+      "prompt_id": "oa-pilot-043",
+      "split": "pilot",
+      "uniform_loss": 4.226702690124512
+    },
+    {
+      "best_alpha_entropy": 4.033306121826172,
+      "improvement_over_uniform": 1.2699127197265625,
+      "null_losses": {
+        "last_layer_only": 9.733917236328125,
+        "magnitude_proportional": 6.840790748596191,
+        "random_dirichlet": 6.9687042236328125,
+        "uniform": 5.274959087371826
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.005046367645264,
+      "prompt_id": "oa-pilot-044",
+      "split": "pilot",
+      "uniform_loss": 5.274959087371826
+    },
+    {
+      "best_alpha_entropy": 3.9563722610473633,
+      "improvement_over_uniform": 1.481450080871582,
+      "null_losses": {
+        "last_layer_only": 10.754668235778809,
+        "magnitude_proportional": 6.223697185516357,
+        "random_dirichlet": 5.987056255340576,
+        "uniform": 5.351138591766357
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.8696885108947754,
+      "prompt_id": "oa-pilot-045",
+      "split": "pilot",
+      "uniform_loss": 5.351138591766357
+    },
+    {
+      "best_alpha_entropy": 3.9339871406555176,
+      "improvement_over_uniform": 1.14963960647583,
+      "null_losses": {
+        "last_layer_only": 11.494864463806152,
+        "magnitude_proportional": 5.372130870819092,
+        "random_dirichlet": 5.046696662902832,
+        "uniform": 4.73683500289917
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.58719539642334,
+      "prompt_id": "oa-pilot-046",
+      "split": "pilot",
+      "uniform_loss": 4.73683500289917
+    },
+    {
+      "best_alpha_entropy": 3.8852055072784424,
+      "improvement_over_uniform": 0.6782972812652588,
+      "null_losses": {
+        "last_layer_only": 10.80004596710205,
+        "magnitude_proportional": 4.949911117553711,
+        "random_dirichlet": 4.240137100219727,
+        "uniform": 4.118179798126221
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.439882516860962,
+      "prompt_id": "oa-pilot-047",
+      "split": "pilot",
+      "uniform_loss": 4.118179798126221
+    },
+    {
+      "best_alpha_entropy": 3.9973208904266357,
+      "improvement_over_uniform": 1.2324399948120117,
+      "null_losses": {
+        "last_layer_only": 9.482685089111328,
+        "magnitude_proportional": 5.979349136352539,
+        "random_dirichlet": 5.839195728302002,
+        "uniform": 5.367899417877197
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.1354594230651855,
+      "prompt_id": "oa-pilot-048",
+      "split": "pilot",
+      "uniform_loss": 5.367899417877197
+    },
+    {
+      "best_alpha_entropy": 3.9713289737701416,
+      "improvement_over_uniform": 1.1717259883880615,
+      "null_losses": {
+        "last_layer_only": 8.94608211517334,
+        "magnitude_proportional": 5.121992588043213,
+        "random_dirichlet": 4.429898738861084,
+        "uniform": 4.439940929412842
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2682149410247803,
+      "prompt_id": "oa-pilot-049",
+      "split": "pilot",
+      "uniform_loss": 4.439940929412842
+    },
+    {
+      "best_alpha_entropy": 3.948772430419922,
+      "improvement_over_uniform": 1.0331635475158691,
+      "null_losses": {
+        "last_layer_only": 8.7716064453125,
+        "magnitude_proportional": 5.636460781097412,
+        "random_dirichlet": 5.576659202575684,
+        "uniform": 4.865380764007568
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.832217216491699,
+      "prompt_id": "oa-pilot-050",
+      "split": "pilot",
+      "uniform_loss": 4.865380764007568
+    },
+    {
+      "best_alpha_entropy": 3.8627452850341797,
+      "improvement_over_uniform": 1.6900811195373535,
+      "null_losses": {
+        "last_layer_only": 10.515728950500488,
+        "magnitude_proportional": 7.185845375061035,
+        "random_dirichlet": 6.758660793304443,
+        "uniform": 6.812212944030762
+      },
+      "num_sources": 98,
+      "optimized_loss": 5.122131824493408,
+      "prompt_id": "oa-pilot-051",
+      "split": "pilot",
+      "uniform_loss": 6.812212944030762
+    },
+    {
+      "best_alpha_entropy": 3.901209592819214,
+      "improvement_over_uniform": 1.471695899963379,
+      "null_losses": {
+        "last_layer_only": 10.270927429199219,
+        "magnitude_proportional": 6.209238052368164,
+        "random_dirichlet": 5.431685447692871,
+        "uniform": 4.801680088043213
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.329984188079834,
+      "prompt_id": "oa-pilot-052",
+      "split": "pilot",
+      "uniform_loss": 4.801680088043213
+    },
+    {
+      "best_alpha_entropy": 3.9226503372192383,
+      "improvement_over_uniform": 1.5668275356292725,
+      "null_losses": {
+        "last_layer_only": 10.625696182250977,
+        "magnitude_proportional": 6.006422519683838,
+        "random_dirichlet": 5.361434459686279,
+        "uniform": 5.128482341766357
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.561654806137085,
+      "prompt_id": "oa-pilot-053",
+      "split": "pilot",
+      "uniform_loss": 5.128482341766357
+    },
+    {
+      "best_alpha_entropy": 3.997319221496582,
+      "improvement_over_uniform": 1.2045366764068604,
+      "null_losses": {
+        "last_layer_only": 11.57791519165039,
+        "magnitude_proportional": 6.6638264656066895,
+        "random_dirichlet": 5.658722400665283,
+        "uniform": 5.001708507537842
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.7971718311309814,
+      "prompt_id": "oa-pilot-054",
+      "split": "pilot",
+      "uniform_loss": 5.001708507537842
+    },
+    {
+      "best_alpha_entropy": 3.8404879570007324,
+      "improvement_over_uniform": 1.3583183288574219,
+      "null_losses": {
+        "last_layer_only": 9.416876792907715,
+        "magnitude_proportional": 5.0188212394714355,
+        "random_dirichlet": 5.646026611328125,
+        "uniform": 5.0062255859375
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.647907257080078,
+      "prompt_id": "oa-pilot-055",
+      "split": "pilot",
+      "uniform_loss": 5.0062255859375
+    },
+    {
+      "best_alpha_entropy": 3.9623522758483887,
+      "improvement_over_uniform": 1.0402286052703857,
+      "null_losses": {
+        "last_layer_only": 10.792397499084473,
+        "magnitude_proportional": 4.767139911651611,
+        "random_dirichlet": 3.9062931537628174,
+        "uniform": 3.642681837081909
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.6024532318115234,
+      "prompt_id": "oa-pilot-056",
+      "split": "pilot",
+      "uniform_loss": 3.642681837081909
+    },
+    {
+      "best_alpha_entropy": 3.9564197063446045,
+      "improvement_over_uniform": 1.7006185054779053,
+      "null_losses": {
+        "last_layer_only": 12.245284080505371,
+        "magnitude_proportional": 5.839024066925049,
+        "random_dirichlet": 5.448276042938232,
+        "uniform": 4.567493915557861
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.866875410079956,
+      "prompt_id": "oa-pilot-057",
+      "split": "pilot",
+      "uniform_loss": 4.567493915557861
+    },
+    {
+      "best_alpha_entropy": 3.950559616088867,
+      "improvement_over_uniform": 1.2869186401367188,
+      "null_losses": {
+        "last_layer_only": 13.109353065490723,
+        "magnitude_proportional": 5.721149921417236,
+        "random_dirichlet": 4.995368480682373,
+        "uniform": 4.46162223815918
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.174703598022461,
+      "prompt_id": "oa-pilot-058",
+      "split": "pilot",
+      "uniform_loss": 4.46162223815918
+    },
+    {
+      "best_alpha_entropy": 3.9820361137390137,
+      "improvement_over_uniform": 1.0039851665496826,
+      "null_losses": {
+        "last_layer_only": 10.862110137939453,
+        "magnitude_proportional": 5.287868022918701,
+        "random_dirichlet": 4.755298137664795,
+        "uniform": 4.291873455047607
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.287888288497925,
+      "prompt_id": "oa-pilot-059",
+      "split": "pilot",
+      "uniform_loss": 4.291873455047607
+    },
+    {
+      "best_alpha_entropy": 3.933413028717041,
+      "improvement_over_uniform": 1.251110315322876,
+      "null_losses": {
+        "last_layer_only": 10.645588874816895,
+        "magnitude_proportional": 5.248524188995361,
+        "random_dirichlet": 4.124746799468994,
+        "uniform": 4.095702648162842
+      },
+      "num_sources": 98,
+      "optimized_loss": 2.844592332839966,
+      "prompt_id": "oa-pilot-060",
+      "split": "pilot",
+      "uniform_loss": 4.095702648162842
+    },
+    {
+      "best_alpha_entropy": 3.8998167514801025,
+      "improvement_over_uniform": 1.2223150730133057,
+      "null_losses": {
+        "last_layer_only": 10.585543632507324,
+        "magnitude_proportional": 5.395135402679443,
+        "random_dirichlet": 5.341075897216797,
+        "uniform": 4.811336040496826
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.5890209674835205,
+      "prompt_id": "oa-pilot-061",
+      "split": "pilot",
+      "uniform_loss": 4.811336040496826
+    },
+    {
+      "best_alpha_entropy": 3.9395740032196045,
+      "improvement_over_uniform": 1.2670621871948242,
+      "null_losses": {
+        "last_layer_only": 14.187705993652344,
+        "magnitude_proportional": 5.892852783203125,
+        "random_dirichlet": 5.566635608673096,
+        "uniform": 5.335132122039795
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.068069934844971,
+      "prompt_id": "oa-pilot-062",
+      "split": "pilot",
+      "uniform_loss": 5.335132122039795
+    },
+    {
+      "best_alpha_entropy": 3.919478178024292,
+      "improvement_over_uniform": 0.847905158996582,
+      "null_losses": {
+        "last_layer_only": 11.570853233337402,
+        "magnitude_proportional": 5.182394981384277,
+        "random_dirichlet": 5.052604675292969,
+        "uniform": 4.9003801345825195
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.0524749755859375,
+      "prompt_id": "oa-pilot-063",
+      "split": "pilot",
+      "uniform_loss": 4.9003801345825195
+    },
+    {
+      "best_alpha_entropy": 3.8608531951904297,
+      "improvement_over_uniform": 1.14332914352417,
+      "null_losses": {
+        "last_layer_only": 11.313241958618164,
+        "magnitude_proportional": 5.953071117401123,
+        "random_dirichlet": 5.808928966522217,
+        "uniform": 5.862615585327148
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.7192864418029785,
+      "prompt_id": "oa-pilot-064",
+      "split": "pilot",
+      "uniform_loss": 5.862615585327148
+    },
+    {
+      "best_alpha_entropy": 3.993037223815918,
+      "improvement_over_uniform": 1.5645618438720703,
+      "null_losses": {
+        "last_layer_only": 10.351622581481934,
+        "magnitude_proportional": 7.225404262542725,
+        "random_dirichlet": 6.237885475158691,
+        "uniform": 6.224748134613037
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.660186290740967,
+      "prompt_id": "oa-pilot-065",
+      "split": "pilot",
+      "uniform_loss": 6.224748134613037
+    },
+    {
+      "best_alpha_entropy": 4.021114349365234,
+      "improvement_over_uniform": 1.652635097503662,
+      "null_losses": {
+        "last_layer_only": 11.785512924194336,
+        "magnitude_proportional": 6.047129154205322,
+        "random_dirichlet": 5.564359188079834,
+        "uniform": 5.376895904541016
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.7242608070373535,
+      "prompt_id": "oa-pilot-066",
+      "split": "pilot",
+      "uniform_loss": 5.376895904541016
+    },
+    {
+      "best_alpha_entropy": 3.9679765701293945,
+      "improvement_over_uniform": 1.2831134796142578,
+      "null_losses": {
+        "last_layer_only": 10.530279159545898,
+        "magnitude_proportional": 6.491114616394043,
+        "random_dirichlet": 5.57856559753418,
+        "uniform": 5.072834491729736
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.7897210121154785,
+      "prompt_id": "oa-pilot-067",
+      "split": "pilot",
+      "uniform_loss": 5.072834491729736
+    },
+    {
+      "best_alpha_entropy": 3.9537787437438965,
+      "improvement_over_uniform": 1.6158008575439453,
+      "null_losses": {
+        "last_layer_only": 8.397021293640137,
+        "magnitude_proportional": 5.675743103027344,
+        "random_dirichlet": 5.672743797302246,
+        "uniform": 5.551753997802734
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.935953140258789,
+      "prompt_id": "oa-pilot-068",
+      "split": "pilot",
+      "uniform_loss": 5.551753997802734
+    },
+    {
+      "best_alpha_entropy": 3.9528355598449707,
+      "improvement_over_uniform": 1.348668098449707,
+      "null_losses": {
+        "last_layer_only": 8.974726676940918,
+        "magnitude_proportional": 5.623983860015869,
+        "random_dirichlet": 5.796710968017578,
+        "uniform": 5.147648811340332
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.798980712890625,
+      "prompt_id": "oa-pilot-069",
+      "split": "pilot",
+      "uniform_loss": 5.147648811340332
+    },
+    {
+      "best_alpha_entropy": 4.095819473266602,
+      "improvement_over_uniform": 1.207348108291626,
+      "null_losses": {
+        "last_layer_only": 9.933810234069824,
+        "magnitude_proportional": 6.13013219833374,
+        "random_dirichlet": 4.8948893547058105,
+        "uniform": 4.465251445770264
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2579033374786377,
+      "prompt_id": "oa-pilot-070",
+      "split": "pilot",
+      "uniform_loss": 4.465251445770264
+    },
+    {
+      "best_alpha_entropy": 3.8972482681274414,
+      "improvement_over_uniform": 1.2390294075012207,
+      "null_losses": {
+        "last_layer_only": 10.648524284362793,
+        "magnitude_proportional": 6.431474208831787,
+        "random_dirichlet": 5.4571533203125,
+        "uniform": 5.248147487640381
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.00911808013916,
+      "prompt_id": "oa-pilot-071",
+      "split": "pilot",
+      "uniform_loss": 5.248147487640381
+    },
+    {
+      "best_alpha_entropy": 3.950533390045166,
+      "improvement_over_uniform": 1.5662221908569336,
+      "null_losses": {
+        "last_layer_only": 11.614387512207031,
+        "magnitude_proportional": 6.056018352508545,
+        "random_dirichlet": 6.248531818389893,
+        "uniform": 5.746725559234619
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.1805033683776855,
+      "prompt_id": "oa-pilot-072",
+      "split": "pilot",
+      "uniform_loss": 5.746725559234619
+    },
+    {
+      "best_alpha_entropy": 3.8813977241516113,
+      "improvement_over_uniform": 1.1685004234313965,
+      "null_losses": {
+        "last_layer_only": 11.950455665588379,
+        "magnitude_proportional": 5.1167216300964355,
+        "random_dirichlet": 4.541318893432617,
+        "uniform": 4.344433307647705
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.1759328842163086,
+      "prompt_id": "oa-pilot-073",
+      "split": "pilot",
+      "uniform_loss": 4.344433307647705
+    },
+    {
+      "best_alpha_entropy": 3.910285711288452,
+      "improvement_over_uniform": 1.0059621334075928,
+      "null_losses": {
+        "last_layer_only": 10.249309539794922,
+        "magnitude_proportional": 5.045388221740723,
+        "random_dirichlet": 5.375999450683594,
+        "uniform": 4.711746692657471
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.705784559249878,
+      "prompt_id": "oa-pilot-074",
+      "split": "pilot",
+      "uniform_loss": 4.711746692657471
+    },
+    {
+      "best_alpha_entropy": 3.91005277633667,
+      "improvement_over_uniform": 1.3211455345153809,
+      "null_losses": {
+        "last_layer_only": 8.235414505004883,
+        "magnitude_proportional": 5.677541732788086,
+        "random_dirichlet": 4.683113098144531,
+        "uniform": 4.502608299255371
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.1814627647399902,
+      "prompt_id": "oa-pilot-075",
+      "split": "pilot",
+      "uniform_loss": 4.502608299255371
+    },
+    {
+      "best_alpha_entropy": 3.9323251247406006,
+      "improvement_over_uniform": 1.4418120384216309,
+      "null_losses": {
+        "last_layer_only": 9.175970077514648,
+        "magnitude_proportional": 6.393057823181152,
+        "random_dirichlet": 6.434908866882324,
+        "uniform": 5.864577770233154
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.422765731811523,
+      "prompt_id": "oa-pilot-076",
+      "split": "pilot",
+      "uniform_loss": 5.864577770233154
+    },
+    {
+      "best_alpha_entropy": 3.9464058876037598,
+      "improvement_over_uniform": 1.2370986938476562,
+      "null_losses": {
+        "last_layer_only": 11.267751693725586,
+        "magnitude_proportional": 6.544996738433838,
+        "random_dirichlet": 5.926825523376465,
+        "uniform": 5.822686195373535
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.585587501525879,
+      "prompt_id": "oa-pilot-077",
+      "split": "pilot",
+      "uniform_loss": 5.822686195373535
+    },
+    {
+      "best_alpha_entropy": 4.0532121658325195,
+      "improvement_over_uniform": 1.4858903884887695,
+      "null_losses": {
+        "last_layer_only": 12.313512802124023,
+        "magnitude_proportional": 5.946885585784912,
+        "random_dirichlet": 5.582448959350586,
+        "uniform": 5.573707580566406
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.087817192077637,
+      "prompt_id": "oa-pilot-078",
+      "split": "pilot",
+      "uniform_loss": 5.573707580566406
+    },
+    {
+      "best_alpha_entropy": 4.034304618835449,
+      "improvement_over_uniform": 1.3187246322631836,
+      "null_losses": {
+        "last_layer_only": 10.520148277282715,
+        "magnitude_proportional": 6.2242255210876465,
+        "random_dirichlet": 5.767704010009766,
+        "uniform": 5.109201908111572
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.7904772758483887,
+      "prompt_id": "oa-pilot-079",
+      "split": "pilot",
+      "uniform_loss": 5.109201908111572
+    },
+    {
+      "best_alpha_entropy": 3.923671245574951,
+      "improvement_over_uniform": 1.6216998100280762,
+      "null_losses": {
+        "last_layer_only": 10.86709976196289,
+        "magnitude_proportional": 6.2099609375,
+        "random_dirichlet": 5.504179000854492,
+        "uniform": 5.188881874084473
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.5671820640563965,
+      "prompt_id": "oa-pilot-080",
+      "split": "pilot",
+      "uniform_loss": 5.188881874084473
+    },
+    {
+      "best_alpha_entropy": 3.953805446624756,
+      "improvement_over_uniform": 1.7043671607971191,
+      "null_losses": {
+        "last_layer_only": 9.503549575805664,
+        "magnitude_proportional": 7.354823112487793,
+        "random_dirichlet": 7.4602460861206055,
+        "uniform": 6.464253902435303
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.759886741638184,
+      "prompt_id": "oa-pilot-081",
+      "split": "pilot",
+      "uniform_loss": 6.464253902435303
+    },
+    {
+      "best_alpha_entropy": 3.935563802719116,
+      "improvement_over_uniform": 1.2133936882019043,
+      "null_losses": {
+        "last_layer_only": 10.138665199279785,
+        "magnitude_proportional": 6.072181224822998,
+        "random_dirichlet": 5.689881801605225,
+        "uniform": 5.2344207763671875
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.021027088165283,
+      "prompt_id": "oa-pilot-082",
+      "split": "pilot",
+      "uniform_loss": 5.2344207763671875
+    },
+    {
+      "best_alpha_entropy": 3.938143730163574,
+      "improvement_over_uniform": 1.3583688735961914,
+      "null_losses": {
+        "last_layer_only": 11.601557731628418,
+        "magnitude_proportional": 6.977466583251953,
+        "random_dirichlet": 5.6716766357421875,
+        "uniform": 5.576690673828125
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.218321800231934,
+      "prompt_id": "oa-pilot-083",
+      "split": "pilot",
+      "uniform_loss": 5.576690673828125
+    },
+    {
+      "best_alpha_entropy": 3.9770619869232178,
+      "improvement_over_uniform": 1.385152816772461,
+      "null_losses": {
+        "last_layer_only": 10.04641342163086,
+        "magnitude_proportional": 5.9571533203125,
+        "random_dirichlet": 4.806965351104736,
+        "uniform": 4.585949897766113
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2007970809936523,
+      "prompt_id": "oa-pilot-084",
+      "split": "pilot",
+      "uniform_loss": 4.585949897766113
+    },
+    {
+      "best_alpha_entropy": 3.918041229248047,
+      "improvement_over_uniform": 0.9551553726196289,
+      "null_losses": {
+        "last_layer_only": 11.004232406616211,
+        "magnitude_proportional": 4.939263343811035,
+        "random_dirichlet": 4.812724590301514,
+        "uniform": 4.230770111083984
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2756147384643555,
+      "prompt_id": "oa-pilot-085",
+      "split": "pilot",
+      "uniform_loss": 4.230770111083984
+    },
+    {
+      "best_alpha_entropy": 4.089428901672363,
+      "improvement_over_uniform": 1.2685470581054688,
+      "null_losses": {
+        "last_layer_only": 13.469820976257324,
+        "magnitude_proportional": 7.379116535186768,
+        "random_dirichlet": 5.63401985168457,
+        "uniform": 5.414523124694824
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.1459760665893555,
+      "prompt_id": "oa-pilot-086",
+      "split": "pilot",
+      "uniform_loss": 5.414523124694824
+    },
+    {
+      "best_alpha_entropy": 3.9170150756835938,
+      "improvement_over_uniform": 1.335360050201416,
+      "null_losses": {
+        "last_layer_only": 10.637170791625977,
+        "magnitude_proportional": 6.059031963348389,
+        "random_dirichlet": 6.129787921905518,
+        "uniform": 5.22887659072876
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.8935165405273438,
+      "prompt_id": "oa-pilot-087",
+      "split": "pilot",
+      "uniform_loss": 5.22887659072876
+    },
+    {
+      "best_alpha_entropy": 3.9231390953063965,
+      "improvement_over_uniform": 1.7301087379455566,
+      "null_losses": {
+        "last_layer_only": 11.021949768066406,
+        "magnitude_proportional": 6.504983425140381,
+        "random_dirichlet": 6.812150001525879,
+        "uniform": 6.199446201324463
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.469337463378906,
+      "prompt_id": "oa-pilot-088",
+      "split": "pilot",
+      "uniform_loss": 6.199446201324463
+    },
+    {
+      "best_alpha_entropy": 4.05322790145874,
+      "improvement_over_uniform": 1.209834098815918,
+      "null_losses": {
+        "last_layer_only": 10.19585132598877,
+        "magnitude_proportional": 6.071728229522705,
+        "random_dirichlet": 5.5953450202941895,
+        "uniform": 5.184621810913086
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.974787712097168,
+      "prompt_id": "oa-pilot-089",
+      "split": "pilot",
+      "uniform_loss": 5.184621810913086
+    },
+    {
+      "best_alpha_entropy": 3.979235887527466,
+      "improvement_over_uniform": 1.3438289165496826,
+      "null_losses": {
+        "last_layer_only": 9.975314140319824,
+        "magnitude_proportional": 5.615543842315674,
+        "random_dirichlet": 5.49158239364624,
+        "uniform": 4.752495765686035
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.4086668491363525,
+      "prompt_id": "oa-pilot-090",
+      "split": "pilot",
+      "uniform_loss": 4.752495765686035
+    },
+    {
+      "best_alpha_entropy": 4.0782084465026855,
+      "improvement_over_uniform": 1.411100149154663,
+      "null_losses": {
+        "last_layer_only": 11.230731010437012,
+        "magnitude_proportional": 6.733114719390869,
+        "random_dirichlet": 5.458938121795654,
+        "uniform": 5.076489448547363
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.6653892993927,
+      "prompt_id": "oa-pilot-091",
+      "split": "pilot",
+      "uniform_loss": 5.076489448547363
+    },
+    {
+      "best_alpha_entropy": 3.884878635406494,
+      "improvement_over_uniform": 1.1557774543762207,
+      "null_losses": {
+        "last_layer_only": 9.780481338500977,
+        "magnitude_proportional": 5.622811794281006,
+        "random_dirichlet": 5.516709327697754,
+        "uniform": 5.168890953063965
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.013113498687744,
+      "prompt_id": "oa-pilot-092",
+      "split": "pilot",
+      "uniform_loss": 5.168890953063965
+    },
+    {
+      "best_alpha_entropy": 4.051761627197266,
+      "improvement_over_uniform": 1.155653953552246,
+      "null_losses": {
+        "last_layer_only": 10.615347862243652,
+        "magnitude_proportional": 6.186702251434326,
+        "random_dirichlet": 5.451876163482666,
+        "uniform": 4.927331924438477
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.7716779708862305,
+      "prompt_id": "oa-pilot-093",
+      "split": "pilot",
+      "uniform_loss": 4.927331924438477
+    },
+    {
+      "best_alpha_entropy": 3.888654947280884,
+      "improvement_over_uniform": 1.2780861854553223,
+      "null_losses": {
+        "last_layer_only": 10.234028816223145,
+        "magnitude_proportional": 5.557614326477051,
+        "random_dirichlet": 5.319386005401611,
+        "uniform": 5.286576747894287
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.008490562438965,
+      "prompt_id": "oa-pilot-094",
+      "split": "pilot",
+      "uniform_loss": 5.286576747894287
+    },
+    {
+      "best_alpha_entropy": 4.00000524520874,
+      "improvement_over_uniform": 1.0128216743469238,
+      "null_losses": {
+        "last_layer_only": 10.806303977966309,
+        "magnitude_proportional": 5.731919288635254,
+        "random_dirichlet": 4.894010543823242,
+        "uniform": 4.3087263107299805
+      },
+      "num_sources": 98,
+      "optimized_loss": 3.2959046363830566,
+      "prompt_id": "oa-pilot-095",
+      "split": "pilot",
+      "uniform_loss": 4.3087263107299805
+    },
+    {
+      "best_alpha_entropy": 4.038130760192871,
+      "improvement_over_uniform": 1.816389560699463,
+      "null_losses": {
+        "last_layer_only": 11.381420135498047,
+        "magnitude_proportional": 7.242746829986572,
+        "random_dirichlet": 6.334589004516602,
+        "uniform": 6.460687637329102
+      },
+      "num_sources": 98,
+      "optimized_loss": 4.644298076629639,
+      "prompt_id": "oa-pilot-096",
+      "split": "pilot",
+      "uniform_loss": 6.460687637329102
+    }
+  ],
+  "split": "pilot"
+}

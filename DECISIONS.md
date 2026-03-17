@@ -235,3 +235,17 @@
 - Decision: add `prompts/registry_v4.yaml`, expand the oracle-alpha split to `96` pilot prompts and `128` confirm prompts, and point the default registry loader plus the main experiment config at `registry_v4`.
 - Rationale: a prereg-scale launch is only worth doing once the prompt surface is large enough to answer the near-term sample-size question without immediately forcing another registry bump. Freezing the bigger split now turns the next run into the real campaign rather than another intermediate rehearsal.
 - Impact: the repo now has both pieces required for the launch path: checkpointed campaign infrastructure and a materially larger saved prompt surface. The next `resattn-9jq` step is operational, not architectural.
+
+## [2026-03-17T11:12:00-0500] DECISION: Treat the `registry_v4` prereg-scale `gpt2-xl` campaign as a development-model oracle gate clear, but not as a full interpretation clear
+
+- Trigger: the first prereg-scale campaign on `prompts/registry_v4.yaml` completed with a full `96 / 128` pilot/confirm split, final summary artifacts, and strong sequence-level oracle improvements against uniform and the preregistered nulls.
+- Decision: record the `gpt2-xl` `registry_v4` artifact as the first development-model clear of the preregistered Phase 1 oracle-loss gate, while keeping strong interpretive language blocked because confirm alpha-shape recovery is still weak and the result is not yet on the primary Gemma-2 lane.
+- Rationale: the repo now has direct evidence that the oracle optimization itself is real at prereg scale on the development model, but the held-out predictor still selects the raw-simplex target with heavy shrinkage and only weakly recovers oracle-alpha shape (`R^2 < 0`, mean JS `≈ 0.24`). That is enough to advance the lane operationally, but not enough to claim a solved routing-recovery story.
+- Impact: the next oracle issue should move to prereg-scale pattern analysis on the saved artifact rather than keep treating basic oracle feasibility as unresolved, while the stronger interpretation gate stays open.
+
+## [2026-03-17T11:14:00-0500] DECISION: Keep checkpoint caches and bulky raw campaign JSONs local, and track compact summaries plus the technical memo
+
+- Trigger: the completed prereg-scale campaign output directory contained `448` prompt-level checkpoint files (`33 MB`) in addition to the top-level summary JSONs and memo.
+- Decision: ignore `results/**/checkpoints/`, `results/**/*.log`, and the bulky raw campaign JSONs in git so resumable caches remain available locally under `results/`, while the committed repo surface carries the manifest, compact machine-readable summaries, and the markdown memo.
+- Rationale: the checkpoint tree and full raw JSON payloads are operationally valuable for local reuse, but versioning hundreds of per-prompt cache files plus multi-megabyte raw JSONs would clutter the repository without improving the scientific handoff nearly as much as compact summaries and the memo do.
+- Impact: future large campaigns can still write reusable checkpoint trees and full raw JSONs under `results/`, but closeout should commit the manifest, compact split/predictiveness summaries, and the markdown write-up rather than the raw cache directory or oversized JSON dumps.

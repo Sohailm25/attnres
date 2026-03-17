@@ -254,6 +254,26 @@ Suggested entry format:
   - The new oracle-alpha ids now span `oa-pilot-001..096` and `oa-confirm-001..128`.
   - The tool-breakage collection staying fixed is useful: the larger prompt freeze isolates the oracle-alpha scale question without quietly changing another lane.
 
+## [2026-03-17T11:05:55-0500] The Big Split Cleared The Oracle Gate And Reopened The Target Question
+- Stage: analysis
+- Feel of the Experiment: This is the first oracle artifact that feels genuinely difficult to dismiss on the core loss metric. At the same time, it is not emotionally tidy, because the bigger split did not reward the cleaner logit-target story I half-expected it to.
+- Working Hypotheses:
+  - The development-model oracle optimization is now firmly real enough to move beyond feasibility arguments.
+  - The right interpretation target may still be closer to routed-loss recovery than to high-fidelity alpha-shape recovery, at least for this sequence-level predictor family.
+- Hunches and Guesses:
+  - The raw-simplex target winning again with `lambda=100.0` does not mean the earlier geometry critique was wrong; it may mean that bigger pilot sets favor an aggressively shrunk predictor that preserves only the loss-relevant part of the signal.
+- Predictions:
+  - The next useful oracle work is not another scale-up. It is pattern analysis on the saved `registry_v4` artifact and a clearer story about what the held-out predictor is supposed to recover.
+- Surprises and Tensions:
+  - I expected the larger split to either keep the logit target selected or collapse the routed-loss gain. Instead it kept the routed-loss gain and reverted to the raw-simplex target.
+  - `R^2` staying negative while predicted routed loss is solidly positive on `128` confirm prompts is the cleanest evidence yet that “alpha-shape similarity” and “loss-relevant recovery” are not the same object here.
+- Confidence:
+  - high that the development-model oracle gate is truly cleared
+  - medium that the current positive predictiveness result is the right object for stronger claims without more interpretive work
+- Interesting facts:
+  - The confirm oracle run improved over uniform by `+1.2993` nats with `128 / 128` prompts positive.
+  - The held-out predictor still improved over uniform by `+0.1162` nats with `95 / 128` prompts positive, despite confirm `R^2 = -0.0884` and mean JS `= 0.2427`.
+
 ## [2026-03-17T09:08:00-0500] The Logit Path Survived A Bigger Split
 - Stage: implementation
 - Feel of the Experiment: This is the first result that feels like a genuine scaling signal instead of a fragile local win. The larger split did not just preserve positivity; it kept the same target family alive on a broader surface.

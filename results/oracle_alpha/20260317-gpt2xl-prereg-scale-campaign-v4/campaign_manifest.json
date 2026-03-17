@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "feature_checkpoints": "results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints/feature_vectors",
+    "oracle_checkpoints": "results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints/oracle_runs",
+    "oracle_eval_run": "oracle_eval_run.json",
+    "oracle_train_run": "oracle_train_run.json",
+    "predictiveness_summary": "predictiveness_summary.json"
+  },
+  "candidate_feature_sources": [
+    "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat"
+  ],
+  "candidate_target_names": [
+    "oracle_alpha_vector",
+    "oracle_alpha_logit_vector",
+    "oracle_alpha_depth_type_band_logit_vector"
+  ],
+  "collection_id": "oracle_alpha_phase1_v1",
+  "control_plan_id": "oracle_alpha_phase1_v1",
+  "control_registry_id": "20260316-phase1-controls-v1",
+  "eval_split": "confirm",
+  "learning_rate": 0.1,
+  "model_name": "gpt2-xl",
+  "num_eval_sequences": 128,
+  "num_train_sequences": 96,
+  "optimization_steps": 20,
+  "output_dir": "results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4",
+  "regularization_grid": [
+    0.0001,
+    0.0003,
+    0.001,
+    0.003,
+    0.01,
+    0.03,
+    0.1,
+    0.3,
+    1.0,
+    3.0,
+    10.0,
+    30.0,
+    100.0
+  ],
+  "seed": 11,
+  "train_split": "pilot"
+}
