@@ -206,6 +206,21 @@
   - the repo will keep compact remapped GPT-2 subword tokenization, the widened `d_model=160`, `d_ff=640`, `8`-block local proxy, and the standard next-token objective fixed
   - the next concrete follow-up is `resattn-7y4`, which moves from `wikitext/wikitext-2-raw-v1` to the larger same-family `wikitext/wikitext-103-raw-v1`
   - objective changes, architecture changes, and further width/horizon/sequence-length changes are explicitly deferred until the corpus-first follow-up answers whether the current regime is mainly overfitting a tiny corpus
+- `known`: `resattn-7y4` has now landed the corpus-first Figure 8 follow-up on the widened compact-subword proxy:
+  - `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1.md` is the first widened compact-subword artifact on `wikitext/wikitext-103-raw-v1`
+  - the calibration read on the same regime was initially positive:
+    - baseline eval loss `= 6.9299`
+    - AttnRes eval loss `= 6.8764`
+    - delta `= -0.0534`
+    - deep embedding persistence `= 0.2022`
+  - the full `1500`-step artifact remained mixed:
+    - baseline best eval loss `= 6.5929`
+    - AttnRes best eval loss `= 6.6315`
+    - loss delta `= +0.0386`
+    - deep embedding persistence improved from `0.1515` on the widened `wikitext-2` run to `0.1615`
+    - the entropy gap stayed effectively unchanged and negative (`1.4318 < 1.4893`)
+  - interpretation: the larger same-family corpus helped the widened compact-subword regime and changed the early-training behavior, but it did not restore a routed win at the main horizon or clear the Figure 8 layer-type-specialization signature
+  - the next Figure 8 follow-up is now `resattn-fby`, which adds best-checkpoint / eval-trajectory support so the repo can inspect the early positive-to-late negative crossover before another optimization redesign
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -292,8 +307,8 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-7y4` to run the widened compact-subword Figure 8 proxy on `wikitext-103` with corpus size as the only changed lever.
-2. Use `resattn-73l` to add a causal refusal-direction intervention check before any mediator-conditioned safety-routing claim.
+1. Use `resattn-73l` to add a causal refusal-direction intervention check before any mediator-conditioned safety-routing claim.
+2. Use `resattn-fby` to add best-checkpoint / eval-trajectory support for the widened `wikitext-103` Figure 8 proxy before another optimization redesign.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

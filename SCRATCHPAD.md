@@ -855,3 +855,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1/checkpoints/prompt_residuals/sa-confirm-006-refusal.pt`
 - Anomalies: the cross-direction metrics are not zero (`0.67` refusal cross pair accuracy and `0.83` harmfulness cross pair accuracy on confirm), so this validates the workflow without licensing a “single perfectly disentangled safety direction” claim
 - Next step: close `resattn-3f1` as a workflow-validation success, keep strong safety-routing claims blocked on later causal mediator checks, and open the next aligned-Gemma safety follow-up
+
+## [2026-03-17T18:26:00-0500] PRE-RUN: Figure 8 `wikitext-103` corpus calibration
+- tmux session: N/A
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-103-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 512 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 200 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration`
+- Config: `dataset=wikitext/wikitext-103-raw-v1`, `train_texts=2048`, `eval_texts=512`, `tokenizer=compact_subword:gpt2`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `steps=200`
+- What I'm testing: the widened compact-subword proxy on `wikitext-103` stays within the existing compact vocabulary cap, writes checkpoints cleanly, and gives a runtime estimate before the full corpus-first launch.
+- Expected outcome: both model checkpoints and a `summary.json` appear under the calibration directory, rerunning the exact command reuses those checkpoints, and the run is slow enough or fast enough to size the tmux launch responsibly.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration/checkpoints/`
+- Checkpoint cadence: every `50` steps and at completion
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration/run.log`
+- Resume command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-103-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 512 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 200 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration`
+- Main confound to watch: the larger validation slice may make early eval-loss movement noisier to compare numerically against the older `256`-text artifacts, so the calibration is operational only.
+- Implementation verified: YES - the runner already passed the existing Figure 8 unit tests, and the compact vocabulary sweep confirmed this `2048 / 512` slice stays under `vocab_size=20000`.
+- Status: LAUNCHING
+
+## [2026-03-17T18:42:00-0500] POST-RUN: Figure 8 `wikitext-103` corpus calibration
+- Outcome: SUCCESS
+- Key metric: at `200` steps, the widened Block AttnRes proxy beat the matched baseline on eval loss (`6.8764` vs `6.9299`, delta `-0.0534`) and deep embedding persistence rose to `0.2022`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration/summary.json`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration/tokenizer_manifest.json`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration/checkpoints/`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-calibration/checkpoints/attnres_training_state.pt`
+- Anomalies: the entropy ordering stayed inverted (`mean_pre_attn_entropy = 1.4557`, `mean_pre_mlp_entropy = 1.5164`), so the calibration is positive but not yet a Figure 8 pass
+- Next step: launch the full `1500`-step `wikitext-103` corpus-first run in `tmux` without bundling a horizon change
+
+## [2026-03-17T18:43:00-0500] PRE-RUN: Figure 8 `wikitext-103` corpus-first run v1
+- tmux session: `fig8-wt103-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-103-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 512 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1`
+- Config: `dataset=wikitext/wikitext-103-raw-v1`, `train_texts=2048`, `eval_texts=512`, `tokenizer=compact_subword:gpt2`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `steps=1500`
+- What I'm testing: whether the corpus-first redesign alone restores competitiveness with the matched baseline and strengthens the Figure-8-facing metric surface on the widened compact-subword proxy.
+- Expected outcome: the routed proxy stays competitive or better than the matched baseline at the full `1500`-step horizon, checkpoint/resume remain clean, and the saved Figure 8 metrics move in the paper-like direction relative to the earlier widened `wikitext-2` artifacts.
+- Expected duration: ~15-30 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1/checkpoints/`
+- Checkpoint cadence: every `50` steps and at completion
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1/run.log`
+- Resume command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-103-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 512 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1`
+- Main confound to watch: the larger corpus may improve competitiveness while leaving the entropy ordering inverted, which would strengthen the regime story but still block a stronger Figure 8 alignment claim.
+- Implementation verified: YES - the exact `wikitext-103` configuration wrote checkpoints, saved a summary, and reused checkpoints on the `200`-step calibration in `9.81` seconds.
+- Status: LAUNCHING
+
+## [2026-03-17T18:46:00-0500] POST-RUN: Figure 8 `wikitext-103` corpus-first run v1
+- Outcome: SUCCESS
+- Key metric: widened `wikitext-103` best loss delta stayed mixed at `+0.0386` (`baseline=6.5929`, `AttnRes=6.6315`), while deep embedding persistence improved to `0.1615`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1/summary.json`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1.md`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1/tokenizer_manifest.json`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: I briefly misread the live tmux completion state and launched a duplicate foreground resume against the same output directory; I caught it immediately, killed the duplicate process, and kept the original tmux run as the source of truth before finalizing the artifact
+- Next step: close `resattn-7y4`, create `resattn-fby` for best-checkpoint / eval-trajectory support on the widened `wikitext-103` regime, and shift overall repo priority to `resattn-73l`

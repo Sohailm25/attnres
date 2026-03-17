@@ -443,3 +443,27 @@
   - horizon from `1500` to `4500` changed the best eval losses by exactly `0.0` while train loss kept falling
   That combination is more consistent with a too-small corpus than with “just add more width,” “just train longer,” or “change the LM objective.”
 - Impact: `resattn-du2` can close once the redesign memo and state docs land, and the next Figure 8 issue becomes `resattn-7y4`, which runs the widened compact-subword proxy on `wikitext-103` while deferring objective, architecture, and sequence-length changes.
+
+## [2026-03-17T18:24:00-0500] DECISION: Keep the widened Figure 8 training surface fixed on `wikitext-103`, but enlarge the validation slice for lower-noise readout
+
+- Trigger: `resattn-7y4` needs one final run specification before launch, and the compact-subword vocabulary sweep on `wikitext-103` showed that `2048` train texts remain within the existing `vocab_size=20000` limit while larger train slices would force an embedding-table change.
+- Decision: keep the training surface identical to the widened `wikitext-2` compact-subword runs (`2048` train texts, `d_model=160`, `d_ff=640`, `8` blocks, `1500` steps, `vocab_size=20000`) and increase only the validation slice from `256` to `512` texts for the `wikitext-103` artifact.
+- Rationale: this preserves the corpus-first redesign discipline by avoiding a hidden architecture change through a larger compact vocabulary, while still buying a more stable evaluation readout on the larger corpus. The measured sweep showed:
+  - `2048 / 256` uses observed compact vocabulary `18494`
+  - `2048 / 512` uses observed compact vocabulary `19250`
+  - `2048 / 1024` would exceed the current limit at `20646`
+  - `4096 / 256` would force a larger vocabulary at `24235`
+- Impact: `resattn-7y4` becomes a clean corpus-first follow-up with a stronger held-out evaluation surface, and any future move to larger train slices now clearly counts as a later architecture-linked redesign rather than an unnoticed continuation of the same regime.
+
+## [2026-03-17T18:49:00-0500] DECISION: Treat `resattn-7y4` as a mixed corpus-first result and move the next Figure 8 follow-up to checkpoint-level optimization visibility
+
+- Trigger: the widened compact-subword `wikitext-103` run finished with a narrower baseline gap and improved deep embedding persistence, but still did not restore a routed win or the prereg entropy ordering.
+- Decision: close `resattn-7y4` as a useful mixed result, do not interpret it as a solved Figure 8 follow-up, and create `resattn-fby` as the next Figure 8-specific issue for best-checkpoint / eval-trajectory support before another optimization redesign.
+- Rationale: the larger corpus changed the failure mode enough to justify a different next question:
+  - widened `wikitext-2` loss delta: `+0.0598`
+  - widened `wikitext-103` loss delta: `+0.0386`
+  - deep embedding persistence improved from `0.1515` to `0.1615`
+  - the entropy ordering stayed inverted (`1.4318 < 1.4893`)
+  - the exact same `wikitext-103` regime was positive at `200` steps during calibration, then negative at the full `1500`-step horizon
+  That means corpus size helped, but the runner still cannot answer the now-live question: whether an earlier more competitive checkpoint also has a better Figure 8 surface. The current runner only preserves the final model plus a scalar `best_eval_loss`, which is not enough.
+- Impact: the repo should stop treating more same-regime training as the obvious next Figure 8 move. The next Figure 8 work should first preserve checkpoint-level eval history and best-model state. Overall repo priority can reasonably shift to `resattn-73l` while that Figure 8 follow-up waits.

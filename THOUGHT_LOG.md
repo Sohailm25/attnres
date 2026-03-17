@@ -712,3 +712,26 @@ Suggested entry format:
 - Interesting facts:
   - Compact subword improved deep embedding persistence twice in a row, first over char-level and then again with width.
   - The best widened eval losses stayed exactly unchanged from `1500` through `4500` steps, which is about as direct a warning against more same-regime optimization as I could ask for.
+
+## [2026-03-17T18:48:00-0500] `wikitext-103` Helped, But It Mostly Changed The Optimization Question
+- Stage: implementation
+- Feel of the Experiment: This is the kind of mixed result that changes what I distrust. The larger corpus did help, but not in the neat “problem solved” way I hoped for. The important shift is that the lane now looks less like pure tiny-corpus overfitting and more like a checkpoint-selection / optimization-shape problem inside a still-imperfect proxy regime.
+- Working Hypotheses:
+  - The widened compact-subword proxy benefits from the larger same-family corpus, but the full `1500`-step training path still drifts away from the early competitive regime.
+  - The next Figure 8 follow-up should capture checkpoint-level eval trajectory and best-model state before another training redesign.
+- Hunches and Guesses:
+  - The `200`-step positive calibration matters more than it first looks. It suggests the widened routed proxy can briefly occupy a healthier regime on `wikitext-103` before the later optimization path gives the baseline back the edge.
+  - If the best checkpoint on `wikitext-103` still has a weak Figure 8 surface, then I will stop defending the current objective and schedule as the likely fix.
+- Predictions:
+  - A best-checkpoint / trajectory follow-up will be more informative than another horizon-only rerun.
+  - If the best-checkpoint read stays mixed, the next redesign should move to objective or optimization regularization rather than more corpus arguments.
+- Surprises and Tensions:
+  - I expected the larger corpus to move the entropy ordering at least a little, but the gap stayed essentially unchanged and negative.
+  - The routed gap narrowed from `+0.0598` to `+0.0386`, which is real progress, but it is still not the kind of directional win that justifies staying in the lane without better checkpoint visibility.
+- Confidence:
+  - high that `resattn-7y4` is a useful mixed result rather than a failed idea
+  - medium-high that `resattn-fby` is the right Figure 8-specific follow-up
+  - medium that `resattn-73l` is the stronger overall next repo step once `7y4` is landed
+- Interesting facts:
+  - On the exact widened `wikitext-103` regime, the `200`-step calibration beat the matched baseline by `0.0534` eval-loss points.
+  - At the full `1500`-step horizon, deep embedding persistence improved to `0.1615`, but the entropy ordering remained inverted (`1.4318 < 1.4893`).
