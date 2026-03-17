@@ -90,6 +90,8 @@ Register every experimental artifact here. Never delete entries; mark superseded
 
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
+| Gemma-2 IT refusal-feature discovery smoke | safety_alignment | partial | `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke.md` |
+| Gemma-2 IT refusal-feature discovery validation v1 | safety_alignment | pass | `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1.md` |
 
 ## Figures
 

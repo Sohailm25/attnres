@@ -412,3 +412,23 @@
   - the entropy ordering stayed inverted
   That is enough evidence to stop treating optimization horizon as the obvious next lever on this exact widened compact-subword setup.
 - Impact: `resattn-jci` can close once the artifact and state docs land, and the next Figure 8 issue becomes `resattn-du2`, which should choose one redesign lever explicitly instead of extending the current regime again.
+
+## [2026-03-17T17:32:00-0500] DECISION: Use aligned Gemma for the safety lane, not the base primary-model spine
+
+- Trigger: `resattn-3f1` needed a real refusal-analysis precondition check before any safety workflow code could be trusted.
+- Decision: keep `google/gemma-2-2b` as the primary frozen-model spine for oracle-alpha and tool-breakage, but use `google/gemma-2-2b-it` as the safety-alignment model for refusal-feature discovery and later safety-lane follow-ups.
+- Rationale: a direct preflight showed the base `google/gemma-2-2b` model complied with a harmful request instead of refusing, while `google/gemma-2-2b-it` refused the same request and answered the high-level harmful-context control normally. A refusal-feature workflow on the base model would have been invalid by construction.
+- Impact: `configs/experiment.yaml` now encodes the safety-model override, and the safety lane can proceed without conflating the main frozen-model spine with the aligned-refusal spine.
+
+## [2026-03-17T17:47:00-0500] DECISION: Close `resattn-3f1` on workflow validation, not on a causal safety claim
+
+- Trigger: the first full aligned-Gemma refusal-feature artifact completed on the frozen `6 / 6` pilot/confirm prompt triples with prompt-level checkpoints, held-out summaries, and resume verification.
+- Decision: treat `resattn-3f1` as complete once the repo lands the aligned-Gemma workflow validator, the frozen prompt collection, and the held-out validation artifact, while keeping mediator-conditioned safety-routing claims blocked on a later causal intervention issue.
+- Rationale: the workflow now clears the blocker it was meant to clear:
+  - behavior checks matched expectation on `36 / 36` prompts
+  - refusal localized to assistant-prefill layer `22`
+  - harmfulness localized to instruction-final layer `25`
+  - confirm pair accuracy stayed `1.0` for both primary directions
+  - refusal and harmfulness directions were nearly orthogonal (`cosine = 0.0064`)
+  At the same time, the cross-direction confirm metrics are not zero (`0.6667` and `0.8333`), so this is not evidence for a fully disentangled single-direction safety story, and it is not yet a mediator-conditioned routing result.
+- Impact: `resattn-3f1` can close honestly as a workflow-validation success, and the next safety follow-up is `resattn-73l`, which adds the causal refusal-direction intervention check before any stronger safety-routing claim.

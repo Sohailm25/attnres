@@ -273,11 +273,22 @@
     - routing degrades the same-model original baseline on the locked factual-recall confirm split
     - the degradation is stronger than a fixed non-uniform alpha control
     - the current dynamic counterfactual does not support the stronger claim that prompt-matched routing is more damaging than prompt-misaligned dynamic routing
+  - `resattn-3f1` now validates the refusal-feature discovery workflow on aligned Gemma:
+    - the safety lane now uses `google/gemma-2-2b-it` rather than the base `google/gemma-2-2b` spine, because a preflight smoke showed the base model complied with a harmful request instead of refusing
+    - `prompts/registry_v4.yaml` now includes `safety_refusal_discovery_v1`, a frozen `6 / 6` pilot/confirm collection of matched `refusal`, `harmful_context`, and `benign` prompt triples
+    - `validation/safety_alignment.py` and `scripts/run_refusal_feature_discovery_validation.py` now implement the first checkpointed safety workflow validator with layer localization, refusal-direction and harmfulness-direction discovery, prompt-behavior checks, and held-out paired separation
+    - the first full artifact `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1.md` is a clean workflow-validation pass:
+      - refusal and non-refusal behavior checks matched expectation on `36 / 36` prompts
+      - refusal localization peaked at assistant-prefill layer `22`
+      - harmfulness localization peaked at instruction-final layer `25`
+      - confirm pair accuracy stayed `1.0` for both primary directions
+      - refusal and harmfulness directions were nearly orthogonal (`cosine = 0.0064`)
+    - interpretation: the refusal-feature discovery workflow is now operationally validated, but strong safety-routing claims remain blocked on later causal mediator checks
 
 ## Immediate Next Steps
 
-1. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
-2. Use `resattn-du2` to make one bounded redesign decision for the Figure 8 proxy lane after the negative width and horizon follow-ups.
+1. Use `resattn-du2` to make one bounded redesign decision for the Figure 8 proxy lane after the negative width and horizon follow-ups.
+2. Use `resattn-73l` to add a causal refusal-direction intervention check before any mediator-conditioned safety-routing claim.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
@@ -316,4 +327,5 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: claim-bearing pattern interpretations require stability and out-of-sample alpha predictiveness on the confirmatory split.
 - `known`: strong Figure 8 or trained-routing match claims require a reproducible proxy or local small-scale depth-mixing reproduction; otherwise Lane 2 is an internal prediction-surface comparison against the published AttnRes Figure 8.
 - `known`: safety analysis must distinguish harmfulness-encoding from refusal-execution and start with layer localization.
+- `known`: the validated safety workflow now depends on the aligned `google/gemma-2-2b-it` model rather than the base `google/gemma-2-2b` spine, because refusal discovery on a non-refusal model would be invalid by construction.
 - `known`: checkpoint studies support within-run evolution claims, not counterfactual schedule claims, unless additional evidence is logged.

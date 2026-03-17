@@ -130,6 +130,7 @@ The tool-breakage lane is mandatory.
 
 - explicitly test whether approximately 8 clusters emerge
 - run the safety lane on refusal or honesty-related features
+- use `google/gemma-2-2b-it` for the safety lane's refusal-feature workflow; keep `google/gemma-2-2b` as the primary frozen-model spine for the non-safety lanes
 - safety lane runs as three stages: layer localization, feature discovery and validation, then mediator-conditioned routing analysis
 - safety lane begins with refusal-feature discovery and validation; do not assume pre-labeled refusal features already exist in the local SAE workflow
 - distinguish harmfulness-encoding features from refusal-execution features before causal interpretation
