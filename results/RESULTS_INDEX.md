@@ -67,6 +67,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 |---|---|---|---|
 | Gemma-2 tuned-lens viability pilot v1 | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` |
 | Gemma-2 routed-versus-original factual-recall baseline pilot v1 | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1.md` |
+| Gemma-2 routed-versus-original factual-recall baseline confirm v1 | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1.md` |
 
 ## Training Dynamics
 
