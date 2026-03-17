@@ -124,20 +124,35 @@
   - `validation/oracle_alpha_campaign.py` materializes prompt-level oracle checkpoints and feature-vector caches under a reusable campaign output directory
   - `scripts/run_oracle_alpha_predictiveness_campaign.py` launches that checkpointed path and writes a manifest, split-level oracle summaries, and a final predictiveness summary
   - `validation/oracle_alpha_runner.py` now accepts cached per-prompt oracle results and cached feature vectors, and each feature-source/target candidate records the full regularization grid rather than only the selected `lambda`
-  - the repo is now operationally ready for a tmux-backed prereg-scale run, but no larger campaign artifact exists yet
+  - the repo is now operationally ready for tmux-backed prereg-scale runs, and the first `registry_v4` campaign artifact now exists under `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/`
 - `known`: the next prereg-scale prompt surface is now frozen as `prompts/registry_v4.yaml`:
   - the default oracle-alpha collection now spans `96` pilot prompts and `128` confirm prompts, with prompt ids `oa-pilot-001` through `oa-pilot-096` and `oa-confirm-001` through `oa-confirm-128`
   - the tool-breakage factual-recall collection is unchanged from `registry_v3`
   - the repo has passed the full unit suite and pre-commit hooks after switching the default loader and main config to `registry_v4`
-  - `resattn-9jq` now reduces to one operational step: launch the tmux-backed prereg-scale campaign and verify checkpointing on disk
+  - `resattn-9jq` has now completed its launch step and produced the first prereg-scale development-model artifact
+- `known`: the first prereg-scale oracle-alpha campaign artifact now exists on the development model:
+  - `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/` contains the saved `96 / 128` `gpt2-xl` campaign outputs plus prompt-level reusable checkpoints
+  - the oracle confirm run clears the preregistered development-model loss gate strongly:
+    - mean oracle improvement over uniform `= +1.2993` nats on `128` confirm prompts
+    - paired one-sided t-test versus uniform `p = 9.72e-98`
+    - paired Cohen's `d = 5.54`
+    - all `128 / 128` confirm prompts improve over uniform
+    - oracle alpha also beats the preregistered `random_dirichlet`, `magnitude_proportional`, and `last_layer_only` nulls on every confirm prompt
+  - held-out predictiveness remains positive at prereg scale but still mixed:
+    - selected target `oracle_alpha_vector` with ridge `100.0`
+    - predicted mean improvement over uniform `= +0.1162` nats, `95 / 128` prompts positive, paired one-sided `p = 1.82e-11`, paired `d = 0.64`
+    - confirm `R^2` stays negative at `-0.0884`, and mean JS to oracle alpha is `0.2427`
+  - interpretation: the development-model oracle gate is now cleared, but strong interpretation remains blocked by weak alpha-shape recovery and by the lack of primary-model replication
+- `known`: the prereg-scale campaign also surfaced a new operational follow-up:
+  - `resattn-9co` tracks summary-stage observability, because top-level summary files stayed stale until the end of the long pilot tuning sweep even after the expensive oracle checkpoints were complete
 
 ## Immediate Next Steps
 
-1. Launch the prereg-scale oracle-alpha campaign from `registry_v4` through the checkpointed runner in `resattn-9jq`, with tmux, checkpoint verification, and a logged resume path in `SCRATCHPAD.md`.
+1. Move the next oracle task to prereg-scale pattern analysis on the saved `registry_v4` artifact in `resattn-tpw`, while keeping strong interpretation gated on the current alpha-shape weakness and the primary-model gap.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
-5. Expand the saved prompt registry or control registry only when a lane needs a larger or more specialized confirmatory surface.
+5. Land `resattn-9co` so future prereg-scale campaigns expose progress during the long summary stage instead of only at the final write.
 
 ## Phase 1 Gate
 

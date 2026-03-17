@@ -348,3 +348,53 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: none
 - Next step: follow `resattn-9jq` to scale the same logit-target path toward the prereg-sized Phase 1 gate
+
+## [2026-03-17T10:32:57-0500] PRE-RUN: prereg-scale oracle-alpha campaign calibration
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_predictiveness_campaign.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --output-dir results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4 --max-train-sequences 2 --max-eval-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11 --regularization-grid 0.0001 0.0003 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10 30 100`
+- Config: `model=gpt2-xl`, `device=mps fallback cpu`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_split=confirm`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`, `targets=oracle_alpha_vector + oracle_alpha_logit_vector + oracle_alpha_depth_type_band_logit_vector`
+- What I'm testing: the checkpointed campaign runner writes prompt-level oracle checkpoints and feature caches into the final prereg-scale output directory and can be resumed cleanly before the long tmux launch.
+- Expected outcome: `2` pilot checkpoints, `2` confirm checkpoints, and matching feature-cache files appear on disk, and rerunning the same command reuses them instead of recomputing them.
+- Expected duration: ~10-20 minutes including first model load
+- Checkpoint path: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints`
+- Checkpoint cadence: after each prompt-level oracle result and each prompt-level feature-vector materialization
+- Log path: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/calibration.log`
+- Resume command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --output-dir results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4 --max-train-sequences 2 --max-eval-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11 --regularization-grid 0.0001 0.0003 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10 30 100`
+- Main confound to watch: the first `gpt2-xl` load on MPS could dominate runtime and make resume behavior harder to notice if I only look at wall-clock time.
+- Implementation verified: YES - full unit suite and `pre-commit` are green on `wip/resattn-scaffold`, and the cached-result path was inspected in `validation/oracle_alpha_runner.py` plus `validation/oracle_alpha_campaign.py` before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T10:36:41-0500] POST-RUN: prereg-scale oracle-alpha campaign calibration
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --output-dir results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4 --max-train-sequences 2 --max-eval-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11 --regularization-grid 0.0001 0.0003 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10 30 100`
+- Outcome: SUCCESS
+- Key metric: `2` pilot oracle checkpoints, `2` confirm oracle checkpoints, and matching feature-cache files were written; rerunning the exact same command left checkpoint mtimes unchanged, confirming resume reuse on the cached prompt subset
+- Artifacts saved: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/`
+- Latest checkpoint: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints/`
+- Anomalies: the calibration summary itself is not scientifically meaningful on `2 / 2`; it is only an operational checkpoint and resume verification
+- Next step: launch the full prereg-scale `96 / 128` campaign in `tmux` against the same output directory
+
+## [2026-03-17T10:36:41-0500] PRE-RUN: prereg-scale oracle-alpha campaign
+- tmux session: `oa-v4-prereg-scale`
+- Script: `scripts/run_oracle_alpha_predictiveness_campaign.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --model-name gpt2-xl --device mps --output-dir results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4 --optimization-steps 20 --learning-rate 0.1 --seed 11 --regularization-grid 0.0001 0.0003 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10 30 100`
+- Config: `model=gpt2-xl`, `device=mps fallback cpu`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot (96 prompts)`, `eval_split=confirm (128 prompts)`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`, `targets=oracle_alpha_vector + oracle_alpha_logit_vector + oracle_alpha_depth_type_band_logit_vector`
+- What I'm testing: whether the current loss-aware predictiveness path stays positive and stable on the first prereg-scale saved prompt surface while persisting reusable per-prompt oracle and feature artifacts.
+- Expected outcome: the run completes on `registry_v4`, writes the full campaign manifest plus split summaries, keeps checkpoint counts growing beyond the calibration subset, and produces the largest held-out predictiveness artifact in the repo.
+- Expected duration: ~45-90 minutes
+- Checkpoint path: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints`
+- Checkpoint cadence: after each prompt-level oracle result and each prompt-level feature-vector materialization
+- Log path: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/campaign.log`
+- Resume command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --model-name gpt2-xl --device mps --output-dir results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4 --optimization-steps 20 --learning-rate 0.1 --seed 11 --regularization-grid 0.0001 0.0003 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10 30 100`
+- Main confound to watch: the run could stay positive on mean predicted routed loss while still concentrating that gain unevenly across confirm prompts, so the per-prompt outputs matter as much as the top-line average.
+- Implementation verified: YES - the calibration run wrote prompt-level checkpoints and the exact resume command reused them without rewriting cached files.
+- Status: LAUNCHING
+
+## [2026-03-17T11:05:55-0500] POST-RUN: prereg-scale oracle-alpha campaign
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --model-name gpt2-xl --device mps --output-dir results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4 --optimization-steps 20 --learning-rate 0.1 --seed 11 --regularization-grid 0.0001 0.0003 0.001 0.003 0.01 0.03 0.1 0.3 1 3 10 30 100`
+- Outcome: SUCCESS
+- Key metric: oracle confirm mean improvement over uniform `= +1.2993` nats on `128` confirm prompts; predicted mean improvement over uniform `= +0.1162` nats with `95 / 128` prompts positive
+- Artifacts saved: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/`, `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4.md`
+- Latest checkpoint: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints/`
+- Anomalies: the summary-stage sweep took much longer than the oracle checkpointing stage and left `predictiveness_summary.json` and `campaign_manifest.json` stale until the final write; follow-up `resattn-9co` tracks that observability gap
+- Next step: register the prereg-scale artifact as the first development-model oracle gate clear, close `resattn-9jq`, and move the next oracle task to prereg-scale pattern analysis on the saved `registry_v4` artifact
