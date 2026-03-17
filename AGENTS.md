@@ -172,6 +172,7 @@ During work:
 
 - Update `SCRATCHPAD.md` before and after any substantial local run.
 - Use `THOUGHT_LOG.md` for research reflections throughout the project. Record hunches, predictions, surprises, confidence shifts, and the current feel of the experiment when those would be useful to understand later.
+- Agents may launch bounded parallel sidecar work for tangential research, literature review, or methodological checking when it materially informs the paper and does not block the critical path.
 - Log non-obvious pivots in `DECISIONS.md` before proceeding.
 - Update `CURRENT_STATE.md` whenever the actual project state changes.
 - Register durable outputs in `results/RESULTS_INDEX.md`.
@@ -183,6 +184,7 @@ During work:
 - It should preserve the feel of the experiment as it unfolds, including confidence changes and competing hypotheses.
 - Keep it high-signal and readable. Write concrete reflections, not filler.
 - Label speculative content clearly enough that no one confuses it with validated findings.
+- If sidecar research or parallel exploration turns up something interesting, summarize the useful takeaway here or in a durable background-work note instead of letting it vanish in ephemeral agent output.
 
 Long-running process rules:
 
@@ -266,6 +268,7 @@ Do not skip ahead to result interpretation until the reconstruction and null-mod
 - Start with the smallest experiment that can genuinely falsify or support the idea. Do not scale up before the tiny version shows signs of life.
 - Prefer tight feedback loops. A five-minute run is excellent, an hour is acceptable, and anything longer than a day requires explicit justification in `DECISIONS.md`.
 - Treat most early-stage work as exploratory: the goal is often to gain surface area, expose unknown unknowns, and sharpen the ontology before expensive runs.
+- Use parallel sidecar agents for bounded tangential research when helpful, especially for papers, tools, benchmarks, or implementation caveats that may enlighten the main experiment without blocking it.
 - Use MIB as a benchmark anchor or sanity control when the task-model pair fits it. If a lane cannot use MIB, record the reason in `DECISIONS.md`.
 - Before making a high-claim interpretation, clear a stability suite and an out-of-sample predictiveness check on the confirmatory split rather than trusting a descriptive fit.
 - Treat a controlled dynamic-routing counterfactual as the preferred confirmatory control for the tool-breakage lane.

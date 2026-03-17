@@ -88,3 +88,10 @@
 - Decision: the repo no longer treats public preregistration as a blocker. `history/PREREG.md` remains the mandatory prereg artifact for claim-bearing work in this workspace.
 - Rationale: the scientific guardrail we actually need here is a stable local prereg plus the pilot/confirmatory split and dependency freeze, not publication on a specific external platform.
 - Impact: active control docs no longer list LessWrong as a prerequisite, and the corresponding tracker issue should be retired.
+
+## [2026-03-16T16:20:00-0500] DECISION: Make the thought log explicitly permissive for ongoing reflection and sidecar research
+
+- Trigger: Sohail wanted `THOUGHT_LOG.md` to preserve the model's feel for the experiment, including internal monologue-like reflections, hunches, guesses, and interesting tangential findings.
+- Decision: treat `THOUGHT_LOG.md` as a first-class reflective research log that agents should update whenever useful, and explicitly allow bounded parallel sidecar research when it informs the paper without blocking the main line of work.
+- Rationale: the experiment will be more valuable at the end if it preserves not just validated results but also the evolving intuitions, tensions, and side observations that shaped the work.
+- Impact: future agents should feel free to record research reflections throughout the project and summarize useful sidecar findings in a durable place instead of losing them in ephemeral outputs.

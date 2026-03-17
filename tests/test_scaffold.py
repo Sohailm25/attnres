@@ -257,6 +257,9 @@ class ScaffoldTests(unittest.TestCase):
             "predictions",
             "surprises",
             "confidence",
+            "parallel",
+            "sidecar",
+            "tangential research",
         ]:
             self.assertIn(snippet, agents)
 
@@ -268,6 +271,7 @@ class ScaffoldTests(unittest.TestCase):
             "Predictions",
             "interesting facts",
             "not claim-bearing evidence",
+            "sidecar research",
         ]:
             self.assertIn(snippet, thought_log)
 

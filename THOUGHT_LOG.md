@@ -14,6 +14,7 @@ Important rule:
 - entries here are not claim-bearing evidence
 - use this file for research reflections, intuitions, and interesting facts
 - validated conclusions still belong in `CURRENT_STATE.md`, `DECISIONS.md`, run artifacts, and the prereg-aware result docs
+- useful sidecar research findings belong here if they help preserve why a tangential paper, result, or intuition seemed important at the time
 
 Suggested entry format:
 
@@ -33,6 +34,8 @@ Suggested entry format:
   - [low / medium / high] in [what]
 - Interesting facts:
   - [paper fact, implementation detail, or pattern worth remembering]
+- Sidecar research:
+  - [useful tangent from parallel reading or bounded exploration]
 ```
 
 ## Working Hypotheses
