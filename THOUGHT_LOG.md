@@ -354,6 +354,28 @@ Suggested entry format:
   - The constrained target moved predicted mean improvement to `+0.0693` nats over uniform with `5 / 8` confirm prompts positive, while oracle alpha stayed at `+1.3409`.
   - The selected ridge penalty still saturated at `100.0`, which means the shrinkage story did not disappear just because the target geometry got better.
 
+## [2026-03-17T12:15:00-0500] The First Pattern Signal Is Real But Smaller And Stranger Than A Clean Block Story
+- Stage: analysis
+- Feel of the Experiment: This is a good place to be skeptical. There is enough structure in the prereg-scale `final_alpha` distributions to beat a matched random control slightly, but the best clustering is mostly a two-prompt outlier carve-out rather than a broad partition of the confirm set.
+- Working Hypotheses:
+  - The development-model oracle lane really does expose some prompt-dependent routing structure at sequence level.
+  - The current raw-source clustering surface is too diffuse and outlier-sensitive to support the `~8`-cluster hypothesis on its own.
+- Hunches and Guesses:
+  - Grouping sources by a thesis-relevant structure such as depth bands and source type may give a cleaner pattern read than clustering the full `98`-source raw simplex directly.
+  - The very frequent `pos_embed` and early-attention top-1 winners suggest part of the current geometry is still dominated by broad scaffold-like routing mass rather than task-specific routing regimes.
+- Predictions:
+  - If the pattern story is real, grouped-source views or prompt-resampled stability checks should preserve a modest above-random gap without collapsing entirely.
+  - If the story is mostly an artifact of a few outliers, that gap will wash out quickly once the clustering view changes.
+- Surprises and Tensions:
+  - The mean effective source count is still about `49.45`, which is much more diffuse than the “clean router picks a small block” intuition might have suggested.
+  - The best silhouette being `0.1428` versus a matched-random `0.1093` is enough to be interesting but not enough to feel safe.
+- Confidence:
+  - medium that the current artifact is worth keeping as a real Phase 2 entry point
+  - high that it does not justify any clean block-structure claim yet
+- Interesting facts:
+  - `k = 2` gives cluster sizes `126 / 2`; `k = 8` still gives one huge cluster of `114`.
+  - `pos_embed` is the top-1 source on `36 / 128` confirm prompts, and attention mass still dominates MLP mass on average (`0.5560` vs `0.4090`).
+
 ## [2026-03-17T17:15:00-0500] Compression Fixed The Shape Story But Not The Loss Story
 - Stage: analysis
 - Feel of the Experiment: This is the cleanest tradeoff we have seen so far. Compression made the predictor look saner in the descriptive metrics and stopped the pathological regularization choice, but it also gave back the one concrete win the full logit target had earned, which was positive held-out routed loss.

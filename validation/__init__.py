@@ -49,6 +49,15 @@ from .oracle_alpha_runner import (
     run_oracle_alpha_predictiveness_check,
     run_oracle_alpha_stability_suite,
 )
+from .pattern_analysis import (
+    ClusterScanResult,
+    SequenceLevelPatternSummary,
+    SourceTypeMassSummary,
+    build_sequence_level_pattern_summary,
+    scan_average_linkage_clusters,
+    summarize_source_type_mass,
+    write_pattern_analysis_summary,
+)
 
 __all__ = [
     "BootstrapMeanInterval",
@@ -68,10 +77,14 @@ __all__ = [
     "OracleAlphaStabilitySummary",
     "PredictivenessPlan",
     "PredictivenessSummary",
+    "ClusterScanResult",
+    "SequenceLevelPatternSummary",
+    "SourceTypeMassSummary",
     "StabilitySuitePlan",
     "alpha_target_matrix",
     "alpha_target_predictions_to_distributions",
     "bootstrap_mean_confidence_interval",
+    "build_sequence_level_pattern_summary",
     "cache_reconstruction_metrics",
     "compare_predictiveness_metric_values",
     "jensen_shannon_divergence",
@@ -90,5 +103,8 @@ __all__ = [
     "run_oracle_alpha_stability_suite",
     "rms_norm",
     "routed_logits",
+    "scan_average_linkage_clusters",
     "shared_final_norm_logit_contributions",
+    "summarize_source_type_mass",
+    "write_pattern_analysis_summary",
 ]

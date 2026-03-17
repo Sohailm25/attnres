@@ -218,6 +218,30 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 ## [2026-03-16T23:13:05-0500] POST-RUN: development-model oracle-alpha prompt-level and hybrid feature comparison
 - Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
 - Outcome: FAILURE
+
+## [2026-03-17T12:08:00-0500] PRE-RUN: prereg-scale oracle-alpha pattern analysis
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_pattern_analysis.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pattern_analysis.py --run-path results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/oracle_eval_run.json --output results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json --random-seed 11 --max-clusters 12`
+- Config: `model=gpt2-xl`, `artifact=registry_v4 confirm oracle_eval_run`, `distance=Jensen-Shannon`, `linkage=average`, `random_control=symmetric_dirichlet_matched_shape`
+- What I'm testing: whether the saved prereg-scale confirm alphas show sequence-level routing structure above a matched random control without overstating the development-model result.
+- Expected outcome: weak-but-nonzero sequence-level structure, descriptive source-type mass summaries, and a reusable compact artifact for the next pattern-analysis decision.
+- Expected duration: ~1 minute
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json`
+- Resume command: rerun the command above
+- Main confound to watch: final-alpha sequence summaries can show structure even when stronger block-structure or Figure 8 claims are still unwarranted.
+- Implementation verified: YES - `tests.test_pattern_analysis` and `tests.test_scaffold` are green before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T12:09:00-0500] POST-RUN: prereg-scale oracle-alpha pattern analysis
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pattern_analysis.py --run-path results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/oracle_eval_run.json --output results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json --random-seed 11 --max-clusters 12`
+- Outcome: PARTIAL
+- Key metric: oracle best silhouette `= 0.1428` at `k = 2` versus matched-random `0.1093`; mean attention mass `= 0.5560`, mean MLP mass `= 0.4090`
+- Artifacts saved: `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json`, `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.md`
+- Anomalies: the positive clustering gap is dominated by a `126 / 2` outlier split rather than a broad multi-cluster partition
+- Next step: keep block-structure claims blocked and use `resattn-ojq` to test grouped-source and prompt-resampled robustness
 - Key metric: selected feature source stayed `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`; `confirm_r_squared=-0.2154`; `confirm_mean_js=0.2377`; `predicted_mean_improvement=-0.0011` nats
 - Artifacts saved: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json`
 - Latest checkpoint: none
