@@ -82,10 +82,15 @@
   - the selected token-aware summary improved the confirm metrics again (`R^2 = -0.2154`, mean JS `= 0.2377`) relative to the mean-pooled `h_4[t]` baseline
   - predicted routed loss remained effectively neutral to slightly negative on confirm (`-0.0011` nats versus uniform), so the stronger interpretation gate is still blocked
   - the next follow-up is prompt-level or hybrid feature surfaces rather than more `h_4[t]`-only pooling variants
+- `known`: the prompt-level and hybrid feature comparison failed to beat the current token-aware baseline:
+  - `resattn-27f` compared prompt-shape scalars, mean-pooled token embeddings, and hybrids that appended those prompt-level features to `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`
+  - none of those candidates beat the token-aware `h_4[t]` baseline on pilot leave-one-out mean JS, so the selected feature source and confirm metrics stayed unchanged (`R^2 = -0.2154`, mean JS `= 0.2377`, predicted mean improvement `= -0.0011` nats)
+  - this is stronger evidence that the current blocker is not just a missing simple feature family
+  - the next follow-up is a bounded design review of the held-out predictiveness setup rather than more small feature-surface additions
 
 ## Immediate Next Steps
 
-1. Compare prompt-level and hybrid feature surfaces for oracle-alpha predictiveness in `resattn-27f`.
+1. Review the held-out oracle-alpha predictiveness design after prompt and hybrid features fail in `resattn-23p`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

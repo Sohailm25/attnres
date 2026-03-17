@@ -209,6 +209,35 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             )
         )
 
+    def test_predictiveness_check_accepts_prompt_level_and_hybrid_sources(self) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=(
+                "prompt_shape_scalar_features_v1",
+                "mean_pooled_token_embedding",
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_prompt_shape_scalar_features_v1_concat",
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+            ),
+        )
+
+        self.assertIn(
+            summary.feature_source,
+            (
+                "prompt_shape_scalar_features_v1",
+                "mean_pooled_token_embedding",
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_prompt_shape_scalar_features_v1_concat",
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+            ),
+        )
+        self.assertEqual(4, len(summary.candidate_feature_summaries))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -267,6 +267,45 @@ def _resid_post_states(
     return h_1, h_4
 
 
+def _mean_pooled_token_embedding(
+    *,
+    model: HookedTransformer,
+    prompt: str,
+) -> torch.Tensor:
+    tokens = model.to_tokens(prompt, prepend_bos=False)
+    with torch.no_grad():
+        embeddings = model.embed(tokens)[0]
+    return embeddings.mean(dim=0)
+
+
+def _prompt_shape_scalar_features(
+    *,
+    model: HookedTransformer,
+    prompt: str,
+) -> torch.Tensor:
+    stripped_prompt = prompt.strip()
+    words = stripped_prompt.split()
+    token_count = int(model.to_tokens(prompt, prepend_bos=False).shape[-1])
+    word_count = len(words)
+    char_count = len(prompt)
+    mean_word_length = (
+        sum(len(word.strip(".,;:!?")) for word in words) / word_count
+        if word_count
+        else 0.0
+    )
+    features = (
+        float(token_count),
+        float(word_count),
+        float(char_count),
+        float(char_count / max(token_count, 1)),
+        float(mean_word_length),
+        float(prompt.count(",")),
+        float(prompt.count("'")),
+        float(prompt.endswith(" of")),
+    )
+    return torch.tensor(features, dtype=torch.float32)
+
+
 def _position_thirds_mean_pooled(states: torch.Tensor) -> torch.Tensor:
     if states.ndim != 2 or states.shape[0] == 0:
         raise ValueError("states must have shape [pos, d_model] with pos > 0")
@@ -298,25 +337,77 @@ def _feature_vector_for_source(
     prepend_bos: bool | None,
     feature_source: str,
 ) -> list[float]:
-    h_1, h_4 = _resid_post_states(
-        model=model,
-        prompt=prompt,
-        prepend_bos=prepend_bos,
-    )
+    h_1: torch.Tensor | None = None
+    h_4: torch.Tensor | None = None
+
+    def resid_states() -> tuple[torch.Tensor, torch.Tensor]:
+        nonlocal h_1, h_4
+        if h_1 is None or h_4 is None:
+            h_1, h_4 = _resid_post_states(
+                model=model,
+                prompt=prompt,
+                prepend_bos=prepend_bos,
+            )
+        return h_1, h_4
+
     if feature_source == "mean_pooled_h_1[t]_resid_post_layer_0":
+        h_1, _ = resid_states()
         feature = h_1.mean(dim=0)
     elif feature_source == "mean_pooled_h_4[t]_resid_post_layer_3":
+        _, h_4 = resid_states()
         feature = h_4.mean(dim=0)
     elif (
         feature_source == "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat"
     ):
+        _, h_4 = resid_states()
         feature = _position_thirds_mean_pooled(h_4)
     elif feature_source == "start_mid_end_h_4[t]_resid_post_layer_3_concat":
+        _, h_4 = resid_states()
         feature = _start_mid_end_summary(h_4)
+    elif feature_source == "prompt_shape_scalar_features_v1":
+        feature = _prompt_shape_scalar_features(
+            model=model,
+            prompt=prompt,
+        )
+    elif feature_source == "mean_pooled_token_embedding":
+        feature = _mean_pooled_token_embedding(
+            model=model,
+            prompt=prompt,
+        )
     elif feature_source == "mean_pooled_h_1[t]_plus_h_4[t]_concat":
+        h_1, h_4 = resid_states()
         feature = torch.cat((h_1.mean(dim=0), h_4.mean(dim=0)))
     elif feature_source == "final_token_h_1[t]_plus_h_4[t]_concat":
+        h_1, h_4 = resid_states()
         feature = torch.cat((h_1[-1], h_4[-1]))
+    elif (
+        feature_source
+        == "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_prompt_shape_scalar_features_v1_concat"
+    ):
+        _, h_4 = resid_states()
+        feature = torch.cat(
+            (
+                _position_thirds_mean_pooled(h_4),
+                _prompt_shape_scalar_features(
+                    model=model,
+                    prompt=prompt,
+                ).to(dtype=h_4.dtype, device=h_4.device),
+            )
+        )
+    elif (
+        feature_source
+        == "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat"
+    ):
+        _, h_4 = resid_states()
+        feature = torch.cat(
+            (
+                _position_thirds_mean_pooled(h_4),
+                _mean_pooled_token_embedding(
+                    model=model,
+                    prompt=prompt,
+                ).to(dtype=h_4.dtype, device=h_4.device),
+            )
+        )
     else:
         raise ValueError(f"unsupported feature source {feature_source!r}")
     return [float(value) for value in feature.detach().cpu().tolist()]
