@@ -166,6 +166,58 @@ class AttnResReproductionTests(unittest.TestCase):
             self.assertTrue(torch.isfinite(torch.tensor(summary.final_train_loss)))
             self.assertTrue(torch.isfinite(torch.tensor(summary.final_eval_loss)))
 
+    def test_train_language_model_writes_best_checkpoint_and_eval_history(self) -> None:
+        config = self.AttnResProxyConfig(
+            vocab_size=16,
+            d_model=16,
+            n_heads=4,
+            n_layers=2,
+            d_ff=32,
+            max_seq_len=4,
+            dropout=0.0,
+            num_blocks=2,
+        )
+        model = self.StandardResidualTinyLM(config)
+        examples = torch.tensor(
+            [
+                [1, 2, 3, 4, 5],
+                [2, 3, 4, 5, 6],
+                [3, 4, 5, 6, 7],
+                [4, 5, 6, 7, 8],
+            ],
+            dtype=torch.long,
+        )
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            checkpoint_path = Path(tmp_dir) / "training_state.pt"
+            best_checkpoint_path = Path(tmp_dir) / "best_state.pt"
+            eval_history_path = Path(tmp_dir) / "eval_history.json"
+            summary = self.train_language_model(
+                model=model,
+                model_label="baseline",
+                train_examples=examples,
+                eval_examples=examples,
+                batch_size=2,
+                num_steps=3,
+                learning_rate=1e-3,
+                weight_decay=0.0,
+                seed=11,
+                device="cpu",
+                checkpoint_path=checkpoint_path,
+                best_checkpoint_path=best_checkpoint_path,
+                eval_history_path=eval_history_path,
+                checkpoint_interval=1,
+            )
+
+            self.assertTrue(checkpoint_path.is_file())
+            self.assertTrue(best_checkpoint_path.is_file())
+            self.assertTrue(eval_history_path.is_file())
+            history = json.loads(eval_history_path.read_text())
+            self.assertGreaterEqual(len(history), 3)
+            self.assertEqual(summary.best_eval_step, history[-1]["best_eval_step"])
+            self.assertEqual(str(best_checkpoint_path), summary.best_checkpoint_path)
+            self.assertEqual(str(eval_history_path), summary.eval_history_path)
+
     def test_summarize_figure8_proxy_metrics_tracks_operationalized_patterns(
         self,
     ) -> None:
@@ -301,8 +353,21 @@ class AttnResReproductionTests(unittest.TestCase):
             self.assertTrue(
                 (output_dir / "checkpoints" / "attnres_training_state.pt").is_file()
             )
+            self.assertTrue(
+                (output_dir / "checkpoints" / "baseline_best_state.pt").is_file()
+            )
+            self.assertTrue(
+                (output_dir / "checkpoints" / "attnres_best_state.pt").is_file()
+            )
+            self.assertTrue(
+                (output_dir / "checkpoints" / "baseline_eval_history.json").is_file()
+            )
+            self.assertTrue(
+                (output_dir / "checkpoints" / "attnres_eval_history.json").is_file()
+            )
             self.assertEqual("synthetic_text", summary.dataset_name)
             self.assertGreater(len(summary.figure8_proxy_metrics.target_summaries), 0)
+            self.assertIsNotNone(summary.best_checkpoint_figure8_proxy_metrics)
             self.assertTrue(
                 torch.isfinite(torch.tensor(summary.baseline_summary.best_eval_loss))
             )

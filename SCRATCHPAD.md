@@ -951,3 +951,19 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1/checkpoints/prompt_residuals/sa-confirm-006-refusal.pt`
 - Anomalies: the greedy refusal marker stayed saturated on refusal prompts and only flipped on `1 / 6` harmful-context prompts, so the continuation-preference metric became the decisive causal readout rather than the binary marker alone
 - Next step: close `resattn-73l` as the bounded causal mediator pass, open mediator-conditioned routing follow-up `resattn-h1p`, and move overall repo priority to `resattn-fby`
+
+## [2026-03-17T18:24:08-0500] PRE-RUN: Figure 8 `wikitext-103` best-checkpoint follow-up v1
+- tmux session: `fig8-fby-wt103-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-103-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 512 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1`
+- Config: `dataset=wikitext/wikitext-103-raw-v1`, `train_texts=2048`, `eval_texts=512`, `tokenizer=compact_subword:gpt2`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `steps=1500`
+- What I'm testing: whether preserving eval history and exporting the best AttnRes checkpoint changes the Figure 8 read on the widened `wikitext-103` regime relative to the final-checkpoint-only artifact.
+- Expected outcome: the run writes resumable training checkpoints plus `*_best_state.pt` and `*_eval_history.json`, and the resulting summary can compare final versus best AttnRes Figure 8 proxy metrics without another rerun.
+- Expected duration: ~15-30 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1/checkpoints/`
+- Checkpoint cadence: every `50` steps and at completion, with best-state refresh on eval improvement
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1/run.log`
+- Resume command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-103-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 512 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1`
+- Main confound to watch: the best checkpoint may improve eval loss without materially improving the Figure 8 surface, which would sharpen the argument against optimization-shape alone as the next redesign lever.
+- Implementation verified: YES - `tests/test_attnres_reproduction.py` now covers best-checkpoint and eval-history persistence, and the full `tests/` suite stays green after the runner change.
+- Status: LAUNCHING
