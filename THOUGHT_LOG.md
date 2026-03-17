@@ -129,3 +129,21 @@ Suggested entry format:
 - Interesting facts:
   - The initial registry deliberately covers two near-term needs rather than every future lane: Phase 1 oracle-alpha prompts and factual-recall prompts for tool-breakage.
   - The guard now exists in both importable Python code and a runnable export script, which lowers the chance that someone bypasses it accidentally.
+
+## [2026-03-16T22:40:00-0500] Control Suite Before Runner
+- Stage: implementation
+- Feel of the Experiment: This is the part of research infrastructure that looks boring until it saves the project. The repo now has a way to say “these are the controls we promised” without pretending that promise has already been executed.
+- Working Hypotheses:
+  - The next temptation will be to start runner work and quietly drift from the saved control plan unless the loader becomes the default path immediately.
+- Hunches and Guesses:
+  - MIB was the easiest place to accidentally bluff, so forcing it into `planned` versus `omitted` felt more important than wiring a toy adapter.
+- Predictions:
+  - The first oracle-alpha runner will probably reveal that the control suite needs one or two additional reporting fields, but not a different backbone.
+- Surprises and Tensions:
+  - The repo had already accumulated enough methodological language that the missing piece was not another decision memo; it was a config and code path that future execution cannot casually bypass.
+- Confidence:
+  - high in the saved control-plan format being the right floor
+  - medium in the exact stability metrics list being final
+- Interesting facts:
+  - The MIB control is now explicit but still honest: planned benchmark anchor, no fake execution claim, revisit once a runner exists.
+  - The new helper module stays runner-agnostic, which should make it usable for both the eventual development-model path and the primary Gemma path.
