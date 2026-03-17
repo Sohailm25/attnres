@@ -179,6 +179,17 @@
     - the entropy gap improved from `-0.0590` to `-0.0349`
   - the compact-subword proxy no longer beat the matched baseline at that longer horizon (`6.6764` versus `6.6463`)
   - interpretation: compact subword is a better proxy regime than characters for future Figure 8 work, but tokenization realism alone is not enough to clear the alignment problem; the next likely bottleneck is capacity or training horizon rather than tokenization
+- `known`: `resattn-111` has now isolated model capacity as the next Figure 8 proxy lever on the compact-subword regime:
+  - `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1.md` widens the same `8`-block compact-subword proxy from `d_model=96`, `d_ff=384` to `d_model=160`, `d_ff=640` while holding the `1500`-step horizon fixed
+  - width improved the widened proxy in absolute terms but helped the matched baseline more:
+    - widened baseline best eval loss `= 6.5899`
+    - widened AttnRes best eval loss `= 6.6496`
+    - widened loss delta `= +0.0598`
+  - the Figure-8-facing read stayed mixed:
+    - deep embedding persistence improved from `0.1364` to `0.1515`
+    - the entropy gap regressed from `-0.0349` to `-0.0561`
+    - the entropy ordering remained inverted
+  - interpretation: width alone is not enough to recover the compact-subword baseline comparison or the prereg layer-type-specialization signature at the fixed `1500`-step horizon; the next likely bottleneck is optimization horizon on the widened regime rather than more tokenization or width changes
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -254,7 +265,7 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-111` to scale the compact-subword Figure 8 proxy on the next likely bottleneck, such as model capacity or optimization horizon, without reopening tokenization.
+1. Take `resattn-jci` to test optimization horizon on the widened compact-subword Figure 8 proxy without changing tokenization or width again.
 2. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.

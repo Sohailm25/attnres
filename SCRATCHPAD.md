@@ -219,6 +219,55 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
 - Outcome: FAILURE
 
+## [2026-03-17T16:25:00-0500] PRE-RUN: compact-subword capacity-first Figure 8 proxy follow-up
+- tmux session: `attnres-111-capacity`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
+- Config: `tokenizer_mode=compact_subword`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `steps=1500`, `batch_size=16`, `seed=11`
+- What I'm testing: whether model capacity, rather than tokenization, is the next bottleneck for the local compact-subword Block AttnRes Figure 8 proxy.
+- Expected outcome: the wider compact-subword proxy regains a loss edge over the matched baseline while preserving or improving the paper-facing Figure 8 proxy metrics relative to the smaller compact-subword run.
+- Expected duration: ~30-90 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/checkpoints/`
+- Checkpoint cadence: every `50` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the wider proxy loses at the fixed `1500`-step horizon, the result may still reflect optimization undertraining rather than proving capacity is unhelpful.
+- Implementation verified: YES - existing compact-subword proxy runner already supports width scaling, checkpoint/resume, and summary export; unit tests for the runner path are already green on trunk.
+- Status: LAUNCHING
+
+## [2026-03-17T16:28:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up initial launch
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 512 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
+- Outcome: FAILURE
+- Key metric: launch blocked before training by `compact subword vocabulary size 18494 exceeds config.vocab_size=512`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/run.log`
+- Anomalies: the first spec reused the old character-level vocabulary assumption instead of the saved compact-subword manifest requirement
+- Next step: relaunch with `vocab_size=20000`, matching the saved compact-subword regime on the same data slice
+
+## [2026-03-17T16:31:00-0500] PRE-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
+- tmux session: `attnres-111-capacity`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
+- Config: `tokenizer_mode=compact_subword`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `steps=1500`, `batch_size=16`, `seed=11`
+- What I'm testing: whether width, rather than tokenization, is the next bottleneck for the local compact-subword Block AttnRes Figure 8 proxy.
+- Expected outcome: the wider compact-subword proxy regains a loss edge over the matched baseline while preserving or improving the paper-facing Figure 8 proxy metrics relative to the smaller compact-subword run.
+- Expected duration: ~30-90 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/checkpoints/`
+- Checkpoint cadence: every `50` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the wider proxy loses at the fixed `1500`-step horizon, the result may still reflect optimization undertraining rather than proving capacity is unhelpful.
+- Implementation verified: YES - the saved compact-subword artifact on the same data slice already proves `vocab_size=20000` is the correct regime, so this relaunch isolates width rather than re-testing tokenization.
+- Status: LAUNCHING
+
+## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
+- Outcome: SUCCESS
+- Key metric: baseline best eval loss `6.5899`, AttnRes best eval loss `6.6496`, delta `+0.0598`; deep embedding persistence `0.1515`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1.md`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: the initial launch used the wrong compact-subword vocabulary size; rerunning the exact final command after completion reused the saved checkpoints and finished in `7.52` seconds
+- Next step: close `resattn-111` as a useful capacity-isolation result and move the Figure 8 lane to `resattn-jci`, which tests optimization horizon on the widened compact-subword regime
+
 ## [2026-03-17T14:50:52-0500] PRE-RUN: small local Block AttnRes viability smoke
 - tmux session: `attnres-proxy-smoke-v1`
 - Script: `scripts/run_attnres_proxy_viability.py`

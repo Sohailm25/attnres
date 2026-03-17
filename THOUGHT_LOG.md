@@ -624,3 +624,25 @@ Suggested entry format:
 - Interesting facts:
   - Relative to the char-level scaled run, compact subword improved deep embedding persistence from `0.1049` to `0.1364`.
   - The entropy gap improved from `-0.0590` to `-0.0349`, but it still stayed on the wrong side of zero.
+
+## [2026-03-17T16:40:00-0500] Width Helped The Figure A Little, And The Baseline More
+- Stage: implementation
+- Feel of the Experiment: This is the kind of mixed result I trust. It did not hand us the clean “just make it bigger” story, but it did sharpen the next move without reopening old questions.
+- Working Hypotheses:
+  - Compact subword is still the right proxy regime.
+  - Width alone is not enough at the fixed `1500`-step horizon; the widened proxy likely needs more optimization budget if it is going to compete with the matched baseline.
+- Hunches and Guesses:
+  - The deeper embedding persistence gain feels real enough that I do not want to abandon the widened regime.
+  - The baseline absorbing more of the added capacity than the routed proxy makes horizon the next cleaner lever than another width bump.
+- Predictions:
+  - A horizon-only follow-up on the widened compact-subword regime is more informative than another width or tokenization change.
+  - If the entropy ordering still refuses to move after the longer-horizon run, the next thing to question is the corpus or proxy objective, not width.
+- Surprises and Tensions:
+  - I expected width to at least recover the baseline comparison if capacity were the main blocker, but the widened baseline improved more than the widened proxy.
+  - Deep embedding persistence improved again even while the entropy gap regressed, which keeps the Figure 8 read frustratingly split.
+- Confidence:
+  - high that `resattn-111` should close as a real bottleneck-isolation result
+  - medium that the next Figure 8 follow-up should be optimization horizon rather than a bigger architectural change
+- Interesting facts:
+  - The widened run improved deep embedding persistence from `0.1364` to `0.1515`.
+  - The widened loss delta worsened to `+0.0598`, because the matched baseline improved from `6.6463` to `6.5899` while the AttnRes proxy improved only to `6.6496`.

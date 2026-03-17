@@ -385,3 +385,15 @@
   - the entropy ordering still remained inverted
   That means the next bottleneck is more likely model capacity or optimization horizon than tokenization choice.
 - Impact: `resattn-3l6` can close once the new artifact and state docs land, and the next Figure 8 issue becomes `resattn-111` rather than another char-level rerun.
+
+## [2026-03-17T16:40:00-0500] DECISION: Treat width-only scaling as informative but insufficient, and move the next Figure 8 follow-up to optimization horizon
+
+- Trigger: `resattn-111` widened the compact-subword local Block AttnRes proxy from `d_model=96`, `d_ff=384` to `d_model=160`, `d_ff=640` while keeping the `1500`-step horizon, corpus, and tokenization fixed.
+- Decision: close the capacity-isolation issue as a useful mixed result, keep the widened compact-subword regime as the current Figure 8 proxy default, and make the next follow-up a horizon-only continuation rather than another width or tokenization change.
+- Rationale: width helped the proxy somewhat, but not in the way needed for the claim:
+  - the widened AttnRes proxy improved from `6.6764` to `6.6496` best eval loss
+  - the widened matched baseline improved more strongly from `6.6463` to `6.5899`
+  - deep embedding persistence improved again from `0.1364` to `0.1515`
+  - the entropy gap regressed from `-0.0349` to `-0.0561`, leaving the ordering inverted
+  This is enough to say capacity alone is not the full fix at the fixed `1500`-step horizon. The remaining clean next question is whether the widened proxy is simply under-optimized.
+- Impact: `resattn-111` can close once the artifact and state docs land, and the next Figure 8 issue becomes `resattn-jci` rather than another width or tokenization sweep.
