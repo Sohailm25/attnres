@@ -99,6 +99,9 @@ class ScaffoldTests(unittest.TestCase):
             "controlled dynamic-routing counterfactual",
             "harmfulness",
             "reproducible proxy",
+            "wip/resattn-scaffold",
+            "source of truth",
+            "canonical mainline",
         ]
         for snippet in required_snippets:
             self.assertIn(snippet, content)

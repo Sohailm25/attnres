@@ -319,6 +319,13 @@ Every non-trivial experiment should end with a concise technical write-up stored
 
 The main figure or table should be easy to identify from a quick scan of the directory.
 
+### 10. Branch Truth
+
+- `wip/resattn-scaffold` is the canonical mainline branch for this repo. Treat it as `main` until Sohail decides to rename it.
+- Completed work branches must be merged back into `wip/resattn-scaffold` so that branch remains the source of truth.
+- In-progress work may remain on a task branch until the task is actually done. Do not force premature merges for work that is still active.
+- Do not leave completed work stranded only on a WIP branch.
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
