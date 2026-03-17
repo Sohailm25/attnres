@@ -208,14 +208,34 @@
       - tuned target-rank-range increase is `7 / 8`
       - raw and tuned best-target-rank worsening are both `4 / 8`
     - interpretation: the locked confirm split supports a same-model rank-instability story under routing, not the legacy absolute non-monotonicity story
-  - `resattn-g09` is now the next tool-breakage blocker: add the controlled dynamic-routing counterfactual before making the strong Gemma tool-breakage claim
+  - `resattn-g09` has now landed the prereg-required controlled dynamic-routing counterfactual on the same locked confirm split:
+    - `validation/tool_breakage.py` now includes the counterfactual control-arm machinery and `scripts/run_tool_breakage_dynamic_counterfactual.py` is the launch entry point
+    - `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1.md` is the confirm artifact comparing the saved routed trace against:
+      - `prompt_permuted_alpha`: deterministic cyclic reassignment of the saved confirm oracle alphas
+      - `pilot_mean_alpha`: fixed alpha equal to the mean oracle alpha over the saved pilot prompts
+    - the fixed non-uniform control is weaker than the prompt-matched routed trace on the tuned primary metric:
+      - `pilot_mean_alpha` mean tuned KL over original is `+1.9137`
+      - routed minus `pilot_mean_alpha` mean tuned KL is `+0.6091`
+      - routed minus `pilot_mean_alpha` final-position tuned KL is `+0.8750`
+      - routed worsens tuned final target rank versus `pilot_mean_alpha` on `5 / 8` prompts
+    - the prompt-misaligned dynamic control is at least as damaging as the prompt-matched routed trace on the tuned primary metric:
+      - `prompt_permuted_alpha` mean tuned KL over original is `+2.8310`
+      - routed minus `prompt_permuted_alpha` mean tuned KL is `-0.3082`
+      - routed minus `prompt_permuted_alpha` final-position tuned KL is `-0.6541`
+      - routed worsens tuned final target rank versus `prompt_permuted_alpha` on `4 / 8` prompts
+      - routed increases tuned rank range versus `prompt_permuted_alpha` on only `2 / 8` prompts
+    - interpretation: `resattn-g09` clears the weaker static-routing objection but blocks the stronger same-model Gemma claim that prompt-matched input-dependent routing is uniquely responsible for the observed lens damage
+  - the strongest current Gemma tool-breakage statement is therefore limited to:
+    - routing degrades the same-model original baseline on the locked factual-recall confirm split
+    - the degradation is stronger than a fixed non-uniform alpha control
+    - the current dynamic counterfactual does not support the stronger claim that prompt-matched routing is more damaging than prompt-misaligned dynamic routing
 
 ## Immediate Next Steps
 
-1. Use `resattn-g09` to run the controlled dynamic-routing counterfactual for the Gemma tool-breakage claim.
-2. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
-3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
-4. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+1. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
+2. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
+3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
 ## Phase 1 Gate
@@ -238,7 +258,7 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: raw logit lens is not assumed monotonic in the vanilla model; the strong tool-breakage claim requires additional instability under routing relative to the original-model baseline and a tuned-lens-aware comparison.
 - `known`: the tuned-lens-aware comparison is now KL-primary on Gemma-2 factual recall; final-position metrics must still be reported and control answer-token-facing interpretation.
 - `known`: the current Gemma pilot shows that the simple non-monotonicity boolean can saturate on the original-model baseline, so later tool-breakage decisions must use an explicitly relative routed-versus-original metric rather than that boolean alone; the current codified fallback is relative target-rank instability and target-rank degradation.
-- `known`: the strong tool-breakage claim also requires a controlled dynamic-routing counterfactual or another explicitly logged confirmatory failure metric.
+- `known`: the prereg-required dynamic counterfactual now exists on the locked Gemma confirm split, and it weakens the strongest same-model claim: the prompt-permuted dynamic control is at least as damaging as the prompt-matched routed trace on the tuned primary KL surface.
 - `known`: router training success is not just "it trains"; the local target gate is `R^2 > 0.5` when approximating oracle-alpha.
 - `known`: clustering must be informative enough to clear `silhouette > 0.2` before we claim task-structured routing.
 - `known`: if hierarchical clustering is run on Jensen-Shannon distances directly, use average or complete linkage rather than Ward.

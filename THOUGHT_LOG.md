@@ -560,3 +560,23 @@ Suggested entry format:
 - Interesting facts:
   - The saved config had already declared `r_squared` primary and `mean_js_divergence` secondary; the problem was that the runner was ignoring that declaration.
   - Aggregate alpha stability and prompt-matched alpha stability are different objects, and the predictiveness question really needs the latter.
+
+## [2026-03-17T14:19:00-0500] The Gemma Counterfactual Narrowed The Claim More Than The Story
+- Stage: implementation
+- Feel of the Experiment: This is exactly the kind of result that is annoying operationally and valuable scientifically. The counterfactual did not kill the lane, but it did kill the easy version of the claim.
+- Working Hypotheses:
+  - The same-model Gemma tool-breakage result is real as a routed-versus-original degradation and as a stronger-than-static-control effect.
+  - What failed is the more specific story that prompt-matched input-dependent routing is uniquely responsible for the damage, at least under the current dynamic control.
+- Hunches and Guesses:
+  - The prompt-permuted control may be so damaging because dynamic but misaligned mixtures are enough to scramble the same intermediate lens traces, which pushes the interpretation toward "non-uniform routed mixtures are brittle" rather than "the learned prompt-specific route is the uniquely bad actor."
+- Predictions:
+  - The next highest-value lane should probably shift to the Figure 8 proxy rather than immediately trying to rescue the Gemma claim with another control.
+- Surprises and Tensions:
+  - I expected the prompt-permuted control to stay harmful, but I did not expect it to beat the prompt-matched route on the tuned mean KL metric.
+  - The fixed pilot-mean alpha control being weaker is still useful; it says the control did not fail across the board.
+- Confidence:
+  - high that the strong same-model Gemma claim is still blocked
+  - medium that a finer dynamic control would change the qualitative conclusion enough to justify immediate follow-up
+- Interesting facts:
+  - `pilot_mean_alpha` stayed clearly weaker than the prompt-matched route on tuned KL (`routed minus control = +0.6091`), while `prompt_permuted_alpha` was more damaging (`routed minus control = -0.3082`).
+  - The tuned routed-versus-prompt-permuted rank metrics were also weak: final-rank worsening `4 / 8`, best-rank worsening `3 / 8`, and rank-range increase only `2 / 8`.
