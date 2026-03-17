@@ -59,10 +59,14 @@
   - `configs/oracle_alpha_controls_v1.yaml` records the current stability suite, held-out predictiveness check, and explicit MIB anchor plan
   - `validation/oracle_alpha_controls.py` provides the registry loader plus reusable bootstrap, restart-stability, and held-out predictiveness helpers
   - the current MIB stance is `planned`, not `omitted`: the control is recorded now, while execution remains blocked on a future oracle-alpha runner
+- `known`: the first oracle-alpha execution harness now exists:
+  - `validation/oracle_alpha_runner.py` implements a final-output development slice that optimizes a per-sequence softmax alpha vector over fixed cached residual sources
+  - `scripts/run_oracle_alpha_development_slice.py` consumes the saved prompt and control registries by default and writes a JSON artifact
+  - the first `gpt2-xl` pilot smoke on `2` prompts completed on local MPS and improved mean sequence loss over uniform by `1.2141` nats, but this remains a runner smoke rather than a claim-bearing result
 
 ## Immediate Next Steps
 
-1. Build the first oracle-alpha execution harness (`resattn-myh`) so the saved control suite can be exercised on the development model rather than remain config-only.
+1. Scale the new oracle-alpha runner beyond the two-prompt smoke in `resattn-83v`: pilot batch size, restart stability, and prompt perturbations are the next live oracle-alpha execution work.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 4. Validate the refusal-feature discovery workflow before the safety lane becomes active.
@@ -95,6 +99,7 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: claim-bearing prompts and thresholds must come from a pilot/confirmatory split rather than one blended prompt pool.
 - `known`: the confirm set is now code-locked against exploratory access through the saved prompt registry helpers and export script.
 - `known`: claim-bearing oracle-alpha runs must also load an explicit control plan that fixes bootstrap size, stability perturbations, held-out predictiveness evaluation, and the MIB plan or omission rationale.
+- `known`: the current oracle-alpha runner is a development slice over final-output residual sources, not yet the full claim-bearing multi-layer analysis surface.
 - `known`: MIB is a benchmark/control anchor, not the project spine; if it is omitted for a lane, that omission must be justified in `DECISIONS.md`.
 - `known`: claim-bearing pattern interpretations require stability and out-of-sample alpha predictiveness on the confirmatory split.
 - `known`: strong Figure 8 or trained-routing match claims require a reproducible proxy or local small-scale depth-mixing reproduction; otherwise Lane 2 is an internal prediction-surface comparison against the published AttnRes Figure 8.

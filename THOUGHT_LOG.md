@@ -147,3 +147,21 @@ Suggested entry format:
 - Interesting facts:
   - The MIB control is now explicit but still honest: planned benchmark anchor, no fake execution claim, revisit once a runner exists.
   - The new helper module stays runner-agnostic, which should make it usable for both the eventual development-model path and the primary Gemma path.
+
+## [2026-03-16T23:08:00-0500] First Runner Smoke
+- Stage: implementation
+- Feel of the Experiment: The project crossed from “careful scaffold” into “actual experiment code” again. The result is encouraging, but the more important fact is that the runner is now forced through the saved prompt and control contracts.
+- Working Hypotheses:
+  - The biggest remaining implementation risk is no longer whether a basic oracle-alpha optimization can run; it is whether the same path stays stable under restart and prompt perturbation pressure.
+- Hunches and Guesses:
+  - A surprisingly large loss drop on a tiny pilot slice is more likely to reflect the freedom of the per-sequence final-output objective than any strong scientific story yet.
+- Predictions:
+  - Scaling from `2` prompts to a real pilot batch will surface the first practical bottlenecks around cache reuse and runtime, not around the basic alpha optimizer.
+- Surprises and Tensions:
+  - The first `gpt2-xl` slice improved over uniform more strongly than I expected for such a small harness, which increases my suspicion rather than my confidence until restart and perturbation checks exist.
+- Confidence:
+  - high that the runner wiring is real
+  - low-to-medium that the raw magnitude of this first smoke improvement will survive more disciplined scaling
+- Interesting facts:
+  - The final-output development slice used `98` sources on `gpt2-xl`: embeddings plus `48` attention outputs and `48` MLP outputs.
+  - The first two pilot prompts both improved over uniform, but that is still a smoke artifact and not a preregistered claim-bearing gate.

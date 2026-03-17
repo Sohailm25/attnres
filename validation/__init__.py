@@ -28,6 +28,11 @@ from .oracle_alpha_controls import (
     mean_pairwise_js_divergence,
     mean_topk_jaccard_similarity,
 )
+from .oracle_alpha_runner import (
+    OracleAlphaRunSummary,
+    OracleAlphaSequenceResult,
+    run_oracle_alpha_collection,
+)
 
 __all__ = [
     "BootstrapMeanInterval",
@@ -37,6 +42,8 @@ __all__ = [
     "ModelBackedReconstructionMetrics",
     "OracleAlphaControlPlan",
     "OracleAlphaControlRegistry",
+    "OracleAlphaRunSummary",
+    "OracleAlphaSequenceResult",
     "PredictivenessPlan",
     "PredictivenessSummary",
     "StabilitySuitePlan",
@@ -48,6 +55,7 @@ __all__ = [
     "mean_pairwise_js_divergence",
     "mean_topk_jaccard_similarity",
     "model_backed_reconstruction_metrics",
+    "run_oracle_alpha_collection",
     "rms_norm",
     "routed_logits",
     "shared_final_norm_logit_contributions",
