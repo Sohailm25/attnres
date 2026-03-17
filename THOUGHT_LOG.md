@@ -203,3 +203,22 @@ Suggested entry format:
 - Interesting facts:
   - The confirm-split oracle alpha itself improved mean loss over uniform by `1.3409` nats, so the blocker is predictiveness rather than the confirm oracle run.
   - The current mean-pooled `h_1[t]` ridge predictor reached `R^2 = -0.2456` and mean JS `= 0.2434` on the confirm split.
+
+## [2026-03-17T01:08:00-0500] Slightly Better Still Isn’t Good Enough
+- Stage: implementation
+- Feel of the Experiment: The richer-feature comparison was worth doing because it moved the result in the right direction without needing any story-telling. But the movement was small enough that it mostly sharpened the next question instead of answering it.
+- Working Hypotheses:
+  - The real missing ingredient is probably token-awareness or a less lossy sequence summary, not merely “a slightly later layer”.
+- Hunches and Guesses:
+  - Mean-pooled `h_4[t]` looks like a better internal baseline than mean-pooled `h_1[t]`, but it still feels like a compressed shadow of the object we are asking it to predict.
+- Predictions:
+  - The next meaningful improvement will come from features that preserve more positional structure or encode prompt shape more directly.
+- Surprises and Tensions:
+  - `h_4[t]` beat the other tested internal summaries, including the `h_1+h_4` concatenations, which makes me suspect that “better early contextualization” matters more here than raw feature count.
+  - Even the best candidate still wanted the strongest ridge penalty, which is an uncomfortable sign that the predictor is mostly trying not to say too much.
+- Confidence:
+  - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
+  - low that further pooled-state variants alone will solve the confirm-split predictiveness problem
+- Interesting facts:
+  - The best tested internal feature summary improved predicted mean loss from `-0.0348` to `-0.0010` nats versus uniform.
+  - The confirm-split `R^2` stayed negative (`-0.2314`) even after that improvement.

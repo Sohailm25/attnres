@@ -138,6 +138,10 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             learning_rate=0.1,
             seed=11,
             regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=(
+                "mean_pooled_h_1[t]_resid_post_layer_0",
+                "mean_pooled_h_1[t]_plus_h_4[t]_concat",
+            ),
         )
 
         self.assertEqual("pilot", summary.train_run.split)
@@ -145,8 +149,26 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         self.assertFalse(summary.eval_run.exploratory)
         self.assertEqual(3, summary.predictiveness_summary.num_train_examples)
         self.assertEqual(2, summary.predictiveness_summary.num_eval_examples)
+        self.assertEqual(2, len(summary.candidate_feature_summaries))
+        self.assertIn(
+            summary.feature_source,
+            (
+                "mean_pooled_h_1[t]_resid_post_layer_0",
+                "mean_pooled_h_1[t]_plus_h_4[t]_concat",
+            ),
+        )
         self.assertIn(summary.selected_regularization_strength, (1e-3, 1e-1, 1.0))
         self.assertEqual(2, len(summary.eval_predictions))
+        self.assertTrue(
+            all(
+                candidate.feature_source
+                in (
+                    "mean_pooled_h_1[t]_resid_post_layer_0",
+                    "mean_pooled_h_1[t]_plus_h_4[t]_concat",
+                )
+                for candidate in summary.candidate_feature_summaries
+            )
+        )
         for prediction in summary.eval_predictions:
             self.assertEqual(prediction.num_sources, len(prediction.predicted_alpha))
             self.assertGreaterEqual(prediction.predicted_loss, 0.0)

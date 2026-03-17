@@ -73,10 +73,14 @@
   - on `gpt2-xl`, the confirm-split result was weak for the current feature spec: `R^2 = -0.2456`, mean JS to oracle alpha `= 0.2434`, and predicted alpha vectors were slightly worse than uniform on average (`-0.0348` nats)
   - the oracle alpha itself remained strong on the confirm split (`1.3409` nats over uniform), so the failure is in the current predictor surface rather than in the confirm-split oracle run
   - strong oracle-alpha interpretation remains blocked until a stronger out-of-sample predictor exists
+- `known`: the first richer feature-summary comparison improved the predictor slightly but did not clear the blocker:
+  - `resattn-k2e` compared a small pilot-only set of internal-state summaries and selected `mean_pooled_h_4[t]_resid_post_layer_3` by leave-one-out pilot mean JS
+  - the selected `h_4[t]` summary modestly improved the confirm metrics (`R^2 = -0.2314`, mean JS `= 0.2409`, predicted mean improvement `= -0.0010` nats) relative to the `h_1[t]` baseline
+  - that is still not strong enough for claim-bearing interpretation, so the next follow-up moves to token-aware or prompt-level feature surfaces rather than declaring the problem solved
 
 ## Immediate Next Steps
 
-1. Investigate stronger feature summaries for oracle-alpha held-out predictiveness in `resattn-k2e`.
+1. Test token-aware or prompt-level feature surfaces for oracle-alpha predictiveness in `resattn-7ve`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

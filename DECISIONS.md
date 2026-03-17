@@ -158,3 +158,10 @@
 - Decision: omit MIB for this specific development-model prompt-slice run, while keeping the broader control-suite anchor planned for a later benchmark-compatible lane.
 - Rationale: the current pilot/confirm oracle-alpha surface is a custom local prompt registry on `gpt2-xl`, not a benchmark-compatible task-model pair where a MIB-style sanity task would be informative rather than artificial.
 - Impact: the runner-stage artifact now records a justified omission instead of silently skipping MIB, and future compatible lanes should revisit the anchor rather than treating it as closed.
+
+## [2026-03-17T01:08:00-0500] DECISION: Keep feature-source selection pilot-only and treat `h_4[t]` mean pooling as the current best internal summary, not a locked predictor
+
+- Trigger: `resattn-k2e` compared a small richer set of internal-state summaries to see whether the failed held-out predictiveness result was just an overly weak `h_1[t]` feature choice.
+- Decision: rank candidate feature sources on pilot leave-one-out mean JS only, select `mean_pooled_h_4[t]_resid_post_layer_3` as the best tested internal-state summary, and keep the confirm split for a single held-out rerun.
+- Rationale: using confirm to compare feature families would quietly contaminate the gate. The pilot-only ranking improved the predictor modestly, which is useful information, but the confirm result stayed too weak to justify locking the feature source as solved.
+- Impact: future predictiveness work should treat mean-pooled `h_4[t]` as the current best internal baseline and move next to token-aware or prompt-level features rather than continuing to iterate tiny pooled-state variants.
