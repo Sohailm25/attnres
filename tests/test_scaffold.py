@@ -61,6 +61,7 @@ class ScaffoldTests(unittest.TestCase):
             "scripts/export_prompt_split.py",
             "scripts/run_oracle_alpha_development_slice.py",
             "scripts/run_oracle_alpha_heldout_predictiveness_check.py",
+            "scripts/run_oracle_alpha_predictiveness_campaign.py",
             "scripts/run_oracle_alpha_pilot_stability_suite.py",
         }
         missing = sorted(path for path in expected if not (ROOT / path).is_file())

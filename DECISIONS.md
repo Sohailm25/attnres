@@ -221,3 +221,10 @@
 - Decision: create `prompts/registry_v3.yaml`, expand the oracle-alpha split to `32` pilot prompts and `16` confirm prompts, point the default loader and config at `registry_v3`, and rerun the same loss-aware comparison without changing the feature surface or target set.
 - Rationale: if the logit path is the real current best method, it should survive more data before we spend effort on another redesign. Scaling the saved prompt surface is the cleanest way to test that.
 - Impact: the `oracle_alpha_logit_vector` path stayed selected, the held-out routed-loss metric remained positive and strengthened to `+0.1277` nats, and `12 / 16` confirm prompts improved over uniform. The next issue should scale this same path toward the prereg-sized Phase 1 gate.
+
+## [2026-03-17T09:29:48-0500] DECISION: Build the next oracle-alpha scale-up as a resumable campaign instead of another one-shot rerun
+
+- Trigger: after `resattn-0vx`, the next live question was no longer whether to scale but how to do it without repeatedly paying for nearby reruns as the prompt surface grows toward the prereg gate.
+- Decision: add a checkpointed campaign layer that persists prompt-level oracle sequence results, feature-vector caches, and the full target-by-regularization tuning grid under one output directory before launching the larger run itself.
+- Rationale: the current `32 / 16` result is strong enough to justify scaling, but the old held-out script was still operationally disposable: no prompt-level resume, no reusable feature cache, and no saved full lambda table. Those would force avoidable reruns once the run became expensive.
+- Impact: the repo now has a reusable prereg-scale launch path, but the actual larger scientific run remains pending on freezing the next saved prompt surface and launching it in `tmux`.

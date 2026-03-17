@@ -120,10 +120,15 @@
   - the held-out confirm routed-loss metric remained positive and strengthened in absolute terms (`+0.1277` nats over uniform, `12 / 16` prompts positive)
   - confirm `R^2` improved to `-0.1954`, while confirm mean JS was `0.2421`; descriptive alpha recovery is still weak, but the routed-loss signal now survives a meaningfully larger split
   - the next oracle-alpha follow-up is to scale this same logit path toward the prereg-sized Phase 1 gate rather than to change targets again
+- `known`: the prereg-scale campaign build-out now exists even though the large launch has not started:
+  - `validation/oracle_alpha_campaign.py` materializes prompt-level oracle checkpoints and feature-vector caches under a reusable campaign output directory
+  - `scripts/run_oracle_alpha_predictiveness_campaign.py` launches that checkpointed path and writes a manifest, split-level oracle summaries, and a final predictiveness summary
+  - `validation/oracle_alpha_runner.py` now accepts cached per-prompt oracle results and cached feature vectors, and each feature-source/target candidate records the full regularization grid rather than only the selected `lambda`
+  - the repo is now operationally ready for a tmux-backed prereg-scale run once the next saved prompt surface is frozen, but no larger campaign artifact exists yet
 
 ## Immediate Next Steps
 
-1. Scale the `registry_v3` loss-aware logit path toward the prereg-sized Phase 1 gate in `resattn-9jq`.
+1. Freeze the next prereg-scale oracle-alpha prompt surface, likely as `registry_v4`, and launch it through the checkpointed campaign runner in `resattn-9jq`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

@@ -20,6 +20,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Pilot/confirmatory prompt registry v3 scale-up | infrastructure | pass | `results/infrastructure/20260317-pilot-confirm-registry-v3.md` |
 | Oracle-alpha Phase 1 control suite | infrastructure | pass | `results/infrastructure/20260316-oracle-alpha-control-suite.md` |
 | Held-out predictiveness review alignment | infrastructure | pass | `results/infrastructure/20260316-heldout-predictiveness-review-alignment.md` |
+| Prereg-scale oracle-alpha campaign build-out | infrastructure | pass | `results/infrastructure/20260317-prereg-scale-campaign-buildout.md` |
 
 ## Oracle Alpha
 

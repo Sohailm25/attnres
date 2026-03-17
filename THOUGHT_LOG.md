@@ -219,6 +219,23 @@ Suggested entry format:
 - Confidence:
   - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
 
+## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
+- Stage: planning
+- Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.
+- Working Hypotheses:
+  - The current positive `32 / 16` result is real enough that the next bottleneck is operational discipline more than predictor redesign.
+- Hunches and Guesses:
+  - The most annoying future reruns would come from forgetting to save the per-prompt oracle outputs, not from forgetting one more metric in the summary table.
+- Predictions:
+  - Once the larger prompt surface is frozen, the next useful disagreements will be about prompt composition and confirm-split size, not about whether the runner can survive interruption.
+- Surprises and Tensions:
+  - The old held-out script was scientifically decent but operationally flimsy; that mismatch only really became obvious once the result was finally good enough to deserve scaling.
+- Confidence:
+  - medium-high that checkpointed prompt-level artifacts are the right no-regret build-out
+  - medium that the next saved prompt surface should be materially larger in both pilot and confirm, not just pilot again
+- Interesting facts:
+  - The current runner already had most of the scientific logic we needed; the missing piece was durable persistence of oracle results, feature vectors, and the full regularization sweep.
+
 ## [2026-03-17T09:08:00-0500] The Logit Path Survived A Bigger Split
 - Stage: implementation
 - Feel of the Experiment: This is the first result that feels like a genuine scaling signal instead of a fragile local win. The larger split did not just preserve positivity; it kept the same target family alive on a broader surface.

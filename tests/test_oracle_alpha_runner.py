@@ -225,6 +225,7 @@ class OracleAlphaRunnerTests(unittest.TestCase):
                 selected_regularization,
                 _,
                 metric_values,
+                _,
             ) = self._tuned_ridge_regularization(
                 model=object(),
                 train_entries=(
@@ -380,6 +381,41 @@ class OracleAlphaRunnerTests(unittest.TestCase):
                 "oracle_alpha_depth_type_band_logit_vector",
             },
             {candidate.target for candidate in summary.candidate_feature_summaries},
+        )
+
+    def test_predictiveness_candidate_records_full_regularization_grid(self) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=(
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+            ),
+            candidate_target_names=("oracle_alpha_logit_vector",),
+        )
+
+        self.assertEqual(1, len(summary.candidate_feature_summaries))
+        candidate = summary.candidate_feature_summaries[0]
+        self.assertEqual(3, len(candidate.regularization_summaries))
+        self.assertEqual(
+            (1e-3, 1e-1, 1.0),
+            tuple(
+                regularization.regularization_strength
+                for regularization in candidate.regularization_summaries
+            ),
+        )
+        self.assertTrue(
+            all(
+                regularization.tuning_primary_metric
+                == "mean_predicted_improvement_over_uniform"
+                and regularization.tuning_secondary_metric == "mean_js_divergence"
+                for regularization in candidate.regularization_summaries
+            )
         )
 
 

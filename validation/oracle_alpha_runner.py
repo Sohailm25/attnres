@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Callable, Mapping, Sequence
 
 import numpy as np
 import torch
@@ -140,6 +140,17 @@ class OracleAlphaPredictivenessSummary:
 
 
 @dataclass(frozen=True)
+class OracleAlphaPredictivenessRegularizationCandidate:
+    regularization_strength: float
+    tuning_primary_metric: str
+    tuning_primary_metric_value: float
+    tuning_secondary_metric: str
+    tuning_secondary_metric_value: float
+    tuning_r_squared: float
+    tuning_mean_js_divergence: float
+
+
+@dataclass(frozen=True)
 class OracleAlphaPredictivenessFeatureCandidate:
     target: str
     feature_source: str
@@ -150,6 +161,10 @@ class OracleAlphaPredictivenessFeatureCandidate:
     tuning_secondary_metric_value: float
     tuning_r_squared: float
     tuning_mean_js_divergence: float
+    regularization_summaries: tuple[
+        OracleAlphaPredictivenessRegularizationCandidate,
+        ...,
+    ]
 
 
 def _apply_final_norm_and_unembed(
@@ -441,6 +456,34 @@ def _feature_vector_for_source(
     return [float(value) for value in feature.detach().cpu().tolist()]
 
 
+def collect_feature_vectors(
+    *,
+    model: HookedTransformer,
+    prompt_entries: Sequence[PromptEntry],
+    prepend_bos: bool | None,
+    feature_source: str,
+    existing_feature_vectors: Mapping[str, Sequence[float]] | None = None,
+    on_feature_vector: Callable[[PromptEntry, list[float]], None] | None = None,
+) -> list[list[float]]:
+    cached_vectors = existing_feature_vectors or {}
+    collected_vectors = []
+    for entry in prompt_entries:
+        cached = cached_vectors.get(entry.prompt_id)
+        if cached is None:
+            vector = _feature_vector_for_source(
+                model=model,
+                prompt=entry.text,
+                prepend_bos=prepend_bos,
+                feature_source=feature_source,
+            )
+            if on_feature_vector is not None:
+                on_feature_vector(entry, vector)
+        else:
+            vector = [float(value) for value in cached]
+        collected_vectors.append(vector)
+    return collected_vectors
+
+
 def _loss_for_predicted_alpha(
     *,
     model: HookedTransformer,
@@ -610,6 +653,8 @@ def run_oracle_alpha_collection(
     learning_rate: float = 0.1,
     seed: int = 0,
     prepend_bos: bool | None = None,
+    existing_sequence_results: Mapping[str, OracleAlphaSequenceResult] | None = None,
+    on_sequence_result: Callable[[OracleAlphaSequenceResult], None] | None = None,
 ) -> OracleAlphaRunSummary:
     control_registry = load_oracle_alpha_control_registry()
     control_plan = control_registry.plans[collection_id]
@@ -628,17 +673,29 @@ def run_oracle_alpha_collection(
     if not entries:
         raise ValueError("at least one prompt entry is required")
 
-    sequence_results = tuple(
-        _optimize_sequence(
-            model=model,
-            entry=entry,
-            optimization_steps=optimization_steps,
-            learning_rate=learning_rate,
-            seed=seed + index,
-            prepend_bos=prepend_bos,
-        )
-        for index, entry in enumerate(entries)
-    )
+    cached_results = existing_sequence_results or {}
+    sequence_results = []
+    for index, entry in enumerate(entries):
+        cached = cached_results.get(entry.prompt_id)
+        if cached is None:
+            result = _optimize_sequence(
+                model=model,
+                entry=entry,
+                optimization_steps=optimization_steps,
+                learning_rate=learning_rate,
+                seed=seed + index,
+                prepend_bos=prepend_bos,
+            )
+            if on_sequence_result is not None:
+                on_sequence_result(result)
+        else:
+            if cached.prompt != entry.text or cached.split != entry.split:
+                raise ValueError(
+                    f"cached result for {entry.prompt_id!r} does not match prompt entry"
+                )
+            result = cached
+        sequence_results.append(result)
+    sequence_results = tuple(sequence_results)
     improvements = [
         result.uniform_loss - result.optimized_loss for result in sequence_results
     ]
@@ -950,7 +1007,12 @@ def _tuned_ridge_regularization(
     primary_metric: str,
     secondary_metric: str,
     prepend_bos: bool | None,
-) -> tuple[float, PredictivenessSummary, dict[str, float]]:
+) -> tuple[
+    float,
+    PredictivenessSummary,
+    dict[str, float],
+    tuple[OracleAlphaPredictivenessRegularizationCandidate, ...],
+]:
     if len(train_features) < 2:
         raise ValueError("at least two training examples are required")
     if not regularization_grid:
@@ -963,6 +1025,7 @@ def _tuned_ridge_regularization(
     best_regularization: float | None = None
     best_summary: PredictivenessSummary | None = None
     best_metric_overrides: dict[str, float] | None = None
+    regularization_summaries = []
     num_examples = len(train_features)
     for regularization_strength in regularization_grid:
         fold_predictions = []
@@ -1018,6 +1081,25 @@ def _tuned_ridge_regularization(
                 sum(fold_improvements) / len(fold_improvements)
             )
         }
+        regularization_summaries.append(
+            OracleAlphaPredictivenessRegularizationCandidate(
+                regularization_strength=float(regularization_strength),
+                tuning_primary_metric=primary_metric,
+                tuning_primary_metric_value=predictiveness_metric_value(
+                    summary=candidate_summary,
+                    metric_name=primary_metric,
+                    metric_overrides=candidate_metric_overrides,
+                ),
+                tuning_secondary_metric=secondary_metric,
+                tuning_secondary_metric_value=predictiveness_metric_value(
+                    summary=candidate_summary,
+                    metric_name=secondary_metric,
+                    metric_overrides=candidate_metric_overrides,
+                ),
+                tuning_r_squared=candidate_summary.r_squared,
+                tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
+            )
+        )
         if best_summary is None:
             best_regularization = float(regularization_strength)
             best_summary = candidate_summary
@@ -1057,88 +1139,39 @@ def _tuned_ridge_regularization(
             best_summary = candidate_summary
             best_metric_overrides = candidate_metric_overrides
 
-    return best_regularization, best_summary, best_metric_overrides
+    return (
+        best_regularization,
+        best_summary,
+        best_metric_overrides,
+        tuple(regularization_summaries),
+    )
 
 
-def run_oracle_alpha_predictiveness_check(
+def build_oracle_alpha_predictiveness_summary(
     *,
     model: HookedTransformer,
     collection_id: str,
-    max_train_sequences: int | None = None,
-    max_eval_sequences: int | None = None,
-    optimization_steps: int = 20,
-    learning_rate: float = 0.1,
-    seed: int = 0,
-    regularization_grid: Sequence[float] = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
-    candidate_feature_sources: Sequence[str] | None = None,
-    candidate_target_names: Sequence[str] | None = None,
-    target_name_override: str | None = None,
+    train_entries: Sequence[PromptEntry],
+    eval_entries: Sequence[PromptEntry],
+    train_run: OracleAlphaRunSummary,
+    eval_run: OracleAlphaRunSummary,
+    regularization_grid: Sequence[float],
+    candidate_feature_sources: Sequence[str],
+    candidate_target_names: Sequence[str],
     prepend_bos: bool | None = None,
+    train_feature_vectors_by_source: Mapping[str, Sequence[Sequence[float]]]
+    | None = None,
+    eval_feature_vectors_by_source: Mapping[str, Sequence[Sequence[float]]]
+    | None = None,
 ) -> OracleAlphaPredictivenessSummary:
     control_registry = load_oracle_alpha_control_registry()
     control_plan = control_registry.plans[collection_id]
     predictiveness_plan = control_plan.predictiveness
-    target_name = target_name_override or predictiveness_plan.target
-    if predictiveness_plan.model_family != "ridge_regression":
-        raise ValueError("predictiveness plan must use ridge_regression")
-    if target_name_override is not None and candidate_target_names is not None:
-        raise ValueError(
-            "target_name_override and candidate_target_names are mutually exclusive"
-        )
 
-    train_entries = list(
-        resolve_prompt_entries(
-            collection_id=predictiveness_plan.train_collection_id,
-            split=predictiveness_plan.train_split,
-            exploratory=True,
-        )
-    )
-    eval_entries = list(
-        resolve_prompt_entries(
-            collection_id=predictiveness_plan.eval_collection_id,
-            split=predictiveness_plan.eval_split,
-            exploratory=False,
-        )
-    )
-    if max_train_sequences is not None:
-        train_entries = train_entries[:max_train_sequences]
-    if max_eval_sequences is not None:
-        eval_entries = eval_entries[:max_eval_sequences]
-    if len(train_entries) < 2:
-        raise ValueError("predictiveness training requires at least two pilot prompts")
-    if not eval_entries:
-        raise ValueError("predictiveness evaluation requires confirm prompts")
-    feature_sources = tuple(
-        candidate_feature_sources or ("mean_pooled_h_1[t]_resid_post_layer_0",)
-    )
-    if not feature_sources:
+    if not candidate_feature_sources:
         raise ValueError("candidate_feature_sources must not be empty")
-    target_names = tuple(candidate_target_names or (target_name,))
-    if not target_names:
+    if not candidate_target_names:
         raise ValueError("candidate_target_names must not be empty")
-
-    train_run = run_oracle_alpha_collection(
-        model=model,
-        collection_id=collection_id,
-        split=predictiveness_plan.train_split,
-        exploratory=True,
-        prompt_entries=train_entries,
-        optimization_steps=optimization_steps,
-        learning_rate=learning_rate,
-        seed=seed,
-        prepend_bos=prepend_bos,
-    )
-    eval_run = run_oracle_alpha_collection(
-        model=model,
-        collection_id=collection_id,
-        split=predictiveness_plan.eval_split,
-        exploratory=False,
-        prompt_entries=eval_entries,
-        optimization_steps=optimization_steps,
-        learning_rate=learning_rate,
-        seed=seed + 1000,
-        prepend_bos=prepend_bos,
-    )
 
     train_targets = [list(result.final_alpha) for result in train_run.sequence_results]
     eval_targets = [list(result.final_alpha) for result in eval_run.sequence_results]
@@ -1154,21 +1187,27 @@ def run_oracle_alpha_predictiveness_check(
     tuning_primary_metric_value = None
     tuning_secondary_metric_value = None
     selected_train_features = None
-    for feature_source in feature_sources:
-        train_features = [
-            _feature_vector_for_source(
+    train_feature_cache = train_feature_vectors_by_source or {}
+    eval_feature_cache = eval_feature_vectors_by_source or {}
+
+    for feature_source in candidate_feature_sources:
+        cached_train_vectors = train_feature_cache.get(feature_source)
+        if cached_train_vectors is None:
+            cached_train_vectors = collect_feature_vectors(
                 model=model,
-                prompt=entry.text,
+                prompt_entries=train_entries,
                 prepend_bos=prepend_bos,
                 feature_source=feature_source,
             )
-            for entry in train_entries
+        train_features = [
+            [float(value) for value in vector] for vector in cached_train_vectors
         ]
-        for candidate_target_name in target_names:
+        for candidate_target_name in candidate_target_names:
             (
                 candidate_regularization_strength,
                 candidate_summary,
                 candidate_metric_overrides,
+                regularization_summaries,
             ) = _tuned_ridge_regularization(
                 model=model,
                 train_entries=train_entries,
@@ -1203,6 +1242,7 @@ def run_oracle_alpha_predictiveness_check(
                     tuning_secondary_metric_value=candidate_tuning_secondary_metric_value,
                     tuning_r_squared=candidate_summary.r_squared,
                     tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
+                    regularization_summaries=regularization_summaries,
                 )
             )
             if tuning_primary_metric_value is None:
@@ -1236,14 +1276,16 @@ def run_oracle_alpha_predictiveness_check(
                 tuning_mean_js_divergence = candidate_summary.mean_js_divergence
                 selected_train_features = train_features
 
-    eval_features = [
-        _feature_vector_for_source(
+    cached_eval_vectors = eval_feature_cache.get(selected_feature_source)
+    if cached_eval_vectors is None:
+        cached_eval_vectors = collect_feature_vectors(
             model=model,
-            prompt=entry.text,
+            prompt_entries=eval_entries,
             prepend_bos=prepend_bos,
             feature_source=selected_feature_source,
         )
-        for entry in eval_entries
+    eval_features = [
+        [float(value) for value in vector] for vector in cached_eval_vectors
     ]
     selected_train_target_matrix = alpha_target_matrix(
         target_name=selected_target_name,
@@ -1332,4 +1374,97 @@ def run_oracle_alpha_predictiveness_check(
         oracle_mean_improvement_over_uniform=oracle_mean_improvement_over_uniform,
         mib_status="omitted",
         mib_rationale=mib_rationale,
+    )
+
+
+def run_oracle_alpha_predictiveness_check(
+    *,
+    model: HookedTransformer,
+    collection_id: str,
+    max_train_sequences: int | None = None,
+    max_eval_sequences: int | None = None,
+    optimization_steps: int = 20,
+    learning_rate: float = 0.1,
+    seed: int = 0,
+    regularization_grid: Sequence[float] = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
+    candidate_feature_sources: Sequence[str] | None = None,
+    candidate_target_names: Sequence[str] | None = None,
+    target_name_override: str | None = None,
+    prepend_bos: bool | None = None,
+) -> OracleAlphaPredictivenessSummary:
+    control_registry = load_oracle_alpha_control_registry()
+    control_plan = control_registry.plans[collection_id]
+    predictiveness_plan = control_plan.predictiveness
+    target_name = target_name_override or predictiveness_plan.target
+    if predictiveness_plan.model_family != "ridge_regression":
+        raise ValueError("predictiveness plan must use ridge_regression")
+    if target_name_override is not None and candidate_target_names is not None:
+        raise ValueError(
+            "target_name_override and candidate_target_names are mutually exclusive"
+        )
+
+    train_entries = list(
+        resolve_prompt_entries(
+            collection_id=predictiveness_plan.train_collection_id,
+            split=predictiveness_plan.train_split,
+            exploratory=True,
+        )
+    )
+    eval_entries = list(
+        resolve_prompt_entries(
+            collection_id=predictiveness_plan.eval_collection_id,
+            split=predictiveness_plan.eval_split,
+            exploratory=False,
+        )
+    )
+    if max_train_sequences is not None:
+        train_entries = train_entries[:max_train_sequences]
+    if max_eval_sequences is not None:
+        eval_entries = eval_entries[:max_eval_sequences]
+    if len(train_entries) < 2:
+        raise ValueError("predictiveness training requires at least two pilot prompts")
+    if not eval_entries:
+        raise ValueError("predictiveness evaluation requires confirm prompts")
+    feature_sources = tuple(
+        candidate_feature_sources or ("mean_pooled_h_1[t]_resid_post_layer_0",)
+    )
+    if not feature_sources:
+        raise ValueError("candidate_feature_sources must not be empty")
+    target_names = tuple(candidate_target_names or (target_name,))
+    if not target_names:
+        raise ValueError("candidate_target_names must not be empty")
+
+    train_run = run_oracle_alpha_collection(
+        model=model,
+        collection_id=collection_id,
+        split=predictiveness_plan.train_split,
+        exploratory=True,
+        prompt_entries=train_entries,
+        optimization_steps=optimization_steps,
+        learning_rate=learning_rate,
+        seed=seed,
+        prepend_bos=prepend_bos,
+    )
+    eval_run = run_oracle_alpha_collection(
+        model=model,
+        collection_id=collection_id,
+        split=predictiveness_plan.eval_split,
+        exploratory=False,
+        prompt_entries=eval_entries,
+        optimization_steps=optimization_steps,
+        learning_rate=learning_rate,
+        seed=seed + 1000,
+        prepend_bos=prepend_bos,
+    )
+    return build_oracle_alpha_predictiveness_summary(
+        model=model,
+        collection_id=collection_id,
+        train_entries=train_entries,
+        eval_entries=eval_entries,
+        train_run=train_run,
+        eval_run=eval_run,
+        regularization_grid=regularization_grid,
+        candidate_feature_sources=feature_sources,
+        candidate_target_names=target_names,
+        prepend_bos=prepend_bos,
     )
