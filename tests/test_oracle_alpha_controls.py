@@ -86,6 +86,65 @@ class OracleAlphaControlTests(unittest.TestCase):
             ):
                 self.assertAlmostEqual(original_value, recovered_value, places=6)
 
+    def test_depth_type_band_logit_target_round_trips_with_single_template_example(
+        self,
+    ) -> None:
+        source_labels = (
+            "embed",
+            "pos_embed",
+            "0_attn_out",
+            "1_attn_out",
+            "2_attn_out",
+            "3_attn_out",
+            "4_attn_out",
+            "5_attn_out",
+            "0_mlp_out",
+            "1_mlp_out",
+            "2_mlp_out",
+            "3_mlp_out",
+            "4_mlp_out",
+            "5_mlp_out",
+        )
+        distributions = [
+            [
+                0.08,
+                0.04,
+                0.10,
+                0.05,
+                0.07,
+                0.03,
+                0.12,
+                0.06,
+                0.09,
+                0.04,
+                0.08,
+                0.05,
+                0.11,
+                0.08,
+            ]
+        ]
+
+        transformed = self.alpha_target_matrix(
+            target_name="oracle_alpha_depth_type_band_logit_vector",
+            distributions=distributions,
+            source_labels=source_labels,
+        )
+        recovered = self.alpha_target_predictions_to_distributions(
+            target_name="oracle_alpha_depth_type_band_logit_vector",
+            predictions=transformed.tolist(),
+            source_labels=source_labels,
+            train_distributions=distributions,
+        )
+
+        self.assertEqual((1, 8), transformed.shape)
+        self.assertAlmostEqual(1.0, sum(recovered[0]), places=6)
+        for original_value, recovered_value in zip(
+            distributions[0],
+            recovered[0],
+            strict=True,
+        ):
+            self.assertAlmostEqual(original_value, recovered_value, places=6)
+
     def test_compare_predictiveness_metric_values_respects_direction(self) -> None:
         self.assertGreater(
             self.compare_predictiveness_metric_values(
