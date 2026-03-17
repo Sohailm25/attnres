@@ -9,6 +9,7 @@ import sys
 
 from datasets import load_dataset
 import torch
+from transformers import AutoTokenizer
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--text-field", default="text")
     parser.add_argument("--max-train-texts", type=int, default=512)
     parser.add_argument("--max-eval-texts", type=int, default=128)
+    parser.add_argument(
+        "--tokenizer-mode",
+        default="character",
+        choices=("character", "compact_subword"),
+    )
+    parser.add_argument("--tokenizer-name", default="gpt2")
+    parser.add_argument("--separator-text", default="\n\n")
     parser.add_argument("--vocab-size", type=int, default=512)
     parser.add_argument("--d-model", type=int, default=128)
     parser.add_argument("--n-heads", type=int, default=4)
@@ -87,6 +95,11 @@ def main() -> int:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     device = _resolve_device(args.device)
+    tokenizer = None
+    tokenizer_name = None
+    if args.tokenizer_mode == "compact_subword":
+        tokenizer_name = args.tokenizer_name
+        tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
     train_texts = _load_texts(
         dataset_name=args.dataset_name,
         dataset_config=args.dataset_config,
@@ -124,6 +137,10 @@ def main() -> int:
         seed=args.seed,
         device=device,
         checkpoint_interval=args.checkpoint_every_steps,
+        tokenizer_mode=args.tokenizer_mode,
+        tokenizer=tokenizer,
+        tokenizer_name=tokenizer_name,
+        separator_text=args.separator_text,
     )
     return 0
 

@@ -170,6 +170,15 @@
     - the larger run also passed the checkpoint/resume requirement; rerunning the full command reused the saved checkpoints and completed in `9.822` seconds
     - the saved Figure 8 proxy metrics remain mixed rather than paper-like: deep embedding persistence is low (`0.1049`) and mean pre-attn entropy remains below mean pre-MLP entropy (`1.4674 < 1.5264`)
   - interpretation: the local trained-routing proxy is now operationally real and suitable for later claim-bearing comparison, but it does not yet validate Figure 8 alignment and should not be overclaimed as such
+- `known`: `resattn-3l6` has now decided the next credible Figure 8 proxy regime and produced the first compact-subword artifact:
+  - `scripts/run_attnres_proxy_viability.py` and `validation/attnres_reproduction.py` now support a compact remapped GPT-2 subword mode in addition to the original char-level path
+  - `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1.md` is the first checkpointed Wikitext compact-subword run on the same local `8`-block proxy
+  - at the `200`-step smoke horizon, the compact-subword proxy beat the matched baseline by `0.0467` eval-loss points (`7.0459` versus `7.0926`)
+  - at the `1500`-step horizon, the compact-subword run modestly improved the paper-facing metrics relative to the char-level scaled run:
+    - deep embedding persistence improved from `0.1049` to `0.1364`
+    - the entropy gap improved from `-0.0590` to `-0.0349`
+  - the compact-subword proxy no longer beat the matched baseline at that longer horizon (`6.6764` versus `6.6463`)
+  - interpretation: compact subword is a better proxy regime than characters for future Figure 8 work, but tokenization realism alone is not enough to clear the alignment problem; the next likely bottleneck is capacity or training horizon rather than tokenization
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -245,7 +254,7 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-3l6` to decide the next credible Figure 8 proxy regime now that the first local AttnRes proxy is built but still gives mixed pattern metrics.
+1. Take `resattn-111` to scale the compact-subword Figure 8 proxy on the next likely bottleneck, such as model capacity or optimization horizon, without reopening tokenization.
 2. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.

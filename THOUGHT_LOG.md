@@ -602,3 +602,25 @@ Suggested entry format:
 - Interesting facts:
   - The scaled run beat the matched baseline by `0.0327` eval-loss points while still showing `mean_pre_attn_entropy < mean_pre_mlp_entropy`.
   - The first larger launch failed for a boring but useful reason: `vocab_size=256` no longer covered the larger Wikitext slice (`269` characters), and widening to `512` fixed it immediately.
+
+## [2026-03-17T15:40:00-0500] Tokenizer Realism Helped The Figure More Than The Model
+- Stage: implementation
+- Feel of the Experiment: This is a good regime-decision result. It’s not the satisfying pass I wanted, but it cleanly changes what I distrust. The char-level regime now looks like a real proxy mismatch, not just a harmless simplification.
+- Working Hypotheses:
+  - Compact GPT-2 subword remapping is the correct default proxy regime going forward.
+  - The remaining blocker is no longer tokenization realism; it is probably capacity or training horizon within the more realistic regime.
+- Hunches and Guesses:
+  - If I scale the compact-subword run modestly in capacity, the loss comparison may recover while preserving the modest Figure 8 metric improvements.
+  - I do not expect another char-level rerun to teach us anything new now.
+- Predictions:
+  - The next useful run should keep compact subword fixed and scale one axis only: either `d_model`/`d_ff` or training horizon.
+  - If the entropy ordering still refuses to flip after that, the next thing to question is corpus rather than tokenizer.
+- Surprises and Tensions:
+  - The subword smoke looked encouraging immediately, then the longer run lost the baseline comparison even while the Figure-facing metrics improved.
+  - That split is actually informative: "better figure surface, worse training outcome" is exactly what a regime change plus underpowered model can look like.
+- Confidence:
+  - high that tokenization was one real mismatch in the char-level proxy
+  - medium that capacity is the next bottleneck rather than corpus
+- Interesting facts:
+  - Relative to the char-level scaled run, compact subword improved deep embedding persistence from `0.1049` to `0.1364`.
+  - The entropy gap improved from `-0.0590` to `-0.0349`, but it still stayed on the wrong side of zero.

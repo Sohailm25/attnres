@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 import torch
 import torch.nn.functional as F
@@ -519,6 +519,80 @@ def _encode_character_texts(
     return [vocabulary[character] for character in joined_text]
 
 
+def _tokenizer_input_ids(
+    *,
+    tokenizer: Any,
+    text: str,
+) -> list[int]:
+    encoded = tokenizer(text, add_special_tokens=False)
+    if isinstance(encoded, dict):
+        input_ids = encoded.get("input_ids")
+    else:
+        input_ids = getattr(encoded, "input_ids", None)
+    if input_ids is None:
+        raise ValueError("tokenizer output must expose input_ids")
+    return list(input_ids)
+
+
+def _joined_original_token_ids(
+    *,
+    texts: Sequence[str],
+    tokenizer: Any,
+    separator_text: str,
+) -> list[int]:
+    if not texts:
+        raise ValueError("texts must contain at least one element")
+    separator_original_token_ids = _tokenizer_input_ids(
+        tokenizer=tokenizer,
+        text=separator_text,
+    )
+    if not separator_original_token_ids:
+        raise ValueError("separator_text must tokenize to at least one token")
+
+    original_token_ids = []
+    for text_index, text in enumerate(texts):
+        token_ids = _tokenizer_input_ids(tokenizer=tokenizer, text=text)
+        if text_index > 0:
+            original_token_ids.extend(separator_original_token_ids)
+        original_token_ids.extend(token_ids)
+    return original_token_ids
+
+
+def _compact_subword_tokenization(
+    *,
+    texts: Sequence[str],
+    tokenizer: Any,
+    tokenizer_name: str,
+    separator_text: str,
+) -> tuple[list[int], dict[int, int], dict[str, Any]]:
+    original_token_ids = _joined_original_token_ids(
+        texts=texts,
+        tokenizer=tokenizer,
+        separator_text=separator_text,
+    )
+    separator_original_token_ids = _tokenizer_input_ids(
+        tokenizer=tokenizer,
+        text=separator_text,
+    )
+    unique_original_token_ids = sorted(set(original_token_ids))
+    compact_token_lookup = {
+        original_token_id: compact_token_id
+        for compact_token_id, original_token_id in enumerate(unique_original_token_ids)
+    }
+    manifest: dict[str, Any] = {
+        "tokenizer_mode": "compact_subword",
+        "tokenizer_name": tokenizer_name,
+        "separator_text": separator_text,
+        "separator_original_token_ids": separator_original_token_ids,
+        "separator_compact_token_ids": [
+            compact_token_lookup[token_id] for token_id in separator_original_token_ids
+        ],
+        "observed_vocabulary_size": len(unique_original_token_ids),
+        "observed_original_token_ids": unique_original_token_ids,
+    }
+    return original_token_ids, compact_token_lookup, manifest
+
+
 def _immediate_predecessor_source(
     target_label: str, source_labels: Sequence[str]
 ) -> str:
@@ -628,27 +702,82 @@ def run_attnres_proxy_viability_from_texts(
     seed: int,
     device: str,
     checkpoint_interval: int = 50,
+    tokenizer_mode: str = "character",
+    tokenizer: Any | None = None,
+    tokenizer_name: str | None = None,
+    separator_text: str = "\n\n",
 ) -> AttnResProxyViabilitySummary:
     all_texts = tuple(train_texts) + tuple(eval_texts)
-    vocabulary = _sorted_character_vocab(all_texts)
-    if len(vocabulary) > config.vocab_size:
-        raise ValueError(
-            f"character vocabulary size {len(vocabulary)} exceeds config.vocab_size={config.vocab_size}"
-        )
 
     output_dir.mkdir(parents=True, exist_ok=True)
     checkpoints_dir = output_dir / "checkpoints"
     checkpoints_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "character_vocabulary.json").write_text(
-        json.dumps(vocabulary, indent=2, sort_keys=True) + "\n"
-    )
+    if tokenizer_mode == "character":
+        vocabulary = _sorted_character_vocab(all_texts)
+        if len(vocabulary) > config.vocab_size:
+            raise ValueError(
+                f"character vocabulary size {len(vocabulary)} exceeds config.vocab_size={config.vocab_size}"
+            )
+        (output_dir / "character_vocabulary.json").write_text(
+            json.dumps(vocabulary, indent=2, sort_keys=True) + "\n"
+        )
+        train_token_ids = _encode_character_texts(
+            texts=train_texts,
+            vocabulary=vocabulary,
+        )
+        eval_token_ids = _encode_character_texts(
+            texts=eval_texts,
+            vocabulary=vocabulary,
+        )
+        summary_tokenizer_mode = "character"
+    elif tokenizer_mode == "compact_subword":
+        if tokenizer is None or tokenizer_name is None:
+            raise ValueError(
+                "compact_subword mode requires both tokenizer and tokenizer_name"
+            )
+        _, original_to_compact, manifest = _compact_subword_tokenization(
+            texts=all_texts,
+            tokenizer=tokenizer,
+            tokenizer_name=tokenizer_name,
+            separator_text=separator_text,
+        )
+        if len(manifest["observed_original_token_ids"]) > config.vocab_size:
+            raise ValueError(
+                "compact subword vocabulary size "
+                f"{len(manifest['observed_original_token_ids'])} exceeds "
+                f"config.vocab_size={config.vocab_size}"
+            )
+        (output_dir / "tokenizer_manifest.json").write_text(
+            json.dumps(manifest, sort_keys=True) + "\n"
+        )
+        train_original_token_ids = _joined_original_token_ids(
+            texts=train_texts,
+            tokenizer=tokenizer,
+            separator_text=separator_text,
+        )
+        eval_original_token_ids = _joined_original_token_ids(
+            texts=eval_texts,
+            tokenizer=tokenizer,
+            separator_text=separator_text,
+        )
+        train_token_ids = [
+            original_to_compact[original_token_id]
+            for original_token_id in train_original_token_ids
+        ]
+        eval_token_ids = [
+            original_to_compact[original_token_id]
+            for original_token_id in eval_original_token_ids
+        ]
+        summary_tokenizer_mode = f"compact_subword:{tokenizer_name}"
+    else:
+        raise ValueError(f"unsupported tokenizer_mode: {tokenizer_mode}")
 
     train_examples = build_next_token_examples(
-        token_ids=_encode_character_texts(texts=train_texts, vocabulary=vocabulary),
+        token_ids=train_token_ids,
         sequence_length=config.max_seq_len,
     )
     eval_examples = build_next_token_examples(
-        token_ids=_encode_character_texts(texts=eval_texts, vocabulary=vocabulary),
+        token_ids=eval_token_ids,
         sequence_length=config.max_seq_len,
     )
 
@@ -711,7 +840,7 @@ def run_attnres_proxy_viability_from_texts(
 
     summary = AttnResProxyViabilitySummary(
         dataset_name=dataset_name,
-        tokenizer_mode="character",
+        tokenizer_mode=summary_tokenizer_mode,
         proxy_config=config,
         sequence_length=config.max_seq_len,
         num_train_examples=int(train_examples.shape[0]),

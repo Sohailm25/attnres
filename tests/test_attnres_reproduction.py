@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -307,6 +308,78 @@ class AttnResReproductionTests(unittest.TestCase):
             )
             self.assertTrue(
                 torch.isfinite(torch.tensor(summary.attnres_summary.best_eval_loss))
+            )
+
+    def test_run_attnres_proxy_viability_from_texts_supports_compact_subword_mode(
+        self,
+    ) -> None:
+        class StubTokenizer:
+            def __init__(self) -> None:
+                self._mapping = {
+                    "alpha beta": [101, 202, 303],
+                    "beta gamma": [202, 404],
+                    "eval alpha beta gamma delta": [505, 101, 202, 404, 606],
+                    "\n\n": [9000],
+                }
+
+            def __call__(
+                self,
+                text: str,
+                *,
+                add_special_tokens: bool = False,
+            ) -> dict[str, list[int]]:
+                if add_special_tokens:
+                    raise AssertionError(
+                        "stub tokenizer does not expect special tokens"
+                    )
+                return {"input_ids": list(self._mapping[text])}
+
+            def decode(self, token_ids: list[int]) -> str:
+                return "|".join(str(token_id) for token_id in token_ids)
+
+        config = self.AttnResProxyConfig(
+            vocab_size=16,
+            d_model=16,
+            n_heads=4,
+            n_layers=2,
+            d_ff=32,
+            max_seq_len=4,
+            dropout=0.0,
+            num_blocks=2,
+        )
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "attnres_proxy_subword"
+            summary = self.run_attnres_proxy_viability_from_texts(
+                config=config,
+                dataset_name="synthetic_text",
+                train_texts=("alpha beta", "beta gamma"),
+                eval_texts=("eval alpha beta gamma delta",),
+                output_dir=output_dir,
+                batch_size=1,
+                num_steps=2,
+                learning_rate=1e-3,
+                weight_decay=0.0,
+                seed=11,
+                device="cpu",
+                checkpoint_interval=1,
+                tokenizer_mode="compact_subword",
+                tokenizer=StubTokenizer(),
+                tokenizer_name="stub-tokenizer",
+            )
+
+            manifest_path = output_dir / "tokenizer_manifest.json"
+            self.assertTrue(manifest_path.is_file())
+            manifest = json.loads(manifest_path.read_text())
+            self.assertEqual("compact_subword", manifest["tokenizer_mode"])
+            self.assertEqual("stub-tokenizer", manifest["tokenizer_name"])
+            self.assertEqual(
+                [101, 202, 303, 404, 505, 606, 9000],
+                manifest["observed_original_token_ids"],
+            )
+            self.assertEqual("compact_subword:stub-tokenizer", summary.tokenizer_mode)
+            self.assertTrue(
+                torch.isfinite(torch.tensor(summary.baseline_summary.best_eval_loss))
             )
 
 

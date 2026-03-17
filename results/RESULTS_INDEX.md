@@ -52,6 +52,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 |---|---|---|---|
 | Local Block AttnRes proxy viability smoke v1 | figure8_validation | mixed | `results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1.md` |
 | Local Block AttnRes proxy viability scale v1 | figure8_validation | mixed | `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1.md` |
+| Local Block AttnRes proxy compact-subword v1 | figure8_validation | mixed | `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1.md` |
 
 ## Block Structure
 

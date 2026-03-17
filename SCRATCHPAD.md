@@ -294,6 +294,56 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: the routed pattern surface is still mixed rather than paper-like even after the stronger run; `deep_embedding_persistence` fell to `0.1049` and `mean_pre_attn_entropy` remained below `mean_pre_mlp_entropy`
 - Next step: treat the local AttnRes proxy as operationally viable, close the build issue, and move to a bounded proxy-regime decision (`resattn-3l6`) before any Figure 8 alignment claim
 
+## [2026-03-17T15:14:08-0500] PRE-RUN: compact-subword local Block AttnRes viability smoke
+- tmux session: `attnres-proxy-subword-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 200 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-v1`
+- Config: `dataset=wikitext-2-raw-v1`, `tokenizer=compact GPT-2 subword remap`, `proxy=8-block`, `baseline=matched standard residual`, `device=mps fallback cpu via script`
+- What I'm testing: whether replacing the char-level regime with a compact GPT-2 subword regime on the same Wikitext slice gives a cleaner Figure 8 proxy signal without changing the tiny 8-block architecture.
+- Expected outcome: both models train stably, checkpoints are written, and the first 200-step summary is good enough to justify resuming the same run to a longer horizon.
+- Expected duration: ~10-25 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/checkpoints/`
+- Checkpoint cadence: every `50` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/run.log`
+- Resume command: rerun the command above with `--num-steps 1500`
+- Main confound to watch: if the compact vocabulary materially slows training but leaves the pattern metrics unchanged, the next bottleneck is likely corpus or capacity rather than tokenization.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_attnres_reproduction`
+- Status: LAUNCHING
+
+## [2026-03-17T15:15:27-0500] POST-RUN: compact-subword local Block AttnRes viability smoke
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 200 --checkpoint-every-steps 50 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-v1`
+- Outcome: SUCCESS
+- Key metric: `attnres_best_eval_loss=7.0459` versus `baseline_best_eval_loss=7.0926` (`delta=-0.0467`)
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/summary.json`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/tokenizer_manifest.json`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: the entropy ordering is still inverted, but deep embedding persistence improved relative to the char-level scaled run (`0.1378` versus `0.1049`)
+- Next step: resume the same output directory to `1500` steps and see whether the compact-subword regime keeps its stronger loss gap and improves the proxy metrics further
+
+## [2026-03-17T15:15:27-0500] PRE-RUN: compact-subword local Block AttnRes scale continuation
+- tmux session: `attnres-proxy-subword-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 100 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-v1`
+- Config: `same corpus`, `same tokenizer`, `same architecture`, `resume from 200-step checkpoints`
+- What I'm testing: whether the compact-subword regime keeps improving and produces a more credible Figure 8 proxy read when allowed to train to the same horizon as the earlier char-level scale run.
+- Expected outcome: the AttnRes proxy remains at least competitive with the baseline and the saved Figure 8 proxy metrics improve enough to clarify whether tokenizer realism was the main missing ingredient.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/checkpoints/`
+- Checkpoint cadence: every `100` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/run.log`
+- Resume command: rerun the command above
+- Main confound to watch: if deeper training keeps the loss gap but the pattern surface remains mixed, the next bottleneck is likely corpus or capacity rather than tokenization.
+- Implementation verified: YES - the 200-step compact-subword run completed and wrote resumable checkpoints plus the expected manifest/summary files
+- Status: LAUNCHING
+
+## [2026-03-17T15:40:32-0500] POST-RUN: compact-subword local Block AttnRes scale continuation
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 100 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-v1`
+- Outcome: SUCCESS
+- Key metric: `attnres_best_eval_loss=6.6764` versus `baseline_best_eval_loss=6.6463` (`delta=+0.0300`)
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1.md`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: tokenization realism helped the Figure-facing metrics but not the baseline comparison; `deep_embedding_persistence` improved to `0.1364` and the entropy gap improved to `-0.0349`, but the Block AttnRes proxy no longer beat the matched baseline at the longer horizon
+- Next step: keep compact subword as the preferred proxy regime, close the tokenizer-vs-char decision, and move the next Figure 8 follow-up to capacity or optimization scaling (`resattn-111`)
+
 ## [2026-03-17T12:08:00-0500] PRE-RUN: prereg-scale oracle-alpha pattern analysis
 - tmux session: N/A
 - Script: `scripts/run_oracle_alpha_pattern_analysis.py`

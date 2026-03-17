@@ -361,3 +361,27 @@
   - the stronger run improved the loss comparison without improving the paper-facing metric surface
   This makes the right next issue a proxy-regime decision, not more pretending that `7hb` already solved trained-routing alignment.
 - Impact: the next Figure 8 follow-up becomes `resattn-3l6`, which decides whether to scale the current char-level regime further or move to a stronger tokenizer / corpus setup before claim-bearing proxy analysis.
+
+## [2026-03-17T15:25:00-0500] DECISION: Make the next Figure 8 proxy run more realistic by changing tokenization, not by extending char-level training again
+
+- Trigger: `resattn-3l6` exists because the saved `7hb` char-level Wikitext artifacts were operationally successful but scientifically mixed, and Sohail explicitly gave room for a longer or bigger run if it adds real signal.
+- Decision: keep the current `8`-block architecture, dataset family, and matched-baseline setup fixed, but move the next proxy run from character-level modeling to compact remapped GPT-2 subword tokenization on the same Wikitext corpus before spending more time on another char-level rerun.
+- Rationale: the scaled char-level run already answered the “just train it longer” question well enough. Loss improved more strongly, but the Figure 8-facing metrics did not move in the right direction:
+  - the proxy beat the baseline by `0.0327` eval-loss points
+  - deep embedding persistence dropped from `0.1824` to `0.1049`
+  - the entropy ordering stayed inverted (`mean_pre_attn_entropy < mean_pre_mlp_entropy`)
+  That pattern is more consistent with a regime mismatch than with a simple undertraining problem. Switching to compact subword ids is the smallest higher-fidelity change because it preserves the local training setup while removing the most obvious mismatch with normal LM training.
+- Impact: `validation/attnres_reproduction.py` and `scripts/run_attnres_proxy_viability.py` should support a compact-subword mode, and the next run should be a checkpointed Wikitext compact-subword viability slice on the same `8`-block architecture. If that run remains mixed, the next follow-up should debate corpus or capacity, not tokenizer realism again.
+
+## [2026-03-17T15:40:00-0500] DECISION: Keep compact subword as the Figure 8 proxy default and move the next follow-up to capacity or optimization, not back to characters
+
+- Trigger: the compact-subword Wikitext artifact from `resattn-3l6` completed at the same `1500`-step horizon as the earlier char-level scaled run.
+- Decision: close the tokenizer-vs-char decision in favor of compact remapped GPT-2 subword tokenization as the default local Figure 8 proxy regime, and create the next follow-up around capacity or optimization scaling rather than another tokenization change.
+- Rationale: the compact-subword run moved the paper-facing metrics in the right direction relative to the char-level scaled artifact:
+  - deep embedding persistence improved from `0.1049` to `0.1364`
+  - the entropy gap improved from `-0.0590` to `-0.0349`
+  At the same time, tokenization realism alone did not solve the proxy:
+  - the compact-subword proxy lost the longer-horizon baseline comparison (`6.6764` vs `6.6463`)
+  - the entropy ordering still remained inverted
+  That means the next bottleneck is more likely model capacity or optimization horizon than tokenization choice.
+- Impact: `resattn-3l6` can close once the new artifact and state docs land, and the next Figure 8 issue becomes `resattn-111` rather than another char-level rerun.
