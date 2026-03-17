@@ -967,3 +967,11 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Main confound to watch: the best checkpoint may improve eval loss without materially improving the Figure 8 surface, which would sharpen the argument against optimization-shape alone as the next redesign lever.
 - Implementation verified: YES - `tests/test_attnres_reproduction.py` now covers best-checkpoint and eval-history persistence, and the full `tests/` suite stays green after the runner change.
 - Status: LAUNCHING
+
+## [2026-03-17T18:46:49-0500] POST-RUN: Figure 8 `wikitext-103` best-checkpoint follow-up v1
+- Outcome: SUCCESS
+- Key metric: final loss delta `= +0.1272`, best-checkpoint loss delta `= +0.0386`, and best-checkpoint deep embedding persistence `= 0.1689`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1/summary.json`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1.md`, `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1/checkpoints/`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1/checkpoints/attnres_best_state.pt`
+- Anomalies: both models peaked early (`baseline=900`, `attnres=850`), but the best-checkpoint Figure 8 surface only improved modestly and still kept the entropy ordering inverted
+- Next step: close `resattn-fby`, keep the widened `wikitext-103` regime as the current Figure 8 default, and move the next Figure 8 question to a bounded optimization or objective redesign issue rather than another blind rerun

@@ -757,3 +757,25 @@ Suggested entry format:
 - Interesting facts:
   - Refusal suppression on refusal prompts reduced the refusal-versus-context preference margin by `0.1891`, while harmfulness suppression stayed exactly flat.
   - Refusal injection on harmful-context prompts increased the same preference margin by `0.1741` and produced the only greedy refusal flip (`1 / 6`).
+
+## [2026-03-17T18:46:49-0500] Best Checkpoint Helped The Proxy, But Not Enough To Let Me Blame Everything On Late Drift
+- Stage: implementation
+- Feel of the Experiment: This is the kind of result that narrows the story without making it pleasant. The runner was definitely hiding useful signal by only preserving the final checkpoint, but the moment I gave the proxy its best checkpoint, the deeper problem stayed visible.
+- Working Hypotheses:
+  - The widened compact-subword `wikitext-103` regime has a real earlier operating region that is better than the final checkpoint suggests.
+  - But the main Figure 8 blocker is no longer “we are judging the wrong checkpoint.” It is something about the training setup itself: objective, regularization, or a related optimization design choice.
+- Hunches and Guesses:
+  - If best-checkpoint export had flipped the entropy ordering or at least erased the baseline loss gap, I would still defend optimization-shape as the next main lever. It did neither.
+  - The modest bump in deep embedding persistence feels important because it says the local proxy is not completely missing the paper surface; it is just not sustaining it strongly enough.
+- Predictions:
+  - The next useful Figure 8 step should be a bounded redesign question, not another same-regime rerun.
+  - If the next redesign only improves loss without fixing the entropy ordering, the claim boundary will stay descriptive no matter how operationally clean the proxy becomes.
+- Surprises and Tensions:
+  - The final-checkpoint loss gap (`+0.1272`) was much harsher than the best-checkpoint gap (`+0.0386`). That is a non-trivial measurement correction.
+  - Even after that correction, the best-checkpoint entropy ordering still ran the wrong way. That is the uncomfortable part I do not get to explain away anymore.
+- Confidence:
+  - high that `resattn-fby` was worth doing before any redesign
+  - medium-high that checkpoint drift is now a secondary issue rather than the primary Figure 8 bottleneck
+- Interesting facts:
+  - The matched baseline peaked at step `900`, while the AttnRes proxy peaked slightly earlier at `850`.
+  - Best-checkpoint deep embedding persistence improved from `0.1615` to `0.1689`, but the entropy gap only moved from `-0.0574` to `-0.0549`.
