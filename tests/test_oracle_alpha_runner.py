@@ -24,10 +24,14 @@ class OracleAlphaRunnerTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         from validation.oracle_alpha_runner import (
             run_oracle_alpha_collection,
+            run_oracle_alpha_predictiveness_check,
             run_oracle_alpha_stability_suite,
         )
 
         cls.run_oracle_alpha_collection = staticmethod(run_oracle_alpha_collection)
+        cls.run_oracle_alpha_predictiveness_check = staticmethod(
+            run_oracle_alpha_predictiveness_check
+        )
         cls.run_oracle_alpha_stability_suite = staticmethod(
             run_oracle_alpha_stability_suite
         )
@@ -123,6 +127,30 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             first.sequence_results[0].final_alpha,
             second.sequence_results[0].final_alpha,
         )
+
+    def test_predictiveness_check_uses_pilot_to_confirm_splits(self) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+        )
+
+        self.assertEqual("pilot", summary.train_run.split)
+        self.assertEqual("confirm", summary.eval_run.split)
+        self.assertFalse(summary.eval_run.exploratory)
+        self.assertEqual(3, summary.predictiveness_summary.num_train_examples)
+        self.assertEqual(2, summary.predictiveness_summary.num_eval_examples)
+        self.assertIn(summary.selected_regularization_strength, (1e-3, 1e-1, 1.0))
+        self.assertEqual(2, len(summary.eval_predictions))
+        for prediction in summary.eval_predictions:
+            self.assertEqual(prediction.num_sources, len(prediction.predicted_alpha))
+            self.assertGreaterEqual(prediction.predicted_loss, 0.0)
+            self.assertGreaterEqual(prediction.js_divergence_to_oracle, 0.0)
 
 
 if __name__ == "__main__":

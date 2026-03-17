@@ -144,3 +144,17 @@
 - Decision: initialize alpha logits with tiny seed-dependent noise, summarize stability from the terminal `final_alpha` vectors rather than best-loss snapshots, and keep paraphrase perturbations as explicit saved prompt text in the registry.
 - Rationale: restart stability is meaningless if every seed follows the same optimizer path, and prompt-perturbation metrics are not interpretable if the perturbation text is broken or generated ad hoc.
 - Impact: the rerun artifact now measures a real exploratory stability surface, and future stability or predictiveness work should treat `final_alpha` plus saved perturbation text as the source of truth.
+
+## [2026-03-17T00:18:00-0500] DECISION: Match the held-out predictiveness run to the saved ridge-regression plan and the current sequence-level oracle target
+
+- Trigger: `resattn-53q` exposed two repo-state ambiguities: the control plan specified `ridge_regression` while the helper only implemented plain least squares, and the saved feature description still allowed either internal-state summaries or prompt-level features.
+- Decision: implement a real ridge-regression predictiveness path, tune regularization on the pilot split only using leave-one-out mean JS divergence, and use a sequence-level summary of `h_1[t]` for the current development-model runner by mean-pooling `resid_post` at layer `0` across token positions.
+- Rationale: the current oracle-alpha runner produces one alpha vector per sequence, so the predictor should consume a sequence-level early-state summary rather than inventing a different target object. Pilot-only tuning keeps the confirm split clean, and mean JS is a more stable tiny-sample tuning metric than fold-level `R^2` with one held-out sequence.
+- Impact: the first held-out artifact is now methodologically aligned with the saved control plan, but it also shows that the present mean-pooled `h_1[t]` feature summary does not generalize well enough for strong interpretation.
+
+## [2026-03-17T00:35:00-0500] DECISION: Record MIB as omitted for the current development-model predictiveness slice while keeping the global anchor planned
+
+- Trigger: `resattn-53q` required an explicit MIB decision now that a development-model predictiveness runner exists.
+- Decision: omit MIB for this specific development-model prompt-slice run, while keeping the broader control-suite anchor planned for a later benchmark-compatible lane.
+- Rationale: the current pilot/confirm oracle-alpha surface is a custom local prompt registry on `gpt2-xl`, not a benchmark-compatible task-model pair where a MIB-style sanity task would be informative rather than artificial.
+- Impact: the runner-stage artifact now records a justified omission instead of silently skipping MIB, and future compatible lanes should revisit the anchor rather than treating it as closed.
