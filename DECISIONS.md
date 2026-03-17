@@ -432,3 +432,14 @@
   - refusal and harmfulness directions were nearly orthogonal (`cosine = 0.0064`)
   At the same time, the cross-direction confirm metrics are not zero (`0.6667` and `0.8333`), so this is not evidence for a fully disentangled single-direction safety story, and it is not yet a mediator-conditioned routing result.
 - Impact: `resattn-3f1` can close honestly as a workflow-validation success, and the next safety follow-up is `resattn-73l`, which adds the causal refusal-direction intervention check before any stronger safety-routing claim.
+
+## [2026-03-17T18:05:00-0500] DECISION: Make corpus size the next Figure 8 redesign lever and defer objective and architecture changes
+
+- Trigger: `resattn-du2` followed the compact-subword width-only and horizon-only negatives and needed one bounded redesign decision before more compute was spent on the Figure 8 proxy lane.
+- Decision: keep compact remapped GPT-2 subword tokenization, keep the widened `d_model=160`, `d_ff=640`, `8`-block local proxy, keep the standard next-token objective, and make the next Figure 8 run a corpus-first follow-up on `wikitext/wikitext-103-raw-v1`.
+- Rationale: the saved artifacts point most strongly at corpus-size mismatch and overfitting on `wikitext-2-raw-v1`, not at a simple optimization shortage or an obviously wrong proxy architecture:
+  - compact subword improved the Figure-facing metrics relative to the char-level run
+  - width improved deep embedding persistence again
+  - horizon from `1500` to `4500` changed the best eval losses by exactly `0.0` while train loss kept falling
+  That combination is more consistent with a too-small corpus than with “just add more width,” “just train longer,” or “change the LM objective.”
+- Impact: `resattn-du2` can close once the redesign memo and state docs land, and the next Figure 8 issue becomes `resattn-7y4`, which runs the widened compact-subword proxy on `wikitext-103` while deferring objective, architecture, and sequence-length changes.
