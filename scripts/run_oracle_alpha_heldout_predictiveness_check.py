@@ -48,12 +48,11 @@ def parse_args() -> argparse.Namespace:
         "--candidate-feature-sources",
         nargs="+",
         default=(
-            "mean_pooled_h_1[t]_resid_post_layer_0",
-            "mean_pooled_h_4[t]_resid_post_layer_3",
             "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
-            "start_mid_end_h_4[t]_resid_post_layer_3_concat",
-            "mean_pooled_h_1[t]_plus_h_4[t]_concat",
-            "final_token_h_1[t]_plus_h_4[t]_concat",
+            "prompt_shape_scalar_features_v1",
+            "mean_pooled_token_embedding",
+            "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_prompt_shape_scalar_features_v1_concat",
+            "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
         ),
     )
     parser.add_argument("--model-name", default=None)

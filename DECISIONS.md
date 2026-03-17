@@ -172,3 +172,10 @@
 - Decision: keep pilot-only feature selection, adopt `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat` as the best tested token-aware internal summary by pilot leave-one-out mean JS, and keep strong interpretation blocked because confirm-split predicted loss stayed slightly below uniform on average.
 - Rationale: the token-aware summary improved confirm `R^2` and mean JS modestly, which is real signal, but it did not translate into a positive routed-loss advantage. That is not enough to treat the predictor as substantively recovered.
 - Impact: future predictiveness work should move to prompt-level or hybrid feature surfaces rather than continuing to search within `h_4[t]`-only token-aware pooling variants.
+
+## [2026-03-16T23:13:05-0500] DECISION: Stop iterating simple prompt-level feature families and escalate to a design review
+
+- Trigger: `resattn-27f` compared prompt-shape baselines, mean token-embedding baselines, and hybrids that appended those prompt-level features to the best token-aware `h_4[t]` summary.
+- Decision: keep `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat` as the best tested feature source, treat the prompt-level and hybrid comparisons as failed to improve the blocker, and move next to a bounded design review of the held-out predictiveness setup.
+- Rationale: none of the new candidates beat the existing token-aware baseline on pilot leave-one-out JS, so the confirm artifact stayed effectively unchanged. That makes more small feature-family additions look low-yield relative to checking whether the target object, tuning metric, sample size, or predictor family is the real problem.
+- Impact: the next predictiveness issue should review the sequence-level alpha target, the ridge-regression choice, the `8`-prompt pilot/confirm scale, and the alignment between pilot JS tuning and confirm routed-loss recovery before further runner changes.

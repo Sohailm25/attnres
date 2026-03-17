@@ -241,3 +241,22 @@ Suggested entry format:
 - Interesting facts:
   - The selected token-aware summary improved confirm `R^2` from `-0.2314` to `-0.2154` and mean JS from `0.2409` to `0.2377`.
   - Every tested candidate still preferred the strongest ridge penalty (`100.0`), which continues to look like the model saying “be conservative; the feature surface is still weak.”
+
+## [2026-03-16T23:13:05-0500] The Prompt-Level Detour Mostly Strengthened The Case For A Deeper Review
+- Stage: implementation
+- Feel of the Experiment: This is the kind of negative result that is actually useful. The prompt-level and hybrid ideas were the obvious next cheap shot, and the repo is better off knowing they do not help than half-believing they might have if only we had tried them.
+- Working Hypotheses:
+  - The held-out predictiveness bottleneck is now more likely about the target or predictor class than about missing a small auxiliary feature family.
+- Hunches and Guesses:
+  - If there is still a recoverable signal here, it may need either a different target object than one sequence-level alpha vector or a predictor that respects token structure more directly.
+- Predictions:
+  - A design review will probably focus on at least one of four things: sequence-level target coarseness, linear ridge bias, tiny prompt count versus feature dimension, or pilot JS as the wrong tuning metric for the loss objective.
+- Surprises and Tensions:
+  - The hybrids did not even beat the plain token-aware `h_4[t]` baseline on pilot JS, which is stronger evidence against “we just forgot prompt shape” than I expected.
+  - The prompt-shape hybrid came very close to the best pilot JS, which is mildly annoying because it says the added features are not nonsense, just not enough to matter.
+- Confidence:
+  - high that simple prompt-level or hybrid features are not the missing piece
+  - medium that the next correct move is to step back and review the predictiveness formulation itself
+- Interesting facts:
+  - `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_prompt_shape_scalar_features_v1_concat` nearly tied the best pilot JS (`0.24356` vs `0.24350`) but still lost.
+  - The selected feature source and all confirm metrics remained exactly unchanged because none of the new candidates beat the existing baseline.

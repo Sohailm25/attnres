@@ -198,3 +198,28 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: token-aware features improved alpha-shape metrics but not held-out routed-loss improvement, and the selected ridge penalty again saturated at `100.0`
 - Next step: keep the blocker open and move to prompt-level or hybrid feature surfaces in `resattn-27f`
+
+## [2026-03-16T23:10:43-0500] PRE-RUN: development-model oracle-alpha prompt-level and hybrid feature comparison
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_heldout_predictiveness_check.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Config: `model=gpt2-xl`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_split=confirm`, `selection_metric=pilot_leave_one_out_mean_js`, `candidate_set=position_thirds_h4 + prompt baselines/hybrids`, `device=mps fallback cpu`
+- What I'm testing: whether prompt-level baselines or hybrids that append prompt-shape or mean token-embedding features to the best token-aware `h_4[t]` summary can finally turn the confirm-split predicted routed-loss metric positive.
+- Expected outcome: either a hybrid feature surface wins pilot selection and moves predicted mean improvement above uniform, or the run makes it clear that the current sequence-level target is still not recoverable with this simple feature family.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json`
+- Resume command: rerun the command above
+- Main confound to watch: the hybrid candidates raise feature dimension again on only `8` pilot prompts, so they may improve alpha similarity while remaining too over-regularized to recover routed-loss advantage.
+- Implementation verified: YES - `tests/test_oracle_alpha_runner.py` passes with the new prompt-level and hybrid feature sources before this run.
+- Status: LAUNCHING
+
+## [2026-03-16T23:13:05-0500] POST-RUN: development-model oracle-alpha prompt-level and hybrid feature comparison
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Outcome: FAILURE
+- Key metric: selected feature source stayed `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`; `confirm_r_squared=-0.2154`; `confirm_mean_js=0.2377`; `predicted_mean_improvement=-0.0011` nats
+- Artifacts saved: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json`
+- Latest checkpoint: none
+- Anomalies: none of the prompt-level or hybrid candidates beat the existing token-aware baseline on pilot leave-one-out JS, so the confirm artifact stayed unchanged; every candidate again selected ridge `100.0`
+- Next step: stop adding small feature families and move to the design-review follow-up in `resattn-23p`
