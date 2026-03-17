@@ -157,11 +157,20 @@
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
   - strong Figure 8 / trained-routing alignment claims require a small local AttnRes reproduction as the reproducible proxy
   - until that proxy exists, the Figure 8 lane is limited to comparison against the published AttnRes pattern surface rather than claims of direct trained-routing alignment
+- `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
+  - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
+  - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
+  - held-out mean KL to the final distribution improved from `11.3881` to `3.4580`, and mean held-out top-1 agreement improved from `0.1863` to `0.5119`
+  - final-position held-out KL also improved from `14.8685` to `7.5721`, but final-position top-1 only moved from `0.1010` to `0.1250`
+  - interpretation: the custom Gemma tuned-lens path is operationally viable and good enough to keep the primary tool-breakage lane on Gemma-2, but later routed-versus-original work should treat distributional metrics as the current strength and not overstate answer-token recovery
+- `known`: the tuned-lens pilot is now checkpoint-hardened:
+  - prompt-level residual caches and `training_state.pt` live under `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoints`
+  - rerunning the exact launch command after completion reused the saved checkpoint tree successfully, so future routed-versus-original work can build on the same durability path rather than starting from a throwaway script
 
 ## Immediate Next Steps
 
-1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
-2. Take `resattn-5k9` to train and validate the custom Gemma-2 tuned lens for the tool-breakage lane.
+1. Use `resattn-ehz` to decide whether the routed-versus-original lane should keep held-out KL as the primary tuned-lens baseline metric or sharpen the lens objective for stronger final-position factual-recall recovery before making answer-token-facing claims.
+2. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 3. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
 4. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

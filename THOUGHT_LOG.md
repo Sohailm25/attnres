@@ -416,6 +416,24 @@ Suggested entry format:
   - The best tested internal feature summary improved predicted mean loss from `-0.0348` to `-0.0010` nats versus uniform.
   - The confirm-split `R^2` stayed negative (`-0.2314`) even after that improvement.
 
+## [2026-03-17T12:56:00-0500] The Gemma Tuned-Lens Path Is Real, But Its Strength Is Not The Obvious One
+- Stage: analysis
+- Feel of the Experiment: The good news is that the annoying part worked. The bad news is that the easy story is not the right one. The custom Gemma tuned lens clearly beats the raw lens, but the cleanest gains are in KL and broad token-distribution recovery, not in crisp final factual-recall answer recovery.
+- Working Hypotheses:
+  - The same-model tuned-lens baseline is now viable enough that we should stop discussing whether Gemma is the right host and move on to what metric later routed-versus-original claims should center.
+  - If we want stronger answer-token-facing tool-breakage claims later, we may need either a more targeted tuned-lens objective or a more explicit metric hierarchy instead of pretending the current pilot already solved that.
+- Hunches and Guesses:
+  - The later tool-breakage lane will probably be most honest if it treats KL-like distributional differences as the primary tuned-lens baseline and keeps answer-token top-1 as a secondary stress metric.
+  - Reusing the saved prompt caches will matter more than it seems now; they turn a potentially annoying rerun tax into a mostly solved operational problem.
+- Predictions:
+  - A routed-versus-original comparison built on this baseline should already be informative about lens-shape disruptions even if final answer-token swings remain smaller.
+- Surprises and Tensions:
+  - Mean top-1 over all held-out positions jumped from `0.1863` to `0.5119`, but final-position top-1 only moved from `0.1010` to `0.1250`.
+  - The viability pilot feels like a pass and a warning at the same time: good enough to proceed, not good enough to get lazy about what “better tuned lens” means.
+- Confidence:
+  - high that keeping the tuned-lens-aware comparison on Gemma-2 was the right call
+  - medium that later tool-breakage interpretation will need careful metric discipline to avoid overselling the final-position story
+
 ## [2026-03-16T22:59:08-0500] Token Awareness Helped The Shape More Than The Outcome
 - Stage: implementation
 - Feel of the Experiment: This result is more interesting than the raw delta suggests. Preserving coarse position structure in `h_4[t]` did seem to help the predictor find alpha vectors that look a bit more like the oracle ones, but that shape improvement still refused to turn into a real routed-loss gain.

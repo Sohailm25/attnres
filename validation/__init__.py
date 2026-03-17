@@ -58,6 +58,18 @@ from .pattern_analysis import (
     summarize_source_type_mass,
     write_pattern_analysis_summary,
 )
+from .tuned_lens import (
+    LowRankAffineResidualLens,
+    ResidualTranslationExamples,
+    TunedLensLayerMetric,
+    TunedLensViabilitySummary,
+    collect_residual_translation_examples,
+    evaluate_low_rank_residual_lens,
+    fit_low_rank_residual_lens,
+    run_tuned_lens_viability_pilot,
+    save_tuned_lens_artifacts,
+    tuned_lens_cache_name_filter,
+)
 
 __all__ = [
     "BootstrapMeanInterval",
@@ -78,9 +90,13 @@ __all__ = [
     "PredictivenessPlan",
     "PredictivenessSummary",
     "ClusterScanResult",
+    "LowRankAffineResidualLens",
+    "ResidualTranslationExamples",
     "SequenceLevelPatternSummary",
     "SourceTypeMassSummary",
     "StabilitySuitePlan",
+    "TunedLensLayerMetric",
+    "TunedLensViabilitySummary",
     "alpha_target_matrix",
     "alpha_target_predictions_to_distributions",
     "bootstrap_mean_confidence_interval",
@@ -106,5 +122,11 @@ __all__ = [
     "scan_average_linkage_clusters",
     "shared_final_norm_logit_contributions",
     "summarize_source_type_mass",
+    "collect_residual_translation_examples",
+    "evaluate_low_rank_residual_lens",
+    "fit_low_rank_residual_lens",
+    "run_tuned_lens_viability_pilot",
+    "save_tuned_lens_artifacts",
+    "tuned_lens_cache_name_filter",
     "write_pattern_analysis_summary",
 ]
