@@ -54,7 +54,7 @@ class ScaffoldTests(unittest.TestCase):
             "journal/current_state.md",
             "prompts/__init__.py",
             "prompts/registry.py",
-            "prompts/registry_v2.yaml",
+            "prompts/registry_v3.yaml",
             "sessions/SESSION_TEMPLATE.md",
             "results/RESULTS_INDEX.md",
             "scripts/download_reference_papers.py",
@@ -183,7 +183,7 @@ class ScaffoldTests(unittest.TestCase):
     def test_experiment_config_points_to_saved_prompt_registry(self) -> None:
         config = (ROOT / "configs/experiment.yaml").read_text()
         required_snippets = [
-            "prompt_registry: prompts/registry_v2.yaml",
+            "prompt_registry: prompts/registry_v3.yaml",
             "oracle_alpha_control_registry: configs/oracle_alpha_controls_v1.yaml",
             "pilot_split: pilot",
             "confirmatory_split: confirm",

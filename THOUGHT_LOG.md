@@ -219,6 +219,26 @@ Suggested entry format:
 - Confidence:
   - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
 
+## [2026-03-17T09:08:00-0500] The Logit Path Survived A Bigger Split
+- Stage: implementation
+- Feel of the Experiment: This is the first result that feels like a genuine scaling signal instead of a fragile local win. The larger split did not just preserve positivity; it kept the same target family alive on a broader surface.
+- Working Hypotheses:
+  - `oracle_alpha_logit_vector` is now the best current predictiveness target for scaling.
+  - The main remaining risk is not “wrong target family” but “still not enough data to reach prereg-grade confidence.”
+- Hunches and Guesses:
+  - The next useful failure mode, if it happens, will come from much larger scale rather than from another small methodological mismatch.
+- Predictions:
+  - If this same path remains positive on the next prereg-sized scale-up, the repo should stop treating held-out predictiveness as the central blocker for Phase 1 scaling.
+- Surprises and Tensions:
+  - The selected regularization snapped back to `100.0` even while held-out routed loss improved, which suggests shrinkage preference is not by itself a sign that the path is bad.
+  - Mean JS worsened slightly while routed-loss recovery improved again, which keeps reinforcing that the routed-loss metric is the thing to trust most here.
+- Confidence:
+  - high that further scaling on the logit path is the right next move
+  - medium that descriptive alpha metrics may remain weak even if the loss story continues to improve
+- Interesting facts:
+  - The `32 / 16` run selected `oracle_alpha_logit_vector` with pilot mean predicted improvement `+0.1012` nats and held-out confirm improvement `+0.1277` nats.
+  - `12 / 16` confirm prompts improved over uniform, while confirm `R^2` improved to `-0.1954`.
+
 ## [2026-03-17T08:52:22-0500] Pilot Size Mattered More Than The Last Few Tuning Tweaks
 - Stage: implementation
 - Feel of the Experiment: This is the first oracle-alpha predictiveness result in a while that actually changes the shape of the story instead of just sharpening a failure. Doubling the pilot surface did not solve everything, but it clearly changed what the runner trusted.

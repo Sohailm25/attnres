@@ -51,7 +51,7 @@
   - applying `ln_final` plus `unembed` to that reconstructed mixture recovers the original logits exactly on the smoke prompt
   - per-layer `resid_mid` and `resid_post` identities were exact in the smoke check on local MPS
 - `known`: the pilot/confirmatory split is now saved and code-enforced:
-  - `prompts/registry_v2.yaml` is the current default prompt registry for the inline prompt collections, and `prompts/registry_v1.yaml` remains as the earlier `8 / 8` pilot/confirm snapshot
+  - `prompts/registry_v3.yaml` is the current default prompt registry for the inline prompt collections, while `prompts/registry_v1.yaml` and `prompts/registry_v2.yaml` remain as earlier saved prompt-surface snapshots
   - `prompts/registry.py` centralizes registry loading plus the confirm-only access guard
   - `scripts/export_prompt_split.py` refuses confirmatory reads when exploratory mode is enabled
   - the first saved collections cover Phase 1 oracle-alpha prompts and the factual-recall tool-breakage lane
@@ -114,10 +114,16 @@
   - the held-out confirm routed-loss metric turned positive again (`+0.0857` nats over uniform, `5 / 8` prompts positive) while confirm mean JS stayed at `0.2377`
   - confirm `R^2` remains negative (`-0.2616`), so pilot size looks like a real lever but not a full resolution of the predictiveness blocker
   - the next oracle-alpha follow-up is to scale the `registry_v2` path beyond the current `16 / 8` slice rather than to switch targets again
+- `known`: the next scale-up kept the logit path alive on a larger saved split:
+  - `resattn-0vx` introduced `prompts/registry_v3.yaml`, which expands the oracle-alpha prompt surface to `32` pilot prompts and `16` confirm prompts
+  - on `gpt2-xl`, the same loss-aware target comparison still selected `oracle_alpha_logit_vector`, now with `lambda=100.0`
+  - the held-out confirm routed-loss metric remained positive and strengthened in absolute terms (`+0.1277` nats over uniform, `12 / 16` prompts positive)
+  - confirm `R^2` improved to `-0.1954`, while confirm mean JS was `0.2421`; descriptive alpha recovery is still weak, but the routed-loss signal now survives a meaningfully larger split
+  - the next oracle-alpha follow-up is to scale this same logit path toward the prereg-sized Phase 1 gate rather than to change targets again
 
 ## Immediate Next Steps
 
-1. Scale the `registry_v2` loss-aware logit path beyond the current `16 / 8` slice in `resattn-0vx`.
+1. Scale the `registry_v3` loss-aware logit path toward the prereg-sized Phase 1 gate in `resattn-9jq`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

@@ -214,3 +214,10 @@
 - Decision: create `prompts/registry_v2.yaml`, double the oracle-alpha pilot split from `8` to `16` prompts with saved paraphrases, point the default loader and experiment config at `registry_v2`, and rerun the same loss-aware target comparison without changing the feature source or confirm set.
 - Rationale: this isolates the sample-size hypothesis directly. If pilot size is a real bottleneck, the selected target and regularization should become more stable before we invest in token/span-level target redesign.
 - Impact: the enlarged pilot surface changed selection from the raw-simplex target to `oracle_alpha_logit_vector`, moved `lambda` from `100.0` to `0.01`, and restored a positive confirm routed-loss delta (`+0.0857` nats). The next issue should scale this path further rather than switch targets again immediately.
+
+## [2026-03-17T09:08:00-0500] DECISION: Scale the logit path again before redesigning it
+
+- Trigger: `resattn-0vx` was the direct follow-up after the positive `registry_v2` result, and the main question was whether the logit-target win would survive a larger saved prompt surface.
+- Decision: create `prompts/registry_v3.yaml`, expand the oracle-alpha split to `32` pilot prompts and `16` confirm prompts, point the default loader and config at `registry_v3`, and rerun the same loss-aware comparison without changing the feature surface or target set.
+- Rationale: if the logit path is the real current best method, it should survive more data before we spend effort on another redesign. Scaling the saved prompt surface is the cleanest way to test that.
+- Impact: the `oracle_alpha_logit_vector` path stayed selected, the held-out routed-loss metric remained positive and strengthened to `+0.1277` nats, and `12 / 16` confirm prompts improved over uniform. The next issue should scale this same path toward the prereg-sized Phase 1 gate.

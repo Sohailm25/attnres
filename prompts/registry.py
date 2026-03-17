@@ -10,7 +10,7 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_REGISTRY_PATH = ROOT / "prompts" / "registry_v2.yaml"
+DEFAULT_REGISTRY_PATH = ROOT / "prompts" / "registry_v3.yaml"
 ALLOWED_SPLITS = {"pilot", "confirm"}
 
 
