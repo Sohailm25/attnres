@@ -2,7 +2,7 @@
 
 - Date: 2026-03-16
 - Repo: standalone and initialized
-- Branch: `wip/resattn-ydp`
-- Focus: Phase 1 dependency freeze plus reconstruction and cache-validity infrastructure
-- Experimental status: the pinned Phase 1 environment exists, the toy reconstruction tests are green, and a `gpt2-xl` model-backed reconstruction smoke has now passed on local MPS
-- Critical reminder: keep the oracle-alpha framing honest, preserve the deep-research control additions, and treat the remaining blockers as the prompt split plus the identifiability controls rather than reconstruction math
+- Branch: `wip/resattn-gke`
+- Focus: Phase 1 prompt-registry enforcement plus the remaining identifiability blockers
+- Experimental status: the pinned Phase 1 environment exists, the toy and model-backed reconstruction tests are green, and the pilot/confirmatory split now lives in a versioned registry with code-level confirm-access enforcement
+- Critical reminder: keep the oracle-alpha framing honest, preserve the deep-research control additions, and treat the remaining blockers as identifiability, MIB compatibility, and out-of-sample predictiveness rather than prompt bookkeeping

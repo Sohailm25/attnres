@@ -1,0 +1,168 @@
+version: 1
+registry_id: 20260316-pilot-confirm-v1
+created_on: 2026-03-16
+
+defaults:
+  aggregation_unit: sequence
+  null_models:
+    - uniform
+    - random_dirichlet
+    - magnitude_proportional
+    - last_layer_only
+  statistical_tests:
+    - paired_t_test
+    - bootstrap_1000
+  confirmatory_access:
+    exploratory_mode_forbidden: true
+
+collections:
+  oracle_alpha_phase1_v1:
+    lane: oracle_alpha
+    description: >
+      Neutral next-token-completion prompts for early oracle-alpha method tuning on
+      the pilot split and claim-bearing Phase 1 evaluation on the confirmatory split.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+      - unconstrained
+      - top-k
+    prompts:
+      - id: oa-pilot-001
+        split: pilot
+        text: The old library on Maple Street opens every morning at
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-002
+        split: pilot
+        text: After the rain stopped, the sidewalk was covered with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-003
+        split: pilot
+        text: The chef added fresh basil to the bowl of
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-004
+        split: pilot
+        text: At the edge of the forest, the campers heard
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-005
+        split: pilot
+        text: When the train finally arrived, the conductor announced
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-006
+        split: pilot
+        text: The museum guide pointed toward a room filled with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-007
+        split: pilot
+        text: On the kitchen table sat a jar of
+        tags: [neutral_prefix, natural_text]
+      - id: oa-pilot-008
+        split: pilot
+        text: As the sun set behind the hills, the valley turned
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-001
+        split: confirm
+        text: The mechanic wiped grease from the side of the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-002
+        split: confirm
+        text: By late afternoon, the classroom windows were bright with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-003
+        split: confirm
+        text: The gardener planted tulip bulbs beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-004
+        split: confirm
+        text: During the storm, the lighthouse beam swept across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-005
+        split: confirm
+        text: The violinist tightened the bow before playing the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-006
+        split: confirm
+        text: At breakfast, the children argued about who would pour the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-007
+        split: confirm
+        text: The astronomer adjusted the telescope toward the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-008
+        split: confirm
+        text: After the speech ended, the audience rose in
+        tags: [neutral_prefix, natural_text]
+
+  tool_breakage_factual_recall_v1:
+    lane: tool_breakage
+    description: >
+      Safe factual-recall prompts for the routed-versus-original lens comparison lane.
+      The pilot split is available for prompt curation and plot design, while the
+      confirmatory split is reserved for claim-bearing statistics.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+    prompts:
+      - id: tb-pilot-001
+        split: pilot
+        text: The capital of France is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-002
+        split: pilot
+        text: The largest planet in the Solar System is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-003
+        split: pilot
+        text: The chemical symbol for gold is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-004
+        split: pilot
+        text: The author of Hamlet was
+        tags: [factual_recall, safe]
+      - id: tb-pilot-005
+        split: pilot
+        text: Water freezes at zero degrees on the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-006
+        split: pilot
+        text: The currency used in Japan is the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-007
+        split: pilot
+        text: The tallest land animal is the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-008
+        split: pilot
+        text: A baby dog is called a
+        tags: [factual_recall, safe]
+      - id: tb-confirm-001
+        split: confirm
+        text: The capital of Italy is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-002
+        split: confirm
+        text: The smallest prime number is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-003
+        split: confirm
+        text: The chemical symbol for silver is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-004
+        split: confirm
+        text: The author of Pride and Prejudice was
+        tags: [factual_recall, safe]
+      - id: tb-confirm-005
+        split: confirm
+        text: The currency used in the United Kingdom is the
+        tags: [factual_recall, safe]
+      - id: tb-confirm-006
+        split: confirm
+        text: The process plants use to make sugar from sunlight is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-007
+        split: confirm
+        text: The organ that pumps blood through the body is the
+        tags: [factual_recall, safe]
+      - id: tb-confirm-008
+        split: confirm
+        text: The fastest land animal is the
+        tags: [factual_recall, safe]

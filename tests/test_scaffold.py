@@ -51,9 +51,13 @@ class ScaffoldTests(unittest.TestCase):
             "history/20260316-methodology-gap-audit.md",
             "history/20260316-secondary-red-team-review.md",
             "journal/current_state.md",
+            "prompts/__init__.py",
+            "prompts/registry.py",
+            "prompts/registry_v1.yaml",
             "sessions/SESSION_TEMPLATE.md",
             "results/RESULTS_INDEX.md",
             "scripts/download_reference_papers.py",
+            "scripts/export_prompt_split.py",
         }
         missing = sorted(path for path in expected if not (ROOT / path).is_file())
         self.assertEqual([], missing)
@@ -99,6 +103,8 @@ class ScaffoldTests(unittest.TestCase):
             "controlled dynamic-routing counterfactual",
             "harmfulness",
             "reproducible proxy",
+            "pilot/confirmatory split",
+            "confirm set can only be accessed",
             "wip/resattn-scaffold",
             "source of truth",
             "canonical mainline",
@@ -169,6 +175,17 @@ class ScaffoldTests(unittest.TestCase):
         for snippet in required_snippets:
             self.assertIn(snippet, prereg)
         self.assertNotIn("LessWrong", prereg)
+
+    def test_experiment_config_points_to_saved_prompt_registry(self) -> None:
+        config = (ROOT / "configs/experiment.yaml").read_text()
+        required_snippets = [
+            "prompt_registry: prompts/registry_v1.yaml",
+            "pilot_split: pilot",
+            "confirmatory_split: confirm",
+            "confirmatory_access_requires_exploratory_disabled: true",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, config)
 
     def test_methodology_audit_captures_known_subtle_hazards(self) -> None:
         audit = (ROOT / "history/20260316-methodology-gap-audit.md").read_text()

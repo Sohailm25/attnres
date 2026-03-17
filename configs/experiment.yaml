@@ -78,6 +78,12 @@ evaluation:
   requires_stability_suite: true
   requires_out_of_sample_predictiveness: true
 
+registry:
+  prompt_registry: prompts/registry_v1.yaml
+  pilot_split: pilot
+  confirmatory_split: confirm
+  confirmatory_access_requires_exploratory_disabled: true
+
 tool_breakage:
   tuned_lens_required: true
   controlled_dynamic_routing_counterfactual: true
