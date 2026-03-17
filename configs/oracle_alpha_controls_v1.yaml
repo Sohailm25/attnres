@@ -26,7 +26,7 @@ plans:
       eval_collection_id: oracle_alpha_phase1_v1
       eval_split: confirm
       model_family: ridge_regression
-      target: oracle_alpha_vector
+      target: oracle_alpha_logit_vector
       features: cached_early_hidden_state_summary_or_prompt_features
       primary_metric: r_squared
       secondary_metric: mean_js_divergence

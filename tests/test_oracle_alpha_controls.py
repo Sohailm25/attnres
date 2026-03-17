@@ -13,6 +13,8 @@ class OracleAlphaControlTests(unittest.TestCase):
     def setUp(self) -> None:
         from validation.oracle_alpha_controls import (
             MIBPlan,
+            alpha_target_matrix,
+            alpha_target_predictions_to_distributions,
             bootstrap_mean_confidence_interval,
             compare_predictiveness_metric_values,
             linear_alpha_predictiveness_summary,
@@ -24,6 +26,10 @@ class OracleAlphaControlTests(unittest.TestCase):
         )
 
         self.MIBPlan = MIBPlan
+        self.alpha_target_matrix = alpha_target_matrix
+        self.alpha_target_predictions_to_distributions = (
+            alpha_target_predictions_to_distributions
+        )
         self.bootstrap_mean_confidence_interval = bootstrap_mean_confidence_interval
         self.compare_predictiveness_metric_values = compare_predictiveness_metric_values
         self.linear_alpha_predictiveness_summary = linear_alpha_predictiveness_summary
@@ -49,8 +55,36 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.assertIn("runner", plan.mib_anchor.rationale.lower())
         self.assertIn("random_dirichlet", plan.null_models)
         self.assertIn("prompt_paraphrase", plan.stability_suite.prompt_perturbations)
+        self.assertEqual("oracle_alpha_logit_vector", plan.predictiveness.target)
         self.assertEqual("r_squared", plan.predictiveness.primary_metric)
         self.assertEqual("mean_js_divergence", plan.predictiveness.secondary_metric)
+
+    def test_alpha_logit_target_round_trips_simplex_distributions(self) -> None:
+        distributions = [
+            [0.20, 0.30, 0.50],
+            [0.60, 0.10, 0.30],
+        ]
+
+        transformed = self.alpha_target_matrix(
+            target_name="oracle_alpha_logit_vector",
+            distributions=distributions,
+        )
+        recovered = self.alpha_target_predictions_to_distributions(
+            target_name="oracle_alpha_logit_vector",
+            predictions=transformed.tolist(),
+        )
+
+        for original, recovered_distribution in zip(
+            distributions, recovered, strict=True
+        ):
+            self.assertEqual(len(original), len(recovered_distribution))
+            self.assertAlmostEqual(1.0, sum(recovered_distribution), places=6)
+            for original_value, recovered_value in zip(
+                original,
+                recovered_distribution,
+                strict=True,
+            ):
+                self.assertAlmostEqual(original_value, recovered_value, places=6)
 
     def test_compare_predictiveness_metric_values_respects_direction(self) -> None:
         self.assertGreater(
@@ -200,7 +234,7 @@ plans:
       eval_collection_id: oracle_alpha_phase1_v1
       eval_split: confirm
       model_family: ridge_regression
-      target: oracle_alpha_vector
+      target: oracle_alpha_logit_vector
       features: cached_early_hidden_state_summary
       primary_metric: r_squared
       secondary_metric: mean_js_divergence

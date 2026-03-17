@@ -92,10 +92,15 @@
   - the stability suite now reports prompt-matched per-sequence alpha stability alongside the previous aggregate alpha-distribution metrics
   - this improves methodological alignment but does not change the core blocker: the predictor still learns the raw oracle-alpha simplex target in unconstrained Euclidean ridge coordinates on a very small prompt split
   - the next follow-up is a constrained-or-compressed predictiveness target rather than another infrastructure-only tweak
+- `known`: the first constrained predictiveness target is now implemented and rerun:
+  - `resattn-qq2` added the `oracle_alpha_logit_vector` target path, so the runner now fits ridge in constrained alpha-logit coordinates and decodes back to simplex alpha distributions for evaluation
+  - on `gpt2-xl`, that geometry change improved the held-out routed-loss metric from `-0.0011` nats to `+0.0693` nats over uniform on average, with `5 / 8` confirm prompts improving
+  - the descriptive alpha-recovery metrics got worse at the same time (`R^2 = -0.3291`, mean JS `= 0.2457` versus the previous `-0.2154` and `0.2377`), and the selected ridge penalty still saturated at `100.0`
+  - strong interpretation therefore remains blocked; the next follow-up is a compressed target or another lower-dimensional reformulation rather than more raw logit-target iteration
 
 ## Immediate Next Steps
 
-1. Implement a constrained or compressed oracle-alpha predictiveness target in `resattn-qq2`.
+1. Evaluate a compressed oracle-alpha predictiveness target in `resattn-3ns`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

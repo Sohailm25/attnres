@@ -218,6 +218,25 @@ Suggested entry format:
   - Even the best candidate still wanted the strongest ridge penalty, which is an uncomfortable sign that the predictor is mostly trying not to say too much.
 - Confidence:
   - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
+
+## [2026-03-17T16:35:00-0500] Geometry Helped The Loss Metric More Than The Alpha Metric
+- Stage: analysis
+- Feel of the Experiment: This result is more interesting than another clean negative. Changing only the target geometry finally made the held-out routed-loss delta positive on average, but it did it in a way that made the descriptive alpha metrics uglier rather than cleaner.
+- Working Hypotheses:
+  - The logit target is probably closer to the right geometry than raw-simplex ridge, but it is still asking the model to predict too large and too fragile an object for an `8 / 8` split.
+- Hunches and Guesses:
+  - The next useful move is to compress the target, not to keep polishing feature summaries against the full `98`-source alpha vector.
+- Predictions:
+  - A lower-dimensional target will likely trade away some alpha-shape fidelity while making the routed-loss readout more stable and interpretable.
+- Surprises and Tensions:
+  - The first positive held-out routed-loss delta arrived at the same time that confirm `R^2` and mean JS got worse.
+  - That makes the project feel less like “find the best descriptive alpha metric” and more like “decide what predictiveness objective actually matters for the thesis.”
+- Confidence:
+  - medium that the geometry fix was worth landing
+  - low-to-medium that raw logit-coordinate prediction alone can clear the interpretation blocker
+- Interesting facts:
+  - The constrained target moved predicted mean improvement to `+0.0693` nats over uniform with `5 / 8` confirm prompts positive, while oracle alpha stayed at `+1.3409`.
+  - The selected ridge penalty still saturated at `100.0`, which means the shrinkage story did not disappear just because the target geometry got better.
   - low that further pooled-state variants alone will solve the confirm-split predictiveness problem
 - Interesting facts:
   - The best tested internal feature summary improved predicted mean loss from `-0.0348` to `-0.0010` nats versus uniform.
