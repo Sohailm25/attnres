@@ -434,6 +434,24 @@ Suggested entry format:
   - high that keeping the tuned-lens-aware comparison on Gemma-2 was the right call
   - medium that later tool-breakage interpretation will need careful metric discipline to avoid overselling the final-position story
 
+## [2026-03-17T13:05:00-0500] KL Should Drive The Baseline, But Not The Rhetoric
+- Stage: analysis
+- Feel of the Experiment: This one is clearer after looking at the layerwise counts. The lens is doing something real almost everywhere, just not the thing a casual reader would jump to first.
+- Working Hypotheses:
+  - Held-out KL is the right primary tuned-lens baseline metric for the Gemma factual-recall lane because it tracks the strongest same-model fidelity signal in the saved pilot.
+  - Final-position answer-token behavior should constrain later write-up language, not block the whole routed lane from starting.
+- Hunches and Guesses:
+  - If we force final-position top-1 to be primary now, we will spend time rebuilding the lens objective before even finding out whether the routed-versus-original comparison is interesting.
+  - If we ignore final-position metrics, we will talk ourselves into claims the artifact does not support.
+- Predictions:
+  - The later routed-versus-original tool-breakage plots will probably look most convincing when framed as "routing changes lens faithfulness and stability relative to the original-model baseline" rather than as "routing hides the correct answer token" unless the final-position story gets stronger.
+- Surprises and Tensions:
+  - `25 / 26` layers improved on held-out KL and `25 / 26` improved on final-position KL, but only `4 / 26` improved on final-position top-1.
+  - That spread is too lopsided to treat all these metrics as if they were saying the same thing.
+- Confidence:
+  - high that KL-primary is the right control decision
+  - medium-to-high that answer-token-facing claims should stay gated until a sharper lens objective exists or later routed results make the final-position story much stronger
+
 ## [2026-03-16T22:59:08-0500] Token Awareness Helped The Shape More Than The Outcome
 - Stage: implementation
 - Feel of the Experiment: This result is more interesting than the raw delta suggests. Preserving coarse position structure in `h_4[t]` did seem to help the predictor find alpha vectors that look a bit more like the oracle ones, but that shape improvement still refused to turn into a real routed-loss gain.

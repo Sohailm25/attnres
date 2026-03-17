@@ -91,6 +91,12 @@ tool_breakage:
   gemma2_tuned_lens_plan: custom_local_training
   secondary_model_tuned_lens_comparison: supplementary_only
   figure8_strong_claim_proxy: small_local_attnres_reproduction
+  tuned_lens_baseline_primary_metric: heldout_mean_kl_to_final_distribution
+  tuned_lens_baseline_secondary_metrics:
+    - heldout_mean_top1_agreement
+    - heldout_final_position_mean_kl_to_final_distribution
+    - heldout_final_position_mean_top1_agreement
+  answer_token_facing_claims_require_explicit_final_position_metrics: true
 
 required_lanes:
   - oracle_alpha
