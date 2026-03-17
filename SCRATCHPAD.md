@@ -238,6 +238,56 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 ## [2026-03-17T12:09:00-0500] POST-RUN: prereg-scale oracle-alpha pattern analysis
 - Command: `.venv/bin/python scripts/run_oracle_alpha_pattern_analysis.py --run-path results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/oracle_eval_run.json --output results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json --random-seed 11 --max-clusters 12`
 - Outcome: PARTIAL
+
+## [2026-03-17T12:45:32-0500] PRE-RUN: Gemma-2 tuned-lens viability calibration
+- tmux session: N/A
+- Script: `scripts/run_tuned_lens_viability_pilot.py`
+- Command: `.venv/bin/python scripts/run_tuned_lens_viability_pilot.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration --max-train-prompts 2 --max-eval-prompts 1 --translator-rank 16 --num-steps 50 --checkpoint-every-steps 10 --learning-rate 0.01 --seed 11`
+- Config: `train_collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_collection=tool_breakage_factual_recall_v1`, `eval_split=pilot`, `checkpoint_root=results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration/checkpoints`
+- What I'm testing: the real Gemma-2 viability path loads locally, writes prompt caches and intermediate training checkpoints, and can complete a tiny original-model-only tuned-lens slice without code-path surprises.
+- Expected outcome: the calibration saves train/eval prompt caches, writes `training_state.pt`, and emits a held-out summary artifact for a tiny prompt slice.
+- Expected duration: ~10-20 minutes including model load
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration/checkpoints/training_state.pt`
+- Checkpoint cadence: every `10` optimization steps plus final save
+- Log path: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration`
+- Resume command: `.venv/bin/python scripts/run_tuned_lens_viability_pilot.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration --max-train-prompts 2 --max-eval-prompts 1 --translator-rank 16 --num-steps 50 --checkpoint-every-steps 10 --learning-rate 0.01 --seed 11`
+- Main confound to watch: Gemma-2 weight availability or MPS execution quirks could fail before the tuned-lens logic is actually exercised.
+- Implementation verified: YES - `.venv/bin/python -m unittest discover -s tests -p 'test*.py'` is green after adding cache reuse and training resume coverage.
+- Status: LAUNCHING
+
+## [2026-03-17T12:48:12-0500] POST-RUN: Gemma-2 tuned-lens viability calibration
+- Command: `.venv/bin/python scripts/run_tuned_lens_viability_pilot.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration --max-train-prompts 2 --max-eval-prompts 1 --translator-rank 16 --num-steps 50 --checkpoint-every-steps 10 --learning-rate 0.01 --seed 11`
+- Outcome: SUCCESS
+- Key metric: `mean_raw_kl_to_final=9.8754 -> mean_tuned_kl_to_final=1.9276`; `final_position_mean_raw_kl_to_final=5.8291 -> 1.7539`; `mean_top1=0.1923 -> 0.5449`
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-calibration/checkpoints/training_state.pt`
+- Anomalies: the first calibration attempt failed in evaluation because CPU residuals were passed into an MPS unembed path; fixing `_apply_final_norm_and_unembed` to move residuals onto the model device made the rerun resume cleanly from the saved prompt caches and training checkpoint
+- Next step: launch the full original-model-only Gemma-2 viability pilot in tmux on the complete `96`-prompt train slice and `8`-prompt factual-recall eval slice
+
+## [2026-03-17T12:49:17-0500] PRE-RUN: Gemma-2 tuned-lens viability pilot v1
+- tmux session: `gemma2-tuned-lens-v1`
+- Script: `scripts/run_tuned_lens_viability_pilot.py`
+- Command: `.venv/bin/python scripts/run_tuned_lens_viability_pilot.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1 --translator-rank 16 --num-steps 200 --checkpoint-every-steps 25 --learning-rate 0.01 --seed 11`
+- Config: `train_collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_collection=tool_breakage_factual_recall_v1`, `eval_split=pilot`, `checkpoint_root=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoints`
+- What I'm testing: the smallest full-surface Gemma-2 tuned-lens viability artifact can beat raw logit lens on held-out factual-recall pilot prompts while saving reusable original-model caches and a resumable training state.
+- Expected outcome: prompt caches and training checkpoints are written during the run, the held-out tuned-lens metrics beat the raw baseline on the `8` factual-recall pilot prompts, and the output is strong enough to justify the later routed-vs-original tool-breakage lane.
+- Expected duration: ~30-60 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoints/training_state.pt`
+- Checkpoint cadence: every `25` optimization steps plus final save
+- Log path: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/run.log`
+- Resume command: `.venv/bin/python scripts/run_tuned_lens_viability_pilot.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1 --translator-rank 16 --num-steps 200 --checkpoint-every-steps 25 --learning-rate 0.01 --seed 11`
+- Main confound to watch: residual-MSE training could look good on held-out KL while still failing to deliver a meaningful tuned-vs-raw gap on the factual-recall final-position metrics that matter for later tool-breakage use.
+- Implementation verified: YES - the full test suite is green and the Gemma calibration already verified prompt-cache writes, checkpoint resume, and held-out metric improvement on a tiny real-model slice.
+- Status: LAUNCHING
+
+## [2026-03-17T12:52:30-0500] POST-RUN: Gemma-2 tuned-lens viability pilot v1
+- Command: `.venv/bin/python scripts/run_tuned_lens_viability_pilot.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1 --translator-rank 16 --num-steps 200 --checkpoint-every-steps 25 --learning-rate 0.01 --seed 11`
+- Outcome: SUCCESS
+- Key metric: `mean_raw_kl_to_final=11.3881 -> mean_tuned_kl_to_final=3.4580`; `final_position_mean_raw_kl_to_final=14.8685 -> 7.5721`
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoints/training_state.pt`
+- Anomalies: final-position top-1 only improved from `0.1010` to `0.1250`, so the cleanest gain is distributional rather than answer-token recovery
+- Next step: register the pilot as a viability pass, then open the follow-up that decides whether later routed-versus-original work should keep KL as the primary tuned-lens baseline metric or sharpen the lens objective for stronger final-position recovery
 - Key metric: oracle best silhouette `= 0.1428` at `k = 2` versus matched-random `0.1093`; mean attention mass `= 0.5560`, mean MLP mass `= 0.4090`
 - Artifacts saved: `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json`, `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.md`
 - Anomalies: the positive clustering gap is dominated by a `126 / 2` outlier split rather than a broad multi-cluster partition
