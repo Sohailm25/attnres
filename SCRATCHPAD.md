@@ -903,3 +903,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-v1/checkpoints/attnres_training_state.pt`
 - Anomalies: I briefly misread the live tmux completion state and launched a duplicate foreground resume against the same output directory; I caught it immediately, killed the duplicate process, and kept the original tmux run as the source of truth before finalizing the artifact
 - Next step: close `resattn-7y4`, create `resattn-fby` for best-checkpoint / eval-trajectory support on the widened `wikitext-103` regime, and shift overall repo priority to `resattn-73l`
+
+## [2026-03-17T18:01:46-0500] PRE-RUN: aligned Gemma refusal-direction intervention smoke
+- tmux session: N/A
+- Script: `scripts/run_refusal_direction_intervention_check.py`
+- Command: `.venv/bin/python scripts/run_refusal_direction_intervention_check.py --device mps --max-new-tokens 24 --max-pilot-groups 1 --max-confirm-groups 1 --output-dir results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_discovery_v1`, `pilot_groups=1`, `confirm_groups=1`, `max_new_tokens=24`
+- What I'm testing: the bounded refusal-direction coefficient-replacement runner executes cleanly on the aligned model and produces safe summary-only outputs before the full confirm run.
+- Expected outcome: the script completes, writes `summary.json`, keeps raw completions out of the committed summary surface, and shows at least one arm moving refusal-marker behavior in the expected direction.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke/checkpoints/prompt_residuals/`
+- Checkpoint cadence: prompt-level residual checkpoints written on first prompt access
+- Log path: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke/run.log`
+- Resume command: `.venv/bin/python scripts/run_refusal_direction_intervention_check.py --device mps --max-new-tokens 24 --max-pilot-groups 1 --max-confirm-groups 1 --output-dir results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke`
+- Main confound to watch: a naive intervention scale could either do nothing or overpower the residual stream, so this smoke is primarily for runner validity before the full confirm slice.
+- Implementation verified: YES - `tests/test_safety_alignment.py` passes after adding projection-replacement and behavior-summary helpers.
+- Status: LAUNCHING
+
+## [2026-03-17T18:08:51-0500] POST-RUN: aligned Gemma refusal-direction intervention smoke
+- Outcome: SUCCESS
+- Key metric: the binary refusal marker stayed unchanged on `1 / 1`, but the new continuation-preference metric moved in the expected direction for the refusal arms (`margin_delta=-0.2049` on refusal suppression, `+0.1583` on harmful-context refusal injection) while the matched harmfulness controls stayed flat (`0.0`)
+- Artifacts saved: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke/summary.json`, `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke/checkpoints/prompt_residuals/`
+- Latest checkpoint: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke/checkpoints/prompt_residuals/sa-confirm-001-refusal.pt`
+- Anomalies: the first launch was blocked by shell redirection before the output directory existed, and the first scripted rerun surfaced a TransformerLens hook-signature bug; both were fixed before the successful smoke, and the smoke showed the original binary behavior metric was too coarse on its own
+- Next step: run the full `6 / 6` confirm-split intervention artifact with the continuation-preference metric kept as a secondary readout beside the prereg-aligned greedy refusal marker
+
+## [2026-03-17T18:08:51-0500] PRE-RUN: aligned Gemma refusal-direction intervention v1
+- tmux session: N/A
+- Script: `scripts/run_refusal_direction_intervention_check.py`
+- Command: `.venv/bin/python scripts/run_refusal_direction_intervention_check.py --device mps --max-new-tokens 24 --output-dir results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_discovery_v1`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens=24`
+- What I'm testing: whether the localized refusal direction on aligned Gemma causally shifts matched safe continuation preference on the frozen confirm split, and whether the matched harmfulness controls stay weaker or flat at the current bounded intervention surface.
+- Expected outcome: refusal suppression lowers refusal-versus-context preference on refusal prompts, refusal injection raises it on harmful-context prompts, and the harmfulness controls do not recapitulate the same pattern.
+- Expected duration: ~10-25 minutes
+- Checkpoint path: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1/checkpoints/prompt_residuals/`
+- Checkpoint cadence: prompt-level residual checkpoints written on first prompt access
+- Log path: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1/run.log`
+- Resume command: `.venv/bin/python scripts/run_refusal_direction_intervention_check.py --device mps --max-new-tokens 24 --output-dir results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1`
+- Main confound to watch: the greedy refusal marker may remain mostly saturated even if the continuation-preference metric moves, so the final interpretation needs both readouts and should not overstate binary flips.
+- Implementation verified: YES - the `1 / 1` smoke reproduced the expected preference-direction effects while keeping the harmfulness controls flat.
+- Status: LAUNCHING
+
+## [2026-03-17T18:13:35-0500] POST-RUN: aligned Gemma refusal-direction intervention v1
+- Outcome: SUCCESS
+- Key metric: refusal suppression lowered the refusal-versus-context preference margin on refusal prompts by `0.1891`, refusal injection raised the same margin on harmful-context prompts by `0.1741`, and the matched harmfulness controls stayed flat at `0.0`
+- Artifacts saved: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1/summary.json`, `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1/checkpoints/prompt_residuals/`
+- Latest checkpoint: `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1/checkpoints/prompt_residuals/sa-confirm-006-refusal.pt`
+- Anomalies: the greedy refusal marker stayed saturated on refusal prompts and only flipped on `1 / 6` harmful-context prompts, so the continuation-preference metric became the decisive causal readout rather than the binary marker alone
+- Next step: close `resattn-73l` as the bounded causal mediator pass, open mediator-conditioned routing follow-up `resattn-h1p`, and move overall repo priority to `resattn-fby`

@@ -735,3 +735,25 @@ Suggested entry format:
 - Interesting facts:
   - On the exact widened `wikitext-103` regime, the `200`-step calibration beat the matched baseline by `0.0534` eval-loss points.
   - At the full `1500`-step horizon, deep embedding persistence improved to `0.1615`, but the entropy ordering remained inverted (`1.4318 < 1.4893`).
+
+## [2026-03-17T18:13:35-0500] The Safety Mediator Finally Did Something Causal Without Turning Into A Jailbreak Story
+- Stage: implementation
+- Feel of the Experiment: This was the right kind of safety result. The first binary readout looked disappointingly flat, but that turned out to be a measurement problem more than an intervention failure. Once I added the matched continuation-preference metric, the refusal direction started behaving like a real mediator instead of just a separability artifact.
+- Working Hypotheses:
+  - The aligned-Gemma refusal direction at assistant-prefill layer `22` has causal bite on refusal-style execution, not just descriptive separation.
+  - The matched harmfulness direction at instruction-final layer `25` does not explain the same effects on this frozen prompt set.
+- Hunches and Guesses:
+  - The benign-prompt shift is the interesting discomfort in this artifact. It says the refusal direction is not a neatly selective harmful-only switch; it is more like a refusal-style execution axis with some spillover.
+  - That actually makes the next safety step cleaner: routing analysis should be mediator-conditioned, but it should not talk like the mediator is perfectly disentangled.
+- Predictions:
+  - The next safety result that matters is whether routing differences survive or sharpen when conditioned on this mediator.
+  - If future routing analysis only tracks the saturated greedy refusal marker and ignores the continuation-preference surface, it will miss real movement again.
+- Surprises and Tensions:
+  - The first `1 / 1` smoke looked like a null on the binary marker, but the continuation-preference metric immediately separated refusal-direction effects from the harmfulness controls.
+  - On the full confirm split, refusal injection only flipped `1 / 6` harmful-context prompts outright, even though the refusal preference margin shifted consistently in the expected direction.
+- Confidence:
+  - high that `resattn-73l` clears the bounded causal mediator blocker
+  - medium-high that the next safety lane should use this mediator directly rather than reopening discovery
+- Interesting facts:
+  - Refusal suppression on refusal prompts reduced the refusal-versus-context preference margin by `0.1891`, while harmfulness suppression stayed exactly flat.
+  - Refusal injection on harmful-context prompts increased the same preference margin by `0.1741` and produced the only greedy refusal flip (`1 / 6`).

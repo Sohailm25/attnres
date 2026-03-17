@@ -304,12 +304,22 @@
       - confirm pair accuracy stayed `1.0` for both primary directions
       - refusal and harmfulness directions were nearly orthogonal (`cosine = 0.0064`)
     - interpretation: the refusal-feature discovery workflow is now operationally validated, but strong safety-routing claims remain blocked on later causal mediator checks
+  - `resattn-73l` now lands the bounded aligned-Gemma causal mediator check before any safety-routing analysis:
+    - `validation/safety_alignment.py` and `scripts/run_refusal_direction_intervention_check.py` now implement projection-replacement interventions at the localized refusal and harmfulness sites, with summary-only outputs plus a matched safe continuation-preference metric
+    - `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1.md` is the first full confirm artifact on the frozen `6 / 6` aligned-Gemma prompt groups
+    - the causal result is real but bounded:
+      - refusal suppression on refusal prompts lowered the refusal-versus-context preference margin by `0.1891`
+      - the matched harmfulness suppression control stayed flat at `0.0`
+      - refusal injection on harmful-context prompts raised the same preference margin by `0.1741` and flipped the greedy refusal marker on `1 / 6` prompts
+      - refusal injection on benign prompts also raised refusal-versus-benign preference by `0.2374` without producing greedy refusal flips
+      - the matched harmfulness injection control on benign prompts stayed flat at `0.0`
+    - interpretation: the localized refusal direction now has causal bite on the aligned-Gemma confirm split, and the harmfulness control does not recapitulate that effect; at the same time, greedy refusal behavior remains mostly saturated and the benign-prompt shift means this should be treated as bounded mediator evidence rather than a perfectly selective refusal switch
 
 ## Immediate Next Steps
 
-1. Use `resattn-73l` to add a causal refusal-direction intervention check before any mediator-conditioned safety-routing claim.
-2. Use `resattn-fby` to add best-checkpoint / eval-trajectory support for the widened `wikitext-103` Figure 8 proxy before another optimization redesign.
-3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+1. Use `resattn-fby` to add best-checkpoint / eval-trajectory support for the widened `wikitext-103` Figure 8 proxy before another optimization redesign.
+2. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+3. Use `resattn-h1p` for mediator-conditioned safety routing analysis on aligned Gemma now that the bounded causal mediator check is in place.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 

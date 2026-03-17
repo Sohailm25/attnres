@@ -467,3 +467,16 @@
   - the exact same `wikitext-103` regime was positive at `200` steps during calibration, then negative at the full `1500`-step horizon
   That means corpus size helped, but the runner still cannot answer the now-live question: whether an earlier more competitive checkpoint also has a better Figure 8 surface. The current runner only preserves the final model plus a scalar `best_eval_loss`, which is not enough.
 - Impact: the repo should stop treating more same-regime training as the obvious next Figure 8 move. The next Figure 8 work should first preserve checkpoint-level eval history and best-model state. Overall repo priority can reasonably shift to `resattn-73l` while that Figure 8 follow-up waits.
+
+## [2026-03-17T18:13:35-0500] DECISION: Close `resattn-73l` on bounded causal mediator evidence, with continuation preference as the decisive readout
+
+- Trigger: the aligned-Gemma causal mediator run on the frozen `6 / 6` confirm split completed after a smoke showed the original greedy refusal-marker readout was too coarse on its own.
+- Decision: treat `resattn-73l` as complete once the repo lands the bounded coefficient-replacement intervention runner plus the confirm artifact, and interpret the result through both the greedy refusal marker and a matched safe continuation-preference metric.
+- Rationale: the full artifact shows a real causal mediator effect while staying inside the repo’s safety guardrails:
+  - refusal suppression on refusal prompts lowered the refusal-versus-context preference margin by `0.1891`
+  - the matched harmfulness suppression control stayed exactly flat
+  - refusal injection on harmful-context prompts raised the same preference margin by `0.1741` and flipped the greedy refusal marker on `1 / 6` prompts
+  - refusal injection on benign prompts also raised refusal preference (`+0.2374`) without producing greedy refusal flips
+  - the matched harmfulness injection control on benign prompts stayed flat
+  This is enough to clear the “mediator must be causal, not just separable” blocker. It is not enough to claim a highly selective harmful-only refusal switch, because the benign preference shift is real and the binary refusal marker stays mostly saturated.
+- Impact: `resattn-73l` can close honestly as a bounded causal mediator pass. The next safety issue becomes `resattn-h1p`, which moves to mediator-conditioned routing analysis on aligned Gemma. Overall repo priority should now return to `resattn-fby`, because the Figure 8 lane has the stronger cross-lane blocker.
