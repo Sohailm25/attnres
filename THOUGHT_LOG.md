@@ -690,3 +690,25 @@ Suggested entry format:
 - Interesting facts:
   - The base `google/gemma-2-2b` preflight complied with a harmful request directly, which would have made any refusal-feature result invalid by construction.
   - The aligned run localized refusal at assistant-prefill layer `22` and harmfulness at instruction-final layer `25`, which is exactly the sort of positional split the literature made me expect without guaranteeing it.
+
+## [2026-03-17T18:05:00-0500] The Figure 8 Lane Finally Stopped Pretending The Next Lever Was Obvious
+- Stage: analysis
+- Feel of the Experiment: This is a relief more than anything else. The width and horizon follow-ups were useful, but they left the lane in that annoying “maybe one more tweak” state. The redesign decision is the first moment the repo has a clean reason to stop doing that.
+- Working Hypotheses:
+  - The strongest remaining bottleneck is corpus size, not another dose of width or another round of training on the same small dataset.
+  - The proxy architecture is still worth keeping fixed for one more discriminating run because the metric surface did move in the right direction under compact subword and width, even while the baseline comparison stayed weak.
+- Hunches and Guesses:
+  - `wikitext-2` is now doing two bad things at once: making overfitting easy and making it too tempting to read every negative result as an architecture failure.
+  - If the widened compact-subword proxy still looks bad on `wikitext-103`, then the next honest move really will be objective or architecture redesign rather than “more realistic data.”
+- Predictions:
+  - The next Figure 8 artifact should be far more informative than the last two because it will answer the overfitting hypothesis directly instead of circling it.
+  - If the entropy ordering still refuses to move on the larger same-family corpus, I will stop defending the current local objective as the likely fix.
+- Surprises and Tensions:
+  - The char-level scaled run still matters here because it showed the local routed proxy can beat the baseline at all. That keeps me from blaming the whole architecture too early.
+  - The single cleanest piece of evidence came from the horizon run, not the width run: best eval froze while train loss kept dropping. That is much more “data problem” than “capacity problem.”
+- Confidence:
+  - high that `resattn-du2` should choose corpus first
+  - medium-high that `wikitext-103` is the right bounded next step rather than jumping straight to a totally different pretraining distribution
+- Interesting facts:
+  - Compact subword improved deep embedding persistence twice in a row, first over char-level and then again with width.
+  - The best widened eval losses stayed exactly unchanged from `1500` through `4500` steps, which is about as direct a warning against more same-regime optimization as I could ask for.

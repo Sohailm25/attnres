@@ -201,6 +201,11 @@
     - the entropy gap remained negative at `-0.0460`
     - the entropy ordering stayed inverted
   - interpretation: the current widened compact-subword proxy is not primarily blocked on optimization horizon; the next Figure 8 follow-up should be a bounded redesign decision rather than another horizon or width rerun on the same regime
+- `known`: `resattn-du2` has now made that bounded redesign decision for the Figure 8 proxy lane:
+  - the next Figure 8 lever is corpus size, not objective and not local architecture
+  - the repo will keep compact remapped GPT-2 subword tokenization, the widened `d_model=160`, `d_ff=640`, `8`-block local proxy, and the standard next-token objective fixed
+  - the next concrete follow-up is `resattn-7y4`, which moves from `wikitext/wikitext-2-raw-v1` to the larger same-family `wikitext/wikitext-103-raw-v1`
+  - objective changes, architecture changes, and further width/horizon/sequence-length changes are explicitly deferred until the corpus-first follow-up answers whether the current regime is mainly overfitting a tiny corpus
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -287,7 +292,7 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-du2` to make one bounded redesign decision for the Figure 8 proxy lane after the negative width and horizon follow-ups.
+1. Use `resattn-7y4` to run the widened compact-subword Figure 8 proxy on `wikitext-103` with corpus size as the only changed lever.
 2. Use `resattn-73l` to add a causal refusal-direction intervention check before any mediator-conditioned safety-routing claim.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
