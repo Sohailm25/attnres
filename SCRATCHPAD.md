@@ -288,6 +288,22 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoints/training_state.pt`
 - Anomalies: final-position top-1 only improved from `0.1010` to `0.1250`, so the cleanest gain is distributional rather than answer-token recovery
 - Next step: register the pilot as a viability pass, then open the follow-up that decides whether later routed-versus-original work should keep KL as the primary tuned-lens baseline metric or sharpen the lens objective for stronger final-position recovery
+
+## [2026-03-17T13:17:57-0500] PRE-RUN: Gemma-2 tool-breakage baseline calibration
+- tmux session: N/A
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration --split pilot --exploratory --max-prompts 1 --optimization-steps 10 --learning-rate 0.1 --seed 11`
+- Config: `collection=tool_breakage_factual_recall_v1`, `tuned_lens_checkpoint=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`, `checkpoint_root=results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/checkpoints`
+- What I'm testing: the first same-model tool-breakage runner can load the saved Gemma tuned lens, derive target-token traces from prompt metadata, optimize oracle alpha for one factual-recall prompt, and write a resumable prompt-result artifact.
+- Expected outcome: the run saves `summary.json` plus one prompt-result checkpoint and reports both original and routed raw/tuned trace metrics without code-path failures.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/checkpoints/prompt_results`
+- Checkpoint cadence: once per completed prompt
+- Log path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration`
+- Resume command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration --split pilot --exploratory --max-prompts 1 --optimization-steps 10 --learning-rate 0.1 --seed 11`
+- Main confound to watch: target-token derivation and routed-prefix trace construction could be internally consistent enough to run while still misaligning the target token or layer-depth mapping.
+- Implementation verified: YES - `.venv/bin/python -m unittest discover -s tests -p 'test*.py'` is green after adding prompt metadata and tool-breakage trace tests.
+- Status: LAUNCHING
 - Key metric: oracle best silhouette `= 0.1428` at `k = 2` versus matched-random `0.1093`; mean attention mass `= 0.5560`, mean MLP mass `= 0.4090`
 - Artifacts saved: `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json`, `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.md`
 - Anomalies: the positive clustering gap is dominated by a `126 / 2` outlier split rather than a broad multi-cluster partition
@@ -472,3 +488,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/checkpoints/`
 - Anomalies: the summary-stage sweep took much longer than the oracle checkpointing stage and left `predictiveness_summary.json` and `campaign_manifest.json` stale until the final write; follow-up `resattn-9co` tracks that observability gap
 - Next step: register the prereg-scale artifact as the first development-model oracle gate clear, close `resattn-9jq`, and move the next oracle task to prereg-scale pattern analysis on the saved `registry_v4` artifact
+
+## [2026-03-17T13:17:57-0500] PRE-RUN: Gemma-2 tool-breakage baseline calibration
+- tmux session: N/A
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration --split pilot --exploratory --max-prompts 1 --optimization-steps 10 --learning-rate 0.1 --seed 11`
+- Config: `collection=tool_breakage_factual_recall_v1`, `split=pilot (1 prompt calibration)`, `tuned_lens_checkpoint=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`, `primary_metric=held-out KL to final distribution`, `device=mps fallback cpu`
+- What I'm testing: whether the first same-model Gemma tool-breakage runner produces sane routed-versus-original traces, writes prompt-level checkpoints, and keeps the tuned-lens baseline aligned with the saved metric hierarchy.
+- Expected outcome: one prompt checkpoint and one `summary.json` appear under the output directory, and routed traces differ enough from original traces to catch obvious layer-order or target-token bugs.
+- Expected duration: ~5-10 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/checkpoints/prompt_results`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/calibration.log`
+- Resume command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration --split pilot --exploratory --max-prompts 1 --optimization-steps 10 --learning-rate 0.1 --seed 11`
+- Main confound to watch: the first runner could look broken either because the tuned lens is misapplied layerwise or because the factual-recall prompt does not expose a clear routed-versus-original gap on one example.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry tests.test_tool_breakage tests.test_scaffold` passed before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T13:29:41-0500] POST-RUN: Gemma-2 tool-breakage baseline calibration
+- Outcome: SUCCESS
+- Key metric: routing increased tuned-lens mean KL to the final distribution from `1.6851` to `3.5009` and final-position tuned KL from `2.0873` to `3.7710` on the first factual-recall pilot prompt
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/summary.json`, `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/checkpoints/prompt_results/`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-calibration/checkpoints/prompt_results/tb-pilot-001-c72233c57c.json`
+- Anomalies: raw and tuned traces were already non-monotonic on the original-model baseline for this first prompt, so the calibration only establishes runner sanity, not a strong breakage delta
+- Next step: launch the full `8`-prompt pilot baseline in `tmux` with the checkpointed runner and inspect whether routing increases KL or non-monotonicity relative to the original baseline across the saved factual-recall pilot set
+
+## [2026-03-17T13:36:00-0500] PRE-RUN: Gemma-2 tool-breakage baseline pilot v1
+- tmux session: `gemma-tb-pilot-v1`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1 --split pilot --exploratory --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Config: `collection=tool_breakage_factual_recall_v1`, `split=pilot (8 prompts)`, `tuned_lens_checkpoint=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`, `primary_metric=held-out KL to final distribution`, `secondary_metrics=mean top1 + final-position KL/top1`, `device=mps fallback cpu`
+- What I'm testing: whether same-model oracle-routed traces on the full factual-recall pilot set show larger KL degradation and more non-monotonic correct-token traces than the original-model baseline under both raw and tuned lens.
+- Expected outcome: prompt-level checkpoint JSONs appear after each pilot prompt, the run writes a reusable `summary.json`, and the pilot artifact shows whether routed traces materially destabilize the tuned-lens baseline instead of just the raw logit lens.
+- Expected duration: ~25-45 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/checkpoints/prompt_results`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/pilot.log`
+- Resume command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1 --split pilot --exploratory --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Main confound to watch: the first-token factual-recall target may understate instability on multi-token answers, so any answer-token-facing read must stay subordinate to the KL-primary metric hierarchy.
+- Implementation verified: YES - calibration wrote a prompt checkpoint and produced the expected routed-versus-original KL separation on the first pilot prompt.
+- Status: LAUNCHING
+
+## [2026-03-17T13:44:57-0500] POST-RUN: Gemma-2 tool-breakage baseline pilot v1
+- Outcome: SUCCESS
+- Key metric: routing worsened tuned-lens mean KL from `3.3544` to `5.8709` and tuned final-position KL from `7.5721` to `11.4121` on the full `8`-prompt factual-recall pilot split
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/summary.json`, `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1.md`, `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/checkpoints/prompt_results/`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/checkpoints/prompt_results/`
+- Anomalies: the boolean non-monotonicity metric saturated on the original-model baseline (`8 / 8` raw and tuned), so the pilot validates runner behavior and broad KL degradation under routing but does not yet provide an informative relative strong-claim threshold
+- Next step: use the saved pilot traces to codify stronger routed-versus-original success metrics in `resattn-ypj` before any confirmatory factual-recall run

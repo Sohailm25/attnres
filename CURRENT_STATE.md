@@ -3,7 +3,7 @@
 **Last updated:** 2026-03-17
 **Updated by:** codex-gpt5
 **Status:** in_progress
-**Current phase:** Phase 2 - Pattern analysis, Figure 8 validation, and regime comparisons
+**Current phase:** Phase 3 - Tool-breakage and safety routing analysis
 
 ## Active Thesis Lock
 
@@ -170,13 +170,30 @@
   - primary tuned-lens baseline metric: held-out KL to the model's final output distribution
   - required secondary diagnostics: mean top-1 agreement, final-position KL, and final-position top-1
   - interpretation lock: KL improvement alone is enough to keep the same-model tuned-lens baseline viable, but it does not license answer-token-facing factual-recall claims without explicit final-position evidence
+- `known`: `resattn-28b` now provides the first same-model Gemma routed-versus-original factual-recall baseline artifact:
+  - `validation/tool_breakage.py` implements the checkpointed prompt-level baseline runner and `scripts/run_tool_breakage_factual_recall_baseline.py` is the launch entry point
+  - `prompts/registry_v4.yaml` now carries explicit `target_text` metadata for every `tool_breakage_factual_recall_v1` prompt so factual-recall token traces are defined by the saved registry rather than handwritten per run
+  - `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1.md` is the first `8`-prompt pilot artifact comparing original versus routed traces under both raw and tuned lens on `google/gemma-2-2b`
+  - the pilot shows broad KL-primary degradation under routing:
+    - mean raw KL to final increased from `11.3515` to `16.9148`
+    - mean tuned-lens KL to final increased from `3.3544` to `5.8709`
+    - final-position tuned-lens KL increased from `7.5721` to `11.4121`
+    - mean tuned top-1 dropped from `0.5152` to `0.3200`
+    - final-position tuned top-1 dropped from `0.1250` to `0.0433`
+  - prompt-level coverage is broad on the KL-primary metrics:
+    - tuned mean KL worsened on `8 / 8` prompts
+    - tuned final-position KL worsened on `8 / 8` prompts
+    - raw mean KL worsened on `7 / 8` prompts
+    - raw and tuned mean top-1 both worsened on `8 / 8` prompts
+  - the prereg non-monotonicity boolean is already saturated on the original baseline (`8 / 8` prompts non-monotonic under both raw and tuned lens), so this pilot validates the runner and shows broad routed-versus-original degradation, but it does not yet clear the relative strong-claim threshold
+  - `resattn-ypj` is the next tool-breakage blocker: codify stronger routed-versus-original success metrics from the saved pilot traces before any confirmatory Gemma factual-recall run
 
 ## Immediate Next Steps
 
-1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+1. Use `resattn-ypj` to codify stronger routed-versus-original Gemma tool-breakage success metrics from the saved pilot traces before any confirmatory factual-recall run.
 2. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
 3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
-4. Take `resattn-28b` to start the routed-versus-original Gemma factual-recall tool-breakage implementation with the new KL-primary tuned-lens metric hierarchy.
+4. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
 ## Phase 1 Gate
@@ -198,6 +215,7 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: tool-breakage requires a non-monotonic logit-lens demonstration on factual recall, with a target of non-monotonic curves on `>50%` of prompts before making a strong breakage claim.
 - `known`: raw logit lens is not assumed monotonic in the vanilla model; the strong tool-breakage claim requires additional instability under routing relative to the original-model baseline and a tuned-lens-aware comparison.
 - `known`: the tuned-lens-aware comparison is now KL-primary on Gemma-2 factual recall; final-position metrics must still be reported and control answer-token-facing interpretation.
+- `known`: the current Gemma pilot shows that the simple non-monotonicity boolean can saturate on the original-model baseline, so later tool-breakage decisions must use an explicitly relative routed-versus-original metric rather than that boolean alone.
 - `known`: the strong tool-breakage claim also requires a controlled dynamic-routing counterfactual or another explicitly logged confirmatory failure metric.
 - `known`: router training success is not just "it trains"; the local target gate is `R^2 > 0.5` when approximating oracle-alpha.
 - `known`: clustering must be informative enough to clear `silhouette > 0.2` before we claim task-structured routing.

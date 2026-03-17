@@ -86,6 +86,26 @@ class PromptRegistryTests(unittest.TestCase):
         self.assertNotEqual(pilot_entries[0].text, paraphrased.text)
         self.assertIn("prompt_paraphrase", paraphrased.tags)
 
+    def test_tool_breakage_entries_have_target_text_metadata(self) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v1",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+        confirm_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v1",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        self.assertEqual(8, len(pilot_entries))
+        self.assertEqual(8, len(confirm_entries))
+        self.assertTrue(all(entry.target_text for entry in pilot_entries))
+        self.assertTrue(all(entry.target_text for entry in confirm_entries))
+
     def test_confirmatory_access_rejects_exploratory_mode(self) -> None:
         registry = self.load_prompt_registry()
 

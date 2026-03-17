@@ -70,6 +70,17 @@ from .tuned_lens import (
     save_tuned_lens_artifacts,
     tuned_lens_cache_name_filter,
 )
+from .tool_breakage import (
+    ToolBreakageLayerTrace,
+    ToolBreakagePromptResult,
+    ToolBreakageRunSummary,
+    build_routed_residual_traces,
+    run_tool_breakage_factual_recall_baseline,
+    save_tool_breakage_artifacts,
+    summarize_tool_breakage_prompt,
+    summarize_tool_breakage_run,
+    target_token_for_entry,
+)
 
 __all__ = [
     "BootstrapMeanInterval",
@@ -97,6 +108,9 @@ __all__ = [
     "StabilitySuitePlan",
     "TunedLensLayerMetric",
     "TunedLensViabilitySummary",
+    "ToolBreakageLayerTrace",
+    "ToolBreakagePromptResult",
+    "ToolBreakageRunSummary",
     "alpha_target_matrix",
     "alpha_target_predictions_to_distributions",
     "bootstrap_mean_confidence_interval",
@@ -122,11 +136,17 @@ __all__ = [
     "scan_average_linkage_clusters",
     "shared_final_norm_logit_contributions",
     "summarize_source_type_mass",
+    "build_routed_residual_traces",
     "collect_residual_translation_examples",
     "evaluate_low_rank_residual_lens",
     "fit_low_rank_residual_lens",
     "run_tuned_lens_viability_pilot",
+    "run_tool_breakage_factual_recall_baseline",
     "save_tuned_lens_artifacts",
+    "save_tool_breakage_artifacts",
+    "summarize_tool_breakage_prompt",
+    "summarize_tool_breakage_run",
+    "target_token_for_entry",
     "tuned_lens_cache_name_filter",
     "write_pattern_analysis_summary",
 ]
