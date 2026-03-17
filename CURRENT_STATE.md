@@ -166,13 +166,17 @@
 - `known`: the tuned-lens pilot is now checkpoint-hardened:
   - prompt-level residual caches and `training_state.pt` live under `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoints`
   - rerunning the exact launch command after completion reused the saved checkpoint tree successfully, so future routed-versus-original work can build on the same durability path rather than starting from a throwaway script
+- `known`: `resattn-ehz` now fixes the tuned-lens metric hierarchy for the Gemma tool-breakage lane:
+  - primary tuned-lens baseline metric: held-out KL to the model's final output distribution
+  - required secondary diagnostics: mean top-1 agreement, final-position KL, and final-position top-1
+  - interpretation lock: KL improvement alone is enough to keep the same-model tuned-lens baseline viable, but it does not license answer-token-facing factual-recall claims without explicit final-position evidence
 
 ## Immediate Next Steps
 
-1. Use `resattn-ehz` to decide whether the routed-versus-original lane should keep held-out KL as the primary tuned-lens baseline metric or sharpen the lens objective for stronger final-position factual-recall recovery before making answer-token-facing claims.
-2. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
-3. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
-4. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
+1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+2. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
+3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
+4. Take `resattn-28b` to start the routed-versus-original Gemma factual-recall tool-breakage implementation with the new KL-primary tuned-lens metric hierarchy.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
 ## Phase 1 Gate
@@ -193,6 +197,7 @@ The first execution gate remains the preregistered one from `research/decision-m
   - off-diagonal peaks above `2/L`
 - `known`: tool-breakage requires a non-monotonic logit-lens demonstration on factual recall, with a target of non-monotonic curves on `>50%` of prompts before making a strong breakage claim.
 - `known`: raw logit lens is not assumed monotonic in the vanilla model; the strong tool-breakage claim requires additional instability under routing relative to the original-model baseline and a tuned-lens-aware comparison.
+- `known`: the tuned-lens-aware comparison is now KL-primary on Gemma-2 factual recall; final-position metrics must still be reported and control answer-token-facing interpretation.
 - `known`: the strong tool-breakage claim also requires a controlled dynamic-routing counterfactual or another explicitly logged confirmatory failure metric.
 - `known`: router training success is not just "it trains"; the local target gate is `R^2 > 0.5` when approximating oracle-alpha.
 - `known`: clustering must be informative enough to clear `silhouette > 0.2` before we claim task-structured routing.

@@ -106,6 +106,10 @@ The tool-breakage lane is mandatory.
 - Gemma-2 lacks an off-the-shelf tuned lens, so the default path is to train a custom Gemma-2 tuned lens locally
 - a secondary-model tuned-lens comparison is supplementary only and does not satisfy the primary tuned-lens requirement for the Gemma-2 tool-breakage lane
 - raw logit lens is not assumed to be smooth or monotonic in the original model
+- tuned-lens baseline metric hierarchy for Gemma-2 factual recall:
+  - primary metric: held-out KL to the model's final output distribution
+  - required secondary diagnostics: mean top-1 agreement, final-position KL, final-position top-1
+  - answer-token-facing claims require explicit final-position evidence and are not licensed by KL improvement alone
 - retain the legacy threshold language for continuity: `non-monotonic curves on >50% of prompts`, but only interpret it relative to the original-model baseline and tuned-lens-aware comparison
 - success threshold for the strong claim: routing increases non-monotonicity or rank-instability relative to the original-model baseline on >50% of prompts, with tuned-lens-aware comparison reported alongside raw logit lens
 - failure condition: if routing leaves raw and tuned-lens behavior qualitatively unchanged relative to the original-model baseline, the breakage claim must be weakened
