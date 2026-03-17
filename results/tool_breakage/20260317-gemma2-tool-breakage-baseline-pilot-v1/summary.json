@@ -27,6 +27,14 @@
   "fraction_raw_routed_non_monotonic_prompts": 1.0,
   "fraction_tuned_original_non_monotonic_prompts": 1.0,
   "fraction_tuned_routed_non_monotonic_prompts": 1.0,
+  "fraction_raw_routing_increases_non_monotonicity_prompts": 0.0,
+  "fraction_tuned_routing_increases_non_monotonicity_prompts": 0.0,
+  "fraction_raw_routing_worsens_final_target_rank_prompts": 0.5,
+  "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+  "fraction_raw_routing_worsens_best_target_rank_prompts": 0.5,
+  "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+  "fraction_raw_routing_increases_target_rank_range_prompts": 0.5,
+  "fraction_tuned_routing_increases_target_rank_range_prompts": 0.875,
   "prompt_results": [
     {
       "prompt_id": "tb-pilot-001",

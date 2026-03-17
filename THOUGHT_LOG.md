@@ -470,6 +470,23 @@ Suggested entry format:
   - high that `resattn-28b` is a real baseline pass
   - high that `resattn-ypj` is the right next blocker before any confirmatory factual-recall run
 
+## [2026-03-17T14:05:00-0500] Rank Spread Is The Cleanest Rescue Path
+- Stage: analysis
+- Feel of the Experiment: This looks better after forcing the metric comparison onto the saved traces. The probability-shape alternatives were tempting, but they mostly compress the same saturation problem into a noisier number. The rank-based view is the first one that feels both honest and useful.
+- Working Hypotheses:
+  - The right near-term tool-breakage surface is “does routing broaden or worsen target-rank behavior relative to the original baseline?” not “is the curve technically non-monotonic?”
+  - The confirm run is now worth doing because the next metric is at least discriminative on the pilot artifact.
+- Hunches and Guesses:
+  - The tuned-lens confirm run will probably keep the same pattern as pilot: little to no non-monotonicity increase by the old boolean, but broad increases in rank spread and a mixed best-rank suppression story.
+- Predictions:
+  - If the confirm split reproduces the `7 / 8` tuned rank-range increase pattern at a similar level, the tool-breakage lane will have a much cleaner story about routed trace instability even before the later dynamic-routing counterfactual.
+- Surprises and Tensions:
+  - The rank-range metric is much stronger on the tuned lens (`7 / 8`) than the best-rank metric (`4 / 8`), which says routing often makes the trace less stable even when it does not always suppress the best answer visibility outright.
+  - That split is actually useful: it separates instability from outright suppression instead of forcing them into one overloaded number.
+- Confidence:
+  - medium-to-high that rank spread should now drive the confirmatory tool-breakage read
+  - medium that best-rank worsening will remain an important but weaker companion metric rather than the sole headline
+
 ## [2026-03-16T22:59:08-0500] Token Awareness Helped The Shape More Than The Outcome
 - Stage: implementation
 - Feel of the Experiment: This result is more interesting than the raw delta suggests. Preserving coarse position structure in `h_4[t]` did seem to help the predictor find alpha vectors that look a bit more like the oracle ones, but that shape improvement still refused to turn into a real routed-loss gain.
