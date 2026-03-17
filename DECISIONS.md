@@ -480,3 +480,16 @@
   - the matched harmfulness injection control on benign prompts stayed flat
   This is enough to clear the “mediator must be causal, not just separable” blocker. It is not enough to claim a highly selective harmful-only refusal switch, because the benign preference shift is real and the binary refusal marker stays mostly saturated.
 - Impact: `resattn-73l` can close honestly as a bounded causal mediator pass. The next safety issue becomes `resattn-h1p`, which moves to mediator-conditioned routing analysis on aligned Gemma. Overall repo priority should now return to `resattn-fby`, because the Figure 8 lane has the stronger cross-lane blocker.
+
+## [2026-03-17T18:46:49-0500] DECISION: Treat best-checkpoint export as necessary Figure 8 instrumentation, not as the missing scientific fix
+
+- Trigger: `resattn-fby` added eval-history plus best-checkpoint persistence to the widened compact-subword `wikitext-103` proxy and reran the full `1500`-step artifact on the same seed and architecture.
+- Decision: close the trajectory-support issue as a useful mixed result, keep the widened `wikitext-103` regime as the current local Figure 8 default, and stop treating checkpoint selection alone as the next explanatory lever.
+- Rationale: the new artifact changed the measured shape, but not the lane conclusion:
+  - the matched baseline best step was `900`
+  - the AttnRes best step was `850`
+  - final loss delta was `+0.1272`, while best-checkpoint loss delta softened to `+0.0386`
+  - deep embedding persistence improved from `0.1615` at the final checkpoint to `0.1689` at the best checkpoint
+  - the entropy gap improved only slightly from `-0.0574` to `-0.0549`, leaving the ordering inverted
+  That is enough to say the earlier runner was understating the regime by evaluating the final checkpoint alone, but not enough to say optimization-shape fixes the Figure 8 problem. The baseline still wins and the paper-facing layer-type-specialization signature still points the wrong way.
+- Impact: `resattn-fby` can close once the artifact and state docs land. The next Figure 8 follow-up should be framed as a bounded optimization or objective redesign question rather than another blind rerun of the same widened compact-subword `wikitext-103` setup; that follow-up is now tracked as `resattn-8xu`.

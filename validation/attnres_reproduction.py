@@ -55,6 +55,17 @@ class TinyLMTrainingSummary:
     batch_size: int
     learning_rate: float
     checkpoint_path: str | None
+    best_eval_step: int = 0
+    best_checkpoint_path: str | None = None
+    eval_history_path: str | None = None
+
+
+@dataclass(frozen=True)
+class EvalHistoryEntry:
+    step: int
+    eval_loss: float
+    best_eval_loss: float
+    best_eval_step: int
 
 
 @dataclass(frozen=True)
@@ -88,6 +99,10 @@ class AttnResProxyViabilitySummary:
     attnres_summary: TinyLMTrainingSummary
     attnres_routing_entropy_by_target: tuple[tuple[str, float], ...]
     figure8_proxy_metrics: Figure8ProxyMetrics
+    best_checkpoint_attnres_routing_entropy_by_target: tuple[
+        tuple[str, float], ...
+    ] = ()
+    best_checkpoint_figure8_proxy_metrics: Figure8ProxyMetrics | None = None
 
 
 class _CausalSelfAttention(torch.nn.Module):
@@ -379,6 +394,8 @@ def train_language_model(
     seed: int,
     device: str,
     checkpoint_path: Path | None = None,
+    best_checkpoint_path: Path | None = None,
+    eval_history_path: Path | None = None,
     checkpoint_interval: int = 50,
 ) -> TinyLMTrainingSummary:
     model = model.to(device)
@@ -391,7 +408,9 @@ def train_language_model(
     generator.manual_seed(seed)
     start_step = 0
     best_eval_loss = float("inf")
+    best_eval_step = 0
     final_train_loss = float("nan")
+    eval_history: list[EvalHistoryEntry] = []
     if checkpoint_path is not None:
         checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
         if checkpoint_path.is_file():
@@ -400,8 +419,56 @@ def train_language_model(
             optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
             start_step = int(checkpoint["step"])
             best_eval_loss = float(checkpoint["best_eval_loss"])
+            best_eval_step = int(checkpoint.get("best_eval_step", 0))
+            eval_history = [
+                EvalHistoryEntry(**entry)
+                for entry in checkpoint.get("eval_history", [])
+            ]
+    if best_checkpoint_path is not None:
+        best_checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+    if eval_history_path is not None:
+        eval_history_path.parent.mkdir(parents=True, exist_ok=True)
+
+    def save_eval_history() -> None:
+        if eval_history_path is None:
+            return
+        eval_history_path.write_text(
+            json.dumps([asdict(entry) for entry in eval_history], indent=2) + "\n"
+        )
+
+    def save_best_checkpoint(*, step: int, eval_loss: float) -> None:
+        if best_checkpoint_path is None:
+            return
+        torch.save(
+            {
+                "step": step,
+                "eval_loss": eval_loss,
+                "best_eval_loss": best_eval_loss,
+                "best_eval_step": best_eval_step,
+                "model_state_dict": model.state_dict(),
+            },
+            best_checkpoint_path,
+        )
+
+    def record_eval(*, step: int, eval_loss: float) -> None:
+        nonlocal best_eval_loss, best_eval_step
+        if eval_loss <= best_eval_loss:
+            best_eval_loss = eval_loss
+            best_eval_step = step
+            save_best_checkpoint(step=step, eval_loss=eval_loss)
+        eval_history.append(
+            EvalHistoryEntry(
+                step=step,
+                eval_loss=eval_loss,
+                best_eval_loss=best_eval_loss,
+                best_eval_step=best_eval_step,
+            )
+        )
+        save_eval_history()
 
     model.train()
+    last_evaluated_step = 0
+    last_evaluated_loss: float | None = None
     for step in range(start_step, num_steps):
         indices = torch.randint(
             train_examples.shape[0],
@@ -425,11 +492,15 @@ def train_language_model(
                 batch_size=batch_size,
                 device=device,
             )
-            best_eval_loss = min(best_eval_loss, current_eval_loss)
+            record_eval(step=step + 1, eval_loss=current_eval_loss)
+            last_evaluated_step = step + 1
+            last_evaluated_loss = current_eval_loss
             torch.save(
                 {
                     "step": step + 1,
                     "best_eval_loss": best_eval_loss,
+                    "best_eval_step": best_eval_step,
+                    "eval_history": [asdict(entry) for entry in eval_history],
                     "model_state_dict": model.state_dict(),
                     "optimizer_state_dict": optimizer.state_dict(),
                 },
@@ -437,23 +508,29 @@ def train_language_model(
             )
             model.train()
 
-    final_eval_loss = evaluate_language_model(
-        model=model,
-        examples=eval_examples,
-        batch_size=batch_size,
-        device=device,
-    )
-    best_eval_loss = min(best_eval_loss, final_eval_loss)
+    if last_evaluated_step == num_steps and last_evaluated_loss is not None:
+        final_eval_loss = last_evaluated_loss
+    else:
+        final_eval_loss = evaluate_language_model(
+            model=model,
+            examples=eval_examples,
+            batch_size=batch_size,
+            device=device,
+        )
+        record_eval(step=num_steps, eval_loss=final_eval_loss)
     if checkpoint_path is not None:
         torch.save(
             {
                 "step": num_steps,
                 "best_eval_loss": best_eval_loss,
+                "best_eval_step": best_eval_step,
+                "eval_history": [asdict(entry) for entry in eval_history],
                 "model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
             },
             checkpoint_path,
         )
+    save_eval_history()
 
     return TinyLMTrainingSummary(
         model_label=model_label,
@@ -464,6 +541,11 @@ def train_language_model(
         batch_size=batch_size,
         learning_rate=learning_rate,
         checkpoint_path=None if checkpoint_path is None else str(checkpoint_path),
+        best_eval_step=best_eval_step,
+        best_checkpoint_path=(
+            None if best_checkpoint_path is None else str(best_checkpoint_path)
+        ),
+        eval_history_path=None if eval_history_path is None else str(eval_history_path),
     )
 
 
@@ -486,6 +568,47 @@ def summarize_routing_entropy(
         entropy = -(alpha * alpha.log()).sum(dim=0).mean()
         summaries.append((step.target_label, float(entropy.item())))
     return tuple(summaries)
+
+
+def summarize_attnres_checkpoint(
+    *,
+    model: BlockAttnResTinyLM,
+    examples: torch.Tensor,
+    batch_size: int,
+    device: str,
+) -> tuple[tuple[tuple[str, float], ...], Figure8ProxyMetrics]:
+    model = model.to(device)
+    model.eval()
+    routing_by_target: dict[str, list[torch.Tensor]] = {}
+    source_labels_by_target: dict[str, tuple[str, ...]] = {}
+    with torch.no_grad():
+        for start in range(0, examples.shape[0], batch_size):
+            batch = examples[start : start + batch_size].to(device)
+            _, routing_steps = model(batch[:, :-1], return_routing=True)
+            for step in routing_steps:
+                routing_by_target.setdefault(step.target_label, []).append(step.alpha)
+                source_labels_by_target.setdefault(
+                    step.target_label, step.source_labels
+                )
+
+    ordered_routing_steps = []
+    for target_label in list(routing_by_target.keys()):
+        ordered_routing_steps.append(
+            RoutingSnapshot(
+                target_label=target_label,
+                source_labels=source_labels_by_target[target_label],
+                alpha=torch.cat(routing_by_target[target_label], dim=1),
+            )
+        )
+
+    figure8_proxy_metrics = summarize_figure8_proxy_metrics(
+        routing_steps=tuple(ordered_routing_steps)
+    )
+    routing_entropy_by_target = tuple(
+        (target_summary.target_label, target_summary.entropy)
+        for target_summary in figure8_proxy_metrics.target_summaries
+    )
+    return routing_entropy_by_target, figure8_proxy_metrics
 
 
 def save_attnres_proxy_summary(
@@ -794,6 +917,8 @@ def run_attnres_proxy_viability_from_texts(
         seed=seed,
         device=device,
         checkpoint_path=checkpoints_dir / "baseline_training_state.pt",
+        best_checkpoint_path=checkpoints_dir / "baseline_best_state.pt",
+        eval_history_path=checkpoints_dir / "baseline_eval_history.json",
         checkpoint_interval=checkpoint_interval,
     )
     attnres_summary = train_language_model(
@@ -808,34 +933,33 @@ def run_attnres_proxy_viability_from_texts(
         seed=seed,
         device=device,
         checkpoint_path=checkpoints_dir / "attnres_training_state.pt",
+        best_checkpoint_path=checkpoints_dir / "attnres_best_state.pt",
+        eval_history_path=checkpoints_dir / "attnres_eval_history.json",
         checkpoint_interval=checkpoint_interval,
     )
 
-    attnres = attnres.to(device)
-    attnres.eval()
-    routing_by_target: dict[str, list[torch.Tensor]] = {}
-    source_labels_by_target: dict[str, tuple[str, ...]] = {}
-    with torch.no_grad():
-        for start in range(0, eval_examples.shape[0], batch_size):
-            batch = eval_examples[start : start + batch_size].to(device)
-            _, routing_steps = attnres(batch[:, :-1], return_routing=True)
-            for step in routing_steps:
-                routing_by_target.setdefault(step.target_label, []).append(step.alpha)
-                source_labels_by_target.setdefault(
-                    step.target_label, step.source_labels
-                )
-
-    ordered_routing_steps = []
-    for target_label in list(routing_by_target.keys()):
-        ordered_routing_steps.append(
-            RoutingSnapshot(
-                target_label=target_label,
-                source_labels=source_labels_by_target[target_label],
-                alpha=torch.cat(routing_by_target[target_label], dim=1),
-            )
+    attnres_routing_entropy_by_target, figure8_proxy_metrics = (
+        summarize_attnres_checkpoint(
+            model=attnres,
+            examples=eval_examples,
+            batch_size=batch_size,
+            device=device,
         )
-    figure8_proxy_metrics = summarize_figure8_proxy_metrics(
-        routing_steps=tuple(ordered_routing_steps)
+    )
+    best_attnres = BlockAttnResTinyLM(config)
+    best_attnres_checkpoint = torch.load(
+        str(checkpoints_dir / "attnres_best_state.pt"),
+        map_location=device,
+    )
+    best_attnres.load_state_dict(best_attnres_checkpoint["model_state_dict"])
+    (
+        best_checkpoint_attnres_routing_entropy_by_target,
+        best_checkpoint_figure8_proxy_metrics,
+    ) = summarize_attnres_checkpoint(
+        model=best_attnres,
+        examples=eval_examples,
+        batch_size=batch_size,
+        device=device,
     )
 
     summary = AttnResProxyViabilitySummary(
@@ -847,10 +971,11 @@ def run_attnres_proxy_viability_from_texts(
         num_eval_examples=int(eval_examples.shape[0]),
         baseline_summary=baseline_summary,
         attnres_summary=attnres_summary,
-        attnres_routing_entropy_by_target=tuple(
-            (target_summary.target_label, target_summary.entropy)
-            for target_summary in figure8_proxy_metrics.target_summaries
-        ),
+        attnres_routing_entropy_by_target=attnres_routing_entropy_by_target,
         figure8_proxy_metrics=figure8_proxy_metrics,
+        best_checkpoint_attnres_routing_entropy_by_target=(
+            best_checkpoint_attnres_routing_entropy_by_target
+        ),
+        best_checkpoint_figure8_proxy_metrics=best_checkpoint_figure8_proxy_metrics,
     )
     return save_attnres_proxy_summary(output_dir=output_dir, summary=summary)

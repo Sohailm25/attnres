@@ -221,6 +221,17 @@
     - the entropy gap stayed effectively unchanged and negative (`1.4318 < 1.4893`)
   - interpretation: the larger same-family corpus helped the widened compact-subword regime and changed the early-training behavior, but it did not restore a routed win at the main horizon or clear the Figure 8 layer-type-specialization signature
   - the next Figure 8 follow-up is now `resattn-fby`, which adds best-checkpoint / eval-trajectory support so the repo can inspect the early positive-to-late negative crossover before another optimization redesign
+- `known`: `resattn-fby` now captures the best-checkpoint trajectory on the widened `wikitext-103` Figure 8 proxy:
+  - `validation/attnres_reproduction.py` and `tests/test_attnres_reproduction.py` now preserve checkpoint-level eval history plus best-checkpoint exports for both the matched baseline and the local Block AttnRes proxy
+  - `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1.md` is the first artifact that compares final-checkpoint and best-checkpoint Figure 8 summaries on the widened `wikitext-103` regime
+  - the trajectory result is clear:
+    - baseline best step `= 900`
+    - AttnRes best step `= 850`
+    - final loss delta `= +0.1272`
+    - best-checkpoint loss delta `= +0.0386`
+    - deep embedding persistence improved from `0.1615` at the final checkpoint to `0.1689` at the best checkpoint
+    - the entropy gap improved slightly from `-0.0574` to `-0.0549`
+  - interpretation: final-checkpoint-only evaluation was overstating how weak the regime is, but checkpoint selection alone does not solve the Figure 8 lane; the baseline still wins and the entropy ordering remains inverted, so the next honest Figure 8 move is a bounded optimization or objective redesign rather than another blind rerun
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -317,9 +328,9 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-fby` to add best-checkpoint / eval-trajectory support for the widened `wikitext-103` Figure 8 proxy before another optimization redesign.
-2. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
-3. Use `resattn-h1p` for mediator-conditioned safety routing analysis on aligned Gemma now that the bounded causal mediator check is in place.
+1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+2. Use `resattn-h1p` for mediator-conditioned safety routing analysis on aligned Gemma now that the bounded causal mediator check is in place.
+3. Use `resattn-8xu` to choose the next bounded Figure 8 redesign now that `resattn-fby` shows best-checkpoint selection helps but does not fix the widened `wikitext-103` regime.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
