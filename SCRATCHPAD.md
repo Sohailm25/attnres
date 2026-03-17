@@ -323,3 +323,28 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: none
 - Next step: follow `resattn-0vx` to scale the `registry_v2` logit-target path beyond the current `16 / 8` slice
+
+## [2026-03-17T09:02:44-0500] PRE-RUN: development-model oracle-alpha registry_v3 scale check
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_heldout_predictiveness_check.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-registry-v3-scale-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector oracle_alpha_depth_type_band_logit_vector`
+- Config: `model=gpt2-xl`, `prompt_registry=prompts/registry_v3.yaml`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot (32 prompts)`, `eval_split=confirm (16 prompts)`, `selection_metric=pilot_leave_one_out_mean_predicted_improvement_over_uniform`, `secondary_metric=mean_js_divergence`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`, `device=mps fallback cpu`
+- What I'm testing: whether the positive `registry_v2` logit-target result survives a materially larger saved pilot and confirm surface without changing the feature source, target candidates, or tuning rule.
+- Expected outcome: the run completes on the `32 / 16` split, writes a directly comparable artifact, and either keeps the logit target selected with positive confirm routed loss or shows that the `16 / 8` result was still too fragile.
+- Expected duration: ~15-30 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-registry-v3-scale-check.json`
+- Resume command: rerun the command above
+- Main confound to watch: the larger saved surface is still an inline prompt set, so stronger results here would show scale sensitivity inside this local regime, not benchmark-level robustness by themselves.
+- Implementation verified: YES - `tests/test_prompt_registry.py` and `tests/test_scaffold.py` pass with `prompts/registry_v3.yaml` before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T09:08:00-0500] POST-RUN: development-model oracle-alpha registry_v3 scale check
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-registry-v3-scale-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector oracle_alpha_depth_type_band_logit_vector`
+- Outcome: PARTIAL
+- Key metric: selected target `oracle_alpha_logit_vector`; `confirm_r_squared=-0.1954`; `confirm_mean_js=0.2421`; `predicted_mean_improvement=+0.1277` nats versus `oracle_mean_improvement=+1.2726`
+- Artifacts saved: `results/infrastructure/20260317-pilot-confirm-registry-v3.md`, `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-registry-v3-scale-check.json`, `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-registry-v3-scale-check.md`
+- Latest checkpoint: none
+- Anomalies: none
+- Next step: follow `resattn-9jq` to scale the same logit-target path toward the prereg-sized Phase 1 gate

@@ -1,0 +1,362 @@
+version: 3
+registry_id: 20260317-pilot-confirm-v3
+created_on: 2026-03-17
+
+defaults:
+  aggregation_unit: sequence
+  null_models:
+    - uniform
+    - random_dirichlet
+    - magnitude_proportional
+    - last_layer_only
+  statistical_tests:
+    - paired_t_test
+    - bootstrap_1000
+  confirmatory_access:
+    exploratory_mode_forbidden: true
+
+collections:
+  oracle_alpha_phase1_v1:
+    lane: oracle_alpha
+    description: >
+      Neutral next-token-completion prompts for early oracle-alpha method tuning on
+      the pilot split and claim-bearing Phase 1 evaluation on the confirmatory split.
+      Version 3 expands both the pilot and confirm surfaces to test whether the
+      positive registry_v2 result persists on a meaningfully larger saved split.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+      - unconstrained
+      - top-k
+    prompts:
+      - id: oa-pilot-001
+        split: pilot
+        text: The old library on Maple Street opens every morning at
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Every morning, the old library on Maple Street opens at
+      - id: oa-pilot-002
+        split: pilot
+        text: After the rain stopped, the sidewalk was covered with
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: When the rain ended, the sidewalk was covered with
+      - id: oa-pilot-003
+        split: pilot
+        text: The chef added fresh basil to the bowl of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fresh basil went into the chef's bowl of
+      - id: oa-pilot-004
+        split: pilot
+        text: At the edge of the forest, the campers heard
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Near the forest edge, the campers heard
+      - id: oa-pilot-005
+        split: pilot
+        text: When the train finally arrived, the conductor announced
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Once the train finally arrived, the conductor announced
+      - id: oa-pilot-006
+        split: pilot
+        text: The museum guide pointed toward a room filled with
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: The museum guide gestured toward a room filled with
+      - id: oa-pilot-007
+        split: pilot
+        text: On the kitchen table sat a jar of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A jar sat on the kitchen table filled with
+      - id: oa-pilot-008
+        split: pilot
+        text: As the sun set behind the hills, the valley turned
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: As sunset fell behind the hills, the valley turned
+      - id: oa-pilot-009
+        split: pilot
+        text: The cyclist leaned the bike against the wall beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: The cyclist rested the bike against the wall beside the
+      - id: oa-pilot-010
+        split: pilot
+        text: In the bakery window, rows of pastries sat under
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Rows of pastries sat in the bakery window under
+      - id: oa-pilot-011
+        split: pilot
+        text: The teacher wrote tomorrow's homework on the corner of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: On the corner of the board, the teacher wrote tomorrow's homework for
+      - id: oa-pilot-012
+        split: pilot
+        text: By the riverbank, smooth stones shimmered beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Smooth stones by the riverbank shimmered beneath the
+      - id: oa-pilot-013
+        split: pilot
+        text: The reporter switched on the microphone and asked about the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: After switching on the microphone, the reporter asked about the
+      - id: oa-pilot-014
+        split: pilot
+        text: At the market stall, baskets overflowed with
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Baskets at the market stall were overflowing with
+      - id: oa-pilot-015
+        split: pilot
+        text: The dentist set the tray beside the chair and reached for the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Beside the chair, the dentist set the tray and reached for the
+      - id: oa-pilot-016
+        split: pilot
+        text: As winter approached, the neighbors stacked firewood near the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: With winter approaching, the neighbors stacked firewood near the
+      - id: oa-pilot-017
+        split: pilot
+        text: The actor rehearsed the final scene beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Beneath the lights, the actor rehearsed the final scene under the
+      - id: oa-pilot-018
+        split: pilot
+        text: On the harbor, fishing boats rocked beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fishing boats rocked on the harbor beside the
+      - id: oa-pilot-019
+        split: pilot
+        text: The nurse adjusted the blanket over the patient in the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Over the patient in the ward, the nurse adjusted the blanket on the
+      - id: oa-pilot-020
+        split: pilot
+        text: Before the meeting began, someone placed coffee on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Someone placed coffee on the table before the meeting began near the
+      - id: oa-pilot-021
+        split: pilot
+        text: The photographer stepped back to capture the front of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Stepping back, the photographer tried to capture the front of the
+      - id: oa-pilot-022
+        split: pilot
+        text: At the playground, a red ball rolled under the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A red ball rolled under the slide at the playground beside the
+      - id: oa-pilot-023
+        split: pilot
+        text: The carpenter checked the level across the top of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Across the top of the frame, the carpenter checked the level on the
+      - id: oa-pilot-024
+        split: pilot
+        text: When the bell rang, students hurried into the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: As soon as the bell rang, students hurried into the
+      - id: oa-pilot-025
+        split: pilot
+        text: The pianist lifted the lid and sat down at the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Sitting down, the pianist lifted the lid above the
+      - id: oa-pilot-026
+        split: pilot
+        text: At the campsite, smoke drifted upward from the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Smoke drifted upward from the fire at the campsite near the
+      - id: oa-pilot-027
+        split: pilot
+        text: The florist tied a ribbon around the bouquet of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Around the bouquet of flowers, the florist tied a ribbon on the
+      - id: oa-pilot-028
+        split: pilot
+        text: In the hallway, muddy footprints led toward the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Muddy footprints in the hallway led toward the
+      - id: oa-pilot-029
+        split: pilot
+        text: The barber swept loose hair from around the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Around the chair, the barber swept loose hair from the
+      - id: oa-pilot-030
+        split: pilot
+        text: At sunrise, dew sparkled across the rows of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Across the rows of grass, dew sparkled at sunrise over the
+      - id: oa-pilot-031
+        split: pilot
+        text: The referee held the whistle above the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Above the field, the referee held the whistle over the
+      - id: oa-pilot-032
+        split: pilot
+        text: The waiter set the plates beside a bowl of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Beside a bowl of soup, the waiter set the plates near the
+      - id: oa-confirm-001
+        split: confirm
+        text: The mechanic wiped grease from the side of the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-002
+        split: confirm
+        text: By late afternoon, the classroom windows were bright with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-003
+        split: confirm
+        text: The gardener planted tulip bulbs beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-004
+        split: confirm
+        text: During the storm, the lighthouse beam swept across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-005
+        split: confirm
+        text: The violinist tightened the bow before playing the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-006
+        split: confirm
+        text: At breakfast, the children argued about who would pour the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-007
+        split: confirm
+        text: The astronomer adjusted the telescope toward the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-008
+        split: confirm
+        text: After the speech ended, the audience rose in
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-009
+        split: confirm
+        text: After the parade passed, confetti covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-010
+        split: confirm
+        text: The librarian stamped the due date inside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-011
+        split: confirm
+        text: On the porch, a pair of boots waited by the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-012
+        split: confirm
+        text: The scientist labeled the sample before placing it in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-013
+        split: confirm
+        text: During rehearsal, the drummer counted in with the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-014
+        split: confirm
+        text: The tailor pinned the hem along the edge of the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-015
+        split: confirm
+        text: Near midnight, the station platform echoed with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-016
+        split: confirm
+        text: The baker brushed butter across the top of the
+        tags: [neutral_prefix, natural_text]
+
+  tool_breakage_factual_recall_v1:
+    lane: tool_breakage
+    description: >
+      Safe factual-recall prompts for the routed-versus-original lens comparison lane.
+      The pilot split is available for prompt curation and plot design, while the
+      confirmatory split is reserved for claim-bearing statistics.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+    prompts:
+      - id: tb-pilot-001
+        split: pilot
+        text: The capital of France is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-002
+        split: pilot
+        text: The largest planet in the Solar System is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-003
+        split: pilot
+        text: The chemical symbol for gold is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-004
+        split: pilot
+        text: The author of Hamlet was
+        tags: [factual_recall, safe]
+      - id: tb-pilot-005
+        split: pilot
+        text: Water freezes at zero degrees on the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-006
+        split: pilot
+        text: The currency used in Japan is the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-007
+        split: pilot
+        text: The tallest land animal is the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-008
+        split: pilot
+        text: A baby dog is called a
+        tags: [factual_recall, safe]
+      - id: tb-confirm-001
+        split: confirm
+        text: The capital of Italy is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-002
+        split: confirm
+        text: The smallest prime number is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-003
+        split: confirm
+        text: The chemical symbol for silver is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-004
+        split: confirm
+        text: The author of Pride and Prejudice was
+        tags: [factual_recall, safe]
+      - id: tb-confirm-005
+        split: confirm
+        text: The currency used in the United Kingdom is the
+        tags: [factual_recall, safe]
+      - id: tb-confirm-006
+        split: confirm
+        text: The process plants use to make sugar from sunlight is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-007
+        split: confirm
+        text: The organ that pumps blood through the body is the
+        tags: [factual_recall, safe]
+      - id: tb-confirm-008
+        split: confirm
+        text: The fastest land animal is the
+        tags: [factual_recall, safe]

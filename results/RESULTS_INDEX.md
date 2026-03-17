@@ -17,6 +17,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | GPT-2 XL model-backed reconstruction smoke | infrastructure | pass | `results/infrastructure/20260316-gpt2xl-reconstruction-smoke.md` |
 | Pilot/confirmatory prompt registry and confirm-only access guard | infrastructure | pass | `results/infrastructure/20260316-pilot-confirm-registry.md` |
 | Pilot/confirmatory prompt registry v2 pilot expansion | infrastructure | pass | `results/infrastructure/20260317-pilot-confirm-registry-v2.md` |
+| Pilot/confirmatory prompt registry v3 scale-up | infrastructure | pass | `results/infrastructure/20260317-pilot-confirm-registry-v3.md` |
 | Oracle-alpha Phase 1 control suite | infrastructure | pass | `results/infrastructure/20260316-oracle-alpha-control-suite.md` |
 | Held-out predictiveness review alignment | infrastructure | pass | `results/infrastructure/20260316-heldout-predictiveness-review-alignment.md` |
 
@@ -34,6 +35,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | GPT-2 XL held-out predictiveness depth-type-band logit target check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-depth-type-band-logit-target-check.md` |
 | GPT-2 XL held-out predictiveness loss-aware target comparison | oracle_alpha | fail | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-loss-aware-target-comparison.md` |
 | GPT-2 XL held-out predictiveness pilot expansion check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-pilot-expansion-check.md` |
+| GPT-2 XL held-out predictiveness registry v3 scale check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-registry-v3-scale-check.md` |
 
 ## Pattern Analysis
 

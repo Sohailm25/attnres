@@ -79,7 +79,7 @@ evaluation:
   requires_out_of_sample_predictiveness: true
 
 registry:
-  prompt_registry: prompts/registry_v2.yaml
+  prompt_registry: prompts/registry_v3.yaml
   oracle_alpha_control_registry: configs/oracle_alpha_controls_v1.yaml
   pilot_split: pilot
   confirmatory_split: confirm
