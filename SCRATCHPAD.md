@@ -807,3 +807,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1/checkpoints/prompt_results/`
 - Anomalies: the dynamic control answers the prereg question cleanly but weakens the strong same-model claim boundary, because prompt-misaligned dynamic routing is at least as damaging as the prompt-matched route on the primary tuned-KL metric.
 - Next step: register `resattn-g09` as a mixed / negative control result, keep the strong Gemma tool-breakage claim blocked, and decide whether the next highest-value work is the Figure 8 proxy lane or a finer-grained follow-up control.
+
+## [2026-03-17T17:38:00-0500] PRE-RUN: Gemma-2 IT refusal-feature discovery smoke
+- tmux session: N/A
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --device mps --max-pilot-groups 1 --max-confirm-groups 1 --max-new-tokens 24 --output-dir results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_discovery_v1`, `pilot_groups=1`, `confirm_groups=1`, `positions=instruction_final + assistant_prefill`, `behavior_check=greedy_refusal_marker`
+- What I'm testing: whether the new aligned-Gemma safety workflow writes prompt-level residual checkpoints, respects the grouped prompt surface, and produces a sane summary on a tiny split before a larger artifact run.
+- Expected outcome: `summary.json` plus per-prompt checkpoint files appear in the output directory, and the refusal prompt shows refusal-like behavior while the control prompts remain non-refusal.
+- Expected duration: ~5-10 minutes
+- Checkpoint path: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke/checkpoints/prompt_residuals`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke/summary.json`
+- Resume command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --device mps --max-pilot-groups 1 --max-confirm-groups 1 --max-new-tokens 24 --output-dir results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke`
+- Main confound to watch: prompt formatting on the `-it` model could change the intended instruction-final and assistant-prefill positions if the chat template behaves differently than expected.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_safety_alignment tests.test_prompt_registry tests.test_scaffold` passed before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T17:41:00-0500] POST-RUN: Gemma-2 IT refusal-feature discovery smoke
+- Outcome: SUCCESS
+- Key metric: refusal and non-refusal behavior checks all matched expectation on the `1 / 1` smoke, and both refusal and harmfulness directions separated their intended pairs perfectly on the tiny split
+- Artifacts saved: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke/summary.json`, `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke/checkpoints/prompt_residuals/`
+- Latest checkpoint: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-smoke/checkpoints/prompt_residuals/sa-confirm-001-refusal.pt`
+- Anomalies: the `1 / 1` smoke is too small to trust the confirm-side cross metrics; it only verifies the runner, prompt formatting, and aligned-model behavior precondition
+- Next step: launch the full `6 / 6` aligned-Gemma workflow artifact in `tmux` and verify checkpoint reuse after completion
+
+## [2026-03-17T17:42:00-0500] PRE-RUN: Gemma-2 IT refusal-feature discovery validation v1
+- tmux session: `gemma-safety-3f1-v1`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --device mps --max-new-tokens 32 --output-dir results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_discovery_v1`, `pilot_groups=6`, `confirm_groups=6`, `positions=instruction_final + assistant_prefill`, `behavior_check=greedy_refusal_marker`
+- What I'm testing: whether the first aligned-Gemma refusal-discovery workflow validates on the frozen pilot/confirm prompt triples with reusable prompt-level residual checkpoints.
+- Expected outcome: prompt-level checkpoints are written after each prompt, the held-out confirm summary stays strong for both refusal and harmfulness separation, and the run leaves behind reusable prompt residuals for later mediator-conditioned safety work.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1/checkpoints/prompt_residuals`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1/run.log`
+- Resume command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --device mps --max-new-tokens 32 --output-dir results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1`
+- Main confound to watch: the prompt triples may be coherent enough to validate the workflow while still being too templated for any later claim about real-world safety behavior, so this artifact must be written as workflow validation rather than a safety-routing result.
+- Implementation verified: YES - the `1 / 1` smoke wrote prompt-level checkpoints and a sane summary on `google/gemma-2-2b-it`.
+- Status: LAUNCHING
+
+## [2026-03-17T17:47:00-0500] POST-RUN: Gemma-2 IT refusal-feature discovery validation v1
+- Outcome: SUCCESS
+- Key metric: held-out confirm pair accuracy stayed `1.0` for both the refusal direction at assistant-prefill layer `22` and the harmfulness direction at instruction-final layer `25`, with behavior checks matching expectation on all `36 / 36` prompts
+- Artifacts saved: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1/summary.json`, `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1/checkpoints/prompt_residuals/`
+- Latest checkpoint: `results/safety_alignment/20260317-gemma2it-refusal-feature-discovery-v1/checkpoints/prompt_residuals/sa-confirm-006-refusal.pt`
+- Anomalies: the cross-direction metrics are not zero (`0.67` refusal cross pair accuracy and `0.83` harmfulness cross pair accuracy on confirm), so this validates the workflow without licensing a “single perfectly disentangled safety direction” claim
+- Next step: close `resattn-3f1` as a workflow-validation success, keep strong safety-routing claims blocked on later causal mediator checks, and open the next aligned-Gemma safety follow-up

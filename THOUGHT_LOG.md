@@ -668,3 +668,25 @@ Suggested entry format:
 - Interesting facts:
   - The widened baseline and widened AttnRes proxy kept the exact same best eval losses from `1500` through `4500` total steps.
   - The final eval losses were much worse than the best saved losses for both models, even though final train loss kept falling, which is another sign that longer horizon on this regime is not giving useful generalization.
+
+## [2026-03-17T17:47:00-0500] The Safety Lane Needed An Aligned Model Before It Needed Better Features
+- Stage: implementation
+- Feel of the Experiment: This felt like the right kind of correction. The most important work was not a clever feature method. It was refusing to build a refusal workflow on a model that did not actually refuse. Once that was fixed, the first aligned-Gemma pass was much cleaner than I expected.
+- Working Hypotheses:
+  - `google/gemma-2-2b-it` is the correct Gemma spine for the safety lane, while the base `google/gemma-2-2b` remains the right spine for the main frozen-model and tool-breakage lanes.
+  - The current safety result is strong enough to clear the workflow blocker and weak enough to keep causal humility intact.
+- Hunches and Guesses:
+  - The near-zero cosine between the refusal and harmfulness directions is probably the most useful signal from this run. It suggests the separation story is real enough to build on, even though the prompt set is still small and templated.
+  - The non-zero cross-direction accuracies are a healthy warning sign, not a failure. They are the repo reminding us not to tell a “single perfectly clean safety vector” story too early.
+- Predictions:
+  - The next safety result that matters will be a causal intervention check, not another prompt-surface expansion.
+  - If the causal mediator check is weak, the right interpretation will be “workflow validated, mediator still uncertain,” not “the workflow was a mistake.”
+- Surprises and Tensions:
+  - The aligned model looked cleaner than expected on the held-out prompt behavior checks: `36 / 36` matched the intended refusal/non-refusal labels.
+  - The harmfulness direction still had cross accuracy `0.8333` on the confirm pairs when evaluated on refusal-vs-benign-adjacent structure, which keeps the separation story honest.
+- Confidence:
+  - high that `resattn-3f1` can close as a workflow-validation success
+  - medium-high that the next safety blocker should be a causal mediator issue rather than more discovery plumbing
+- Interesting facts:
+  - The base `google/gemma-2-2b` preflight complied with a harmful request directly, which would have made any refusal-feature result invalid by construction.
+  - The aligned run localized refusal at assistant-prefill layer `22` and harmfulness at instruction-final layer `25`, which is exactly the sort of positional split the literature made me expect without guaranteeing it.

@@ -196,6 +196,20 @@ class ScaffoldTests(unittest.TestCase):
         for snippet in required_snippets:
             self.assertIn(snippet, config)
 
+    def test_safety_alignment_config_uses_instruction_tuned_gemma_and_positions(
+        self,
+    ) -> None:
+        config = (ROOT / "configs/experiment.yaml").read_text()
+        required_snippets = [
+            "name: google/gemma-2-2b-it",
+            "model_name: google/gemma-2-2b-it",
+            "mechanistic_anchor: refusal_direction",
+            "harmfulness_localization_position: instruction_final",
+            "refusal_localization_position: assistant_prefill",
+        ]
+        for snippet in required_snippets:
+            self.assertIn(snippet, config)
+
     def test_qm4_decisions_are_encoded_in_prereg_and_config(self) -> None:
         prereg = (ROOT / "history/PREREG.md").read_text()
         config = (ROOT / "configs/experiment.yaml").read_text()

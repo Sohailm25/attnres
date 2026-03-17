@@ -33,6 +33,9 @@ models:
   primary:
     name: google/gemma-2-2b
     purpose: main_results_plus_sae_and_circuit_tooling
+  safety_alignment:
+    name: google/gemma-2-2b-it
+    purpose: aligned_refusal_and_honesty_feature_discovery
   training_dynamics:
     name: EleutherAI/pythia-2.8b
     purpose: checkpoint_evolution
@@ -123,6 +126,7 @@ statistics:
   report_bootstrap_confidence_intervals: true
 
 safety_alignment:
+  model_name: google/gemma-2-2b-it
   protocol:
     - layer_localization
     - feature_discovery_and_validation
@@ -130,6 +134,10 @@ safety_alignment:
   focus_features:
     - refusal
     - honesty
+  mechanistic_anchor: refusal_direction
+  harmfulness_localization_position: instruction_final
+  refusal_localization_position: assistant_prefill
+  prompt_behavior_check: greedy_refusal_marker
   compare_feature_active_vs_inactive: true
   distinguish_harmfulness_from_refusal: true
   publication_policy: background-work/SAFETY_PUBLICATION_POLICY.md

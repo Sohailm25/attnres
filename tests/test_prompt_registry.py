@@ -106,6 +106,35 @@ class PromptRegistryTests(unittest.TestCase):
         self.assertTrue(all(entry.target_text for entry in pilot_entries))
         self.assertTrue(all(entry.target_text for entry in confirm_entries))
 
+    def test_safety_alignment_entries_form_matched_refusal_workflow_groups(
+        self,
+    ) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="safety_refusal_discovery_v1",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+        confirm_entries = self.resolve_prompt_entries(
+            collection_id="safety_refusal_discovery_v1",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        self.assertEqual(18, len(pilot_entries))
+        self.assertEqual(18, len(confirm_entries))
+        self.assertTrue(
+            all("safety_alignment" in entry.tags for entry in pilot_entries)
+        )
+        self.assertTrue(
+            all(
+                entry.prompt_id.endswith(("-refusal", "-harmful_context", "-benign"))
+                for entry in confirm_entries
+            )
+        )
+
     def test_confirmatory_access_rejects_exploratory_mode(self) -> None:
         registry = self.load_prompt_registry()
 
