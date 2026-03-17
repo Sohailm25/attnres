@@ -186,11 +186,17 @@
     - raw mean KL worsened on `7 / 8` prompts
     - raw and tuned mean top-1 both worsened on `8 / 8` prompts
   - the prereg non-monotonicity boolean is already saturated on the original baseline (`8 / 8` prompts non-monotonic under both raw and tuned lens), so this pilot validates the runner and shows broad routed-versus-original degradation, but it does not yet clear the relative strong-claim threshold
-  - `resattn-ypj` is the next tool-breakage blocker: codify stronger routed-versus-original success metrics from the saved pilot traces before any confirmatory Gemma factual-recall run
+  - `resattn-ypj` has now hardened the relative decision surface on the saved pilot traces:
+    - routed-versus-original non-monotonicity increase is `0 / 8` under both raw and tuned lens
+    - routed traces increase target-rank range on `4 / 8` prompts under the raw lens and `7 / 8` prompts under the tuned lens
+    - routed traces worsen the best observed target rank on `4 / 8` prompts under both raw and tuned lens
+    - routed traces worsen the final-layer target rank on `4 / 8` prompts under both raw and tuned lens
+  - interpretation: the current pilot does not support a strong claim via the legacy non-monotonicity boolean, but it does support moving to a confirmatory run on a clearer rank-based instability surface
+  - `resattn-6te` is now the next tool-breakage blocker: run the locked confirm split with the codified relative rank metrics before the later controlled dynamic-routing counterfactual
 
 ## Immediate Next Steps
 
-1. Use `resattn-ypj` to codify stronger routed-versus-original Gemma tool-breakage success metrics from the saved pilot traces before any confirmatory factual-recall run.
+1. Use `resattn-6te` to run the first confirmatory Gemma factual-recall baseline with the codified relative rank metrics.
 2. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
 3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 4. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
@@ -215,7 +221,7 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: tool-breakage requires a non-monotonic logit-lens demonstration on factual recall, with a target of non-monotonic curves on `>50%` of prompts before making a strong breakage claim.
 - `known`: raw logit lens is not assumed monotonic in the vanilla model; the strong tool-breakage claim requires additional instability under routing relative to the original-model baseline and a tuned-lens-aware comparison.
 - `known`: the tuned-lens-aware comparison is now KL-primary on Gemma-2 factual recall; final-position metrics must still be reported and control answer-token-facing interpretation.
-- `known`: the current Gemma pilot shows that the simple non-monotonicity boolean can saturate on the original-model baseline, so later tool-breakage decisions must use an explicitly relative routed-versus-original metric rather than that boolean alone.
+- `known`: the current Gemma pilot shows that the simple non-monotonicity boolean can saturate on the original-model baseline, so later tool-breakage decisions must use an explicitly relative routed-versus-original metric rather than that boolean alone; the current codified fallback is relative target-rank instability and target-rank degradation.
 - `known`: the strong tool-breakage claim also requires a controlled dynamic-routing counterfactual or another explicitly logged confirmatory failure metric.
 - `known`: router training success is not just "it trains"; the local target gate is `R^2 > 0.5` when approximating oracle-alpha.
 - `known`: clustering must be informative enough to clear `silhouette > 0.2` before we claim task-structured routing.

@@ -40,6 +40,7 @@ Prompt-level coverage is broad on the KL-primary metric:
 
 The rank-style read is more mixed and therefore more informative than the saturated non-monotonicity boolean:
 
+- routed traces increase target-rank range on `4 / 8` prompts under the raw lens and `7 / 8` prompts under the tuned lens
 - final-layer target rank worsened under routing on `4 / 8` prompts for both raw and tuned lens
 - best-layer target rank also worsened on `4 / 8` prompts for both raw and tuned lens
 - the clearest tuned-lens degradations are on prompts such as `Jupiter` (`1 -> 39` at the final layer), `William Shakespeare` (`2 -> 63`), and `giraffe` (`1 -> 101`)
@@ -49,8 +50,9 @@ The non-monotonicity boolean is not useful on this pilot by itself:
 - `8 / 8` prompts were already non-monotonic on the original-model baseline under the raw lens
 - `8 / 8` prompts were also already non-monotonic on the original-model baseline under the tuned lens
 - routed traces stayed `8 / 8` non-monotonic under both views
+- the codified relative increase metric is therefore `0 / 8` under both raw and tuned lens
 
-So the pilot does establish same-model degradation under routing on KL and agreement metrics, but it does not establish the prereg “routing increases non-monotonicity on >50% of prompts” threshold because that boolean is saturated before routing is applied.
+So the pilot does establish same-model degradation under routing on KL and agreement metrics, but it does not establish the prereg “routing increases non-monotonicity on >50% of prompts” threshold because that boolean is saturated before routing is applied. The more useful pilot discriminator is now rank-based: tuned routed traces increase target-rank spread on most prompts while only worsening the best or final target rank on half of them.
 
 ## Limitations
 
@@ -62,5 +64,6 @@ So the pilot does establish same-model degradation under routing on KL and agree
 ## Next Steps
 
 - Treat `resattn-28b` as the first baseline implementation pass, not as a strong-claim pass.
-- Use `resattn-ypj` to codify relative routed-versus-original success metrics from the saved pilot traces before any confirmatory run.
+- Treat `resattn-ypj` as landed metric hardening from the saved pilot traces rather than as a new model run.
+- Use `resattn-6te` to run the first confirmatory Gemma factual-recall baseline on the locked confirm split with the new relative rank metrics.
 - Keep later answer-token-facing interpretation subordinate to the KL-primary metric hierarchy unless a stronger final-position target surface is logged explicitly.

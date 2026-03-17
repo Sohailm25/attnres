@@ -95,6 +95,14 @@ class ToolBreakageRunSummary:
     fraction_raw_routed_non_monotonic_prompts: float
     fraction_tuned_original_non_monotonic_prompts: float
     fraction_tuned_routed_non_monotonic_prompts: float
+    fraction_raw_routing_increases_non_monotonicity_prompts: float
+    fraction_tuned_routing_increases_non_monotonicity_prompts: float
+    fraction_raw_routing_worsens_final_target_rank_prompts: float
+    fraction_tuned_routing_worsens_final_target_rank_prompts: float
+    fraction_raw_routing_worsens_best_target_rank_prompts: float
+    fraction_tuned_routing_worsens_best_target_rank_prompts: float
+    fraction_raw_routing_increases_target_rank_range_prompts: float
+    fraction_tuned_routing_increases_target_rank_range_prompts: float
     prompt_results: tuple[ToolBreakagePromptResult, ...]
 
 
@@ -539,6 +547,34 @@ def summarize_tool_breakage_run(
     def mean(values: Sequence[float]) -> float:
         return float(sum(values) / len(values))
 
+    def target_ranks(
+        result: ToolBreakagePromptResult,
+        *,
+        lens_name: str,
+        routed: bool,
+    ) -> list[int]:
+        if lens_name == "raw" and not routed:
+            return [
+                trace.raw_original_final_position_target_rank
+                for trace in result.layer_traces
+            ]
+        if lens_name == "raw" and routed:
+            return [
+                trace.raw_routed_final_position_target_rank
+                for trace in result.layer_traces
+            ]
+        if lens_name == "tuned" and not routed:
+            return [
+                trace.tuned_original_final_position_target_rank
+                for trace in result.layer_traces
+            ]
+        if lens_name == "tuned" and routed:
+            return [
+                trace.tuned_routed_final_position_target_rank
+                for trace in result.layer_traces
+            ]
+        raise ValueError(f"unsupported lens name {lens_name!r}")
+
     return ToolBreakageRunSummary(
         model_name=model_name,
         collection_id=collection_id,
@@ -629,6 +665,82 @@ def summarize_tool_breakage_run(
         fraction_tuned_routed_non_monotonic_prompts=mean(
             [
                 1.0 if result.tuned_routed_non_monotonic else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_raw_routing_increases_non_monotonicity_prompts=mean(
+            [
+                1.0
+                if result.raw_routed_non_monotonic
+                and not result.raw_original_non_monotonic
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_tuned_routing_increases_non_monotonicity_prompts=mean(
+            [
+                1.0
+                if result.tuned_routed_non_monotonic
+                and not result.tuned_original_non_monotonic
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_raw_routing_worsens_final_target_rank_prompts=mean(
+            [
+                1.0
+                if target_ranks(result, lens_name="raw", routed=True)[-1]
+                > target_ranks(result, lens_name="raw", routed=False)[-1]
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_tuned_routing_worsens_final_target_rank_prompts=mean(
+            [
+                1.0
+                if target_ranks(result, lens_name="tuned", routed=True)[-1]
+                > target_ranks(result, lens_name="tuned", routed=False)[-1]
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_raw_routing_worsens_best_target_rank_prompts=mean(
+            [
+                1.0
+                if min(target_ranks(result, lens_name="raw", routed=True))
+                > min(target_ranks(result, lens_name="raw", routed=False))
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_tuned_routing_worsens_best_target_rank_prompts=mean(
+            [
+                1.0
+                if min(target_ranks(result, lens_name="tuned", routed=True))
+                > min(target_ranks(result, lens_name="tuned", routed=False))
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_raw_routing_increases_target_rank_range_prompts=mean(
+            [
+                1.0
+                if max(target_ranks(result, lens_name="raw", routed=True))
+                - min(target_ranks(result, lens_name="raw", routed=True))
+                > max(target_ranks(result, lens_name="raw", routed=False))
+                - min(target_ranks(result, lens_name="raw", routed=False))
+                else 0.0
+                for result in prompt_results
+            ]
+        ),
+        fraction_tuned_routing_increases_target_rank_range_prompts=mean(
+            [
+                1.0
+                if max(target_ranks(result, lens_name="tuned", routed=True))
+                - min(target_ranks(result, lens_name="tuned", routed=True))
+                > max(target_ranks(result, lens_name="tuned", routed=False))
+                - min(target_ranks(result, lens_name="tuned", routed=False))
+                else 0.0
                 for result in prompt_results
             ]
         ),

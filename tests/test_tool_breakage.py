@@ -162,6 +162,125 @@ class ToolBreakageTests(unittest.TestCase):
         self.assertEqual(1, run_summary.num_prompts)
         self.assertEqual(0.0, run_summary.fraction_raw_original_non_monotonic_prompts)
         self.assertEqual(1.0, run_summary.fraction_raw_routed_non_monotonic_prompts)
+        self.assertEqual(
+            1.0, run_summary.fraction_raw_routing_increases_non_monotonicity_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_tuned_routing_increases_non_monotonicity_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_raw_routing_worsens_final_target_rank_prompts
+        )
+        self.assertEqual(
+            0.0, run_summary.fraction_tuned_routing_worsens_final_target_rank_prompts
+        )
+        self.assertEqual(
+            0.0, run_summary.fraction_raw_routing_worsens_best_target_rank_prompts
+        )
+        self.assertEqual(
+            0.0, run_summary.fraction_tuned_routing_worsens_best_target_rank_prompts
+        )
+        self.assertEqual(
+            0.0, run_summary.fraction_raw_routing_increases_target_rank_range_prompts
+        )
+        self.assertEqual(
+            0.0, run_summary.fraction_tuned_routing_increases_target_rank_range_prompts
+        )
+
+    def test_summarize_tool_breakage_run_tracks_relative_rank_instability(self) -> None:
+        def make_trace(
+            *,
+            layer: int,
+            raw_original_rank: int,
+            raw_routed_rank: int,
+            tuned_original_rank: int,
+            tuned_routed_rank: int,
+        ) -> object:
+            return self.ToolBreakageLayerTrace(
+                layer=layer,
+                raw_original_mean_kl_to_final=0.0,
+                raw_routed_mean_kl_to_final=0.0,
+                tuned_original_mean_kl_to_final=0.0,
+                tuned_routed_mean_kl_to_final=0.0,
+                raw_original_mean_top1_agreement=0.0,
+                raw_routed_mean_top1_agreement=0.0,
+                tuned_original_mean_top1_agreement=0.0,
+                tuned_routed_mean_top1_agreement=0.0,
+                raw_original_final_position_kl_to_final=0.0,
+                raw_routed_final_position_kl_to_final=0.0,
+                tuned_original_final_position_kl_to_final=0.0,
+                tuned_routed_final_position_kl_to_final=0.0,
+                raw_original_final_position_top1_agreement=0.0,
+                raw_routed_final_position_top1_agreement=0.0,
+                tuned_original_final_position_top1_agreement=0.0,
+                tuned_routed_final_position_top1_agreement=0.0,
+                raw_original_final_position_target_probability=0.2,
+                raw_routed_final_position_target_probability=0.1,
+                tuned_original_final_position_target_probability=0.3,
+                tuned_routed_final_position_target_probability=0.1,
+                raw_original_final_position_target_rank=raw_original_rank,
+                raw_routed_final_position_target_rank=raw_routed_rank,
+                tuned_original_final_position_target_rank=tuned_original_rank,
+                tuned_routed_final_position_target_rank=tuned_routed_rank,
+            )
+
+        prompt_result = self.ToolBreakagePromptResult(
+            prompt_id="tb-pilot-xyz",
+            prompt="Synthetic prompt",
+            split="pilot",
+            target_text="answer",
+            target_token_id=1,
+            target_token_text=" answer",
+            source_labels=("embed", "0_attn_out"),
+            oracle_alpha=(0.4, 0.6),
+            raw_original_non_monotonic=True,
+            raw_routed_non_monotonic=True,
+            tuned_original_non_monotonic=True,
+            tuned_routed_non_monotonic=True,
+            layer_traces=(
+                make_trace(
+                    layer=0,
+                    raw_original_rank=4,
+                    raw_routed_rank=6,
+                    tuned_original_rank=3,
+                    tuned_routed_rank=9,
+                ),
+                make_trace(
+                    layer=1,
+                    raw_original_rank=2,
+                    raw_routed_rank=10,
+                    tuned_original_rank=1,
+                    tuned_routed_rank=4,
+                ),
+            ),
+        )
+
+        run_summary = self.summarize_tool_breakage_run(
+            model_name="synthetic",
+            collection_id="tool_breakage_factual_recall_v1",
+            split="pilot",
+            tuned_lens_checkpoint_path="checkpoint.pt",
+            prompt_results=(prompt_result,),
+        )
+
+        self.assertEqual(
+            1.0, run_summary.fraction_raw_routing_worsens_final_target_rank_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_tuned_routing_worsens_final_target_rank_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_raw_routing_worsens_best_target_rank_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_tuned_routing_worsens_best_target_rank_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_raw_routing_increases_target_rank_range_prompts
+        )
+        self.assertEqual(
+            1.0, run_summary.fraction_tuned_routing_increases_target_rank_range_prompts
+        )
 
     def test_target_token_for_entry_uses_prompt_plus_target_tokenization(self) -> None:
         entry = PromptEntry(

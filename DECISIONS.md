@@ -289,3 +289,17 @@
   - raw and tuned mean top-1 both worsened on `8 / 8` prompts
   That is enough to say the runner works and the routed-versus-original baseline is scientifically useful. But the prereg legacy threshold is phrased around non-monotonicity relative to the original baseline, and the boolean version of that metric is already saturated here: original-model raw and tuned traces are non-monotonic on all `8 / 8` pilot prompts before routing is applied. A blind confirm run would therefore ask the wrong decision question.
 - Impact: the next tool-breakage issue should codify stronger relative success metrics from the saved pilot traces, likely using target-rank degradation or another routed-versus-original instability summary, and only then move to a confirmatory Gemma factual-recall run. The current pilot remains a real baseline artifact, not a strong-claim pass.
+
+## [2026-03-17T14:05:00-0500] DECISION: Use relative target-rank instability as the next Gemma tool-breakage decision surface
+
+- Trigger: `resattn-ypj` compared candidate relative metrics directly on the saved `resattn-28b` pilot traces because the legacy non-monotonicity boolean was already saturated on the original-model baseline.
+- Decision: keep the legacy routed-versus-original non-monotonicity increase metric in the summary for continuity, but promote relative target-rank metrics to the actionable decision surface before the confirm run:
+  - routed-versus-original final-target-rank worsening
+  - routed-versus-original best-target-rank worsening
+  - routed-versus-original target-rank-range increase
+- Rationale: on the saved pilot traces, non-monotonicity increase stayed `0 / 8` under both raw and tuned lens, so it carries almost no discriminative value. The rank metrics are more informative on the same artifact:
+  - tuned routed traces increase target-rank range on `7 / 8` prompts
+  - tuned routed traces worsen the best target rank on `4 / 8` prompts
+  - tuned routed traces worsen the final-layer target rank on `4 / 8` prompts
+  That makes rank-based summaries the smallest honest way to preserve the prereg “non-monotonicity or rank-instability” language without inventing a new runner or rerunning Gemma before the confirm step.
+- Impact: the next tool-breakage issue should run the locked confirm split using the codified relative rank metrics, while the later controlled dynamic-routing counterfactual remains a separate blocker for the strong claim.
