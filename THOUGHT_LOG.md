@@ -219,6 +219,26 @@ Suggested entry format:
 - Confidence:
   - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
 
+## [2026-03-17T08:52:22-0500] Pilot Size Mattered More Than The Last Few Tuning Tweaks
+- Stage: implementation
+- Feel of the Experiment: This is the first oracle-alpha predictiveness result in a while that actually changes the shape of the story instead of just sharpening a failure. Doubling the pilot surface did not solve everything, but it clearly changed what the runner trusted.
+- Working Hypotheses:
+  - The earlier raw-simplex selection was at least partly a small-sample artifact of the `8`-prompt pilot surface.
+  - `oracle_alpha_logit_vector` still looks like the most promising target family once pilot selection has enough room to stabilize.
+- Hunches and Guesses:
+  - The main next risk is that `16 / 8` is still too small, so this positive held-out result could remain fragile until the saved prompt surface gets larger again.
+- Predictions:
+  - If the next prompt-surface expansion preserves positive confirm routed loss on the logit target, pilot size will look like a major part of the bottleneck rather than a minor nuisance.
+- Surprises and Tensions:
+  - The confirm mean JS barely moved while the selected target and held-out routed loss changed materially, which is another reminder that descriptive alpha metrics and the real objective are only partially aligned.
+  - The compressed target did not benefit from the larger pilot split the way I half-expected; it fell back to `lambda=100.0`.
+- Confidence:
+  - medium-high that pilot size is a real lever for this lane
+  - medium that the logit target is now the best current path to scale
+- Interesting facts:
+  - The enlarged pilot split selected `oracle_alpha_logit_vector` with `lambda=0.01` and pilot mean predicted improvement `+0.1092` nats.
+  - The held-out confirm routed-loss metric improved to `+0.0857` nats over uniform with `5 / 8` prompts positive, while confirm `R^2` stayed negative at `-0.2616`.
+
 ## [2026-03-17T08:28:00-0500] Loss-Aware Tuning Still Didn’t Rescue Predictiveness
 - Stage: implementation
 - Feel of the Experiment: This is a useful failure. The metric-governance fix landed cleanly, but it did not change the scientific answer. That makes the blocker feel less like a runner bug and more like a mismatch between the supervised object and the amount of data we are giving it.

@@ -207,3 +207,10 @@
 - Decision: change the saved predictiveness control plan so pilot tuning is governed first by mean predicted routed-loss improvement over uniform and secondarily by mean JS divergence, and extend the runner to compare multiple target parameterizations directly on one fixed feature surface.
 - Rationale: routed-loss recovery is the actual claim-bearing objective for this lane, so pilot tuning should stop pretending that descriptive alpha metrics alone are the primary decision rule.
 - Impact: the resulting `gpt2-xl` comparison still selected the raw-simplex target and reverted to the same slightly negative confirm result, which means the next issue should stop focusing on target/regularization selection and move to a more fundamental redesign such as a larger pilot surface or a different target object.
+
+## [2026-03-17T08:52:22-0500] DECISION: Test pilot size before another predictor redesign, and treat the positive result as promising but not decisive
+
+- Trigger: `resattn-7mb` had multiple plausible redesign options, and the least invasive one was to increase only the pilot surface while preserving the existing confirm set and loss-aware comparison.
+- Decision: create `prompts/registry_v2.yaml`, double the oracle-alpha pilot split from `8` to `16` prompts with saved paraphrases, point the default loader and experiment config at `registry_v2`, and rerun the same loss-aware target comparison without changing the feature source or confirm set.
+- Rationale: this isolates the sample-size hypothesis directly. If pilot size is a real bottleneck, the selected target and regularization should become more stable before we invest in token/span-level target redesign.
+- Impact: the enlarged pilot surface changed selection from the raw-simplex target to `oracle_alpha_logit_vector`, moved `lambda` from `100.0` to `0.01`, and restored a positive confirm routed-loss delta (`+0.0857` nats). The next issue should scale this path further rather than switch targets again immediately.
