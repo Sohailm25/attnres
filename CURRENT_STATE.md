@@ -3,7 +3,7 @@
 **Last updated:** 2026-03-17
 **Updated by:** codex-gpt5
 **Status:** in_progress
-**Current phase:** Phase 1 - Oracle-alpha infrastructure, reconstruction sanity checks, and stability gates
+**Current phase:** Phase 2 - Pattern analysis, Figure 8 validation, and regime comparisons
 
 ## Active Thesis Lock
 
@@ -145,12 +145,19 @@
   - interpretation: the development-model oracle gate is now cleared, but strong interpretation remains blocked by weak alpha-shape recovery and by the lack of primary-model replication
 - `known`: the prereg-scale campaign also surfaced a new operational follow-up:
   - `resattn-9co` tracks summary-stage observability, because top-level summary files stayed stale until the end of the long pilot tuning sweep even after the expensive oracle checkpoints were complete
+- `known`: the first prereg-scale sequence-level pattern-analysis artifact now exists on the saved `registry_v4` confirm oracle outputs:
+  - `validation/pattern_analysis.py` and `scripts/run_oracle_alpha_pattern_analysis.py` now provide the reusable sequence-level pattern-analysis slice over saved oracle run JSONs
+  - `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.json` summarizes the confirm-split `gpt2-xl` `final_alpha` distributions with source-type mass and average-linkage JSD clustering against a matched random Dirichlet control
+  - the descriptive source-mass read is attention-heavy but diffuse: mean embedding mass `= 0.0349`, mean attention mass `= 0.5560`, mean MLP mass `= 0.4090`, mean entropy `= 3.8986`, and mean effective sources `= 49.4540`
+  - the best oracle clustering result is weakly above the matched random control but still below the prereg block-structure gate: best silhouette `= 0.1428` at `k = 2` versus random-control `0.1093`
+  - the apparent structure is outlier-driven rather than broad block structure: cluster sizes are `126 / 2` at `k = 2`, `119 / 5 / 2 / 2` at `k = 4`, and `114 / 4 / 3 / 2 / 2 / 1 / 1 / 1` at `k = 8`
+  - interpretation: this is a valid Phase 2 entry artifact showing weak above-random routing structure on the development model, but it does not clear the prereg `silhouette > 0.2` gate and does not support a clean `~8`-cluster claim
 
 ## Immediate Next Steps
 
-1. Move the next oracle task to prereg-scale pattern analysis on the saved `registry_v4` artifact in `resattn-tpw`, while keeping strong interpretation gated on the current alpha-shape weakness and the primary-model gap.
-2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
-3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
+1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
+2. Decide the tuned-lens path for Gemma-2 tool-breakage in `resattn-qm4`: custom lens training versus a secondary-model comparison.
+3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 5. Land `resattn-9co` so future prereg-scale campaigns expose progress during the long summary stage instead of only at the final write.
 

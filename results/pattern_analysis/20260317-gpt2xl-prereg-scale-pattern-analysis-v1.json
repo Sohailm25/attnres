@@ -1,0 +1,101 @@
+{
+  "model_name": "gpt2-xl",
+  "collection_id": "oracle_alpha_phase1_v1",
+  "split": "confirm",
+  "num_sequences": 128,
+  "sequence_mean_improvement": 1.299260102212429,
+  "bootstrap_interval": {
+    "confidence_level": 0.95,
+    "lower": 1.2603682707995176,
+    "mean": 1.299260102212429,
+    "num_resamples": 1000,
+    "upper": 1.3417157139629126
+  },
+  "null_model_mean_losses": {
+    "last_layer_only": 10.740724422037601,
+    "magnitude_proportional": 6.06168931722641,
+    "random_dirichlet": 5.686688542366028,
+    "uniform": 5.224809443578124
+  },
+  "num_sources": 98,
+  "mean_entropy": 3.8985673749392546,
+  "mean_effective_sources": 49.45397845807804,
+  "mean_top1_mass": 0.04444327911557383,
+  "top1_source_counts": {
+    "0_attn_out": 19,
+    "10_attn_out": 2,
+    "11_attn_out": 3,
+    "12_attn_out": 1,
+    "13_attn_out": 8,
+    "16_attn_out": 1,
+    "17_mlp_out": 2,
+    "19_attn_out": 1,
+    "19_mlp_out": 1,
+    "1_attn_out": 3,
+    "21_attn_out": 1,
+    "21_mlp_out": 1,
+    "22_mlp_out": 1,
+    "23_mlp_out": 1,
+    "24_mlp_out": 1,
+    "28_mlp_out": 1,
+    "2_mlp_out": 4,
+    "30_attn_out": 4,
+    "31_attn_out": 1,
+    "33_attn_out": 1,
+    "35_attn_out": 4,
+    "36_attn_out": 1,
+    "37_attn_out": 2,
+    "38_attn_out": 2,
+    "39_attn_out": 2,
+    "3_mlp_out": 6,
+    "41_attn_out": 3,
+    "4_mlp_out": 4,
+    "5_attn_out": 1,
+    "6_mlp_out": 1,
+    "8_attn_out": 1,
+    "9_attn_out": 6,
+    "embed": 2,
+    "pos_embed": 36
+  },
+  "source_type_mass": {
+    "mean_embedding_mass": 0.03493249607644382,
+    "mean_attention_mass": 0.5560341021764693,
+    "mean_mlp_mass": 0.4090334017470869
+  },
+  "oracle_cluster_scan": {
+    "linkage_method": "average",
+    "best_k": 2,
+    "best_silhouette": 0.1428390029061045,
+    "silhouette_by_k": {
+      "2": 0.1428390029061045,
+      "3": 0.07135831162161274,
+      "4": 0.05335045997355452,
+      "5": 0.04453623107352229,
+      "6": 0.03128978722629328,
+      "7": 0.01699740054008892,
+      "8": 0.00781384790615166,
+      "9": -0.0016324709609021816,
+      "10": 0.0024337380271819975,
+      "11": -0.012064623350229665,
+      "12": -0.026022783103708487
+    }
+  },
+  "random_control_cluster_scan": {
+    "linkage_method": "average",
+    "best_k": 2,
+    "best_silhouette": 0.10929275479700254,
+    "silhouette_by_k": {
+      "2": 0.10929275479700254,
+      "3": 0.05989363951687258,
+      "4": 0.035976940053494895,
+      "5": 0.021578896635234542,
+      "6": 0.007606952317804522,
+      "7": -0.007445098738549665,
+      "8": -0.015242484809406036,
+      "9": -0.019105305273789768,
+      "10": -0.01877107829167955,
+      "11": -0.02189702896149453,
+      "12": -0.017908624967807717
+    }
+  }
+}
