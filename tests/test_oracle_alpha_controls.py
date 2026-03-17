@@ -19,6 +19,7 @@ class OracleAlphaControlTests(unittest.TestCase):
             mean_pairwise_js_divergence,
             mean_top1_source_agreement,
             mean_topk_jaccard_similarity,
+            ridge_alpha_predictiveness_summary,
         )
 
         self.MIBPlan = MIBPlan
@@ -28,6 +29,7 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.mean_pairwise_js_divergence = mean_pairwise_js_divergence
         self.mean_top1_source_agreement = mean_top1_source_agreement
         self.mean_topk_jaccard_similarity = mean_topk_jaccard_similarity
+        self.ridge_alpha_predictiveness_summary = ridge_alpha_predictiveness_summary
 
     def test_control_plan_file_exists(self) -> None:
         self.assertTrue((ROOT / "configs" / "oracle_alpha_controls_v1.yaml").is_file())
@@ -122,6 +124,36 @@ class OracleAlphaControlTests(unittest.TestCase):
 
         self.assertGreater(summary.r_squared, 0.95)
         self.assertLess(summary.mean_js_divergence, 0.02)
+        self.assertEqual(4, summary.num_train_examples)
+        self.assertEqual(2, summary.num_eval_examples)
+
+    def test_ridge_alpha_predictiveness_summary_is_high_on_linear_signal(self) -> None:
+        summary = self.ridge_alpha_predictiveness_summary(
+            train_features=[
+                [0.0, 0.0],
+                [1.0, 0.0],
+                [0.0, 1.0],
+                [1.0, 1.0],
+            ],
+            train_targets=[
+                [0.70, 0.30],
+                [0.80, 0.20],
+                [0.20, 0.80],
+                [0.30, 0.70],
+            ],
+            eval_features=[
+                [0.25, 0.75],
+                [0.75, 0.25],
+            ],
+            eval_targets=[
+                [0.35, 0.65],
+                [0.65, 0.35],
+            ],
+            regularization_strength=1e-3,
+        )
+
+        self.assertGreater(summary.r_squared, 0.90)
+        self.assertLess(summary.mean_js_divergence, 0.05)
         self.assertEqual(4, summary.num_train_examples)
         self.assertEqual(2, summary.num_eval_examples)
 

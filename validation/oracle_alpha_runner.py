@@ -15,11 +15,15 @@ from prompts import PromptEntry, perturb_prompt_entry, resolve_prompt_entries
 from .model_backed import cache_name_filter
 from .oracle_alpha_controls import (
     BootstrapMeanInterval,
+    PredictivenessSummary,
     bootstrap_mean_confidence_interval,
+    jensen_shannon_divergence,
     load_oracle_alpha_control_registry,
     mean_pairwise_js_divergence,
     mean_top1_source_agreement,
     mean_topk_jaccard_similarity,
+    ridge_alpha_predictiveness_summary,
+    ridge_regression_predictions,
 )
 
 
@@ -77,6 +81,39 @@ class OracleAlphaStabilitySummary:
     paraphrase_metrics: OracleAlphaStabilityMetrics | None
     resample_runs: tuple[OracleAlphaRunSummary, ...]
     resample_metrics: OracleAlphaStabilityMetrics | None
+
+
+@dataclass(frozen=True)
+class OracleAlphaPredictivenessSequenceResult:
+    prompt_id: str
+    prompt: str
+    split: str
+    num_sources: int
+    predicted_alpha: tuple[float, ...]
+    oracle_alpha: tuple[float, ...]
+    predicted_loss: float
+    oracle_loss: float
+    uniform_loss: float
+    js_divergence_to_oracle: float
+
+
+@dataclass(frozen=True)
+class OracleAlphaPredictivenessSummary:
+    model_name: str
+    collection_id: str
+    train_split: str
+    eval_split: str
+    control_plan_id: str
+    control_registry_id: str
+    feature_source: str
+    selected_regularization_strength: float
+    tuning_mean_js_divergence: float
+    predictiveness_summary: PredictivenessSummary
+    train_run: OracleAlphaRunSummary
+    eval_run: OracleAlphaRunSummary
+    eval_predictions: tuple[OracleAlphaPredictivenessSequenceResult, ...]
+    mib_status: str
+    mib_rationale: str
 
 
 def _apply_final_norm_and_unembed(
@@ -202,6 +239,67 @@ def _fixed_residual_sources(
             return_labels=True,
         )
     return residual_stack[:, 0].detach(), tuple(labels), tokens[0].detach()
+
+
+def _mean_pooled_h1_feature(
+    *,
+    model: HookedTransformer,
+    prompt: str,
+    prepend_bos: bool | None,
+) -> list[float]:
+    tokens = model.to_tokens(prompt, prepend_bos=prepend_bos)
+    with torch.no_grad():
+        _, cache = model.run_with_cache(
+            tokens,
+            return_type="logits",
+            names_filter=lambda name: name.endswith("hook_resid_post"),
+        )
+    h_1 = cache[("resid_post", 0)][0]
+    return [float(value) for value in h_1.mean(dim=0).detach().cpu().tolist()]
+
+
+def _normalize_predicted_alpha(
+    predicted_values: Sequence[float],
+) -> list[float]:
+    clipped = [max(0.0, float(value)) for value in predicted_values]
+    total = sum(clipped)
+    if total <= 0.0:
+        return [1.0 / len(clipped)] * len(clipped)
+    return [value / total for value in clipped]
+
+
+def _loss_for_predicted_alpha(
+    *,
+    model: HookedTransformer,
+    entry: PromptEntry,
+    predicted_alpha: Sequence[float],
+    prepend_bos: bool | None,
+) -> float:
+    device = torch.device(str(model.cfg.device))
+    residual_stack, _, tokens = _fixed_residual_sources(
+        model=model,
+        prompt=entry.text,
+        prepend_bos=prepend_bos,
+    )
+    alpha = torch.tensor(
+        predicted_alpha,
+        dtype=residual_stack.dtype,
+        device=device,
+    )
+    residual_stack = residual_stack.to(device)
+    tokens = tokens.to(device)
+    with torch.no_grad():
+        return float(
+            _loss_for_alpha(
+                model=model,
+                residual_stack=residual_stack,
+                tokens=tokens,
+                alpha=alpha,
+            )
+            .detach()
+            .cpu()
+            .item()
+        )
 
 
 def _optimize_sequence(
@@ -558,4 +656,209 @@ def run_oracle_alpha_stability_suite(
         paraphrase_metrics=paraphrase_metrics,
         resample_runs=resample_runs,
         resample_metrics=resample_metrics,
+    )
+
+
+def _tuned_ridge_regularization(
+    *,
+    train_features: Sequence[Sequence[float]],
+    train_targets: Sequence[Sequence[float]],
+    regularization_grid: Sequence[float],
+) -> tuple[float, float]:
+    if len(train_features) < 2:
+        raise ValueError("at least two training examples are required")
+    if not regularization_grid:
+        raise ValueError("regularization_grid must not be empty")
+
+    best_regularization: float | None = None
+    best_mean_js: float | None = None
+    num_examples = len(train_features)
+    for regularization_strength in regularization_grid:
+        holdout_js_values = []
+        for holdout_index in range(num_examples):
+            fold_train_features = [
+                feature
+                for index, feature in enumerate(train_features)
+                if index != holdout_index
+            ]
+            fold_train_targets = [
+                target
+                for index, target in enumerate(train_targets)
+                if index != holdout_index
+            ]
+            predicted = ridge_regression_predictions(
+                train_features=fold_train_features,
+                train_targets=fold_train_targets,
+                eval_features=[train_features[holdout_index]],
+                regularization_strength=regularization_strength,
+            )[0].tolist()
+            holdout_js_values.append(
+                jensen_shannon_divergence(
+                    _normalize_predicted_alpha(predicted),
+                    train_targets[holdout_index],
+                )
+            )
+
+        mean_js = sum(holdout_js_values) / len(holdout_js_values)
+        if best_mean_js is None or mean_js < best_mean_js:
+            best_regularization = float(regularization_strength)
+            best_mean_js = mean_js
+
+    return best_regularization, best_mean_js
+
+
+def run_oracle_alpha_predictiveness_check(
+    *,
+    model: HookedTransformer,
+    collection_id: str,
+    max_train_sequences: int | None = None,
+    max_eval_sequences: int | None = None,
+    optimization_steps: int = 20,
+    learning_rate: float = 0.1,
+    seed: int = 0,
+    regularization_grid: Sequence[float] = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
+    prepend_bos: bool | None = None,
+) -> OracleAlphaPredictivenessSummary:
+    control_registry = load_oracle_alpha_control_registry()
+    control_plan = control_registry.plans[collection_id]
+    predictiveness_plan = control_plan.predictiveness
+    if predictiveness_plan.model_family != "ridge_regression":
+        raise ValueError("predictiveness plan must use ridge_regression")
+
+    train_entries = list(
+        resolve_prompt_entries(
+            collection_id=predictiveness_plan.train_collection_id,
+            split=predictiveness_plan.train_split,
+            exploratory=True,
+        )
+    )
+    eval_entries = list(
+        resolve_prompt_entries(
+            collection_id=predictiveness_plan.eval_collection_id,
+            split=predictiveness_plan.eval_split,
+            exploratory=False,
+        )
+    )
+    if max_train_sequences is not None:
+        train_entries = train_entries[:max_train_sequences]
+    if max_eval_sequences is not None:
+        eval_entries = eval_entries[:max_eval_sequences]
+    if len(train_entries) < 2:
+        raise ValueError("predictiveness training requires at least two pilot prompts")
+    if not eval_entries:
+        raise ValueError("predictiveness evaluation requires confirm prompts")
+
+    train_run = run_oracle_alpha_collection(
+        model=model,
+        collection_id=collection_id,
+        split=predictiveness_plan.train_split,
+        exploratory=True,
+        prompt_entries=train_entries,
+        optimization_steps=optimization_steps,
+        learning_rate=learning_rate,
+        seed=seed,
+        prepend_bos=prepend_bos,
+    )
+    eval_run = run_oracle_alpha_collection(
+        model=model,
+        collection_id=collection_id,
+        split=predictiveness_plan.eval_split,
+        exploratory=False,
+        prompt_entries=eval_entries,
+        optimization_steps=optimization_steps,
+        learning_rate=learning_rate,
+        seed=seed + 1000,
+        prepend_bos=prepend_bos,
+    )
+
+    train_features = [
+        _mean_pooled_h1_feature(
+            model=model,
+            prompt=entry.text,
+            prepend_bos=prepend_bos,
+        )
+        for entry in train_entries
+    ]
+    eval_features = [
+        _mean_pooled_h1_feature(
+            model=model,
+            prompt=entry.text,
+            prepend_bos=prepend_bos,
+        )
+        for entry in eval_entries
+    ]
+    train_targets = [list(result.final_alpha) for result in train_run.sequence_results]
+    eval_targets = [list(result.final_alpha) for result in eval_run.sequence_results]
+    (
+        selected_regularization_strength,
+        tuning_mean_js_divergence,
+    ) = _tuned_ridge_regularization(
+        train_features=train_features,
+        train_targets=train_targets,
+        regularization_grid=regularization_grid,
+    )
+    predictiveness_summary = ridge_alpha_predictiveness_summary(
+        train_features=train_features,
+        train_targets=train_targets,
+        eval_features=eval_features,
+        eval_targets=eval_targets,
+        regularization_strength=selected_regularization_strength,
+    )
+    predicted_eval_alphas = ridge_regression_predictions(
+        train_features=train_features,
+        train_targets=train_targets,
+        eval_features=eval_features,
+        regularization_strength=selected_regularization_strength,
+    )
+    eval_predictions = []
+    for index, result in enumerate(eval_run.sequence_results):
+        normalized_predicted_alpha = _normalize_predicted_alpha(
+            predicted_eval_alphas[index].tolist()
+        )
+        eval_predictions.append(
+            OracleAlphaPredictivenessSequenceResult(
+                prompt_id=result.prompt_id,
+                prompt=result.prompt,
+                split=result.split,
+                num_sources=result.num_sources,
+                predicted_alpha=tuple(normalized_predicted_alpha),
+                oracle_alpha=result.final_alpha,
+                predicted_loss=_loss_for_predicted_alpha(
+                    model=model,
+                    entry=eval_entries[index],
+                    predicted_alpha=normalized_predicted_alpha,
+                    prepend_bos=prepend_bos,
+                ),
+                oracle_loss=result.optimized_loss,
+                uniform_loss=result.uniform_loss,
+                js_divergence_to_oracle=jensen_shannon_divergence(
+                    normalized_predicted_alpha,
+                    result.final_alpha,
+                ),
+            )
+        )
+
+    mib_rationale = (
+        "omitted for the current development-model runner stage because the "
+        "pilot/confirm prompt registry is a custom local prompt slice rather than "
+        "a benchmark-compatible task surface, so a MIB-style sanity task would be "
+        "artificial here; keep the global MIB anchor planned for a later compatible lane"
+    )
+
+    return OracleAlphaPredictivenessSummary(
+        model_name=model.cfg.model_name,
+        collection_id=collection_id,
+        train_split=predictiveness_plan.train_split,
+        eval_split=predictiveness_plan.eval_split,
+        control_plan_id=control_plan.plan_id,
+        control_registry_id=control_registry.registry_id,
+        feature_source="mean_pooled_h_1[t]_resid_post_layer_0",
+        selected_regularization_strength=selected_regularization_strength,
+        tuning_mean_js_divergence=tuning_mean_js_divergence,
+        predictiveness_summary=predictiveness_summary,
+        train_run=train_run,
+        eval_run=eval_run,
+        eval_predictions=tuple(eval_predictions),
+        mib_status="omitted",
+        mib_rationale=mib_rationale,
     )

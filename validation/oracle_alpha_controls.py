@@ -88,6 +88,69 @@ class PredictivenessSummary:
     num_eval_examples: int
 
 
+def _validated_predictiveness_arrays(
+    *,
+    train_features: Sequence[Sequence[float]],
+    train_targets: Sequence[Sequence[float]],
+    eval_features: Sequence[Sequence[float]],
+    eval_targets: Sequence[Sequence[float]],
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    train_x = np.asarray(train_features, dtype=float)
+    train_y = np.asarray(train_targets, dtype=float)
+    eval_x = np.asarray(eval_features, dtype=float)
+    eval_y = np.asarray(eval_targets, dtype=float)
+
+    if train_x.ndim != 2 or eval_x.ndim != 2:
+        raise ValueError("feature arrays must be rank-2")
+    if train_y.ndim != 2 or eval_y.ndim != 2:
+        raise ValueError("target arrays must be rank-2")
+    if train_x.shape[0] != train_y.shape[0]:
+        raise ValueError("train feature and target counts must match")
+    if eval_x.shape[0] != eval_y.shape[0]:
+        raise ValueError("eval feature and target counts must match")
+    if train_y.shape[1] != eval_y.shape[1]:
+        raise ValueError("target dimensions must match")
+    if train_x.shape[1] != eval_x.shape[1]:
+        raise ValueError("feature dimensions must match")
+
+    return train_x, train_y, eval_x, eval_y
+
+
+def _predictiveness_summary_from_predictions(
+    *,
+    train_y: np.ndarray,
+    eval_y: np.ndarray,
+    predictions: np.ndarray,
+) -> PredictivenessSummary:
+    residual_sum = float(np.square(eval_y - predictions).sum())
+    centered = eval_y - eval_y.mean(axis=0, keepdims=True)
+    total_sum = float(np.square(centered).sum())
+    if total_sum == 0.0:
+        r_squared = 1.0 if residual_sum == 0.0 else 0.0
+    else:
+        r_squared = 1.0 - (residual_sum / total_sum)
+
+    predicted_distributions = np.clip(predictions, a_min=0.0, a_max=None)
+    actual_distributions = np.clip(eval_y, a_min=0.0, a_max=None)
+    mean_js = _mean(
+        [
+            jensen_shannon_divergence(predicted_row, actual_row)
+            for predicted_row, actual_row in zip(
+                predicted_distributions.tolist(),
+                actual_distributions.tolist(),
+                strict=True,
+            )
+        ]
+    )
+
+    return PredictivenessSummary(
+        r_squared=r_squared,
+        mean_js_divergence=mean_js,
+        num_train_examples=train_y.shape[0],
+        num_eval_examples=eval_y.shape[0],
+    )
+
+
 def _mean(values: Sequence[float]) -> float:
     if not values:
         raise ValueError("values must not be empty")
@@ -233,21 +296,12 @@ def linear_alpha_predictiveness_summary(
     eval_features: Sequence[Sequence[float]],
     eval_targets: Sequence[Sequence[float]],
 ) -> PredictivenessSummary:
-    train_x = np.asarray(train_features, dtype=float)
-    train_y = np.asarray(train_targets, dtype=float)
-    eval_x = np.asarray(eval_features, dtype=float)
-    eval_y = np.asarray(eval_targets, dtype=float)
-
-    if train_x.ndim != 2 or eval_x.ndim != 2:
-        raise ValueError("feature arrays must be rank-2")
-    if train_y.ndim != 2 or eval_y.ndim != 2:
-        raise ValueError("target arrays must be rank-2")
-    if train_x.shape[0] != train_y.shape[0]:
-        raise ValueError("train feature and target counts must match")
-    if eval_x.shape[0] != eval_y.shape[0]:
-        raise ValueError("eval feature and target counts must match")
-    if train_y.shape[1] != eval_y.shape[1]:
-        raise ValueError("target dimensions must match")
+    train_x, train_y, eval_x, eval_y = _validated_predictiveness_arrays(
+        train_features=train_features,
+        train_targets=train_targets,
+        eval_features=eval_features,
+        eval_targets=eval_targets,
+    )
 
     train_design = np.concatenate(
         [np.ones((train_x.shape[0], 1)), train_x],
@@ -259,33 +313,83 @@ def linear_alpha_predictiveness_summary(
     )
     coefficients, *_ = np.linalg.lstsq(train_design, train_y, rcond=None)
     predictions = eval_design @ coefficients
-
-    residual_sum = float(np.square(eval_y - predictions).sum())
-    centered = eval_y - eval_y.mean(axis=0, keepdims=True)
-    total_sum = float(np.square(centered).sum())
-    if total_sum == 0.0:
-        r_squared = 1.0 if residual_sum == 0.0 else 0.0
-    else:
-        r_squared = 1.0 - (residual_sum / total_sum)
-
-    predicted_distributions = np.clip(predictions, a_min=0.0, a_max=None)
-    actual_distributions = np.clip(eval_y, a_min=0.0, a_max=None)
-    mean_js = _mean(
-        [
-            jensen_shannon_divergence(predicted_row, actual_row)
-            for predicted_row, actual_row in zip(
-                predicted_distributions.tolist(),
-                actual_distributions.tolist(),
-                strict=True,
-            )
-        ]
+    return _predictiveness_summary_from_predictions(
+        train_y=train_y,
+        eval_y=eval_y,
+        predictions=predictions,
     )
 
-    return PredictivenessSummary(
-        r_squared=r_squared,
-        mean_js_divergence=mean_js,
-        num_train_examples=train_x.shape[0],
-        num_eval_examples=eval_x.shape[0],
+
+def ridge_regression_predictions(
+    *,
+    train_features: Sequence[Sequence[float]],
+    train_targets: Sequence[Sequence[float]],
+    eval_features: Sequence[Sequence[float]],
+    regularization_strength: float,
+) -> np.ndarray:
+    if regularization_strength < 0.0:
+        raise ValueError("regularization_strength must be non-negative")
+
+    train_x = np.asarray(train_features, dtype=float)
+    train_y = np.asarray(train_targets, dtype=float)
+    eval_x = np.asarray(eval_features, dtype=float)
+
+    if train_x.ndim != 2 or eval_x.ndim != 2:
+        raise ValueError("feature arrays must be rank-2")
+    if train_y.ndim != 2:
+        raise ValueError("target arrays must be rank-2")
+    if train_x.shape[0] != train_y.shape[0]:
+        raise ValueError("train feature and target counts must match")
+    if train_x.shape[1] != eval_x.shape[1]:
+        raise ValueError("feature dimensions must match")
+
+    feature_mean = train_x.mean(axis=0, keepdims=True)
+    feature_scale = train_x.std(axis=0, keepdims=True)
+    feature_scale[feature_scale == 0.0] = 1.0
+
+    train_standardized = (train_x - feature_mean) / feature_scale
+    eval_standardized = (eval_x - feature_mean) / feature_scale
+    train_design = np.concatenate(
+        [np.ones((train_standardized.shape[0], 1)), train_standardized],
+        axis=1,
+    )
+    eval_design = np.concatenate(
+        [np.ones((eval_standardized.shape[0], 1)), eval_standardized],
+        axis=1,
+    )
+    regularizer = np.eye(train_design.shape[1], dtype=float)
+    regularizer[0, 0] = 0.0
+    coefficients = np.linalg.solve(
+        train_design.T @ train_design + (regularization_strength * regularizer),
+        train_design.T @ train_y,
+    )
+    return eval_design @ coefficients
+
+
+def ridge_alpha_predictiveness_summary(
+    *,
+    train_features: Sequence[Sequence[float]],
+    train_targets: Sequence[Sequence[float]],
+    eval_features: Sequence[Sequence[float]],
+    eval_targets: Sequence[Sequence[float]],
+    regularization_strength: float,
+) -> PredictivenessSummary:
+    train_x, train_y, eval_x, eval_y = _validated_predictiveness_arrays(
+        train_features=train_features,
+        train_targets=train_targets,
+        eval_features=eval_features,
+        eval_targets=eval_targets,
+    )
+    predictions = ridge_regression_predictions(
+        train_features=train_x.tolist(),
+        train_targets=train_y.tolist(),
+        eval_features=eval_x.tolist(),
+        regularization_strength=regularization_strength,
+    )
+    return _predictiveness_summary_from_predictions(
+        train_y=train_y,
+        eval_y=eval_y,
+        predictions=predictions,
     )
 
 

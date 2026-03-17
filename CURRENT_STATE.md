@@ -1,6 +1,6 @@
 # Current State
 
-**Last updated:** 2026-03-16
+**Last updated:** 2026-03-17
 **Updated by:** codex-gpt5
 **Status:** in_progress
 **Current phase:** Phase 1 - Oracle-alpha infrastructure, reconstruction sanity checks, and stability gates
@@ -68,13 +68,18 @@
   - the exploratory `gpt2-xl` pilot artifact on `8` prompts improved mean sequence loss over uniform by `1.2432` nats with a bootstrap interval of `[1.1482, 1.3361]`
   - restart variation in the aggregate `final_alpha` distributions was tiny but non-zero (`mean JS = 2.87e-07`, top-1 agreement `0.60`), while saved paraphrases and prompt resampling moved the aggregate alpha distributions more strongly (`JS = 0.0305` and `0.0191`)
   - this is still a development-model stability hardening result, not confirm-split predictiveness or a claim-bearing feasibility pass
+- `known`: the first held-out predictiveness artifact now exists, and it is a real blocker rather than a positive result:
+  - `scripts/run_oracle_alpha_heldout_predictiveness_check.py` runs the pilot-to-confirm predictiveness check using mean-pooled `h_1[t]` features and a pilot-tuned ridge regressor
+  - on `gpt2-xl`, the confirm-split result was weak for the current feature spec: `R^2 = -0.2456`, mean JS to oracle alpha `= 0.2434`, and predicted alpha vectors were slightly worse than uniform on average (`-0.0348` nats)
+  - the oracle alpha itself remained strong on the confirm split (`1.3409` nats over uniform), so the failure is in the current predictor surface rather than in the confirm-split oracle run
+  - strong oracle-alpha interpretation remains blocked until a stronger out-of-sample predictor exists
 
 ## Immediate Next Steps
 
-1. Execute the held-out alpha predictiveness check on the confirmatory split in `resattn-53q`.
+1. Investigate stronger feature summaries for oracle-alpha held-out predictiveness in `resattn-k2e`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
-3. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
-4. Validate the refusal-feature discovery workflow before the safety lane becomes active.
+3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
+4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 5. Expand the saved prompt registry or control registry only when a lane needs a larger or more specialized confirmatory surface.
 
 ## Phase 1 Gate
