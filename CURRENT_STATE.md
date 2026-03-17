@@ -156,7 +156,20 @@
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
   - strong Figure 8 / trained-routing alignment claims require a small local AttnRes reproduction as the reproducible proxy
-  - until that proxy exists, the Figure 8 lane is limited to comparison against the published AttnRes pattern surface rather than claims of direct trained-routing alignment
+  - `resattn-7hb` now provides that first local reproducible proxy scaffold, so the stronger Figure 8 lane is no longer blocked on missing trained-routing infrastructure
+  - strong Figure 8 alignment claims are still blocked on the proxy actually expressing the published pattern surface rather than only existing operationally
+- `known`: `resattn-7hb` now provides the first local Block AttnRes reproduction plus matched baseline setup for the Figure 8 lane:
+  - `validation/attnres_reproduction.py` implements the reusable `8`-block tiny baseline / Block AttnRes pair, checkpointed training loop, and Figure 8 proxy summaries over exported routing
+  - `scripts/run_attnres_proxy_viability.py` is the local launch entry point for char-level Wikitext viability runs with resumable checkpoints
+  - the smoke artifact `results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1.md` proved the runner path:
+    - both models trained stably on local MPS
+    - checkpoints were written for both models and the exact rerun command reused them successfully
+    - the Block AttnRes proxy slightly beat the matched baseline on eval loss (`2.7130` versus `2.7338`)
+  - the scaled artifact `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1.md` is the first serious viability read:
+    - on `2048` train texts, `256` eval texts, and `1500` steps, the Block AttnRes proxy beat the matched baseline by `0.0327` eval-loss points (`2.1130` versus `2.1458`)
+    - the larger run also passed the checkpoint/resume requirement; rerunning the full command reused the saved checkpoints and completed in `9.822` seconds
+    - the saved Figure 8 proxy metrics remain mixed rather than paper-like: deep embedding persistence is low (`0.1049`) and mean pre-attn entropy remains below mean pre-MLP entropy (`1.4674 < 1.5264`)
+  - interpretation: the local trained-routing proxy is now operationally real and suitable for later claim-bearing comparison, but it does not yet validate Figure 8 alignment and should not be overclaimed as such
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -232,7 +245,7 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
+1. Take `resattn-3l6` to decide the next credible Figure 8 proxy regime now that the first local AttnRes proxy is built but still gives mixed pattern metrics.
 2. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 3. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.

@@ -580,3 +580,25 @@ Suggested entry format:
 - Interesting facts:
   - `pilot_mean_alpha` stayed clearly weaker than the prompt-matched route on tuned KL (`routed minus control = +0.6091`), while `prompt_permuted_alpha` was more damaging (`routed minus control = -0.3082`).
   - The tuned routed-versus-prompt-permuted rank metrics were also weak: final-rank worsening `4 / 8`, best-rank worsening `3 / 8`, and rank-range increase only `2 / 8`.
+
+## [2026-03-17T15:05:00-0500] The Local AttnRes Proxy Is Real, But It Is Not Yet The Figure
+- Stage: implementation
+- Feel of the Experiment: This lane stopped feeling hypothetical. The tiny `8`-block proxy actually trains, checkpoints, resumes, and even beats the matched baseline once scaled a bit. But the pattern surface is stubbornly not the paper yet, which is exactly the kind of tension I want recorded.
+- Working Hypotheses:
+  - `resattn-7hb` succeeded as a build-and-viability issue.
+  - The next blocker is no longer "can we train a local proxy at all?" but "is this char-level Wikitext regime capable of expressing the Figure 8 signatures we care about?"
+- Hunches and Guesses:
+  - The loss advantage surviving the larger run makes me think the proxy architecture is not the wrong bet.
+  - The still-inverted entropy ordering makes me suspect the data/tokenization regime is at least part of the problem, not just undertraining.
+- Predictions:
+  - A more realistic tokenizer or corpus will matter more than another tiny architectural tweak.
+  - If we keep the exact current regime and just train longer, we may get a cleaner baseline comparison but still not a convincing Figure 8-style pattern surface.
+- Surprises and Tensions:
+  - I expected the larger run to improve the paper-facing metrics at least a little once the loss gap opened up more, but deep embedding persistence actually dropped from `0.1824` to `0.1049`.
+  - The proxy already prefers fairly late blocks at `final_output` even while the broad qualitative pattern is still mixed.
+- Confidence:
+  - high that the local reproducible-proxy infrastructure now exists
+  - medium that the next right move is a proxy-regime decision rather than another same-regime rerun
+- Interesting facts:
+  - The scaled run beat the matched baseline by `0.0327` eval-loss points while still showing `mean_pre_attn_entropy < mean_pre_mlp_entropy`.
+  - The first larger launch failed for a boring but useful reason: `vocab_size=256` no longer covered the larger Wikitext slice (`269` characters), and widening to `512` fixed it immediately.

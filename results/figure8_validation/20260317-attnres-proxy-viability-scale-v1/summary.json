@@ -1,0 +1,813 @@
+{
+  "dataset_name": "wikitext/wikitext-2-raw-v1",
+  "tokenizer_mode": "character",
+  "proxy_config": {
+    "vocab_size": 512,
+    "d_model": 96,
+    "n_heads": 4,
+    "n_layers": 8,
+    "d_ff": 384,
+    "max_seq_len": 64,
+    "dropout": 0.0,
+    "num_blocks": 8
+  },
+  "sequence_length": 64,
+  "num_train_examples": 14717,
+  "num_eval_examples": 1603,
+  "baseline_summary": {
+    "model_label": "standard_residual_baseline",
+    "final_train_loss": NaN,
+    "final_eval_loss": 2.145790405792765,
+    "best_eval_loss": 2.145790405792765,
+    "num_steps": 1500,
+    "batch_size": 16,
+    "learning_rate": 0.0003,
+    "checkpoint_path": "results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/checkpoints/baseline_training_state.pt"
+  },
+  "attnres_summary": {
+    "model_label": "block_attnres_proxy",
+    "final_train_loss": NaN,
+    "final_eval_loss": 2.1130473153425915,
+    "best_eval_loss": 2.1130473153425915,
+    "num_steps": 1500,
+    "batch_size": 16,
+    "learning_rate": 0.0003,
+    "checkpoint_path": "results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/checkpoints/attnres_training_state.pt"
+  },
+  "attnres_routing_entropy_by_target": [
+    [
+      "0_pre_attn",
+      -0.0
+    ],
+    [
+      "0_pre_mlp",
+      0.5095825791358948
+    ],
+    [
+      "1_pre_attn",
+      0.5764071345329285
+    ],
+    [
+      "1_pre_mlp",
+      1.0530818700790405
+    ],
+    [
+      "2_pre_attn",
+      1.0473841428756714
+    ],
+    [
+      "2_pre_mlp",
+      1.3590223789215088
+    ],
+    [
+      "3_pre_attn",
+      1.3618475198745728
+    ],
+    [
+      "3_pre_mlp",
+      1.5758684873580933
+    ],
+    [
+      "4_pre_attn",
+      1.5825624465942383
+    ],
+    [
+      "4_pre_mlp",
+      1.6805800199508667
+    ],
+    [
+      "5_pre_attn",
+      1.7664598226547241
+    ],
+    [
+      "5_pre_mlp",
+      1.8806556463241577
+    ],
+    [
+      "6_pre_attn",
+      1.899719476699829
+    ],
+    [
+      "6_pre_mlp",
+      1.9984720945358276
+    ],
+    [
+      "7_pre_attn",
+      2.0373806953430176
+    ],
+    [
+      "7_pre_mlp",
+      2.1542012691497803
+    ],
+    [
+      "final_output",
+      1.8117116689682007
+    ]
+  ],
+  "figure8_proxy_metrics": {
+    "target_summaries": [
+      {
+        "target_label": "0_pre_attn",
+        "immediate_predecessor_source": "embed",
+        "locality_score": 1.0,
+        "embedding_weight": 1.0,
+        "entropy": -0.0,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            1.0
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "0_pre_mlp",
+        "immediate_predecessor_source": "block_0_attn",
+        "locality_score": 0.7766900658607483,
+        "embedding_weight": 0.2233099341392517,
+        "entropy": 0.5095825791358948,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.2233099341392517
+          ],
+          [
+            "block_0_attn",
+            0.7766900658607483
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "1_pre_attn",
+        "immediate_predecessor_source": "block_0",
+        "locality_score": 0.7147656679153442,
+        "embedding_weight": 0.2852343022823334,
+        "entropy": 0.5764071345329285,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.2852343022823334
+          ],
+          [
+            "block_0",
+            0.7147656679153442
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "1_pre_mlp",
+        "immediate_predecessor_source": "block_1_attn",
+        "locality_score": 0.39419519901275635,
+        "embedding_weight": 0.2475316971540451,
+        "entropy": 1.0530818700790405,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.2475316971540451
+          ],
+          [
+            "block_0",
+            0.35827308893203735
+          ],
+          [
+            "block_1_attn",
+            0.39419519901275635
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "2_pre_attn",
+        "immediate_predecessor_source": "block_1",
+        "locality_score": 0.433486670255661,
+        "embedding_weight": 0.21496069431304932,
+        "entropy": 1.0473841428756714,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.21496069431304932
+          ],
+          [
+            "block_0",
+            0.35155266523361206
+          ],
+          [
+            "block_1",
+            0.433486670255661
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "2_pre_mlp",
+        "immediate_predecessor_source": "block_2_attn",
+        "locality_score": 0.26837533712387085,
+        "embedding_weight": 0.2519003450870514,
+        "entropy": 1.3590223789215088,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.2519003450870514
+          ],
+          [
+            "block_0",
+            0.255386084318161
+          ],
+          [
+            "block_1",
+            0.22433823347091675
+          ],
+          [
+            "block_2_attn",
+            0.26837533712387085
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "3_pre_attn",
+        "immediate_predecessor_source": "block_2",
+        "locality_score": 0.25840237736701965,
+        "embedding_weight": 0.18403339385986328,
+        "entropy": 1.3618475198745728,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.18403339385986328
+          ],
+          [
+            "block_0",
+            0.267123818397522
+          ],
+          [
+            "block_1",
+            0.2904403805732727
+          ],
+          [
+            "block_2",
+            0.25840237736701965
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "3_pre_mlp",
+        "immediate_predecessor_source": "block_3_attn",
+        "locality_score": 0.1584228277206421,
+        "embedding_weight": 0.24027766287326813,
+        "entropy": 1.5758684873580933,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.24027766287326813
+          ],
+          [
+            "block_0",
+            0.18396112322807312
+          ],
+          [
+            "block_1",
+            0.20236177742481232
+          ],
+          [
+            "block_2",
+            0.21497659385204315
+          ],
+          [
+            "block_3_attn",
+            0.1584228277206421
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "embed",
+            0.007349500898271799
+          ],
+          [
+            "block_2",
+            0.0003216625191271305
+          ]
+        ]
+      },
+      {
+        "target_label": "4_pre_attn",
+        "immediate_predecessor_source": "block_3",
+        "locality_score": 0.23523667454719543,
+        "embedding_weight": 0.14674578607082367,
+        "entropy": 1.5825624465942383,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.14674578607082367
+          ],
+          [
+            "block_0",
+            0.22461239993572235
+          ],
+          [
+            "block_1",
+            0.18884696066379547
+          ],
+          [
+            "block_2",
+            0.20455817878246307
+          ],
+          [
+            "block_3",
+            0.23523667454719543
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "block_2",
+            9.747348485689145e-06
+          ]
+        ]
+      },
+      {
+        "target_label": "4_pre_mlp",
+        "immediate_predecessor_source": "block_4_attn",
+        "locality_score": 0.3189355731010437,
+        "embedding_weight": 0.11908876895904541,
+        "entropy": 1.6805800199508667,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.11908876895904541
+          ],
+          [
+            "block_0",
+            0.14414483308792114
+          ],
+          [
+            "block_1",
+            0.14910872280597687
+          ],
+          [
+            "block_2",
+            0.1412815898656845
+          ],
+          [
+            "block_3",
+            0.12744049727916718
+          ],
+          [
+            "block_4_attn",
+            0.3189355731010437
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "block_0",
+            9.747348485689145e-06
+          ],
+          [
+            "block_2",
+            0.0016765439650043845
+          ]
+        ]
+      },
+      {
+        "target_label": "5_pre_attn",
+        "immediate_predecessor_source": "block_4",
+        "locality_score": 0.16584904491901398,
+        "embedding_weight": 0.11686606705188751,
+        "entropy": 1.7664598226547241,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.11686606705188751
+          ],
+          [
+            "block_0",
+            0.1897568553686142
+          ],
+          [
+            "block_1",
+            0.1764584183692932
+          ],
+          [
+            "block_2",
+            0.16426438093185425
+          ],
+          [
+            "block_3",
+            0.18680523335933685
+          ],
+          [
+            "block_4",
+            0.16584904491901398
+          ]
+        ],
+        "skip_connection_peak_fractions": []
+      },
+      {
+        "target_label": "5_pre_mlp",
+        "immediate_predecessor_source": "block_5_attn",
+        "locality_score": 0.19063101708889008,
+        "embedding_weight": 0.0960315391421318,
+        "entropy": 1.8806556463241577,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.0960315391421318
+          ],
+          [
+            "block_0",
+            0.18635407090187073
+          ],
+          [
+            "block_1",
+            0.13371138274669647
+          ],
+          [
+            "block_2",
+            0.1209101676940918
+          ],
+          [
+            "block_3",
+            0.12104906886816025
+          ],
+          [
+            "block_4",
+            0.15131275355815887
+          ],
+          [
+            "block_5_attn",
+            0.19063101708889008
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "block_0",
+            0.014123908244073391
+          ],
+          [
+            "block_1",
+            0.000974734895862639
+          ],
+          [
+            "block_2",
+            9.747348485689145e-06
+          ],
+          [
+            "block_3",
+            2.9242046366562136e-05
+          ],
+          [
+            "block_4",
+            0.004113381262868643
+          ]
+        ]
+      },
+      {
+        "target_label": "6_pre_attn",
+        "immediate_predecessor_source": "block_5",
+        "locality_score": 0.16371563076972961,
+        "embedding_weight": 0.09312742948532104,
+        "entropy": 1.899719476699829,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.09312742948532104
+          ],
+          [
+            "block_0",
+            0.14287196099758148
+          ],
+          [
+            "block_1",
+            0.14280620217323303
+          ],
+          [
+            "block_2",
+            0.16185104846954346
+          ],
+          [
+            "block_3",
+            0.17361043393611908
+          ],
+          [
+            "block_4",
+            0.12201730906963348
+          ],
+          [
+            "block_5",
+            0.16371563076972961
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "block_1",
+            4.8736743337940425e-05
+          ],
+          [
+            "block_2",
+            0.006199313793331385
+          ],
+          [
+            "block_3",
+            0.0005458515370264649
+          ],
+          [
+            "block_4",
+            9.747348485689145e-06
+          ]
+        ]
+      },
+      {
+        "target_label": "6_pre_mlp",
+        "immediate_predecessor_source": "block_6_attn",
+        "locality_score": 0.15198968350887299,
+        "embedding_weight": 0.09292467683553696,
+        "entropy": 1.9984720945358276,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.09292467683553696
+          ],
+          [
+            "block_0",
+            0.11799473315477371
+          ],
+          [
+            "block_1",
+            0.10411606729030609
+          ],
+          [
+            "block_2",
+            0.12083485722541809
+          ],
+          [
+            "block_3",
+            0.12518124282360077
+          ],
+          [
+            "block_4",
+            0.15353024005889893
+          ],
+          [
+            "block_5",
+            0.13342851400375366
+          ],
+          [
+            "block_6_attn",
+            0.15198968350887299
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "embed",
+            0.001471849624067545
+          ],
+          [
+            "block_0",
+            0.0022418901789933443
+          ],
+          [
+            "block_1",
+            0.00025343106244690716
+          ],
+          [
+            "block_2",
+            0.005136852618306875
+          ],
+          [
+            "block_3",
+            0.007866110652685165
+          ],
+          [
+            "block_4",
+            0.03469081595540047
+          ],
+          [
+            "block_5",
+            0.044545382261276245
+          ]
+        ]
+      },
+      {
+        "target_label": "7_pre_attn",
+        "immediate_predecessor_source": "block_6",
+        "locality_score": 0.10405685007572174,
+        "embedding_weight": 0.10795571655035019,
+        "entropy": 2.0373806953430176,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.10795571655035019
+          ],
+          [
+            "block_0",
+            0.13316528499126434
+          ],
+          [
+            "block_1",
+            0.13551737368106842
+          ],
+          [
+            "block_2",
+            0.11212462931871414
+          ],
+          [
+            "block_3",
+            0.1490393429994583
+          ],
+          [
+            "block_4",
+            0.12354656308889389
+          ],
+          [
+            "block_5",
+            0.13459423184394836
+          ],
+          [
+            "block_6",
+            0.10405685007572174
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "embed",
+            0.0003216625191271305
+          ],
+          [
+            "block_0",
+            0.002095679985359311
+          ],
+          [
+            "block_1",
+            0.00010722083243308589
+          ],
+          [
+            "block_2",
+            0.0003898939467035234
+          ],
+          [
+            "block_3",
+            0.007895352318882942
+          ],
+          [
+            "block_4",
+            0.0026610263157635927
+          ],
+          [
+            "block_5",
+            0.008080552332103252
+          ]
+        ]
+      },
+      {
+        "target_label": "7_pre_mlp",
+        "immediate_predecessor_source": "block_7_attn",
+        "locality_score": 0.08133826404809952,
+        "embedding_weight": 0.1384357362985611,
+        "entropy": 2.1542012691497803,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.1384357362985611
+          ],
+          [
+            "block_0",
+            0.14051443338394165
+          ],
+          [
+            "block_1",
+            0.13300801813602448
+          ],
+          [
+            "block_2",
+            0.09912104904651642
+          ],
+          [
+            "block_3",
+            0.1030617356300354
+          ],
+          [
+            "block_4",
+            0.10999356955289841
+          ],
+          [
+            "block_5",
+            0.10720115154981613
+          ],
+          [
+            "block_6",
+            0.0873260572552681
+          ],
+          [
+            "block_7_attn",
+            0.08133826404809952
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "embed",
+            0.024368371814489365
+          ],
+          [
+            "block_0",
+            0.003089909441769123
+          ],
+          [
+            "block_1",
+            0.00024368372396565974
+          ],
+          [
+            "block_2",
+            7.797878788551316e-05
+          ],
+          [
+            "block_4",
+            0.006442997604608536
+          ],
+          [
+            "block_5",
+            0.001735028112307191
+          ]
+        ]
+      },
+      {
+        "target_label": "final_output",
+        "immediate_predecessor_source": "block_7",
+        "locality_score": 0.10913585871458054,
+        "embedding_weight": 0.03278933838009834,
+        "entropy": 1.8117116689682007,
+        "mean_alpha_by_source": [
+          [
+            "embed",
+            0.03278933838009834
+          ],
+          [
+            "block_0",
+            0.06363274902105331
+          ],
+          [
+            "block_1",
+            0.06731608510017395
+          ],
+          [
+            "block_2",
+            0.09330872446298599
+          ],
+          [
+            "block_3",
+            0.08872002363204956
+          ],
+          [
+            "block_4",
+            0.1384948194026947
+          ],
+          [
+            "block_5",
+            0.1842271387577057
+          ],
+          [
+            "block_6",
+            0.2223752737045288
+          ],
+          [
+            "block_7",
+            0.10913585871458054
+          ]
+        ],
+        "skip_connection_peak_fractions": [
+          [
+            "block_0",
+            0.00022418901789933443
+          ],
+          [
+            "block_1",
+            0.0014621022855862975
+          ],
+          [
+            "block_2",
+            0.08853516727685928
+          ],
+          [
+            "block_3",
+            0.03914535418152809
+          ],
+          [
+            "block_4",
+            0.1980661302804947
+          ],
+          [
+            "block_5",
+            0.36450210213661194
+          ],
+          [
+            "block_6",
+            0.43337687849998474
+          ]
+        ]
+      }
+    ],
+    "mean_pre_attn_entropy": 1.4673944626535689,
+    "mean_pre_mlp_entropy": 1.5264330431818962,
+    "deep_embedding_persistence": 0.10488500653041734
+  }
+}

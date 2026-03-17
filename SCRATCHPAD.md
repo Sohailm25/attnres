@@ -219,6 +219,81 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
 - Outcome: FAILURE
 
+## [2026-03-17T14:50:52-0500] PRE-RUN: small local Block AttnRes viability smoke
+- tmux session: `attnres-proxy-smoke-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 256 --max-eval-texts 64 --vocab-size 256 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 8 --num-steps 200 --checkpoint-every-steps 25 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1`
+- Config: `dataset=wikitext-2-raw-v1`, `tokenizer=character`, `proxy=8-block`, `baseline=matched standard residual`, `device=mps fallback cpu via script`
+- What I'm testing: the smallest honest local AttnRes proxy can train stably on local hardware, emit resumable checkpoints, and export routing summaries rich enough to score later Figure 8 metrics.
+- Expected outcome: both tiny models finish training without NaNs, the AttnRes proxy is not catastrophically worse than the matched baseline, and `summary.json` contains per-target locality / entropy / embedding / skip summaries.
+- Expected duration: ~15-30 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1/checkpoints/`
+- Checkpoint cadence: every `25` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1/run.log`
+- Resume command: rerun the command above inside tmux
+- Main confound to watch: a char-level tiny LM can train stably yet still be too weak to make routing summaries informative, so loss stability matters but is not the only success condition.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_attnres_reproduction`
+- Status: LAUNCHING
+
+## [2026-03-17T14:53:49-0500] POST-RUN: small local Block AttnRes viability smoke
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 256 --max-eval-texts 64 --vocab-size 256 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 8 --num-steps 200 --checkpoint-every-steps 25 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1`
+- Outcome: SUCCESS
+- Key metric: `attnres_best_eval_loss=2.7130` versus `baseline_best_eval_loss=2.7338` (`delta=-0.0207`)
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1/`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-viability-smoke-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: the initial Figure 8 proxy read is mixed rather than paper-like: `deep_embedding_persistence=0.1824` and `mean_pre_attn_entropy < mean_pre_mlp_entropy`, so this run validates the pipeline more than the final pattern claim.
+- Next step: scale the exact same 8-block setup on more text and more optimization steps before judging whether the local proxy has real Figure 8-like structure.
+
+## [2026-03-17T14:53:49-0500] PRE-RUN: scaled local Block AttnRes viability run
+- tmux session: `attnres-proxy-scale-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --vocab-size 256 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 100 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-viability-scale-v1`
+- Config: `dataset=wikitext-2-raw-v1`, `tokenizer=character`, `proxy=8-block`, `architecture frozen from smoke`, `scale-up=data+steps only`
+- What I'm testing: whether the same 8-block local proxy develops clearer routing structure and a more stable loss read when trained longer on a larger text surface.
+- Expected outcome: the AttnRes proxy remains at least competitive with the matched baseline and the saved Figure 8 summaries become less obviously undertrained than the smoke artifact.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/checkpoints/`
+- Checkpoint cadence: every `100` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/run.log`
+- Resume command: rerun the command above inside tmux
+- Main confound to watch: if the char-level proxy still shows weak or inverted Figure 8 metrics after a materially longer run, the issue may be the proxy/data choice rather than simple undertraining.
+- Implementation verified: YES - smoke run completed, wrote checkpoints, and the exact resume command reused them successfully in `7.642` seconds.
+- Status: LAUNCHING
+
+## [2026-03-17T14:54:57-0500] POST-RUN: scaled local Block AttnRes viability run
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --vocab-size 256 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 100 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-viability-scale-v1`
+- Outcome: FAILURE
+- Key metric: `character_vocabulary_size=269 > vocab_size=256`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/run.log`
+- Latest checkpoint: none
+- Anomalies: scaling the Wikitext slice increased the observed character vocabulary beyond the smoke-safe default, so the larger run failed before training rather than revealing a model issue.
+- Next step: relaunch with `vocab_size=512` and keep the rest of the scale-up fixed so the only substantive change remains data+optimization scale.
+
+## [2026-03-17T14:54:57-0500] PRE-RUN: scaled local Block AttnRes viability run relaunch
+- tmux session: `attnres-proxy-scale-v1`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --vocab-size 512 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 100 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-viability-scale-v1`
+- Config: `dataset=wikitext-2-raw-v1`, `tokenizer=character`, `proxy=8-block`, `architecture frozen from smoke`, `scale-up=data+steps only`, `vocab_size widened to fit corpus`
+- What I'm testing: the same larger run as above, now with enough character vocabulary capacity to cover the real corpus slice.
+- Expected outcome: the run reaches checkpoints and completes so the pattern read is about training, not an avoidable tokenizer-capacity failure.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/checkpoints/`
+- Checkpoint cadence: every `100` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/run.log`
+- Resume command: rerun the command above inside tmux
+- Main confound to watch: if the pattern surface stays weak after this relaunch, the bottleneck is likely the proxy/data regime rather than a simple configuration mistake.
+- Implementation verified: YES - the failure was pre-training and isolated to vocabulary coverage; no model code changes were needed beyond a safer default.
+- Status: LAUNCHING
+
+## [2026-03-17T15:04:32-0500] POST-RUN: scaled local Block AttnRes viability run relaunch
+- Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --vocab-size 512 --d-model 96 --n-heads 4 --n-layers 8 --d-ff 384 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 100 --learning-rate 0.0003 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-viability-scale-v1`
+- Outcome: SUCCESS
+- Key metric: `attnres_best_eval_loss=2.1130` versus `baseline_best_eval_loss=2.1458` (`delta=-0.0327`)
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/`, `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1.md`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-viability-scale-v1/checkpoints/attnres_training_state.pt`
+- Anomalies: the routed pattern surface is still mixed rather than paper-like even after the stronger run; `deep_embedding_persistence` fell to `0.1049` and `mean_pre_attn_entropy` remained below `mean_pre_mlp_entropy`
+- Next step: treat the local AttnRes proxy as operationally viable, close the build issue, and move to a bounded proxy-regime decision (`resattn-3l6`) before any Figure 8 alignment claim
+
 ## [2026-03-17T12:08:00-0500] PRE-RUN: prereg-scale oracle-alpha pattern analysis
 - tmux session: N/A
 - Script: `scripts/run_oracle_alpha_pattern_analysis.py`

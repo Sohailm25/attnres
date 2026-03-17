@@ -339,3 +339,25 @@
   - routed minus `prompt_permuted_alpha` final-position tuned KL is `-0.6541`
   The rank-based confirm read points in the same direction: routed worsens tuned final target rank versus the prompt-permuted control on only `4 / 8` prompts and increases tuned rank range on only `2 / 8`. That is not enough to say the prompt-matched route is uniquely responsible for the observed lens damage.
 - Impact: the Gemma lane should now be written up as a routed-versus-original degradation that is stronger than a fixed non-uniform control but not stronger than the current prompt-misaligned dynamic control. The next highest-value implementation step should move to another lane, while any future Gemma follow-up must be framed as a new control-design question rather than a missing prerequisite.
+
+## [2026-03-17T14:33:00-0500] DECISION: Start `resattn-7hb` with an `8`-block local Block AttnRes viability slice, not a paper-scale reproduction
+
+- Trigger: after `resattn-g09` landed, `resattn-7hb` became the highest-value ready issue, and the repo needed a concrete minimum viable proxy definition before adding any training code.
+- Decision: define the first local AttnRes proxy slice as a small decoder-only Block AttnRes reproduction with:
+  - `8` routing blocks so the proxy can actually express the `~8`-block Figure 8 structure the paper highlights
+  - a matched standard-residual baseline
+  - explicit sublayer-granular routing export for later Figure 8 metrics
+  - a local feasibility-first training target rather than a paper-scale benchmark target
+- Rationale: the proxy exists to make trained-routing alignment claims reproducible, not to replicate the paper’s absolute benchmark numbers on local hardware. An `8`-block model is the smallest setup that still preserves the key structural object from the paper, while a matched baseline prevents the proxy from collapsing into a one-off architecture demo. Jumping straight to a larger 194M+ reproduction before verifying stable training and exportability on local hardware would be the wrong order of operations.
+- Impact: the first `7hb` implementation should build the training/export scaffolding and run a tiny viability slice before any longer tmux-backed training campaign is launched. If that slice fails to train stably or cannot export routing at the needed granularity, the lane should pause and reconsider architecture scope before burning more compute.
+
+## [2026-03-17T15:05:00-0500] DECISION: Close `resattn-7hb` on local-proxy viability, not on Figure 8 alignment
+
+- Trigger: the first smoke and scaled Wikitext runs from `resattn-7hb` both completed with checkpoints, rerunnable resume paths, exported routing summaries, and a real eval-loss win for the local Block AttnRes proxy over the matched baseline.
+- Decision: treat `resattn-7hb` as successful once the repo lands the local `8`-block proxy scaffold plus the two viability artifacts, but do not treat the lane as a Figure 8 alignment pass.
+- Rationale: the issue asked for the smallest local AttnRes reproduction and matched baseline setup that could support later Figure 8 checks. The scaled artifact now proves that this setup is operationally real. At the same time, the saved proxy metrics remain mixed:
+  - deep embedding persistence stayed low at `0.1049`
+  - mean pre-attn entropy remained below mean pre-MLP entropy (`1.4674 < 1.5264`)
+  - the stronger run improved the loss comparison without improving the paper-facing metric surface
+  This makes the right next issue a proxy-regime decision, not more pretending that `7hb` already solved trained-routing alignment.
+- Impact: the next Figure 8 follow-up becomes `resattn-3l6`, which decides whether to scale the current char-level regime further or move to a stronger tokenizer / corpus setup before claim-bearing proxy analysis.
