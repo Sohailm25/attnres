@@ -3,10 +3,14 @@
 
 import contextlib
 import io
+from huggingface_hub import logging as huggingface_logging
+import logging
 from pathlib import Path
 import unittest
+from unittest import mock
 import warnings
 
+from prompts import PromptEntry
 from transformer_lens import HookedTransformer
 from transformers.utils import logging as transformers_logging
 
@@ -16,6 +20,8 @@ warnings.filterwarnings(
     "ignore",
     message=r"`torch_dtype` is deprecated! Use `dtype` instead!",
 )
+huggingface_logging.set_verbosity_error()
+logging.getLogger("huggingface_hub.file_download").setLevel(logging.CRITICAL)
 transformers_logging.set_verbosity_error()
 
 
@@ -23,11 +29,13 @@ class OracleAlphaRunnerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from validation.oracle_alpha_runner import (
+            _tuned_ridge_regularization,
             run_oracle_alpha_collection,
             run_oracle_alpha_predictiveness_check,
             run_oracle_alpha_stability_suite,
         )
 
+        cls._tuned_ridge_regularization = staticmethod(_tuned_ridge_regularization)
         cls.run_oracle_alpha_collection = staticmethod(run_oracle_alpha_collection)
         cls.run_oracle_alpha_predictiveness_check = staticmethod(
             run_oracle_alpha_predictiveness_check
@@ -167,7 +175,10 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         self.assertEqual("oracle_alpha_logit_vector", summary.target)
         self.assertEqual(3, summary.predictiveness_summary.num_train_examples)
         self.assertEqual(2, summary.predictiveness_summary.num_eval_examples)
-        self.assertEqual("r_squared", summary.tuning_primary_metric)
+        self.assertEqual(
+            "mean_predicted_improvement_over_uniform",
+            summary.tuning_primary_metric,
+        )
         self.assertEqual("mean_js_divergence", summary.tuning_secondary_metric)
         self.assertEqual(2, len(summary.candidate_feature_summaries))
         self.assertIn(
@@ -191,7 +202,8 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         )
         self.assertTrue(
             all(
-                candidate.tuning_primary_metric == "r_squared"
+                candidate.tuning_primary_metric
+                == "mean_predicted_improvement_over_uniform"
                 and candidate.tuning_secondary_metric == "mean_js_divergence"
                 for candidate in summary.candidate_feature_summaries
             )
@@ -201,6 +213,51 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             self.assertAlmostEqual(1.0, sum(prediction.predicted_alpha), places=6)
             self.assertGreaterEqual(prediction.predicted_loss, 0.0)
             self.assertGreaterEqual(prediction.js_divergence_to_oracle, 0.0)
+
+    def test_tuned_ridge_regularization_can_select_on_predicted_loss_improvement(
+        self,
+    ) -> None:
+        with mock.patch(
+            "validation.oracle_alpha_runner._loss_for_predicted_alpha",
+            side_effect=(0.10, 0.10, 0.90, 0.90),
+        ):
+            (
+                selected_regularization,
+                _,
+                metric_values,
+            ) = self._tuned_ridge_regularization(
+                model=object(),
+                train_entries=(
+                    PromptEntry(
+                        prompt_id="pilot-1",
+                        text="First prompt",
+                        split="pilot",
+                        tags=(),
+                        perturbations={},
+                    ),
+                    PromptEntry(
+                        prompt_id="pilot-2",
+                        text="Second prompt",
+                        split="pilot",
+                        tags=(),
+                        perturbations={},
+                    ),
+                ),
+                train_features=([0.0], [1.0]),
+                train_targets=([0.8, 0.2], [0.2, 0.8]),
+                train_uniform_losses=(1.0, 1.0),
+                target_name="oracle_alpha_vector",
+                source_labels=None,
+                regularization_grid=(1e-3, 1.0),
+                primary_metric="mean_predicted_improvement_over_uniform",
+                secondary_metric="mean_js_divergence",
+                prepend_bos=None,
+            )
+
+        self.assertEqual(1e-3, selected_regularization)
+        self.assertAlmostEqual(
+            0.9, metric_values["mean_predicted_improvement_over_uniform"]
+        )
 
     def test_predictiveness_check_accepts_token_aware_feature_sources(self) -> None:
         summary = self.run_oracle_alpha_predictiveness_check(
@@ -289,6 +346,41 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         for prediction in summary.eval_predictions:
             self.assertEqual(prediction.num_sources, len(prediction.predicted_alpha))
             self.assertAlmostEqual(1.0, sum(prediction.predicted_alpha), places=6)
+
+    def test_predictiveness_check_compares_multiple_candidate_targets(self) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=(
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+            ),
+            candidate_target_names=(
+                "oracle_alpha_logit_vector",
+                "oracle_alpha_depth_type_band_logit_vector",
+            ),
+        )
+
+        self.assertIn(
+            summary.target,
+            (
+                "oracle_alpha_logit_vector",
+                "oracle_alpha_depth_type_band_logit_vector",
+            ),
+        )
+        self.assertEqual(2, len(summary.candidate_feature_summaries))
+        self.assertEqual(
+            {
+                "oracle_alpha_logit_vector",
+                "oracle_alpha_depth_type_band_logit_vector",
+            },
+            {candidate.target for candidate in summary.candidate_feature_summaries},
+        )
 
 
 if __name__ == "__main__":

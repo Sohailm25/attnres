@@ -28,7 +28,7 @@ plans:
       model_family: ridge_regression
       target: oracle_alpha_logit_vector
       features: cached_early_hidden_state_summary_or_prompt_features
-      primary_metric: r_squared
+      primary_metric: mean_predicted_improvement_over_uniform
       secondary_metric: mean_js_divergence
       failure_action: weaken_claim
     mib_anchor:

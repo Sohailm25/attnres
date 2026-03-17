@@ -124,6 +124,8 @@ class OracleAlphaPredictivenessSummary:
     feature_source: str
     tuning_primary_metric: str
     tuning_secondary_metric: str
+    tuning_primary_metric_value: float
+    tuning_secondary_metric_value: float
     selected_regularization_strength: float
     tuning_mean_js_divergence: float
     candidate_feature_summaries: tuple["OracleAlphaPredictivenessFeatureCandidate", ...]
@@ -131,12 +133,15 @@ class OracleAlphaPredictivenessSummary:
     train_run: OracleAlphaRunSummary
     eval_run: OracleAlphaRunSummary
     eval_predictions: tuple[OracleAlphaPredictivenessSequenceResult, ...]
+    predicted_mean_improvement_over_uniform: float
+    oracle_mean_improvement_over_uniform: float
     mib_status: str
     mib_rationale: str
 
 
 @dataclass(frozen=True)
 class OracleAlphaPredictivenessFeatureCandidate:
+    target: str
     feature_source: str
     selected_regularization_strength: float
     tuning_primary_metric: str
@@ -934,25 +939,35 @@ def run_oracle_alpha_stability_suite(
 
 def _tuned_ridge_regularization(
     *,
+    model: HookedTransformer,
+    train_entries: Sequence[PromptEntry],
     train_features: Sequence[Sequence[float]],
     train_targets: Sequence[Sequence[float]],
+    train_uniform_losses: Sequence[float],
     target_name: str,
     source_labels: Sequence[str] | None,
     regularization_grid: Sequence[float],
     primary_metric: str,
     secondary_metric: str,
-) -> tuple[float, PredictivenessSummary]:
+    prepend_bos: bool | None,
+) -> tuple[float, PredictivenessSummary, dict[str, float]]:
     if len(train_features) < 2:
         raise ValueError("at least two training examples are required")
     if not regularization_grid:
         raise ValueError("regularization_grid must not be empty")
+    if len(train_entries) != len(train_features):
+        raise ValueError("train_entries and train_features must match in length")
+    if len(train_uniform_losses) != len(train_features):
+        raise ValueError("train_uniform_losses and train_features must match in length")
 
     best_regularization: float | None = None
     best_summary: PredictivenessSummary | None = None
+    best_metric_overrides: dict[str, float] | None = None
     num_examples = len(train_features)
     for regularization_strength in regularization_grid:
         fold_predictions = []
         fold_targets = []
+        fold_improvements = []
         for holdout_index in range(num_examples):
             fold_train_features = [
                 feature
@@ -981,17 +996,32 @@ def _tuned_ridge_regularization(
                 source_labels=source_labels,
                 train_distributions=fold_train_targets,
             )
+            predicted_loss = _loss_for_predicted_alpha(
+                model=model,
+                entry=train_entries[holdout_index],
+                predicted_alpha=predicted_distribution[0].tolist(),
+                prepend_bos=prepend_bos,
+            )
             fold_predictions.append(predicted_distribution[0].tolist())
             fold_targets.append(train_targets[holdout_index])
+            fold_improvements.append(
+                float(train_uniform_losses[holdout_index]) - predicted_loss
+            )
 
         candidate_summary = predictiveness_summary_from_predictions(
             train_targets=train_targets,
             eval_targets=fold_targets,
             predictions=fold_predictions,
         )
+        candidate_metric_overrides = {
+            "mean_predicted_improvement_over_uniform": (
+                sum(fold_improvements) / len(fold_improvements)
+            )
+        }
         if best_summary is None:
             best_regularization = float(regularization_strength)
             best_summary = candidate_summary
+            best_metric_overrides = candidate_metric_overrides
             continue
 
         primary_delta = compare_predictiveness_metric_values(
@@ -999,10 +1029,12 @@ def _tuned_ridge_regularization(
             left=predictiveness_metric_value(
                 summary=candidate_summary,
                 metric_name=primary_metric,
+                metric_overrides=candidate_metric_overrides,
             ),
             right=predictiveness_metric_value(
                 summary=best_summary,
                 metric_name=primary_metric,
+                metric_overrides=best_metric_overrides,
             ),
         )
         secondary_delta = compare_predictiveness_metric_values(
@@ -1010,10 +1042,12 @@ def _tuned_ridge_regularization(
             left=predictiveness_metric_value(
                 summary=candidate_summary,
                 metric_name=secondary_metric,
+                metric_overrides=candidate_metric_overrides,
             ),
             right=predictiveness_metric_value(
                 summary=best_summary,
                 metric_name=secondary_metric,
+                metric_overrides=best_metric_overrides,
             ),
         )
         if primary_delta > 1e-12 or (
@@ -1021,8 +1055,9 @@ def _tuned_ridge_regularization(
         ):
             best_regularization = float(regularization_strength)
             best_summary = candidate_summary
+            best_metric_overrides = candidate_metric_overrides
 
-    return best_regularization, best_summary
+    return best_regularization, best_summary, best_metric_overrides
 
 
 def run_oracle_alpha_predictiveness_check(
@@ -1036,6 +1071,7 @@ def run_oracle_alpha_predictiveness_check(
     seed: int = 0,
     regularization_grid: Sequence[float] = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
     candidate_feature_sources: Sequence[str] | None = None,
+    candidate_target_names: Sequence[str] | None = None,
     target_name_override: str | None = None,
     prepend_bos: bool | None = None,
 ) -> OracleAlphaPredictivenessSummary:
@@ -1045,6 +1081,10 @@ def run_oracle_alpha_predictiveness_check(
     target_name = target_name_override or predictiveness_plan.target
     if predictiveness_plan.model_family != "ridge_regression":
         raise ValueError("predictiveness plan must use ridge_regression")
+    if target_name_override is not None and candidate_target_names is not None:
+        raise ValueError(
+            "target_name_override and candidate_target_names are mutually exclusive"
+        )
 
     train_entries = list(
         resolve_prompt_entries(
@@ -1073,6 +1113,9 @@ def run_oracle_alpha_predictiveness_check(
     )
     if not feature_sources:
         raise ValueError("candidate_feature_sources must not be empty")
+    target_names = tuple(candidate_target_names or (target_name,))
+    if not target_names:
+        raise ValueError("candidate_target_names must not be empty")
 
     train_run = run_oracle_alpha_collection(
         model=model,
@@ -1099,9 +1142,13 @@ def run_oracle_alpha_predictiveness_check(
 
     train_targets = [list(result.final_alpha) for result in train_run.sequence_results]
     eval_targets = [list(result.final_alpha) for result in eval_run.sequence_results]
+    train_uniform_losses = [
+        result.uniform_loss for result in train_run.sequence_results
+    ]
     source_labels = _shared_source_labels_for_runs((train_run, eval_run))
     candidate_feature_summaries = []
     selected_feature_source = None
+    selected_target_name = None
     selected_regularization_strength = None
     tuning_mean_js_divergence = None
     tuning_primary_metric_value = None
@@ -1117,66 +1164,77 @@ def run_oracle_alpha_predictiveness_check(
             )
             for entry in train_entries
         ]
-        (
-            candidate_regularization_strength,
-            candidate_summary,
-        ) = _tuned_ridge_regularization(
-            train_features=train_features,
-            train_targets=train_targets,
-            target_name=target_name,
-            source_labels=source_labels,
-            regularization_grid=regularization_grid,
-            primary_metric=predictiveness_plan.primary_metric,
-            secondary_metric=predictiveness_plan.secondary_metric,
-        )
-        candidate_tuning_primary_metric_value = predictiveness_metric_value(
-            summary=candidate_summary,
-            metric_name=predictiveness_plan.primary_metric,
-        )
-        candidate_tuning_secondary_metric_value = predictiveness_metric_value(
-            summary=candidate_summary,
-            metric_name=predictiveness_plan.secondary_metric,
-        )
-        candidate_feature_summaries.append(
-            OracleAlphaPredictivenessFeatureCandidate(
-                feature_source=feature_source,
-                selected_regularization_strength=candidate_regularization_strength,
-                tuning_primary_metric=predictiveness_plan.primary_metric,
-                tuning_primary_metric_value=candidate_tuning_primary_metric_value,
-                tuning_secondary_metric=predictiveness_plan.secondary_metric,
-                tuning_secondary_metric_value=candidate_tuning_secondary_metric_value,
-                tuning_r_squared=candidate_summary.r_squared,
-                tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
+        for candidate_target_name in target_names:
+            (
+                candidate_regularization_strength,
+                candidate_summary,
+                candidate_metric_overrides,
+            ) = _tuned_ridge_regularization(
+                model=model,
+                train_entries=train_entries,
+                train_features=train_features,
+                train_targets=train_targets,
+                train_uniform_losses=train_uniform_losses,
+                target_name=candidate_target_name,
+                source_labels=source_labels,
+                regularization_grid=regularization_grid,
+                primary_metric=predictiveness_plan.primary_metric,
+                secondary_metric=predictiveness_plan.secondary_metric,
+                prepend_bos=prepend_bos,
             )
-        )
-        if tuning_primary_metric_value is None:
-            selected_feature_source = feature_source
-            selected_regularization_strength = candidate_regularization_strength
-            tuning_primary_metric_value = candidate_tuning_primary_metric_value
-            tuning_secondary_metric_value = candidate_tuning_secondary_metric_value
-            tuning_mean_js_divergence = candidate_summary.mean_js_divergence
-            selected_train_features = train_features
-            continue
+            candidate_tuning_primary_metric_value = predictiveness_metric_value(
+                summary=candidate_summary,
+                metric_name=predictiveness_plan.primary_metric,
+                metric_overrides=candidate_metric_overrides,
+            )
+            candidate_tuning_secondary_metric_value = predictiveness_metric_value(
+                summary=candidate_summary,
+                metric_name=predictiveness_plan.secondary_metric,
+                metric_overrides=candidate_metric_overrides,
+            )
+            candidate_feature_summaries.append(
+                OracleAlphaPredictivenessFeatureCandidate(
+                    target=candidate_target_name,
+                    feature_source=feature_source,
+                    selected_regularization_strength=candidate_regularization_strength,
+                    tuning_primary_metric=predictiveness_plan.primary_metric,
+                    tuning_primary_metric_value=candidate_tuning_primary_metric_value,
+                    tuning_secondary_metric=predictiveness_plan.secondary_metric,
+                    tuning_secondary_metric_value=candidate_tuning_secondary_metric_value,
+                    tuning_r_squared=candidate_summary.r_squared,
+                    tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
+                )
+            )
+            if tuning_primary_metric_value is None:
+                selected_feature_source = feature_source
+                selected_target_name = candidate_target_name
+                selected_regularization_strength = candidate_regularization_strength
+                tuning_primary_metric_value = candidate_tuning_primary_metric_value
+                tuning_secondary_metric_value = candidate_tuning_secondary_metric_value
+                tuning_mean_js_divergence = candidate_summary.mean_js_divergence
+                selected_train_features = train_features
+                continue
 
-        primary_delta = compare_predictiveness_metric_values(
-            metric_name=predictiveness_plan.primary_metric,
-            left=candidate_tuning_primary_metric_value,
-            right=tuning_primary_metric_value,
-        )
-        secondary_delta = compare_predictiveness_metric_values(
-            metric_name=predictiveness_plan.secondary_metric,
-            left=candidate_tuning_secondary_metric_value,
-            right=tuning_secondary_metric_value,
-        )
-        if primary_delta > 1e-12 or (
-            abs(primary_delta) <= 1e-12 and secondary_delta > 1e-12
-        ):
-            selected_feature_source = feature_source
-            selected_regularization_strength = candidate_regularization_strength
-            tuning_primary_metric_value = candidate_tuning_primary_metric_value
-            tuning_secondary_metric_value = candidate_tuning_secondary_metric_value
-            tuning_mean_js_divergence = candidate_summary.mean_js_divergence
-            selected_train_features = train_features
+            primary_delta = compare_predictiveness_metric_values(
+                metric_name=predictiveness_plan.primary_metric,
+                left=candidate_tuning_primary_metric_value,
+                right=tuning_primary_metric_value,
+            )
+            secondary_delta = compare_predictiveness_metric_values(
+                metric_name=predictiveness_plan.secondary_metric,
+                left=candidate_tuning_secondary_metric_value,
+                right=tuning_secondary_metric_value,
+            )
+            if primary_delta > 1e-12 or (
+                abs(primary_delta) <= 1e-12 and secondary_delta > 1e-12
+            ):
+                selected_feature_source = feature_source
+                selected_target_name = candidate_target_name
+                selected_regularization_strength = candidate_regularization_strength
+                tuning_primary_metric_value = candidate_tuning_primary_metric_value
+                tuning_secondary_metric_value = candidate_tuning_secondary_metric_value
+                tuning_mean_js_divergence = candidate_summary.mean_js_divergence
+                selected_train_features = train_features
 
     eval_features = [
         _feature_vector_for_source(
@@ -1188,7 +1246,7 @@ def run_oracle_alpha_predictiveness_check(
         for entry in eval_entries
     ]
     selected_train_target_matrix = alpha_target_matrix(
-        target_name=target_name,
+        target_name=selected_target_name,
         distributions=train_targets,
         source_labels=source_labels,
     )
@@ -1199,7 +1257,7 @@ def run_oracle_alpha_predictiveness_check(
         regularization_strength=selected_regularization_strength,
     )
     predicted_eval_alphas = alpha_target_predictions_to_distributions(
-        target_name=target_name,
+        target_name=selected_target_name,
         predictions=predicted_eval_targets.tolist(),
         source_labels=source_labels,
         train_distributions=train_targets,
@@ -1234,6 +1292,14 @@ def run_oracle_alpha_predictiveness_check(
                 ),
             )
         )
+    predicted_mean_improvement_over_uniform = sum(
+        prediction.uniform_loss - prediction.predicted_loss
+        for prediction in eval_predictions
+    ) / len(eval_predictions)
+    oracle_mean_improvement_over_uniform = sum(
+        prediction.uniform_loss - prediction.oracle_loss
+        for prediction in eval_predictions
+    ) / len(eval_predictions)
 
     mib_rationale = (
         "omitted for the current development-model runner stage because the "
@@ -1247,12 +1313,14 @@ def run_oracle_alpha_predictiveness_check(
         collection_id=collection_id,
         train_split=predictiveness_plan.train_split,
         eval_split=predictiveness_plan.eval_split,
-        target=target_name,
+        target=selected_target_name,
         control_plan_id=control_plan.plan_id,
         control_registry_id=control_registry.registry_id,
         feature_source=selected_feature_source,
         tuning_primary_metric=predictiveness_plan.primary_metric,
         tuning_secondary_metric=predictiveness_plan.secondary_metric,
+        tuning_primary_metric_value=tuning_primary_metric_value,
+        tuning_secondary_metric_value=tuning_secondary_metric_value,
         selected_regularization_strength=selected_regularization_strength,
         tuning_mean_js_divergence=tuning_mean_js_divergence,
         candidate_feature_summaries=tuple(candidate_feature_summaries),
@@ -1260,6 +1328,8 @@ def run_oracle_alpha_predictiveness_check(
         train_run=train_run,
         eval_run=eval_run,
         eval_predictions=tuple(eval_predictions),
+        predicted_mean_improvement_over_uniform=predicted_mean_improvement_over_uniform,
+        oracle_mean_improvement_over_uniform=oracle_mean_improvement_over_uniform,
         mib_status="omitted",
         mib_rationale=mib_rationale,
     )

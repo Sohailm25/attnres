@@ -6,8 +6,10 @@ from __future__ import annotations
 import argparse
 import contextlib
 from dataclasses import asdict
+from huggingface_hub import logging as huggingface_logging
 import io
 import json
+import logging
 from pathlib import Path
 import sys
 import warnings
@@ -27,6 +29,8 @@ warnings.filterwarnings(
     "ignore",
     message=r"`torch_dtype` is deprecated! Use `dtype` instead!",
 )
+huggingface_logging.set_verbosity_error()
+logging.getLogger("huggingface_hub.file_download").setLevel(logging.CRITICAL)
 transformers_logging.set_verbosity_error()
 
 
@@ -39,6 +43,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--learning-rate", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--target-name", default=None)
+    parser.add_argument("--candidate-target-names", nargs="+", default=None)
     parser.add_argument(
         "--regularization-grid",
         type=float,
@@ -104,6 +109,11 @@ def main() -> int:
         seed=args.seed,
         regularization_grid=tuple(args.regularization_grid),
         candidate_feature_sources=tuple(args.candidate_feature_sources),
+        candidate_target_names=(
+            tuple(args.candidate_target_names)
+            if args.candidate_target_names is not None
+            else None
+        ),
         target_name_override=args.target_name,
     )
     output_path.write_text(json.dumps(asdict(summary), separators=(",", ":")) + "\n")
