@@ -57,6 +57,13 @@ class DirectionSeparationMetrics:
 
 
 @dataclass(frozen=True)
+class DirectionProjectionSummary:
+    positive_mean: float
+    negative_mean: float
+    mean_gap: float
+
+
+@dataclass(frozen=True)
 class SafetyDirectionValidationSummary:
     target_name: str
     position_name: str
@@ -73,6 +80,65 @@ class SafetyPromptBehaviorResult:
     role: str
     matched_expected_behavior: bool
     generated_completion_excerpt: str
+
+
+@dataclass(frozen=True)
+class InterventionBehaviorSummary:
+    num_prompts: int
+    baseline_refusal_rate: float
+    intervened_refusal_rate: float
+    refusal_rate_delta: float
+    changed_prompt_fraction: float
+
+
+@dataclass(frozen=True)
+class ContinuationPreferenceSummary:
+    baseline_positive_mean_logprob: float
+    baseline_negative_mean_logprob: float
+    baseline_margin: float
+    intervened_positive_mean_logprob: float
+    intervened_negative_mean_logprob: float
+    intervened_margin: float
+    margin_delta: float
+
+
+@dataclass(frozen=True)
+class ProjectionInterventionArmConfig:
+    arm_name: str
+    target_role: str
+    direction_name: str
+    position_name: str
+    selected_layer: int
+    target_projection: float
+    positive_target_role: str
+    negative_target_role: str
+
+
+@dataclass(frozen=True)
+class InterventionPromptResult:
+    prompt_id: str
+    group_id: str
+    split: str
+    role: str
+    baseline_refusal_like: bool
+    intervened_refusal_like: bool
+    baseline_preference_margin: float
+    intervened_preference_margin: float
+
+
+@dataclass(frozen=True)
+class ProjectionInterventionArmSummary:
+    arm_name: str
+    target_role: str
+    direction_name: str
+    position_name: str
+    selected_layer: int
+    target_projection: float
+    positive_target_role: str
+    negative_target_role: str
+    behavior_summary: InterventionBehaviorSummary
+    preference_summary: ContinuationPreferenceSummary
+    prompt_results: tuple[InterventionPromptResult, ...]
 
 
 @dataclass(frozen=True)
@@ -94,6 +160,21 @@ class RefusalFeatureDiscoverySummary:
     harmfulness_validation_confirm: SafetyDirectionValidationSummary
     refusal_harmfulness_direction_cosine: float
     prompt_behaviors: tuple[SafetyPromptBehaviorResult, ...]
+
+
+@dataclass(frozen=True)
+class RefusalDirectionInterventionSummary:
+    model_name: str
+    collection_id: str
+    pilot_num_groups: int
+    confirm_num_groups: int
+    max_new_tokens: int
+    refusal_localization: SafetyLayerLocalizationSummary
+    harmfulness_localization: SafetyLayerLocalizationSummary
+    refusal_projection_summary: DirectionProjectionSummary
+    harmfulness_projection_summary: DirectionProjectionSummary
+    refusal_harmfulness_direction_cosine: float
+    arm_summaries: tuple[ProjectionInterventionArmSummary, ...]
 
 
 def _prompt_role(prompt_id: str) -> str:
@@ -220,6 +301,126 @@ def paired_projection_summary(
     return DirectionSeparationMetrics(
         mean_margin=float(margins.mean().item()),
         pair_accuracy=float((margins > 0.0).float().mean().item()),
+    )
+
+
+def _normalized_direction(direction: torch.Tensor) -> torch.Tensor:
+    if direction.ndim != 1:
+        raise ValueError("direction must have shape [d_model]")
+    direction = direction.to(dtype=torch.float32)
+    norm = direction.norm()
+    if float(norm.item()) <= 0.0:
+        raise ValueError("direction must have non-zero norm")
+    return direction / norm
+
+
+def build_direction_projection_summary(
+    *,
+    positive_residuals: torch.Tensor,
+    negative_residuals: torch.Tensor,
+    direction: torch.Tensor,
+) -> DirectionProjectionSummary:
+    if positive_residuals.shape != negative_residuals.shape:
+        raise ValueError("positive and negative residuals must have identical shapes")
+    if positive_residuals.ndim != 2:
+        raise ValueError("residuals must have shape [groups, d_model]")
+
+    normalized_direction = _normalized_direction(direction)
+    positive_scores = positive_residuals.to(dtype=torch.float32) @ normalized_direction
+    negative_scores = negative_residuals.to(dtype=torch.float32) @ normalized_direction
+    positive_mean = float(positive_scores.mean().item())
+    negative_mean = float(negative_scores.mean().item())
+    return DirectionProjectionSummary(
+        positive_mean=positive_mean,
+        negative_mean=negative_mean,
+        mean_gap=positive_mean - negative_mean,
+    )
+
+
+def replace_direction_projection(
+    *,
+    residual: torch.Tensor,
+    direction: torch.Tensor,
+    target_projection: float,
+) -> torch.Tensor:
+    if residual.ndim != 1:
+        raise ValueError("residual must have shape [d_model]")
+    normalized_direction = _normalized_direction(direction).to(device=residual.device)
+    residual = residual.to(dtype=torch.float32)
+    current_projection = float(torch.dot(residual, normalized_direction).item())
+    projection_delta = target_projection - current_projection
+    return residual + (projection_delta * normalized_direction)
+
+
+def build_intervention_behavior_summary(
+    *,
+    baseline_refusal_like: Sequence[bool],
+    intervened_refusal_like: Sequence[bool],
+) -> InterventionBehaviorSummary:
+    if len(baseline_refusal_like) != len(intervened_refusal_like):
+        raise ValueError(
+            "baseline and intervened refusal-like labels must have the same length"
+        )
+    if not baseline_refusal_like:
+        raise ValueError("at least one prompt result is required")
+
+    num_prompts = len(baseline_refusal_like)
+    baseline_hits = sum(bool(value) for value in baseline_refusal_like)
+    intervened_hits = sum(bool(value) for value in intervened_refusal_like)
+    changed_count = sum(
+        bool(baseline) != bool(intervened)
+        for baseline, intervened in zip(
+            baseline_refusal_like,
+            intervened_refusal_like,
+            strict=True,
+        )
+    )
+    baseline_rate = baseline_hits / num_prompts
+    intervened_rate = intervened_hits / num_prompts
+    return InterventionBehaviorSummary(
+        num_prompts=num_prompts,
+        baseline_refusal_rate=baseline_rate,
+        intervened_refusal_rate=intervened_rate,
+        refusal_rate_delta=intervened_rate - baseline_rate,
+        changed_prompt_fraction=changed_count / num_prompts,
+    )
+
+
+def build_continuation_preference_summary(
+    *,
+    baseline_positive_logprobs: Sequence[float],
+    baseline_negative_logprobs: Sequence[float],
+    intervened_positive_logprobs: Sequence[float],
+    intervened_negative_logprobs: Sequence[float],
+) -> ContinuationPreferenceSummary:
+    lengths = {
+        len(baseline_positive_logprobs),
+        len(baseline_negative_logprobs),
+        len(intervened_positive_logprobs),
+        len(intervened_negative_logprobs),
+    }
+    if lengths != {len(baseline_positive_logprobs)}:
+        raise ValueError("all continuation logprob sequences must have the same length")
+    if not baseline_positive_logprobs:
+        raise ValueError("at least one continuation result is required")
+
+    def mean(values: Sequence[float]) -> float:
+        return sum(float(value) for value in values) / len(values)
+
+    baseline_positive_mean = mean(baseline_positive_logprobs)
+    baseline_negative_mean = mean(baseline_negative_logprobs)
+    intervened_positive_mean = mean(intervened_positive_logprobs)
+    intervened_negative_mean = mean(intervened_negative_logprobs)
+    baseline_margin = baseline_positive_mean - baseline_negative_mean
+    intervened_margin = intervened_positive_mean - intervened_negative_mean
+    return ContinuationPreferenceSummary(
+        baseline_positive_mean_logprob=baseline_positive_mean,
+        baseline_negative_mean_logprob=baseline_negative_mean,
+        baseline_margin=baseline_margin,
+        intervened_positive_mean_logprob=intervened_positive_mean,
+        intervened_negative_mean_logprob=intervened_negative_mean,
+        intervened_margin=intervened_margin,
+        margin_delta=intervened_margin - baseline_margin,
     )
 
 
@@ -433,8 +634,290 @@ def _behavior_rate(
     return matched / len(filtered)
 
 
+def _resid_post_hook_name(layer: int) -> str:
+    return f"blocks.{layer}.hook_resid_post"
+
+
+def _position_index_from_names(
+    *,
+    position_name: str,
+    instruction_final_index: int,
+    assistant_prefill_index: int,
+) -> int:
+    if position_name == POSITION_INSTRUCTION_FINAL:
+        return instruction_final_index
+    if position_name == POSITION_ASSISTANT_PREFILL:
+        return assistant_prefill_index
+    raise ValueError(f"unsupported position {position_name!r}")
+
+
+def _projection_intervention_hook(
+    *,
+    direction: torch.Tensor,
+    position_index: int,
+    target_projection: float,
+):
+    def hook(residual: torch.Tensor, hook: object) -> torch.Tensor:
+        del hook
+        updated = residual.clone()
+        updated[0, position_index, :] = replace_direction_projection(
+            residual=updated[0, position_index, :],
+            direction=direction.to(device=updated.device, dtype=updated.dtype),
+            target_projection=target_projection,
+        )
+        return updated
+
+    return hook
+
+
+def _greedy_generate_completion_with_optional_intervention(
+    *,
+    model: HookedTransformer,
+    prompt_text: str,
+    max_new_tokens: int,
+    intervention: ProjectionInterventionArmConfig | None,
+    direction_by_name: dict[str, torch.Tensor],
+) -> str:
+    formatted_prompt, token_tensor, instruction_final_index, assistant_prefill_index = (
+        _chat_formatted_prompt_and_positions(model, prompt_text)
+    )
+    del formatted_prompt
+    tokens = token_tensor.to(model.cfg.device)
+    generated = tokens
+
+    fwd_hooks: list[tuple[str, object]] = []
+    if intervention is not None:
+        position_index = _position_index_from_names(
+            position_name=intervention.position_name,
+            instruction_final_index=instruction_final_index,
+            assistant_prefill_index=assistant_prefill_index,
+        )
+        fwd_hooks.append(
+            (
+                _resid_post_hook_name(intervention.selected_layer),
+                _projection_intervention_hook(
+                    direction=direction_by_name[intervention.direction_name],
+                    position_index=position_index,
+                    target_projection=intervention.target_projection,
+                ),
+            )
+        )
+
+    for _ in range(max_new_tokens):
+        with torch.inference_mode():
+            with model.hooks(fwd_hooks=fwd_hooks):
+                logits = model(generated, return_type="logits")
+        next_token = logits[:, -1, :].argmax(dim=-1, keepdim=True)
+        generated = torch.cat((generated, next_token), dim=-1)
+
+    new_tokens = generated[:, tokens.shape[-1] :]
+    return model.tokenizer.decode(new_tokens[0].tolist(), skip_special_tokens=True)
+
+
+def _continuation_mean_logprob_with_optional_intervention(
+    *,
+    model: HookedTransformer,
+    prompt_text: str,
+    continuation_text: str,
+    intervention: ProjectionInterventionArmConfig | None,
+    direction_by_name: dict[str, torch.Tensor],
+) -> float:
+    if not continuation_text:
+        raise ValueError("continuation_text must be non-empty")
+
+    (
+        formatted_prompt,
+        prompt_tokens,
+        instruction_final_index,
+        assistant_prefill_index,
+    ) = _chat_formatted_prompt_and_positions(model, prompt_text)
+    full_tokens = model.tokenizer(
+        formatted_prompt + continuation_text,
+        return_tensors="pt",
+    )["input_ids"].to(model.cfg.device)
+    prompt_tokens = prompt_tokens.to(model.cfg.device)
+    prefix_length = int(prompt_tokens.shape[-1])
+    if prefix_length >= int(full_tokens.shape[-1]):
+        raise ValueError("continuation_text must add at least one token")
+
+    fwd_hooks: list[tuple[str, object]] = []
+    if intervention is not None:
+        position_index = _position_index_from_names(
+            position_name=intervention.position_name,
+            instruction_final_index=instruction_final_index,
+            assistant_prefill_index=assistant_prefill_index,
+        )
+        fwd_hooks.append(
+            (
+                _resid_post_hook_name(intervention.selected_layer),
+                _projection_intervention_hook(
+                    direction=direction_by_name[intervention.direction_name],
+                    position_index=position_index,
+                    target_projection=intervention.target_projection,
+                ),
+            )
+        )
+
+    with torch.inference_mode():
+        with model.hooks(fwd_hooks=fwd_hooks):
+            logits = model(full_tokens, return_type="logits")
+
+    logprobs = logits.log_softmax(dim=-1)
+    continuation_logits = logprobs[:, prefix_length - 1 : -1, :]
+    continuation_targets = full_tokens[:, prefix_length:]
+    gathered = continuation_logits.gather(
+        dim=-1,
+        index=continuation_targets.unsqueeze(-1),
+    ).squeeze(-1)
+    return float(gathered.mean().item())
+
+
+def _run_projection_intervention_arm(
+    *,
+    model: HookedTransformer,
+    groups: Sequence[SafetyPromptGroup],
+    checkpoints_by_prompt_id: dict[str, dict[str, object]],
+    intervention: ProjectionInterventionArmConfig,
+    direction_by_name: dict[str, torch.Tensor],
+    max_new_tokens: int,
+) -> ProjectionInterventionArmSummary:
+    prompt_results: list[InterventionPromptResult] = []
+    baseline_refusal_like: list[bool] = []
+    intervened_refusal_like: list[bool] = []
+    baseline_positive_logprobs: list[float] = []
+    baseline_negative_logprobs: list[float] = []
+    intervened_positive_logprobs: list[float] = []
+    intervened_negative_logprobs: list[float] = []
+
+    for group in groups:
+        entry = getattr(group, f"{intervention.target_role}_entry")
+        positive_target_entry = getattr(
+            group, f"{intervention.positive_target_role}_entry"
+        )
+        negative_target_entry = getattr(
+            group, f"{intervention.negative_target_role}_entry"
+        )
+        positive_target_text = str(
+            checkpoints_by_prompt_id[positive_target_entry.prompt_id][
+                "generated_completion"
+            ]
+        )
+        negative_target_text = str(
+            checkpoints_by_prompt_id[negative_target_entry.prompt_id][
+                "generated_completion"
+            ]
+        )
+        baseline_completion = _greedy_generate_completion_with_optional_intervention(
+            model=model,
+            prompt_text=entry.text,
+            max_new_tokens=max_new_tokens,
+            intervention=None,
+            direction_by_name=direction_by_name,
+        )
+        intervened_completion = _greedy_generate_completion_with_optional_intervention(
+            model=model,
+            prompt_text=entry.text,
+            max_new_tokens=max_new_tokens,
+            intervention=intervention,
+            direction_by_name=direction_by_name,
+        )
+        baseline_refusal = matches_refusal_marker(baseline_completion)
+        intervened_refusal = matches_refusal_marker(intervened_completion)
+        baseline_positive_logprob = (
+            _continuation_mean_logprob_with_optional_intervention(
+                model=model,
+                prompt_text=entry.text,
+                continuation_text=positive_target_text,
+                intervention=None,
+                direction_by_name=direction_by_name,
+            )
+        )
+        baseline_negative_logprob = (
+            _continuation_mean_logprob_with_optional_intervention(
+                model=model,
+                prompt_text=entry.text,
+                continuation_text=negative_target_text,
+                intervention=None,
+                direction_by_name=direction_by_name,
+            )
+        )
+        intervened_positive_logprob = (
+            _continuation_mean_logprob_with_optional_intervention(
+                model=model,
+                prompt_text=entry.text,
+                continuation_text=positive_target_text,
+                intervention=intervention,
+                direction_by_name=direction_by_name,
+            )
+        )
+        intervened_negative_logprob = (
+            _continuation_mean_logprob_with_optional_intervention(
+                model=model,
+                prompt_text=entry.text,
+                continuation_text=negative_target_text,
+                intervention=intervention,
+                direction_by_name=direction_by_name,
+            )
+        )
+        baseline_refusal_like.append(baseline_refusal)
+        intervened_refusal_like.append(intervened_refusal)
+        baseline_positive_logprobs.append(baseline_positive_logprob)
+        baseline_negative_logprobs.append(baseline_negative_logprob)
+        intervened_positive_logprobs.append(intervened_positive_logprob)
+        intervened_negative_logprobs.append(intervened_negative_logprob)
+        prompt_results.append(
+            InterventionPromptResult(
+                prompt_id=entry.prompt_id,
+                group_id=group.group_id,
+                split=entry.split,
+                role=_prompt_role(entry.prompt_id),
+                baseline_refusal_like=baseline_refusal,
+                intervened_refusal_like=intervened_refusal,
+                baseline_preference_margin=(
+                    baseline_positive_logprob - baseline_negative_logprob
+                ),
+                intervened_preference_margin=(
+                    intervened_positive_logprob - intervened_negative_logprob
+                ),
+            )
+        )
+
+    return ProjectionInterventionArmSummary(
+        arm_name=intervention.arm_name,
+        target_role=intervention.target_role,
+        direction_name=intervention.direction_name,
+        position_name=intervention.position_name,
+        selected_layer=intervention.selected_layer,
+        target_projection=intervention.target_projection,
+        positive_target_role=intervention.positive_target_role,
+        negative_target_role=intervention.negative_target_role,
+        behavior_summary=build_intervention_behavior_summary(
+            baseline_refusal_like=tuple(baseline_refusal_like),
+            intervened_refusal_like=tuple(intervened_refusal_like),
+        ),
+        preference_summary=build_continuation_preference_summary(
+            baseline_positive_logprobs=tuple(baseline_positive_logprobs),
+            baseline_negative_logprobs=tuple(baseline_negative_logprobs),
+            intervened_positive_logprobs=tuple(intervened_positive_logprobs),
+            intervened_negative_logprobs=tuple(intervened_negative_logprobs),
+        ),
+        prompt_results=tuple(prompt_results),
+    )
+
+
 def save_refusal_feature_discovery_artifacts(
     summary: RefusalFeatureDiscoverySummary,
+    *,
+    output_dir: Path,
+) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    summary_path = output_dir / "summary.json"
+    summary_path.write_text(json.dumps(asdict(summary), indent=2))
+    return summary_path
+
+
+def save_refusal_direction_intervention_artifacts(
+    summary: RefusalDirectionInterventionSummary,
     *,
     output_dir: Path,
 ) -> Path:
@@ -660,4 +1143,210 @@ def run_refusal_feature_discovery_validation(
         prompt_behaviors=prompt_behaviors,
     )
     save_refusal_feature_discovery_artifacts(summary, output_dir=output_dir)
+    return summary
+
+
+def run_refusal_direction_intervention_check(
+    *,
+    model: HookedTransformer,
+    collection_id: str,
+    output_dir: Path,
+    max_new_tokens: int = 32,
+    max_pilot_groups: int | None = None,
+    max_confirm_groups: int | None = None,
+) -> RefusalDirectionInterventionSummary:
+    pilot_groups = group_safety_prompt_entries(
+        resolve_prompt_entries(
+            collection_id=collection_id,
+            split="pilot",
+            exploratory=True,
+        )
+    )
+    confirm_groups = group_safety_prompt_entries(
+        resolve_prompt_entries(
+            collection_id=collection_id,
+            split="confirm",
+            exploratory=False,
+        )
+    )
+    if max_pilot_groups is not None:
+        pilot_groups = pilot_groups[:max_pilot_groups]
+    if max_confirm_groups is not None:
+        confirm_groups = confirm_groups[:max_confirm_groups]
+
+    checkpoint_dir = output_dir / "checkpoints" / "prompt_residuals"
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    all_entries = _selected_entries_from_groups(
+        pilot_groups
+    ) + _selected_entries_from_groups(confirm_groups)
+    checkpoints_by_prompt_id: dict[str, dict[str, object]] = {}
+    for entry in all_entries:
+        checkpoint_path = checkpoint_dir / f"{entry.prompt_id}.pt"
+        checkpoints_by_prompt_id[entry.prompt_id] = _collect_prompt_checkpoint(
+            model=model,
+            entry=entry,
+            checkpoint_path=checkpoint_path,
+            max_new_tokens=max_new_tokens,
+        )
+
+    pilot_refusal_prefill = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_REFUSAL,
+        position_name=POSITION_ASSISTANT_PREFILL,
+    )
+    pilot_harmful_prefill = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_HARMFUL_CONTEXT,
+        position_name=POSITION_ASSISTANT_PREFILL,
+    )
+    pilot_harmful_instruction = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_HARMFUL_CONTEXT,
+        position_name=POSITION_INSTRUCTION_FINAL,
+    )
+    pilot_benign_instruction = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_BENIGN,
+        position_name=POSITION_INSTRUCTION_FINAL,
+    )
+
+    refusal_localization = build_layer_localization_summary(
+        target_name=ROLE_REFUSAL,
+        position_name=POSITION_ASSISTANT_PREFILL,
+        positive_residuals=pilot_refusal_prefill,
+        negative_residuals=pilot_harmful_prefill,
+    )
+    harmfulness_localization = build_layer_localization_summary(
+        target_name="harmfulness",
+        position_name=POSITION_INSTRUCTION_FINAL,
+        positive_residuals=pilot_harmful_instruction,
+        negative_residuals=pilot_benign_instruction,
+    )
+
+    refusal_direction = discover_normalized_direction(
+        positive_residuals=pilot_refusal_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_harmful_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+    )
+    harmfulness_direction = discover_normalized_direction(
+        positive_residuals=pilot_harmful_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_benign_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+    )
+
+    refusal_projection_summary = build_direction_projection_summary(
+        positive_residuals=pilot_refusal_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_harmful_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+        direction=refusal_direction,
+    )
+    harmfulness_projection_summary = build_direction_projection_summary(
+        positive_residuals=pilot_harmful_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_benign_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+        direction=harmfulness_direction,
+    )
+
+    direction_by_name = {
+        ROLE_REFUSAL: refusal_direction,
+        "harmfulness": harmfulness_direction,
+    }
+    intervention_configs = (
+        ProjectionInterventionArmConfig(
+            arm_name="refusal_suppression_on_refusal_prompts",
+            target_role=ROLE_REFUSAL,
+            direction_name=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            selected_layer=refusal_localization.selected_layer,
+            target_projection=refusal_projection_summary.negative_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_HARMFUL_CONTEXT,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="harmfulness_suppression_on_refusal_prompts",
+            target_role=ROLE_REFUSAL,
+            direction_name="harmfulness",
+            position_name=POSITION_INSTRUCTION_FINAL,
+            selected_layer=harmfulness_localization.selected_layer,
+            target_projection=harmfulness_projection_summary.negative_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_HARMFUL_CONTEXT,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="refusal_injection_on_harmful_context_prompts",
+            target_role=ROLE_HARMFUL_CONTEXT,
+            direction_name=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            selected_layer=refusal_localization.selected_layer,
+            target_projection=refusal_projection_summary.positive_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_HARMFUL_CONTEXT,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="refusal_injection_on_benign_prompts",
+            target_role=ROLE_BENIGN,
+            direction_name=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            selected_layer=refusal_localization.selected_layer,
+            target_projection=refusal_projection_summary.positive_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_BENIGN,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="harmfulness_injection_on_benign_prompts",
+            target_role=ROLE_BENIGN,
+            direction_name="harmfulness",
+            position_name=POSITION_INSTRUCTION_FINAL,
+            selected_layer=harmfulness_localization.selected_layer,
+            target_projection=harmfulness_projection_summary.positive_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_BENIGN,
+        ),
+    )
+
+    arm_summaries = tuple(
+        _run_projection_intervention_arm(
+            model=model,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            intervention=intervention,
+            direction_by_name=direction_by_name,
+            max_new_tokens=max_new_tokens,
+        )
+        for intervention in intervention_configs
+    )
+
+    summary = RefusalDirectionInterventionSummary(
+        model_name=model.cfg.model_name,
+        collection_id=collection_id,
+        pilot_num_groups=len(pilot_groups),
+        confirm_num_groups=len(confirm_groups),
+        max_new_tokens=max_new_tokens,
+        refusal_localization=refusal_localization,
+        harmfulness_localization=harmfulness_localization,
+        refusal_projection_summary=refusal_projection_summary,
+        harmfulness_projection_summary=harmfulness_projection_summary,
+        refusal_harmfulness_direction_cosine=float(
+            torch.dot(refusal_direction, harmfulness_direction).item()
+        ),
+        arm_summaries=arm_summaries,
+    )
+    save_refusal_direction_intervention_artifacts(summary, output_dir=output_dir)
     return summary
