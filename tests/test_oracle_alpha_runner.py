@@ -174,6 +174,41 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             self.assertGreaterEqual(prediction.predicted_loss, 0.0)
             self.assertGreaterEqual(prediction.js_divergence_to_oracle, 0.0)
 
+    def test_predictiveness_check_accepts_token_aware_feature_sources(self) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=(
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+                "start_mid_end_h_4[t]_resid_post_layer_3_concat",
+            ),
+        )
+
+        self.assertIn(
+            summary.feature_source,
+            (
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+                "start_mid_end_h_4[t]_resid_post_layer_3_concat",
+            ),
+        )
+        self.assertEqual(2, len(summary.candidate_feature_summaries))
+        self.assertTrue(
+            all(
+                candidate.feature_source
+                in (
+                    "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+                    "start_mid_end_h_4[t]_resid_post_layer_3_concat",
+                )
+                for candidate in summary.candidate_feature_summaries
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

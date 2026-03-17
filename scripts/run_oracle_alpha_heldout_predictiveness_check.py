@@ -50,6 +50,8 @@ def parse_args() -> argparse.Namespace:
         default=(
             "mean_pooled_h_1[t]_resid_post_layer_0",
             "mean_pooled_h_4[t]_resid_post_layer_3",
+            "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+            "start_mid_end_h_4[t]_resid_post_layer_3_concat",
             "mean_pooled_h_1[t]_plus_h_4[t]_concat",
             "final_token_h_1[t]_plus_h_4[t]_concat",
         ),

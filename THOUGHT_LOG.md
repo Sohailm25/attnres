@@ -222,3 +222,22 @@ Suggested entry format:
 - Interesting facts:
   - The best tested internal feature summary improved predicted mean loss from `-0.0348` to `-0.0010` nats versus uniform.
   - The confirm-split `R^2` stayed negative (`-0.2314`) even after that improvement.
+
+## [2026-03-16T22:59:08-0500] Token Awareness Helped The Shape More Than The Outcome
+- Stage: implementation
+- Feel of the Experiment: This result is more interesting than the raw delta suggests. Preserving coarse position structure in `h_4[t]` did seem to help the predictor find alpha vectors that look a bit more like the oracle ones, but that shape improvement still refused to turn into a real routed-loss gain.
+- Working Hypotheses:
+  - The predictor may now be close to the right internal-state family but still missing prompt-level context or another summary that matters for which alpha differences are loss-relevant rather than merely distributionally similar.
+- Hunches and Guesses:
+  - The next useful surface is probably a hybrid: some coarse prompt-shape signal plus the best internal-state summary, not another pure `h_4[t]` pooling trick.
+- Predictions:
+  - Prompt-level or hybrid features will either finally flip predicted loss slightly positive or make it obvious that the current sequence-level target is too coarse for this prompt scale.
+- Surprises and Tensions:
+  - `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat` beat plain mean-pooling by pilot JS and confirm JS, which suggests that positional structure matters.
+  - The predicted mean improvement got microscopically worse (`-0.0011` vs `-0.0010` nats), which is a frustrating hint that matching the alpha distribution better is not the same as preserving the useful part of the routing signal.
+- Confidence:
+  - medium that token-awareness is part of the answer
+  - low that internal-state-only summaries are sufficient by themselves at the current prompt scale
+- Interesting facts:
+  - The selected token-aware summary improved confirm `R^2` from `-0.2314` to `-0.2154` and mean JS from `0.2409` to `0.2377`.
+  - Every tested candidate still preferred the strongest ridge penalty (`100.0`), which continues to look like the model saying “be conservative; the feature surface is still weak.”

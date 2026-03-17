@@ -267,6 +267,30 @@ def _resid_post_states(
     return h_1, h_4
 
 
+def _position_thirds_mean_pooled(states: torch.Tensor) -> torch.Tensor:
+    if states.ndim != 2 or states.shape[0] == 0:
+        raise ValueError("states must have shape [pos, d_model] with pos > 0")
+
+    summaries = []
+    last_non_empty_summary = states[0]
+    for chunk in torch.tensor_split(states, 3, dim=0):
+        if chunk.shape[0] == 0:
+            summaries.append(last_non_empty_summary)
+            continue
+        last_non_empty_summary = chunk.mean(dim=0)
+        summaries.append(last_non_empty_summary)
+    return torch.cat(tuple(summaries))
+
+
+def _start_mid_end_summary(states: torch.Tensor) -> torch.Tensor:
+    if states.ndim != 2 or states.shape[0] == 0:
+        raise ValueError("states must have shape [pos, d_model] with pos > 0")
+
+    final_index = states.shape[0] - 1
+    positions = (0, final_index // 2, final_index)
+    return torch.cat(tuple(states[index] for index in positions))
+
+
 def _feature_vector_for_source(
     *,
     model: HookedTransformer,
@@ -283,6 +307,12 @@ def _feature_vector_for_source(
         feature = h_1.mean(dim=0)
     elif feature_source == "mean_pooled_h_4[t]_resid_post_layer_3":
         feature = h_4.mean(dim=0)
+    elif (
+        feature_source == "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat"
+    ):
+        feature = _position_thirds_mean_pooled(h_4)
+    elif feature_source == "start_mid_end_h_4[t]_resid_post_layer_3_concat":
+        feature = _start_mid_end_summary(h_4)
     elif feature_source == "mean_pooled_h_1[t]_plus_h_4[t]_concat":
         feature = torch.cat((h_1.mean(dim=0), h_4.mean(dim=0)))
     elif feature_source == "final_token_h_1[t]_plus_h_4[t]_concat":

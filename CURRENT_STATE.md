@@ -77,10 +77,15 @@
   - `resattn-k2e` compared a small pilot-only set of internal-state summaries and selected `mean_pooled_h_4[t]_resid_post_layer_3` by leave-one-out pilot mean JS
   - the selected `h_4[t]` summary modestly improved the confirm metrics (`R^2 = -0.2314`, mean JS `= 0.2409`, predicted mean improvement `= -0.0010` nats) relative to the `h_1[t]` baseline
   - that is still not strong enough for claim-bearing interpretation, so the next follow-up moves to token-aware or prompt-level feature surfaces rather than declaring the problem solved
+- `known`: the first token-aware feature comparison improved alpha-shape recovery slightly but still did not clear the held-out predictiveness blocker:
+  - `resattn-7ve` added minimal token-aware `h_4[t]` summaries and selected `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat` by pilot leave-one-out mean JS
+  - the selected token-aware summary improved the confirm metrics again (`R^2 = -0.2154`, mean JS `= 0.2377`) relative to the mean-pooled `h_4[t]` baseline
+  - predicted routed loss remained effectively neutral to slightly negative on confirm (`-0.0011` nats versus uniform), so the stronger interpretation gate is still blocked
+  - the next follow-up is prompt-level or hybrid feature surfaces rather than more `h_4[t]`-only pooling variants
 
 ## Immediate Next Steps
 
-1. Test token-aware or prompt-level feature surfaces for oracle-alpha predictiveness in `resattn-7ve`.
+1. Compare prompt-level and hybrid feature surfaces for oracle-alpha predictiveness in `resattn-27f`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
