@@ -1,0 +1,1195 @@
+version: 4
+registry_id: 20260317-pilot-confirm-v4
+created_on: 2026-03-17
+
+defaults:
+  aggregation_unit: sequence
+  null_models:
+    - uniform
+    - random_dirichlet
+    - magnitude_proportional
+    - last_layer_only
+  statistical_tests:
+    - paired_t_test
+    - bootstrap_1000
+  confirmatory_access:
+    exploratory_mode_forbidden: true
+
+collections:
+  oracle_alpha_phase1_v1:
+    lane: oracle_alpha
+    description: >
+      Neutral next-token-completion prompts for early oracle-alpha method tuning on
+      the pilot split and claim-bearing Phase 1 evaluation on the confirmatory split.
+      Version 4 expands the saved surface toward the prereg scale with `96` pilot
+      prompts and `128` confirm prompts while keeping the same held-out split
+      discipline and prompt style as the earlier versions.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+      - unconstrained
+      - top-k
+    prompts:
+      - id: oa-pilot-001
+        split: pilot
+        text: The old library on Maple Street opens every morning at
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Every morning, the old library on Maple Street opens at
+      - id: oa-pilot-002
+        split: pilot
+        text: After the rain stopped, the sidewalk was covered with
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: When the rain ended, the sidewalk was covered with
+      - id: oa-pilot-003
+        split: pilot
+        text: The chef added fresh basil to the bowl of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fresh basil went into the chef's bowl of
+      - id: oa-pilot-004
+        split: pilot
+        text: At the edge of the forest, the campers heard
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Near the forest edge, the campers heard
+      - id: oa-pilot-005
+        split: pilot
+        text: When the train finally arrived, the conductor announced
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Once the train finally arrived, the conductor announced
+      - id: oa-pilot-006
+        split: pilot
+        text: The museum guide pointed toward a room filled with
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: The museum guide gestured toward a room filled with
+      - id: oa-pilot-007
+        split: pilot
+        text: On the kitchen table sat a jar of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A jar sat on the kitchen table filled with
+      - id: oa-pilot-008
+        split: pilot
+        text: As the sun set behind the hills, the valley turned
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: As sunset fell behind the hills, the valley turned
+      - id: oa-pilot-009
+        split: pilot
+        text: The cyclist leaned the bike against the wall beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: The cyclist rested the bike against the wall beside the
+      - id: oa-pilot-010
+        split: pilot
+        text: In the bakery window, rows of pastries sat under
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Rows of pastries sat in the bakery window under
+      - id: oa-pilot-011
+        split: pilot
+        text: The teacher wrote tomorrow's homework on the corner of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: On the corner of the board, the teacher wrote tomorrow's homework for
+      - id: oa-pilot-012
+        split: pilot
+        text: By the riverbank, smooth stones shimmered beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Smooth stones by the riverbank shimmered beneath the
+      - id: oa-pilot-013
+        split: pilot
+        text: The reporter switched on the microphone and asked about the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: After switching on the microphone, the reporter asked about the
+      - id: oa-pilot-014
+        split: pilot
+        text: At the market stall, baskets overflowed with
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Baskets at the market stall were overflowing with
+      - id: oa-pilot-015
+        split: pilot
+        text: The dentist set the tray beside the chair and reached for the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Beside the chair, the dentist set the tray and reached for the
+      - id: oa-pilot-016
+        split: pilot
+        text: As winter approached, the neighbors stacked firewood near the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: With winter approaching, the neighbors stacked firewood near the
+      - id: oa-pilot-017
+        split: pilot
+        text: The actor rehearsed the final scene beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Beneath the lights, the actor rehearsed the final scene under the
+      - id: oa-pilot-018
+        split: pilot
+        text: On the harbor, fishing boats rocked beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fishing boats rocked on the harbor beside the
+      - id: oa-pilot-019
+        split: pilot
+        text: The nurse adjusted the blanket over the patient in the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Over the patient in the ward, the nurse adjusted the blanket on the
+      - id: oa-pilot-020
+        split: pilot
+        text: Before the meeting began, someone placed coffee on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Someone placed coffee on the table before the meeting began near the
+      - id: oa-pilot-021
+        split: pilot
+        text: The photographer stepped back to capture the front of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Stepping back, the photographer tried to capture the front of the
+      - id: oa-pilot-022
+        split: pilot
+        text: At the playground, a red ball rolled under the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A red ball rolled under the slide at the playground beside the
+      - id: oa-pilot-023
+        split: pilot
+        text: The carpenter checked the level across the top of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Across the top of the frame, the carpenter checked the level on the
+      - id: oa-pilot-024
+        split: pilot
+        text: When the bell rang, students hurried into the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: As soon as the bell rang, students hurried into the
+      - id: oa-pilot-025
+        split: pilot
+        text: The pianist lifted the lid and sat down at the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Sitting down, the pianist lifted the lid above the
+      - id: oa-pilot-026
+        split: pilot
+        text: At the campsite, smoke drifted upward from the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Smoke drifted upward from the fire at the campsite near the
+      - id: oa-pilot-027
+        split: pilot
+        text: The florist tied a ribbon around the bouquet of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Around the bouquet of flowers, the florist tied a ribbon on the
+      - id: oa-pilot-028
+        split: pilot
+        text: In the hallway, muddy footprints led toward the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Muddy footprints in the hallway led toward the
+      - id: oa-pilot-029
+        split: pilot
+        text: The barber swept loose hair from around the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Around the chair, the barber swept loose hair from the
+      - id: oa-pilot-030
+        split: pilot
+        text: At sunrise, dew sparkled across the rows of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Across the rows of grass, dew sparkled at sunrise over the
+      - id: oa-pilot-031
+        split: pilot
+        text: The referee held the whistle above the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Above the field, the referee held the whistle over the
+      - id: oa-pilot-032
+        split: pilot
+        text: The waiter set the plates beside a bowl of
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Beside a bowl of soup, the waiter set the plates near the
+      - id: oa-pilot-033
+        split: pilot
+        text: At the locksmith's bench, brass keys glittered beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Brass keys at the locksmith's bench glittered beside the
+      - id: oa-pilot-034
+        split: pilot
+        text: Inside the print shop, fresh posters dried beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fresh posters inside the print shop dried beneath the
+      - id: oa-pilot-035
+        split: pilot
+        text: At the welding table, bright sparks scattered across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Bright sparks at the welding table scattered across the
+      - id: oa-pilot-036
+        split: pilot
+        text: In the machine shop, curls of metal gathered under the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Curls of metal in the machine shop gathered under the
+      - id: oa-pilot-037
+        split: pilot
+        text: At the cobbler's stand, dark polish shone across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Dark polish at the cobbler's stand shone across the
+      - id: oa-pilot-038
+        split: pilot
+        text: Under the jeweler's lamp, a silver chain rested on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A silver chain under the jeweler's lamp rested on the
+      - id: oa-pilot-039
+        split: pilot
+        text: In the upholstery room, striped fabric draped over the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Striped fabric in the upholstery room draped over the
+      - id: oa-pilot-040
+        split: pilot
+        text: At the repair stall, small washers lined up beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Small washers at the repair stall lined up beside the
+      - id: oa-pilot-041
+        split: pilot
+        text: At the ferry terminal, passengers clustered near the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Passengers at the ferry terminal clustered near the
+      - id: oa-pilot-042
+        split: pilot
+        text: In the departure lounge, a child slept against the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A child in the departure lounge slept against the
+      - id: oa-pilot-043
+        split: pilot
+        text: At the tram stop, rainwater pooled under the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Rainwater at the tram stop pooled under the
+      - id: oa-pilot-044
+        split: pilot
+        text: On the station bridge, commuters hurried toward the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Commuters on the station bridge hurried toward the
+      - id: oa-pilot-045
+        split: pilot
+        text: At the rest area, travel mugs stood beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Travel mugs at the rest area stood beside the
+      - id: oa-pilot-046
+        split: pilot
+        text: In the ticket hall, a janitor rolled the cart past the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A janitor in the ticket hall rolled the cart past the
+      - id: oa-pilot-047
+        split: pilot
+        text: At the bus depot, orange vests hung from the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Orange vests at the bus depot hung from the
+      - id: oa-pilot-048
+        split: pilot
+        text: On the ferry deck, loose ropes coiled near the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Loose ropes on the ferry deck coiled near the
+      - id: oa-pilot-049
+        split: pilot
+        text: At the weather station, loose papers fluttered across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Loose papers at the weather station fluttered across the
+      - id: oa-pilot-050
+        split: pilot
+        text: On the ridge trail, damp leaves clung to the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Damp leaves on the ridge trail clung to the
+      - id: oa-pilot-051
+        split: pilot
+        text: By the ranger cabin, muddy boots waited outside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Muddy boots by the ranger cabin waited outside the
+      - id: oa-pilot-052
+        split: pilot
+        text: After the snowfall, thin branches bent over the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Thin branches after the snowfall bent over the
+      - id: oa-pilot-053
+        split: pilot
+        text: Along the creek bank, pale reeds swayed beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Pale reeds along the creek bank swayed beside the
+      - id: oa-pilot-054
+        split: pilot
+        text: In the orchard row, fallen apples gathered beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fallen apples in the orchard row gathered beneath the
+      - id: oa-pilot-055
+        split: pilot
+        text: At the lookout point, a coin-operated viewer faced the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A coin-operated viewer at the lookout point faced the
+      - id: oa-pilot-056
+        split: pilot
+        text: Across the campground, lantern light flickered through the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Lantern light across the campground flickered through the
+      - id: oa-pilot-057
+        split: pilot
+        text: Backstage at the theater, spare costumes hung behind the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Spare costumes backstage at the theater hung behind the
+      - id: oa-pilot-058
+        split: pilot
+        text: Inside the radio booth, a red signal glowed above the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A red signal inside the radio booth glowed above the
+      - id: oa-pilot-059
+        split: pilot
+        text: At the rehearsal room, sheet music lay open across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Sheet music at the rehearsal room lay open across the
+      - id: oa-pilot-060
+        split: pilot
+        text: Beneath the studio lights, powder dust settled on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Powder dust beneath the studio lights settled on the
+      - id: oa-pilot-061
+        split: pilot
+        text: At the film set, a clapboard rested beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A clapboard at the film set rested beside the
+      - id: oa-pilot-062
+        split: pilot
+        text: In the editing suite, coffee rings marked the edge of the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Coffee rings in the editing suite marked the edge of the
+      - id: oa-pilot-063
+        split: pilot
+        text: Near the orchestra pit, a black case leaned against the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A black case near the orchestra pit leaned against the
+      - id: oa-pilot-064
+        split: pilot
+        text: At the photo lab, strips of negatives curled beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Strips of negatives at the photo lab curled beside the
+      - id: oa-pilot-065
+        split: pilot
+        text: At the skate rink, rental helmets stacked beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Rental helmets at the skate rink stacked beside the
+      - id: oa-pilot-066
+        split: pilot
+        text: Near the climbing wall, chalk dust whitened the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Chalk dust near the climbing wall whitened the
+      - id: oa-pilot-067
+        split: pilot
+        text: At the rowing dock, life jackets dried across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Life jackets at the rowing dock dried across the
+      - id: oa-pilot-068
+        split: pilot
+        text: On the practice court, spare balls rolled beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Spare balls on the practice court rolled beneath the
+      - id: oa-pilot-069
+        split: pilot
+        text: At the trailhead kiosk, folded maps sat under the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Folded maps at the trailhead kiosk sat under the
+      - id: oa-pilot-070
+        split: pilot
+        text: Beside the kayak rack, wet paddles rested on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Wet paddles beside the kayak rack rested on the
+      - id: oa-pilot-071
+        split: pilot
+        text: At the archery range, straw fragments covered the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Straw fragments at the archery range covered the
+      - id: oa-pilot-072
+        split: pilot
+        text: Near the tennis fence, a water jug waited by the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A water jug near the tennis fence waited by the
+      - id: oa-pilot-073
+        split: pilot
+        text: At city hall, a stack of folders sat outside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A stack of folders at city hall sat outside the
+      - id: oa-pilot-074
+        split: pilot
+        text: In the permit office, a printer hummed beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A printer in the permit office hummed beside the
+      - id: oa-pilot-075
+        split: pilot
+        text: At the courthouse steps, reporters clustered around the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Reporters at the courthouse steps clustered around the
+      - id: oa-pilot-076
+        split: pilot
+        text: In the survey room, rolled maps leaned against the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Rolled maps in the survey room leaned against the
+      - id: oa-pilot-077
+        split: pilot
+        text: At the records desk, stamped forms slid across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Stamped forms at the records desk slid across the
+      - id: oa-pilot-078
+        split: pilot
+        text: Near the mailroom shelves, padded envelopes filled the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Padded envelopes near the mailroom shelves filled the
+      - id: oa-pilot-079
+        split: pilot
+        text: In the conference lobby, name badges spread across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Name badges in the conference lobby spread across the
+      - id: oa-pilot-080
+        split: pilot
+        text: At the planning office, blueprints lay flat beneath the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Blueprints at the planning office lay flat beneath the
+      - id: oa-pilot-081
+        split: pilot
+        text: In the greenhouse aisle, clay pots warmed beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Clay pots in the greenhouse aisle warmed beside the
+      - id: oa-pilot-082
+        split: pilot
+        text: At the seed table, paper packets fanned across the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Paper packets at the seed table fanned across the
+      - id: oa-pilot-083
+        split: pilot
+        text: By the irrigation ditch, tall grass bent over the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Tall grass by the irrigation ditch bent over the
+      - id: oa-pilot-084
+        split: pilot
+        text: In the barn loft, coiled rope hung from the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Coiled rope in the barn loft hung from the
+      - id: oa-pilot-085
+        split: pilot
+        text: At the milking parlor, steel pails stood near the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Steel pails at the milking parlor stood near the
+      - id: oa-pilot-086
+        split: pilot
+        text: Across the vineyard row, clipped vines twisted around the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Clipped vines across the vineyard row twisted around the
+      - id: oa-pilot-087
+        split: pilot
+        text: At the compost heap, steam rose above the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Steam at the compost heap rose above the
+      - id: oa-pilot-088
+        split: pilot
+        text: Near the tractor shed, muddy gloves dried on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Muddy gloves near the tractor shed dried on the
+      - id: oa-pilot-089
+        split: pilot
+        text: In the soup kitchen, stacked trays waited beside the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Stacked trays in the soup kitchen waited beside the
+      - id: oa-pilot-090
+        split: pilot
+        text: At the coffee roaster, warm beans tumbled into the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Warm beans at the coffee roaster tumbled into the
+      - id: oa-pilot-091
+        split: pilot
+        text: In the clinic hallway, quiet footsteps echoed past the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Quiet footsteps in the clinic hallway echoed past the
+      - id: oa-pilot-092
+        split: pilot
+        text: At the veterinary counter, leashes hung from the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Leashes at the veterinary counter hung from the
+      - id: oa-pilot-093
+        split: pilot
+        text: In the community center, folding chairs circled the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Folding chairs in the community center circled the
+      - id: oa-pilot-094
+        split: pilot
+        text: At the blood drive, clipboards rested on the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Clipboards at the blood drive rested on the
+      - id: oa-pilot-095
+        split: pilot
+        text: In the daycare room, small backpacks lined the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Small backpacks in the daycare room lined the
+      - id: oa-pilot-096
+        split: pilot
+        text: At the shelter desk, labeled boxes filled the
+        tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Labeled boxes at the shelter desk filled the
+      - id: oa-confirm-001
+        split: confirm
+        text: The mechanic wiped grease from the side of the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-002
+        split: confirm
+        text: By late afternoon, the classroom windows were bright with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-003
+        split: confirm
+        text: The gardener planted tulip bulbs beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-004
+        split: confirm
+        text: During the storm, the lighthouse beam swept across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-005
+        split: confirm
+        text: The violinist tightened the bow before playing the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-006
+        split: confirm
+        text: At breakfast, the children argued about who would pour the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-007
+        split: confirm
+        text: The astronomer adjusted the telescope toward the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-008
+        split: confirm
+        text: After the speech ended, the audience rose in
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-009
+        split: confirm
+        text: After the parade passed, confetti covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-010
+        split: confirm
+        text: The librarian stamped the due date inside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-011
+        split: confirm
+        text: On the porch, a pair of boots waited by the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-012
+        split: confirm
+        text: The scientist labeled the sample before placing it in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-013
+        split: confirm
+        text: During rehearsal, the drummer counted in with the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-014
+        split: confirm
+        text: The tailor pinned the hem along the edge of the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-015
+        split: confirm
+        text: Near midnight, the station platform echoed with
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-016
+        split: confirm
+        text: The baker brushed butter across the top of the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-017
+        split: confirm
+        text: At the bicycle workshop, a chain hung beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-018
+        split: confirm
+        text: In the ceramic studio, wet bowls dried near the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-019
+        split: confirm
+        text: At the glass shop, clear shards glittered under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-020
+        split: confirm
+        text: In the sewing room, bright pins spilled across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-021
+        split: confirm
+        text: At the frame shop, narrow strips of wood leaned against the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-022
+        split: confirm
+        text: In the sign shop, bold letters waited on the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-023
+        split: confirm
+        text: At the instrument bench, tiny screws rolled toward the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-024
+        split: confirm
+        text: In the watch repair room, a soft cloth covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-025
+        split: confirm
+        text: At the taxi stand, a luggage cart rattled past the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-026
+        split: confirm
+        text: In the airport hallway, rolling suitcases clicked across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-027
+        split: confirm
+        text: At the harbor gate, crew members stacked crates beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-028
+        split: confirm
+        text: On the sleeper train, reading lamps glowed above the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-029
+        split: confirm
+        text: At the highway tollbooth, loose change flashed in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-030
+        split: confirm
+        text: In the shuttle van, folded umbrellas slid across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-031
+        split: confirm
+        text: At the border checkpoint, orange cones narrowed the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-032
+        split: confirm
+        text: In the parking garage, headlights washed over the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-033
+        split: confirm
+        text: After the thunderstorm, puddles mirrored the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-034
+        split: confirm
+        text: Along the seawall, white foam splashed against the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-035
+        split: confirm
+        text: On the desert trail, fine sand gathered inside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-036
+        split: confirm
+        text: Beneath the picnic shelter, damp benches faced the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-037
+        split: confirm
+        text: By the trail marker, wildflowers nodded in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-038
+        split: confirm
+        text: Across the meadow, low fog drifted over the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-039
+        split: confirm
+        text: Near the fire tower, pine needles covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-040
+        split: confirm
+        text: After the frost, thin ice edged the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-041
+        split: confirm
+        text: In the costume trailer, sequins shimmered under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-042
+        split: confirm
+        text: At the sound booth, a clipboard rested beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-043
+        split: confirm
+        text: In the rehearsal corridor, taped arrows pointed toward the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-044
+        split: confirm
+        text: Behind the concert stage, road cases stood under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-045
+        split: confirm
+        text: At the dance studio, mirrored walls reflected the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-046
+        split: confirm
+        text: In the news van, tangled cables filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-047
+        split: confirm
+        text: At the screening room, empty cups sat under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-048
+        split: confirm
+        text: In the recording studio, a music stand waited beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-049
+        split: confirm
+        text: At the batting cage, loose helmets filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-050
+        split: confirm
+        text: Near the boathouse, folded oars rested on the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-051
+        split: confirm
+        text: On the ski rack, heavy boots hung from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-052
+        split: confirm
+        text: At the swimming meet, bright towels covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-053
+        split: confirm
+        text: Beside the soccer bench, orange bibs spilled from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-054
+        split: confirm
+        text: At the golf cart path, clipped grass lined the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-055
+        split: confirm
+        text: In the locker corridor, damp jerseys swayed from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-056
+        split: confirm
+        text: Near the scoreboard, extension cords crossed the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-057
+        split: confirm
+        text: In the planning meeting, highlighters circled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-058
+        split: confirm
+        text: At the filing room, archive boxes rose to the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-059
+        split: confirm
+        text: In the permit queue, plastic signs marked the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-060
+        split: confirm
+        text: Near the reception desk, a delivery cart blocked the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-061
+        split: confirm
+        text: At the council chamber, microphones lined the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-062
+        split: confirm
+        text: In the copy room, fresh paper filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-063
+        split: confirm
+        text: Beside the security gate, visitor badges sat in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-064
+        split: confirm
+        text: At the zoning office, survey markers covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-065
+        split: confirm
+        text: In the nursery shed, seedling trays stacked above the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-066
+        split: confirm
+        text: By the orchard ladder, wicker baskets waited in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-067
+        split: confirm
+        text: At the feed room, burlap sacks leaned against the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-068
+        split: confirm
+        text: In the henhouse, scattered straw covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-069
+        split: confirm
+        text: Near the greenhouse vent, warm air stirred the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-070
+        split: confirm
+        text: At the apiary fence, white suits hung beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-071
+        split: confirm
+        text: Along the pasture gate, muddy buckets sat under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-072
+        split: confirm
+        text: In the tool barn, pruning shears rested on the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-073
+        split: confirm
+        text: In the vaccination line, paper forms clipped to the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-074
+        split: confirm
+        text: At the dentist counter, wrapped instruments lay beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-075
+        split: confirm
+        text: In the break room, donated coats covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-076
+        split: confirm
+        text: Near the pharmacy window, numbered tickets curled in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-077
+        split: confirm
+        text: At the blood pressure station, a cuff hung over the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-078
+        split: confirm
+        text: In the waiting room, soft voices drifted through the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-079
+        split: confirm
+        text: At the volunteer table, name tags spread across the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-080
+        split: confirm
+        text: In the outreach van, bottled water filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-081
+        split: confirm
+        text: At the marina slip, rubber bumpers knocked against the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-082
+        split: confirm
+        text: On the bait counter, crushed ice cooled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-083
+        split: confirm
+        text: Beside the sail locker, coiled lines filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-084
+        split: confirm
+        text: At the fish market, silver scales clung to the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-085
+        split: confirm
+        text: On the harbor wall, gulls circled above the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-086
+        split: confirm
+        text: Near the boat ramp, wet tire tracks crossed the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-087
+        split: confirm
+        text: At the rowing shed, varnished shells rested on the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-088
+        split: confirm
+        text: Beside the lighthouse stair, salt spray coated the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-089
+        split: confirm
+        text: In the art classroom, paint jars crowded the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-090
+        split: confirm
+        text: At the language lab, headsets waited beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-091
+        split: confirm
+        text: In the science fair hall, poster boards lined the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-092
+        split: confirm
+        text: At the tutoring table, sharpened pencils filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-093
+        split: confirm
+        text: In the archive room, labeled drawers ran beneath the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-094
+        split: confirm
+        text: Near the circulation desk, returned books stacked on the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-095
+        split: confirm
+        text: In the lecture theater, coats draped over the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-096
+        split: confirm
+        text: At the music classroom, instrument cases leaned under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-097
+        split: confirm
+        text: At the tailor counter, measuring tape curled around the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-098
+        split: confirm
+        text: In the flower cooler, white buckets held the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-099
+        split: confirm
+        text: At the hotel desk, brass pens rested on the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-100
+        split: confirm
+        text: In the laundry room, warm sheets spilled from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-101
+        split: confirm
+        text: At the bakery rack, parchment paper lined the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-102
+        split: confirm
+        text: In the candle shop, sweet smoke drifted through the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-103
+        split: confirm
+        text: At the barber station, combs soaked in the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-104
+        split: confirm
+        text: In the antique store, price tags dangled from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-105
+        split: confirm
+        text: In the lab freezer, labeled samples lined the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-106
+        split: confirm
+        text: At the telescope mount, frost ringed the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-107
+        split: confirm
+        text: In the robotics bay, spare wheels rolled beneath the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-108
+        split: confirm
+        text: At the drafting table, tracing paper covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-109
+        split: confirm
+        text: In the server room, cooling fans hummed behind the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-110
+        split: confirm
+        text: Near the test chamber, warning lights flashed above the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-111
+        split: confirm
+        text: At the clean bench, blue gloves rested beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-112
+        split: confirm
+        text: In the specimen room, glass slides stacked under the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-113
+        split: confirm
+        text: At the survey site, colored flags marked the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-114
+        split: confirm
+        text: In the cable trench, damp soil packed around the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-115
+        split: confirm
+        text: At the power shed, yellow helmets hung from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-116
+        split: confirm
+        text: Near the scaffold base, metal planks leaned against the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-117
+        split: confirm
+        text: At the road crew trailer, orange barrels blocked the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-118
+        split: confirm
+        text: In the utility tunnel, water dripped from the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-119
+        split: confirm
+        text: Beside the cement mixer, gray dust covered the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-120
+        split: confirm
+        text: At the signal box, bundled wires disappeared into the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-121
+        split: confirm
+        text: In the parish hall, paper cups filled the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-122
+        split: confirm
+        text: At the flea market, old records leaned beside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-123
+        split: confirm
+        text: In the laundromat, warm socks tumbled through the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-124
+        split: confirm
+        text: At the mountain lodge, firewood stacked by the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-125
+        split: confirm
+        text: In the church vestibule, umbrellas lined the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-126
+        split: confirm
+        text: At the dog park gate, muddy tennis balls collected near the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-127
+        split: confirm
+        text: In the neighborhood workshop, spare hinges rattled inside the
+        tags: [neutral_prefix, natural_text]
+      - id: oa-confirm-128
+        split: confirm
+        text: At the recycling center, flattened boxes slid along the
+        tags: [neutral_prefix, natural_text]
+
+  tool_breakage_factual_recall_v1:
+    lane: tool_breakage
+    description: >
+      Safe factual-recall prompts for the routed-versus-original lens comparison lane.
+      The pilot split is available for prompt curation and plot design, while the
+      confirmatory split is reserved for claim-bearing statistics.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+    prompts:
+      - id: tb-pilot-001
+        split: pilot
+        text: The capital of France is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-002
+        split: pilot
+        text: The largest planet in the Solar System is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-003
+        split: pilot
+        text: The chemical symbol for gold is
+        tags: [factual_recall, safe]
+      - id: tb-pilot-004
+        split: pilot
+        text: The author of Hamlet was
+        tags: [factual_recall, safe]
+      - id: tb-pilot-005
+        split: pilot
+        text: Water freezes at zero degrees on the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-006
+        split: pilot
+        text: The currency used in Japan is the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-007
+        split: pilot
+        text: The tallest land animal is the
+        tags: [factual_recall, safe]
+      - id: tb-pilot-008
+        split: pilot
+        text: A baby dog is called a
+        tags: [factual_recall, safe]
+      - id: tb-confirm-001
+        split: confirm
+        text: The capital of Italy is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-002
+        split: confirm
+        text: The smallest prime number is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-003
+        split: confirm
+        text: The chemical symbol for silver is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-004
+        split: confirm
+        text: The author of Pride and Prejudice was
+        tags: [factual_recall, safe]
+      - id: tb-confirm-005
+        split: confirm
+        text: The currency used in the United Kingdom is the
+        tags: [factual_recall, safe]
+      - id: tb-confirm-006
+        split: confirm
+        text: The process plants use to make sugar from sunlight is
+        tags: [factual_recall, safe]
+      - id: tb-confirm-007
+        split: confirm
+        text: The organ that pumps blood through the body is the
+        tags: [factual_recall, safe]
+      - id: tb-confirm-008
+        split: confirm
+        text: The fastest land animal is the
+        tags: [factual_recall, safe]

@@ -26,7 +26,7 @@ class PromptRegistryTests(unittest.TestCase):
         self.resolve_prompt_entries = resolve_prompt_entries
 
     def test_registry_file_exists(self) -> None:
-        self.assertTrue((ROOT / "prompts" / "registry_v3.yaml").is_file())
+        self.assertTrue((ROOT / "prompts" / "registry_v4.yaml").is_file())
 
     def test_phase1_collection_records_required_metadata(self) -> None:
         registry = self.load_prompt_registry()
@@ -58,9 +58,8 @@ class PromptRegistryTests(unittest.TestCase):
             exploratory=False,
             registry=registry,
         )
-        self.assertGreaterEqual(len(pilot_entries), 32)
-        self.assertEqual(16, len(confirm_entries))
-        self.assertGreater(len(pilot_entries), len(confirm_entries))
+        self.assertEqual(96, len(pilot_entries))
+        self.assertEqual(128, len(confirm_entries))
         self.assertTrue(
             all(entry.split == "pilot" for entry in pilot_entries),
         )

@@ -228,3 +228,10 @@
 - Decision: add a checkpointed campaign layer that persists prompt-level oracle sequence results, feature-vector caches, and the full target-by-regularization tuning grid under one output directory before launching the larger run itself.
 - Rationale: the current `32 / 16` result is strong enough to justify scaling, but the old held-out script was still operationally disposable: no prompt-level resume, no reusable feature cache, and no saved full lambda table. Those would force avoidable reruns once the run became expensive.
 - Impact: the repo now has a reusable prereg-scale launch path, but the actual larger scientific run remains pending on freezing the next saved prompt surface and launching it in `tmux`.
+
+## [2026-03-17T10:28:19-0500] DECISION: Freeze the prereg-scale oracle-alpha prompt surface as `registry_v4` before launching the big run
+
+- Trigger: `resattn-9jq` had the checkpointed campaign infrastructure but still lacked a large saved prompt surface that justified paying the cost of a tmux-backed prereg-scale run.
+- Decision: add `prompts/registry_v4.yaml`, expand the oracle-alpha split to `96` pilot prompts and `128` confirm prompts, and point the default registry loader plus the main experiment config at `registry_v4`.
+- Rationale: a prereg-scale launch is only worth doing once the prompt surface is large enough to answer the near-term sample-size question without immediately forcing another registry bump. Freezing the bigger split now turns the next run into the real campaign rather than another intermediate rehearsal.
+- Impact: the repo now has both pieces required for the launch path: checkpointed campaign infrastructure and a materially larger saved prompt surface. The next `resattn-9jq` step is operational, not architectural.
