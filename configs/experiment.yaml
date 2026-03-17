@@ -80,6 +80,7 @@ evaluation:
 
 registry:
   prompt_registry: prompts/registry_v1.yaml
+  oracle_alpha_control_registry: configs/oracle_alpha_controls_v1.yaml
   pilot_split: pilot
   confirmatory_split: confirm
   confirmatory_access_requires_exploratory_disabled: true

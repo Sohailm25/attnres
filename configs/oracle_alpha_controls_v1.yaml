@@ -1,0 +1,42 @@
+version: 1
+registry_id: 20260316-phase1-controls-v1
+
+plans:
+  oracle_alpha_phase1_v1:
+    collection_id: oracle_alpha_phase1_v1
+    aggregation_unit: sequence
+    bootstrap_resamples: 1000
+    null_models:
+      - uniform
+      - random_dirichlet
+      - magnitude_proportional
+      - last_layer_only
+    stability_suite:
+      restart_seeds: [11, 17, 23, 31, 47]
+      prompt_perturbations:
+        - prompt_resample
+        - prompt_paraphrase
+      report_metrics:
+        - mean_pairwise_js_divergence
+        - topk_jaccard_at_4
+        - top1_source_agreement
+    predictiveness:
+      train_collection_id: oracle_alpha_phase1_v1
+      train_split: pilot
+      eval_collection_id: oracle_alpha_phase1_v1
+      eval_split: confirm
+      model_family: ridge_regression
+      target: oracle_alpha_vector
+      features: cached_early_hidden_state_summary_or_prompt_features
+      primary_metric: r_squared
+      secondary_metric: mean_js_divergence
+      failure_action: weaken_claim
+    mib_anchor:
+      mib_status: planned
+      benchmark: MIB
+      sanity_task: known_circuit_causal_localization_once_oracle_alpha_runner_exists
+      rationale: >
+        The repo already treats MIB as a benchmark anchor when compatible, but it does
+        not yet have an oracle-alpha runner or a local MIB adapter, so the honest
+        current control is a planned sanity benchmark rather than fake wiring.
+      revisit_trigger: after_oracle_alpha_runner_exists

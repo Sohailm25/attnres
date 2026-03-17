@@ -123,3 +123,10 @@
 - Decision: add `prompts/registry_v1.yaml` as the versioned split artifact, load it through `prompts/registry.py`, point the main experiment config at that file, and require confirmatory access to go through a guard that rejects exploratory mode.
 - Rationale: the split only matters scientifically if prompt membership is durable and the confirm set cannot quietly leak into exploratory iterations under time pressure.
 - Impact: the repo now has a reusable source of truth for prompt collections plus a scriptable confirm-only access rule, and the next Phase 1 blocker moves back to identifiability, MIB, and predictiveness controls.
+
+## [2026-03-16T22:40:00-0500] DECISION: Encode the Phase 1 identifiability controls as a saved control registry before any oracle-alpha runner exists
+
+- Trigger: `resattn-9wn` required the stability suite, held-out predictiveness check, and MIB anchor to exist before claim-bearing oracle-alpha work, but the repo still had no oracle-alpha execution harness.
+- Decision: add `configs/oracle_alpha_controls_v1.yaml` plus `validation/oracle_alpha_controls.py` so the current Phase 1 control suite is durable, validated, and importable even before runner code exists.
+- Rationale: the honest current need is methodological discipline, not fake benchmark wiring. Saving the control plan now prevents later runner code from quietly changing bootstrap size, perturbation types, held-out evaluation, or MIB handling.
+- Impact: claim-bearing oracle-alpha work now has a source-of-truth control config, reusable bootstrap/stability/predictiveness helpers, and an explicit `planned` MIB anchor with a revisit trigger once a runner exists.

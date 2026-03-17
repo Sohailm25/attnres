@@ -40,6 +40,7 @@ class ScaffoldTests(unittest.TestCase):
             ".pre-commit-config.yaml",
             "requirements.txt",
             "configs/experiment.yaml",
+            "configs/oracle_alpha_controls_v1.yaml",
             "background-work/PROPOSAL_REVIEW.md",
             "background-work/RESEARCH_POSITIONING.md",
             "background-work/SAFETY_PUBLICATION_POLICY.md",
@@ -180,6 +181,7 @@ class ScaffoldTests(unittest.TestCase):
         config = (ROOT / "configs/experiment.yaml").read_text()
         required_snippets = [
             "prompt_registry: prompts/registry_v1.yaml",
+            "oracle_alpha_control_registry: configs/oracle_alpha_controls_v1.yaml",
             "pilot_split: pilot",
             "confirmatory_split: confirm",
             "confirmatory_access_requires_exploratory_disabled: true",

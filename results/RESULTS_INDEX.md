@@ -16,6 +16,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Phase 1 dependency freeze and first validation slice | infrastructure | partial | `results/infrastructure/20260316-phase1-freeze-and-validation.md` |
 | GPT-2 XL model-backed reconstruction smoke | infrastructure | pass | `results/infrastructure/20260316-gpt2xl-reconstruction-smoke.md` |
 | Pilot/confirmatory prompt registry and confirm-only access guard | infrastructure | pass | `results/infrastructure/20260316-pilot-confirm-registry.md` |
+| Oracle-alpha Phase 1 control suite | infrastructure | pass | `results/infrastructure/20260316-oracle-alpha-control-suite.md` |
 
 ## Oracle Alpha
 
