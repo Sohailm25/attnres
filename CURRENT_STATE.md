@@ -46,14 +46,18 @@
   - uniform-routing agreement with the original logits after the model's final normalization
   - exact shared-final-norm routed-logit decomposition
   - rejection of the per-source normalization shortcut as exact
+- `known`: model-backed Phase 1 reconstruction is now exercised in `validation/model_backed.py` and by the `gpt2-xl` smoke artifact:
+  - cached embedding plus per-sublayer writes reconstruct the final residual exactly when accumulated in forward order
+  - applying `ln_final` plus `unembed` to that reconstructed mixture recovers the original logits exactly on the smoke prompt
+  - per-layer `resid_mid` and `resid_post` identities were exact in the smoke check on local MPS
 
 ## Immediate Next Steps
 
-1. Extend the new validation module from toy linear-algebra checks to model-backed cache extraction and uniform-routing reconstruction on the development model.
-2. Define and save the pilot/confirmatory split before any method-tuning runs.
-3. Add the identifiability, MIB, and out-of-sample predictiveness controls before claim-bearing oracle-alpha optimization.
-4. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
-5. Keep broader oracle-alpha optimization blocked until the model-backed reconstruction and cache-validity checks are green.
+1. Define and save the pilot/confirmatory split before any method-tuning runs.
+2. Add the identifiability, MIB, and out-of-sample predictiveness controls before claim-bearing oracle-alpha optimization.
+3. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
+4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
+5. Keep broader oracle-alpha optimization blocked until the pilot/confirmatory split and the preregistered controls are green.
 
 ## Phase 1 Gate
 

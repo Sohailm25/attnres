@@ -96,6 +96,20 @@
 - Rationale: this is the smallest reproducible Phase 1 slice that makes the environment real, preserves the shared-final-normalization rule, and avoids pretending a model-backed oracle-alpha path exists before the reconstruction math is tested.
 - Impact: future Phase 1 work can assume a pinned, installed scientific environment plus a tested normalization-aware validation module, but model-backed reconstruction on the development model is still the next gate.
 
+## [2026-03-16T21:10:00-0500] DECISION: Treat `wip/resattn-scaffold` as the repo trunk branch and merge completed task branches back into it
+
+- Trigger: Sohail asked that completed task work not remain isolated on long-lived `wip/*` branches.
+- Decision: treat `wip/resattn-scaffold` as the practical trunk branch for this repo and merge completed task branches back into it before considering the work landed.
+- Rationale: leaving scientific and infrastructure work isolated on task branches creates repo drift and weakens continuity across sessions.
+- Impact: future closeout should include merging the active task branch back into `wip/resattn-scaffold`, pushing that branch, and only then treating the task as finished.
+
+## [2026-03-16T21:18:40-0500] DECISION: Sum cached residual writes in forward order for model-backed reconstruction on MPS
+
+- Trigger: the first `gpt2-xl` model-backed smoke showed exact per-layer residual identities and near-exact logits, but the final residual reconstruction still differed by about `8.5e-4` when the residual stack was combined with a bulk reduction.
+- Decision: reconstruct the final residual by accumulating cached write vectors sequentially in forward order rather than calling `residual_stack.sum(dim=0)`.
+- Rationale: the forward-order accumulation matches the model's actual residual update path and avoids spurious reduction-order mismatch on local MPS.
+- Impact: the `gpt2-xl` smoke now reconstructs the final residual and logits exactly, and this sequential accumulation rule should remain the default for claim-bearing reconstruction checks.
+
 ## [2026-03-16T16:20:00-0500] DECISION: Make the thought log explicitly permissive for ongoing reflection and sidecar research
 
 - Trigger: Sohail wanted `THOUGHT_LOG.md` to preserve the model's feel for the experiment, including internal monologue-like reflections, hunches, guesses, and interesting tangential findings.

@@ -9,11 +9,19 @@ from .reconstruction import (
     routed_logits,
     shared_final_norm_logit_contributions,
 )
+from .model_backed import (
+    LayerResidualMetrics,
+    ModelBackedReconstructionMetrics,
+    model_backed_reconstruction_metrics,
+)
 
 __all__ = [
     "CacheReconstructionMetrics",
+    "LayerResidualMetrics",
+    "ModelBackedReconstructionMetrics",
     "cache_reconstruction_metrics",
     "max_abs_difference",
+    "model_backed_reconstruction_metrics",
     "rms_norm",
     "routed_logits",
     "shared_final_norm_logit_contributions",

@@ -92,3 +92,22 @@ Suggested entry format:
 - Interesting facts:
   - `torch.backends.mps.is_available()` is `True` in the pinned `.venv`, so the local backend assumption is now checked rather than merely stated.
   - The current validation tests encode the two easiest mistakes to make: comparing uniform routing to `logits / L` and pretending per-source normalization is exact.
+
+## [2026-03-16T21:18:40-0500] GPT-2 XL Reconstruction Smoke
+- Stage: implementation
+- Feel of the Experiment: This is the first point where the repo felt like it touched the real experiment rather than just the scaffold. The most interesting part was that the bug signal looked scientific at first but turned out to be numerical bookkeeping.
+- Working Hypotheses:
+  - Model-backed reconstruction errors are still more likely to come from accumulation order or hook selection than from final normalization itself.
+- Hunches and Guesses:
+  - The primary Gemma-2 lane will probably surface different problems than GPT-2 XL, likely around architecture quirks rather than the basic residual algebra.
+- Predictions:
+  - The next real blocker is no longer reconstruction math; it is keeping the prompt split and identifiability controls ahead of any tempting oracle-alpha optimization.
+- Surprises and Tensions:
+  - A bulk `sum(dim=0)` on the residual stack produced a false-looking final residual mismatch on MPS even while the logits and layer identities were effectively right.
+  - Reconstructing in the model's actual forward order made the mismatch disappear entirely, which is a useful reminder that “vectorized” is not automatically the right scientific implementation.
+- Confidence:
+  - high in the current GPT-2 XL reconstruction path
+  - medium that Gemma-2 will be comparably clean on the first pass
+- Interesting facts:
+  - The `gpt2-xl` smoke on local MPS ended with exact final-residual and logit reconstruction on the prompt `"The capital of France is"`.
+  - All `resid_mid` and `resid_post` layer identities were exact once the cache filter and summation order matched the actual forward pass.

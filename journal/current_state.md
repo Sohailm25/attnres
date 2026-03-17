@@ -2,7 +2,7 @@
 
 - Date: 2026-03-16
 - Repo: standalone and initialized
-- Branch: `wip/resattn-syn`
+- Branch: `wip/resattn-ydp`
 - Focus: Phase 1 dependency freeze plus reconstruction and cache-validity infrastructure
-- Experimental status: no model runs yet, but the pinned Phase 1 environment and the first reconstruction sanity tests now exist
-- Critical reminder: keep the oracle-alpha framing honest, preserve the deep-research control additions, and extend the current toy validation checks into model-backed reconstruction before broader optimization
+- Experimental status: the pinned Phase 1 environment exists, the toy reconstruction tests are green, and a `gpt2-xl` model-backed reconstruction smoke has now passed on local MPS
+- Critical reminder: keep the oracle-alpha framing honest, preserve the deep-research control additions, and treat the remaining blockers as the prompt split plus the identifiability controls rather than reconstruction math

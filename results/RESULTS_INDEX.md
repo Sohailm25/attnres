@@ -14,6 +14,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
 | Phase 1 dependency freeze and first validation slice | infrastructure | partial | `results/infrastructure/20260316-phase1-freeze-and-validation.md` |
+| GPT-2 XL model-backed reconstruction smoke | infrastructure | pass | `results/infrastructure/20260316-gpt2xl-reconstruction-smoke.md` |
 
 ## Oracle Alpha
 
