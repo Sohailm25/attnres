@@ -51,7 +51,7 @@
   - applying `ln_final` plus `unembed` to that reconstructed mixture recovers the original logits exactly on the smoke prompt
   - per-layer `resid_mid` and `resid_post` identities were exact in the smoke check on local MPS
 - `known`: the pilot/confirmatory split is now saved and code-enforced:
-  - `prompts/registry_v3.yaml` is the current default prompt registry for the inline prompt collections, while `prompts/registry_v1.yaml` and `prompts/registry_v2.yaml` remain as earlier saved prompt-surface snapshots
+  - `prompts/registry_v4.yaml` is the current default prompt registry for the inline prompt collections, while `prompts/registry_v1.yaml`, `prompts/registry_v2.yaml`, and `prompts/registry_v3.yaml` remain as earlier saved prompt-surface snapshots
   - `prompts/registry.py` centralizes registry loading plus the confirm-only access guard
   - `scripts/export_prompt_split.py` refuses confirmatory reads when exploratory mode is enabled
   - the first saved collections cover Phase 1 oracle-alpha prompts and the factual-recall tool-breakage lane
@@ -124,11 +124,16 @@
   - `validation/oracle_alpha_campaign.py` materializes prompt-level oracle checkpoints and feature-vector caches under a reusable campaign output directory
   - `scripts/run_oracle_alpha_predictiveness_campaign.py` launches that checkpointed path and writes a manifest, split-level oracle summaries, and a final predictiveness summary
   - `validation/oracle_alpha_runner.py` now accepts cached per-prompt oracle results and cached feature vectors, and each feature-source/target candidate records the full regularization grid rather than only the selected `lambda`
-  - the repo is now operationally ready for a tmux-backed prereg-scale run once the next saved prompt surface is frozen, but no larger campaign artifact exists yet
+  - the repo is now operationally ready for a tmux-backed prereg-scale run, but no larger campaign artifact exists yet
+- `known`: the next prereg-scale prompt surface is now frozen as `prompts/registry_v4.yaml`:
+  - the default oracle-alpha collection now spans `96` pilot prompts and `128` confirm prompts, with prompt ids `oa-pilot-001` through `oa-pilot-096` and `oa-confirm-001` through `oa-confirm-128`
+  - the tool-breakage factual-recall collection is unchanged from `registry_v3`
+  - the repo has passed the full unit suite and pre-commit hooks after switching the default loader and main config to `registry_v4`
+  - `resattn-9jq` now reduces to one operational step: launch the tmux-backed prereg-scale campaign and verify checkpointing on disk
 
 ## Immediate Next Steps
 
-1. Freeze the next prereg-scale oracle-alpha prompt surface, likely as `registry_v4`, and launch it through the checkpointed campaign runner in `resattn-9jq`.
+1. Launch the prereg-scale oracle-alpha campaign from `registry_v4` through the checkpointed runner in `resattn-9jq`, with tmux, checkpoint verification, and a logged resume path in `SCRATCHPAD.md`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

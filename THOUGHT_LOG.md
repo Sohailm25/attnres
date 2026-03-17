@@ -236,6 +236,24 @@ Suggested entry format:
 - Interesting facts:
   - The current runner already had most of the scientific logic we needed; the missing piece was durable persistence of oracle results, feature vectors, and the full regularization sweep.
 
+## [2026-03-17T10:28:19-0500] Freezing The Bigger Surface Feels Like The Last Pure Setup Step
+- Stage: planning
+- Feel of the Experiment: `registry_v4` feels like the first prompt freeze that is genuinely large enough to justify a real local campaign rather than another confidence-building rehearsal. The main tension now is operational discipline, not experimental indecision.
+- Working Hypotheses:
+  - The next failure mode is more likely to be runtime hygiene or checkpoint sloppiness than another sample-size miss on the method itself.
+- Hunches and Guesses:
+  - If the larger run still comes back positive on held-out routed loss, the next design question will probably shift from “is the signal real?” to “what is the cheapest credible route to the prereg gate and the null comparisons?”
+- Predictions:
+  - The first useful surprise from the campaign will come from per-prompt heterogeneity, not from the top-line mean alone, because the run now has enough confirm prompts to show shape rather than only direction.
+- Surprises and Tensions:
+  - Expanding the prompt surface was mechanically easy compared with the campaign build-out, which is a reminder that the expensive part of local research is often not writing the prompt text but making sure the next run only has to happen once.
+- Confidence:
+  - medium-high that freezing `96 / 128` before launch is the right tradeoff
+  - medium that this is large enough to avoid another near-term registry revision
+- Interesting facts:
+  - The new oracle-alpha ids now span `oa-pilot-001..096` and `oa-confirm-001..128`.
+  - The tool-breakage collection staying fixed is useful: the larger prompt freeze isolates the oracle-alpha scale question without quietly changing another lane.
+
 ## [2026-03-17T09:08:00-0500] The Logit Path Survived A Bigger Split
 - Stage: implementation
 - Feel of the Experiment: This is the first result that feels like a genuine scaling signal instead of a fragile local win. The larger split did not just preserve positivity; it kept the same target family alive on a broader surface.
