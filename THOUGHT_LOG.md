@@ -111,3 +111,21 @@ Suggested entry format:
 - Interesting facts:
   - The `gpt2-xl` smoke on local MPS ended with exact final-residual and logit reconstruction on the prompt `"The capital of France is"`.
   - All `resid_mid` and `resid_post` layer identities were exact once the cache filter and summation order matched the actual forward pass.
+
+## [2026-03-16T22:05:00-0500] Prompt Split Discipline Finally Feels Real
+- Stage: implementation
+- Feel of the Experiment: This was less glamorous than the reconstruction work, but it is probably more protective against bad science. The split stops being a virtue-signal once the confirm prompts are actually trapped behind code.
+- Working Hypotheses:
+  - The first meaningful use of the confirm split will be to keep the Phase 1 loss gate honest while the identifiability controls are still being built.
+- Hunches and Guesses:
+  - The pressure to “just peek” at confirm prompts would have shown up quickly once tool-breakage plots started looking interesting, so this lock is arriving at the right time.
+- Predictions:
+  - The next bugs are more likely to be around registry growth or model-specific dataset plumbing than around the pilot/confirm guard itself.
+- Surprises and Tensions:
+  - The first direct script-level check failed because Python executed the script with `scripts/` rather than the repo root on `sys.path`, which is banal but exactly the kind of infrastructure paper-cut that would have weakened trust in the guard.
+- Confidence:
+  - high in the current split artifact being durable enough for the next Phase 1 slice
+  - medium that the first registry version will remain the final prompt mix for every lane
+- Interesting facts:
+  - The initial registry deliberately covers two near-term needs rather than every future lane: Phase 1 oracle-alpha prompts and factual-recall prompts for tool-breakage.
+  - The guard now exists in both importable Python code and a runnable export script, which lowers the chance that someone bypasses it accidentally.

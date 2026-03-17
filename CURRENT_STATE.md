@@ -50,14 +50,19 @@
   - cached embedding plus per-sublayer writes reconstruct the final residual exactly when accumulated in forward order
   - applying `ln_final` plus `unembed` to that reconstructed mixture recovers the original logits exactly on the smoke prompt
   - per-layer `resid_mid` and `resid_post` identities were exact in the smoke check on local MPS
+- `known`: the pilot/confirmatory split is now saved and code-enforced:
+  - `prompts/registry_v1.yaml` is the versioned prompt registry for the current inline prompt collections
+  - `prompts/registry.py` centralizes registry loading plus the confirm-only access guard
+  - `scripts/export_prompt_split.py` refuses confirmatory reads when exploratory mode is enabled
+  - the first saved collections cover Phase 1 oracle-alpha prompts and the factual-recall tool-breakage lane
 
 ## Immediate Next Steps
 
-1. Define and save the pilot/confirmatory split before any method-tuning runs.
-2. Add the identifiability, MIB, and out-of-sample predictiveness controls before claim-bearing oracle-alpha optimization.
-3. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
-4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
-5. Keep broader oracle-alpha optimization blocked until the pilot/confirmatory split and the preregistered controls are green.
+1. Add the identifiability, MIB, and out-of-sample predictiveness controls before claim-bearing oracle-alpha optimization.
+2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
+3. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
+4. Expand the saved prompt registry when a lane needs a larger or more specialized confirmatory pool, without reopening the access-enforcement rule.
+5. Keep broader oracle-alpha optimization blocked until the preregistered controls are green.
 
 ## Phase 1 Gate
 
@@ -84,6 +89,7 @@ The first execution gate remains the preregistered one from `research/decision-m
 - `known`: any paired t-test gate is interpreted over per-sequence mean deltas unless a stronger dependence-aware method is written down first.
 - `known`: authored control documents and the local paper cache passed a final existence audit on 2026-03-16.
 - `known`: claim-bearing prompts and thresholds must come from a pilot/confirmatory split rather than one blended prompt pool.
+- `known`: the confirm set is now code-locked against exploratory access through the saved prompt registry helpers and export script.
 - `known`: MIB is a benchmark/control anchor, not the project spine; if it is omitted for a lane, that omission must be justified in `DECISIONS.md`.
 - `known`: claim-bearing pattern interpretations require stability and out-of-sample alpha predictiveness on the confirmatory split.
 - `known`: strong Figure 8 or trained-routing match claims require a reproducible proxy or local small-scale depth-mixing reproduction; otherwise Lane 2 is an internal prediction-surface comparison against the published AttnRes Figure 8.

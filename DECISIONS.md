@@ -116,3 +116,10 @@
 - Decision: treat `THOUGHT_LOG.md` as a first-class reflective research log that agents should update whenever useful, and explicitly allow bounded parallel sidecar research when it informs the paper without blocking the main line of work.
 - Rationale: the experiment will be more valuable at the end if it preserves not just validated results but also the evolving intuitions, tensions, and side observations that shaped the work.
 - Impact: future agents should feel free to record research reflections throughout the project and summarize useful sidecar findings in a durable place instead of losing them in ephemeral outputs.
+
+## [2026-03-16T22:05:00-0500] DECISION: Save the pilot/confirmatory split as a versioned prompt registry with a code-level confirm lock
+
+- Trigger: `resattn-gke` was the highest-priority remaining Phase 1 blocker, and the repo still had policy language about a pilot/confirmatory split without any saved artifact or enforcement path.
+- Decision: add `prompts/registry_v1.yaml` as the versioned split artifact, load it through `prompts/registry.py`, point the main experiment config at that file, and require confirmatory access to go through a guard that rejects exploratory mode.
+- Rationale: the split only matters scientifically if prompt membership is durable and the confirm set cannot quietly leak into exploratory iterations under time pressure.
+- Impact: the repo now has a reusable source of truth for prompt collections plus a scriptable confirm-only access rule, and the next Phase 1 blocker moves back to identifiability, MIB, and predictiveness controls.

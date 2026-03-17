@@ -288,6 +288,7 @@ Do not skip ahead to result interpretation until the reconstruction and null-mod
 - Never assume raw logit lens is a clean monotonic baseline; tool-breakage claims must compare routed behavior against the original model and a tuned-lens-aware baseline.
 - Never present a strong tool-breakage claim without a controlled dynamic-routing counterfactual or an equally explicit failure metric.
 - Never run claim-bearing analysis on the same prompts used to tune the method. Use a pilot/confirmatory split for thresholds, prompt curation, and design choices.
+- The confirm set can only be accessed by non-exploratory code paths. Do not rely on social discipline to keep confirmatory prompts clean.
 - Never describe the router as if it consumes a single global `h_1`; the intended object is a per-token early hidden state such as `h_1[t]`, unless a different design is explicitly logged.
 - Never assume refusal-feature labels are already available in GemmaScope. The safety lane requires a discovery and validation phase before causal claims.
 - Never collapse harmfulness and refusal into one safety signal. Localize candidate safety layers first and separate harmfulness-encoding from refusal-execution before causal routing claims.
