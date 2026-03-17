@@ -3,7 +3,7 @@
 **Last updated:** 2026-03-16
 **Updated by:** codex-gpt5
 **Status:** in_progress
-**Current phase:** Phase 0 - Scaffold, prereg alignment, and methodology hardening
+**Current phase:** Phase 1 - Oracle-alpha infrastructure, reconstruction sanity checks, and stability gates
 
 ## Active Thesis Lock
 
@@ -37,14 +37,23 @@
   - clear a stability suite and an out-of-sample predictiveness check before high-claim interpretation
   - require a controlled dynamic-routing counterfactual for the strong tool-breakage claim
   - separate harmfulness from refusal and localize safety layers before mediator-conditioned safety claims
+- `known`: the Phase 1 dependency freeze has landed:
+  - `requirements.txt` now pins the direct stack used for Phase 1
+  - `requirements.lock.txt` captures the fully resolved transitive environment
+  - `.venv` now imports the pinned `torch`, `transformer-lens`, `sae-lens`, `nnsight`, and `pyvene` stack successfully on this machine, and `torch.backends.mps.is_available()` is `True`
+- `known`: the first reconstruction correctness surface now exists in `validation/reconstruction.py` with tests covering:
+  - cache reconstruction from embedding plus sublayer outputs
+  - uniform-routing agreement with the original logits after the model's final normalization
+  - exact shared-final-norm routed-logit decomposition
+  - rejection of the per-source normalization shortcut as exact
 
 ## Immediate Next Steps
 
-1. Freeze dependencies before claim-bearing scientific execution.
+1. Extend the new validation module from toy linear-algebra checks to model-backed cache extraction and uniform-routing reconstruction on the development model.
 2. Define and save the pilot/confirmatory split before any method-tuning runs.
-3. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
-4. Build the first implementation slice for Phase 1 oracle-alpha infrastructure on local MPS.
-5. Start with reconstruction, stability, and cache-validity tests before any claim-bearing oracle-alpha optimization.
+3. Add the identifiability, MIB, and out-of-sample predictiveness controls before claim-bearing oracle-alpha optimization.
+4. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
+5. Keep broader oracle-alpha optimization blocked until the model-backed reconstruction and cache-validity checks are green.
 
 ## Phase 1 Gate
 

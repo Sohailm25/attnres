@@ -22,13 +22,13 @@ This workspace mirrors the operating scaffold used in `~/braindstorms`, but it i
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m unittest tests.test_scaffold
+.venv/bin/pip install -r requirements.lock.txt
+.venv/bin/python -m unittest discover -s tests -p 'test*.py'
 ```
 
 Optional setup:
 
 ```bash
-.venv/bin/pip install -r requirements.txt
 .venv/bin/pre-commit install
 ```
 
@@ -43,4 +43,6 @@ Optional setup:
 - `history/20260316-thesis-alignment-and-gap-closure.md` records how this scaffold was adapted from `braindstorms`.
 - `history/20260316-methodology-gap-audit.md` records the implementation hazards that were found after the second review.
 - `background-work/papers/DOWNLOAD_MANIFEST.md` indexes the local paper cache used throughout the experiment.
+- `requirements.lock.txt` freezes the full transitive Phase 1 environment used in `.venv`.
+- `validation/` holds the normalization-aware reconstruction and cache-validity checks that gate oracle-alpha work.
 - `scripts/download_reference_papers.py` refreshes the local paper cache.

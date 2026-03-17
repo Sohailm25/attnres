@@ -1,23 +1,24 @@
-# ABOUTME: Base dependencies for the depth-routing spectroscopy experiment.
-# ABOUTME: Install into `.venv` and keep local execution compatible with MPS-first workflows.
+# ABOUTME: Pinned direct dependencies for the depth-routing spectroscopy experiment.
+# ABOUTME: Keep Phase 1 reconstruction checks reproducible in `.venv` on local MPS-first workflows.
 
-torch>=2.4
-torchvision
-transformer-lens
-sae-lens
-nnsight
-pyvene
-circuitsvis
-datasets
-wandb
-plotly
-jupyter
-numpy
-pandas
-scipy
-scikit-learn
-matplotlib
-seaborn
-pyyaml
-pre-commit
-ruff
+torch==2.10.0
+torchvision==0.25.0
+# Keep TransformerLens on the stable v2 line until the v3 bridge settles.
+transformer-lens==2.17.0
+sae-lens==6.38.0
+nnsight==0.6.1
+pyvene==0.1.8
+circuitsvis==1.43.3
+datasets==4.8.2
+wandb==0.25.1
+plotly==6.6.0
+jupyter==1.1.1
+numpy==2.4.3
+pandas==3.0.1
+scipy==1.17.1
+scikit-learn==1.8.0
+matplotlib==3.10.8
+seaborn==0.13.2
+pyyaml==6.0.3
+pre-commit==4.5.1
+ruff==0.15.6

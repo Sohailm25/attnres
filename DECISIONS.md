@@ -89,6 +89,13 @@
 - Rationale: the scientific guardrail we actually need here is a stable local prereg plus the pilot/confirmatory split and dependency freeze, not publication on a specific external platform.
 - Impact: active control docs no longer list LessWrong as a prerequisite, and the corresponding tracker issue should be retired.
 
+## [2026-03-16T20:55:51-0500] DECISION: Freeze the local Phase 1 environment in-place and start with backend-agnostic reconstruction checks
+
+- Trigger: `resattn-syn` was the highest-priority ready blocker, and the current `.venv` only contained bootstrap tooling.
+- Decision: pin the direct dependencies in `requirements.txt`, generate a fully resolved `requirements.lock.txt`, install the pinned stack into the existing `.venv`, and implement the first reconstruction/cache-validity checks as pure validation utilities before wiring a model backend.
+- Rationale: this is the smallest reproducible Phase 1 slice that makes the environment real, preserves the shared-final-normalization rule, and avoids pretending a model-backed oracle-alpha path exists before the reconstruction math is tested.
+- Impact: future Phase 1 work can assume a pinned, installed scientific environment plus a tested normalization-aware validation module, but model-backed reconstruction on the development model is still the next gate.
+
 ## [2026-03-16T16:20:00-0500] DECISION: Make the thought log explicitly permissive for ongoing reflection and sidecar research
 
 - Trigger: Sohail wanted `THOUGHT_LOG.md` to preserve the model's feel for the experiment, including internal monologue-like reflections, hunches, guesses, and interesting tangential findings.
