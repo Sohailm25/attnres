@@ -14,6 +14,7 @@ class OracleAlphaControlTests(unittest.TestCase):
         from validation.oracle_alpha_controls import (
             MIBPlan,
             bootstrap_mean_confidence_interval,
+            compare_predictiveness_metric_values,
             linear_alpha_predictiveness_summary,
             load_oracle_alpha_control_registry,
             mean_pairwise_js_divergence,
@@ -24,6 +25,7 @@ class OracleAlphaControlTests(unittest.TestCase):
 
         self.MIBPlan = MIBPlan
         self.bootstrap_mean_confidence_interval = bootstrap_mean_confidence_interval
+        self.compare_predictiveness_metric_values = compare_predictiveness_metric_values
         self.linear_alpha_predictiveness_summary = linear_alpha_predictiveness_summary
         self.load_oracle_alpha_control_registry = load_oracle_alpha_control_registry
         self.mean_pairwise_js_divergence = mean_pairwise_js_divergence
@@ -47,6 +49,26 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.assertIn("runner", plan.mib_anchor.rationale.lower())
         self.assertIn("random_dirichlet", plan.null_models)
         self.assertIn("prompt_paraphrase", plan.stability_suite.prompt_perturbations)
+        self.assertEqual("r_squared", plan.predictiveness.primary_metric)
+        self.assertEqual("mean_js_divergence", plan.predictiveness.secondary_metric)
+
+    def test_compare_predictiveness_metric_values_respects_direction(self) -> None:
+        self.assertGreater(
+            self.compare_predictiveness_metric_values(
+                metric_name="r_squared",
+                left=0.4,
+                right=0.2,
+            ),
+            0.0,
+        )
+        self.assertGreater(
+            self.compare_predictiveness_metric_values(
+                metric_name="mean_js_divergence",
+                left=0.1,
+                right=0.3,
+            ),
+            0.0,
+        )
 
     def test_bootstrap_mean_confidence_interval_contains_observed_mean(self) -> None:
         interval = self.bootstrap_mean_confidence_interval(

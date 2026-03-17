@@ -260,3 +260,22 @@ Suggested entry format:
 - Interesting facts:
   - `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_prompt_shape_scalar_features_v1_concat` nearly tied the best pilot JS (`0.24356` vs `0.24350`) but still lost.
   - The selected feature source and all confirm metrics remained exactly unchanged because none of the new candidates beat the existing baseline.
+
+## [2026-03-16T23:26:00-0500] The Review Mostly Changed What Not To Trust
+- Stage: implementation
+- Feel of the Experiment: The external review did not hand us a clean new predictor. What it really did was make two quiet weaknesses impossible to ignore: the control config was not truly in charge, and the stability evidence was less relevant to the learned object than it looked.
+- Working Hypotheses:
+  - Fixing metric governance and prompt-matched stability will not solve the predictiveness blocker by themselves, but they are worth landing because they remove two ways of fooling ourselves.
+- Hunches and Guesses:
+  - The next actual progress will come from changing the target geometry, not from another layer of summary features or another selection heuristic.
+- Predictions:
+  - Once the predictor is moved into a constrained or compressed target space, the repeated preference for extreme ridge shrinkage should either weaken or become easier to interpret.
+- Surprises and Tensions:
+  - The strongest review point was not “ridge is weak” but “ridge is learning the wrong object in the wrong coordinates,” which feels more actionable than I expected.
+  - The prompt-matched stability fix is satisfying precisely because it is not flashy; it just removes a blind spot.
+- Confidence:
+  - high that the current no-regret infrastructure fixes are correct
+  - medium that the next redesign should start with target parameterization rather than a larger prompt set
+- Interesting facts:
+  - The saved config had already declared `r_squared` primary and `mean_js_divergence` secondary; the problem was that the runner was ignoring that declaration.
+  - Aggregate alpha stability and prompt-matched alpha stability are different objects, and the predictiveness question really needs the latter.

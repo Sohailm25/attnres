@@ -17,6 +17,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | GPT-2 XL model-backed reconstruction smoke | infrastructure | pass | `results/infrastructure/20260316-gpt2xl-reconstruction-smoke.md` |
 | Pilot/confirmatory prompt registry and confirm-only access guard | infrastructure | pass | `results/infrastructure/20260316-pilot-confirm-registry.md` |
 | Oracle-alpha Phase 1 control suite | infrastructure | pass | `results/infrastructure/20260316-oracle-alpha-control-suite.md` |
+| Held-out predictiveness review alignment | infrastructure | pass | `results/infrastructure/20260316-heldout-predictiveness-review-alignment.md` |
 
 ## Oracle Alpha
 
