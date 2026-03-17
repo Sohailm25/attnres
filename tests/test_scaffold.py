@@ -246,6 +246,31 @@ class ScaffoldTests(unittest.TestCase):
         for snippet in required_snippets:
             self.assertIn(snippet, policy)
 
+    def test_thought_log_is_first_class_and_reflective(self) -> None:
+        agents = (ROOT / "AGENTS.md").read_text()
+        thought_log = (ROOT / "THOUGHT_LOG.md").read_text()
+
+        for snippet in [
+            "THOUGHT_LOG.md",
+            "research reflections",
+            "hunches",
+            "predictions",
+            "surprises",
+            "confidence",
+        ]:
+            self.assertIn(snippet, agents)
+
+        for snippet in [
+            "Working Hypotheses",
+            "Hunches and Guesses",
+            "Feel of the Experiment",
+            "Surprises and Tensions",
+            "Predictions",
+            "interesting facts",
+            "not claim-bearing evidence",
+        ]:
+            self.assertIn(snippet, thought_log)
+
     def test_results_scaffold_covers_all_major_lanes(self) -> None:
         expected = {
             "results/infrastructure",

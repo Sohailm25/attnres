@@ -38,7 +38,7 @@ Optional setup:
 - `CURRENT_STATE.md` is the current single-source status file.
 - `DECISIONS.md` records non-trivial decisions and pivots.
 - `SCRATCHPAD.md` is the pre-run and post-run execution log.
-- `THOUGHT_LOG.md` captures open questions, risks, and new ideas.
+- `THOUGHT_LOG.md` captures research reflections: hunches, predictions, surprises, confidence shifts, and the evolving feel of the experiment.
 - `history/PREREG.md` is the preregistered claim and gate document.
 - `history/20260316-thesis-alignment-and-gap-closure.md` records how this scaffold was adapted from `braindstorms`.
 - `history/20260316-methodology-gap-audit.md` records the implementation hazards that were found after the second review.

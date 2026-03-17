@@ -131,11 +131,12 @@ The source material is split across a long master document plus three supporting
 1. `CURRENT_STATE.md`
 2. `journal/current_state.md`
 3. `SCRATCHPAD.md`
-4. `DECISIONS.md`
-5. `history/PREREG.md`
-6. `history/20260316-methodology-gap-audit.md`
-7. `history/20260316-secondary-red-team-review.md`
-8. `history/20260316-deepresearch-review-and-actions.md`
+4. `THOUGHT_LOG.md`
+5. `DECISIONS.md`
+6. `history/PREREG.md`
+7. `history/20260316-methodology-gap-audit.md`
+8. `history/20260316-secondary-red-team-review.md`
+9. `history/20260316-deepresearch-review-and-actions.md`
 
 ### Read by question
 
@@ -170,9 +171,18 @@ Before starting a non-trivial work session:
 During work:
 
 - Update `SCRATCHPAD.md` before and after any substantial local run.
+- Use `THOUGHT_LOG.md` for research reflections throughout the project. Record hunches, predictions, surprises, confidence shifts, and the current feel of the experiment when those would be useful to understand later.
 - Log non-obvious pivots in `DECISIONS.md` before proceeding.
 - Update `CURRENT_STATE.md` whenever the actual project state changes.
 - Register durable outputs in `results/RESULTS_INDEX.md`.
+
+`THOUGHT_LOG.md` rules:
+
+- This file is for research reflections, not claim-bearing evidence.
+- It is the right place for hunches, predictions, guesses, interesting facts, surprising failures, qualitative impressions, and “I think this is going to break because...” notes.
+- It should preserve the feel of the experiment as it unfolds, including confidence changes and competing hypotheses.
+- Keep it high-signal and readable. Write concrete reflections, not filler.
+- Label speculative content clearly enough that no one confuses it with validated findings.
 
 Long-running process rules:
 
@@ -220,10 +230,11 @@ If context is thin or the session resumed after compaction:
 
 1. Read `CURRENT_STATE.md`
 2. Read the latest entries in `SCRATCHPAD.md`
-3. Read the latest entries in `DECISIONS.md`
-4. Read the latest session log in `sessions/`
-5. Check `results/RESULTS_INDEX.md`
-6. Only then return to the research documents
+3. Read the latest entries in `THOUGHT_LOG.md`
+4. Read the latest entries in `DECISIONS.md`
+5. Read the latest session log in `sessions/`
+6. Check `results/RESULTS_INDEX.md`
+7. Only then return to the research documents
 
 Do not re-explore the whole repo if the state docs already answer the question.
 
