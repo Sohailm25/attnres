@@ -87,10 +87,15 @@
   - none of those candidates beat the token-aware `h_4[t]` baseline on pilot leave-one-out mean JS, so the selected feature source and confirm metrics stayed unchanged (`R^2 = -0.2154`, mean JS `= 0.2377`, predicted mean improvement `= -0.0011` nats)
   - this is stronger evidence that the current blocker is not just a missing simple feature family
   - the next follow-up is a bounded design review of the held-out predictiveness setup rather than more small feature-surface additions
+- `known`: the first bounded design-review alignment slice has landed:
+  - `resattn-23p` made the runner consult the saved predictiveness control metrics instead of hard-coding pilot JS selection
+  - the stability suite now reports prompt-matched per-sequence alpha stability alongside the previous aggregate alpha-distribution metrics
+  - this improves methodological alignment but does not change the core blocker: the predictor still learns the raw oracle-alpha simplex target in unconstrained Euclidean ridge coordinates on a very small prompt split
+  - the next follow-up is a constrained-or-compressed predictiveness target rather than another infrastructure-only tweak
 
 ## Immediate Next Steps
 
-1. Review the held-out oracle-alpha predictiveness design after prompt and hybrid features fail in `resattn-23p`.
+1. Implement a constrained or compressed oracle-alpha predictiveness target in `resattn-qq2`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

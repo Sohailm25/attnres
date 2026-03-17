@@ -100,6 +100,23 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         self.assertLessEqual(summary.restart_metrics.mean_top1_source_agreement, 1.0)
         self.assertLessEqual(summary.paraphrase_metrics.mean_top1_source_agreement, 1.0)
         self.assertLessEqual(summary.resample_metrics.mean_top1_source_agreement, 1.0)
+        self.assertGreater(summary.restart_per_sequence_metrics.matched_prompt_count, 0)
+        self.assertGreaterEqual(
+            summary.restart_per_sequence_metrics.mean_pairwise_js_divergence, 0.0
+        )
+        self.assertLessEqual(
+            summary.restart_per_sequence_metrics.mean_top1_source_agreement, 1.0
+        )
+        self.assertIsNotNone(summary.paraphrase_per_sequence_metrics)
+        self.assertGreater(
+            summary.paraphrase_per_sequence_metrics.matched_prompt_count,
+            0,
+        )
+        self.assertIsNotNone(summary.resample_per_sequence_metrics)
+        self.assertGreater(
+            summary.resample_per_sequence_metrics.matched_prompt_count,
+            0,
+        )
 
     def test_different_restart_seeds_change_alpha_outputs(self) -> None:
         first = self.run_oracle_alpha_collection(
@@ -149,6 +166,8 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         self.assertFalse(summary.eval_run.exploratory)
         self.assertEqual(3, summary.predictiveness_summary.num_train_examples)
         self.assertEqual(2, summary.predictiveness_summary.num_eval_examples)
+        self.assertEqual("r_squared", summary.tuning_primary_metric)
+        self.assertEqual("mean_js_divergence", summary.tuning_secondary_metric)
         self.assertEqual(2, len(summary.candidate_feature_summaries))
         self.assertIn(
             summary.feature_source,
@@ -166,6 +185,13 @@ class OracleAlphaRunnerTests(unittest.TestCase):
                     "mean_pooled_h_1[t]_resid_post_layer_0",
                     "mean_pooled_h_1[t]_plus_h_4[t]_concat",
                 )
+                for candidate in summary.candidate_feature_summaries
+            )
+        )
+        self.assertTrue(
+            all(
+                candidate.tuning_primary_metric == "r_squared"
+                and candidate.tuning_secondary_metric == "mean_js_divergence"
                 for candidate in summary.candidate_feature_summaries
             )
         )

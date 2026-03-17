@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONTROL_REGISTRY_PATH = ROOT / "configs" / "oracle_alpha_controls_v1.yaml"
 ALLOWED_SPLITS = {"pilot", "confirm"}
 ALLOWED_MIB_STATUSES = {"planned", "omitted"}
+ALLOWED_PREDICTIVENESS_METRICS = {"r_squared", "mean_js_divergence"}
 
 
 @dataclass(frozen=True)
@@ -88,6 +89,29 @@ class PredictivenessSummary:
     num_eval_examples: int
 
 
+def predictiveness_metric_value(
+    *,
+    summary: PredictivenessSummary,
+    metric_name: str,
+) -> float:
+    if metric_name not in ALLOWED_PREDICTIVENESS_METRICS:
+        raise ValueError(f"unsupported predictiveness metric {metric_name!r}")
+    return float(getattr(summary, metric_name))
+
+
+def compare_predictiveness_metric_values(
+    *,
+    metric_name: str,
+    left: float,
+    right: float,
+) -> float:
+    if metric_name == "r_squared":
+        return left - right
+    if metric_name == "mean_js_divergence":
+        return right - left
+    raise ValueError(f"unsupported predictiveness metric {metric_name!r}")
+
+
 def _validated_predictiveness_arrays(
     *,
     train_features: Sequence[Sequence[float]],
@@ -148,6 +172,28 @@ def _predictiveness_summary_from_predictions(
         mean_js_divergence=mean_js,
         num_train_examples=train_y.shape[0],
         num_eval_examples=eval_y.shape[0],
+    )
+
+
+def predictiveness_summary_from_predictions(
+    *,
+    train_targets: Sequence[Sequence[float]],
+    eval_targets: Sequence[Sequence[float]],
+    predictions: Sequence[Sequence[float]],
+) -> PredictivenessSummary:
+    train_y = np.asarray(train_targets, dtype=float)
+    eval_y = np.asarray(eval_targets, dtype=float)
+    predicted = np.asarray(predictions, dtype=float)
+    if train_y.ndim != 2:
+        raise ValueError("train_targets must be rank-2")
+    if eval_y.ndim != 2 or predicted.ndim != 2:
+        raise ValueError("eval_targets and predictions must be rank-2")
+    if eval_y.shape != predicted.shape:
+        raise ValueError("eval_targets and predictions must share the same shape")
+    return _predictiveness_summary_from_predictions(
+        train_y=train_y,
+        eval_y=eval_y,
+        predictions=predicted,
     )
 
 
@@ -410,6 +456,10 @@ def _validate_predictiveness_plan(
         raise ValueError(f"unknown train collection {plan.train_collection_id!r}")
     if plan.eval_collection_id not in prompt_registry.collections:
         raise ValueError(f"unknown eval collection {plan.eval_collection_id!r}")
+    if plan.primary_metric not in ALLOWED_PREDICTIVENESS_METRICS:
+        raise ValueError(f"unsupported primary metric {plan.primary_metric!r}")
+    if plan.secondary_metric not in ALLOWED_PREDICTIVENESS_METRICS:
+        raise ValueError(f"unsupported secondary metric {plan.secondary_metric!r}")
 
     train_collection = prompt_registry.collections[plan.train_collection_id]
     eval_collection = prompt_registry.collections[plan.eval_collection_id]

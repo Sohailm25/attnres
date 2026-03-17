@@ -17,11 +17,14 @@ from .oracle_alpha_controls import (
     BootstrapMeanInterval,
     PredictivenessSummary,
     bootstrap_mean_confidence_interval,
+    compare_predictiveness_metric_values,
     jensen_shannon_divergence,
     load_oracle_alpha_control_registry,
     mean_pairwise_js_divergence,
     mean_top1_source_agreement,
     mean_topk_jaccard_similarity,
+    predictiveness_metric_value,
+    predictiveness_summary_from_predictions,
     ridge_alpha_predictiveness_summary,
     ridge_regression_predictions,
 )
@@ -67,6 +70,14 @@ class OracleAlphaStabilityMetrics:
 
 
 @dataclass(frozen=True)
+class OracleAlphaPromptMatchedStabilityMetrics:
+    matched_prompt_count: int
+    mean_pairwise_js_divergence: float
+    mean_topk_jaccard_at_4: float
+    mean_top1_source_agreement: float
+
+
+@dataclass(frozen=True)
 class OracleAlphaStabilitySummary:
     model_name: str
     collection_id: str
@@ -77,10 +88,13 @@ class OracleAlphaStabilitySummary:
     base_run: OracleAlphaRunSummary
     restart_runs: tuple[OracleAlphaRunSummary, ...]
     restart_metrics: OracleAlphaStabilityMetrics
+    restart_per_sequence_metrics: OracleAlphaPromptMatchedStabilityMetrics
     paraphrase_run: OracleAlphaRunSummary | None
     paraphrase_metrics: OracleAlphaStabilityMetrics | None
+    paraphrase_per_sequence_metrics: OracleAlphaPromptMatchedStabilityMetrics | None
     resample_runs: tuple[OracleAlphaRunSummary, ...]
     resample_metrics: OracleAlphaStabilityMetrics | None
+    resample_per_sequence_metrics: OracleAlphaPromptMatchedStabilityMetrics | None
 
 
 @dataclass(frozen=True)
@@ -106,6 +120,8 @@ class OracleAlphaPredictivenessSummary:
     control_plan_id: str
     control_registry_id: str
     feature_source: str
+    tuning_primary_metric: str
+    tuning_secondary_metric: str
     selected_regularization_strength: float
     tuning_mean_js_divergence: float
     candidate_feature_summaries: tuple["OracleAlphaPredictivenessFeatureCandidate", ...]
@@ -121,6 +137,11 @@ class OracleAlphaPredictivenessSummary:
 class OracleAlphaPredictivenessFeatureCandidate:
     feature_source: str
     selected_regularization_strength: float
+    tuning_primary_metric: str
+    tuning_primary_metric_value: float
+    tuning_secondary_metric: str
+    tuning_secondary_metric_value: float
+    tuning_r_squared: float
     tuning_mean_js_divergence: float
 
 
@@ -666,6 +687,76 @@ def _aggregate_alpha_distribution(run: OracleAlphaRunSummary) -> list[float]:
     return [value / len(run.sequence_results) for value in aggregate]
 
 
+def _base_prompt_id(prompt_id: str) -> str:
+    return prompt_id.split(":", 1)[0]
+
+
+def _prompt_matched_stability_metrics_for_runs(
+    runs: Sequence[OracleAlphaRunSummary],
+) -> OracleAlphaPromptMatchedStabilityMetrics:
+    if not runs:
+        raise ValueError("at least one run is required")
+
+    per_run_distributions = [
+        {
+            _base_prompt_id(result.prompt_id): list(result.final_alpha)
+            for result in run.sequence_results
+        }
+        for run in runs
+    ]
+    if len(per_run_distributions) == 1:
+        return OracleAlphaPromptMatchedStabilityMetrics(
+            matched_prompt_count=len(per_run_distributions[0]),
+            mean_pairwise_js_divergence=0.0,
+            mean_topk_jaccard_at_4=1.0,
+            mean_top1_source_agreement=1.0,
+        )
+
+    js_values = []
+    topk_values = []
+    top1_values = []
+    matched_prompt_ids: set[str] = set()
+    for left_index in range(len(per_run_distributions)):
+        for right_index in range(left_index + 1, len(per_run_distributions)):
+            left_run = per_run_distributions[left_index]
+            right_run = per_run_distributions[right_index]
+            overlap = sorted(set(left_run) & set(right_run))
+            matched_prompt_ids.update(overlap)
+            for prompt_id in overlap:
+                left_distribution = left_run[prompt_id]
+                right_distribution = right_run[prompt_id]
+                js_values.append(
+                    jensen_shannon_divergence(left_distribution, right_distribution)
+                )
+                topk_values.append(
+                    mean_topk_jaccard_similarity(
+                        (left_distribution, right_distribution),
+                        k=min(4, len(left_distribution)),
+                    )
+                )
+                top1_values.append(
+                    mean_top1_source_agreement(
+                        (left_distribution, right_distribution),
+                    )
+                )
+
+    if not matched_prompt_ids:
+        raise ValueError("runs must share at least one prompt id")
+
+    return OracleAlphaPromptMatchedStabilityMetrics(
+        matched_prompt_count=len(matched_prompt_ids),
+        mean_pairwise_js_divergence=0.0
+        if not js_values
+        else sum(js_values) / len(js_values),
+        mean_topk_jaccard_at_4=1.0
+        if not topk_values
+        else sum(topk_values) / len(topk_values),
+        mean_top1_source_agreement=1.0
+        if not top1_values
+        else sum(top1_values) / len(top1_values),
+    )
+
+
 def _stability_metrics_for_runs(
     runs: Sequence[OracleAlphaRunSummary],
 ) -> OracleAlphaStabilityMetrics:
@@ -743,9 +834,15 @@ def run_oracle_alpha_stability_suite(
     )
     base_run = restart_runs[0]
     restart_metrics = _stability_metrics_for_runs(restart_runs)
+    restart_per_sequence_metrics = _prompt_matched_stability_metrics_for_runs(
+        restart_runs
+    )
 
     paraphrase_run: OracleAlphaRunSummary | None = None
     paraphrase_metrics: OracleAlphaStabilityMetrics | None = None
+    paraphrase_per_sequence_metrics: OracleAlphaPromptMatchedStabilityMetrics | None = (
+        None
+    )
     if "prompt_paraphrase" in control_plan.stability_suite.prompt_perturbations:
         paraphrase_entries = [
             perturb_prompt_entry(entry, perturbation_name="prompt_paraphrase")
@@ -763,9 +860,15 @@ def run_oracle_alpha_stability_suite(
             prepend_bos=prepend_bos,
         )
         paraphrase_metrics = _stability_metrics_for_runs((base_run, paraphrase_run))
+        paraphrase_per_sequence_metrics = _prompt_matched_stability_metrics_for_runs(
+            (base_run, paraphrase_run)
+        )
 
     resample_runs: tuple[OracleAlphaRunSummary, ...] = ()
     resample_metrics: OracleAlphaStabilityMetrics | None = None
+    resample_per_sequence_metrics: OracleAlphaPromptMatchedStabilityMetrics | None = (
+        None
+    )
     if "prompt_resample" in control_plan.stability_suite.prompt_perturbations:
         if len(base_entries) < 2:
             raise ValueError("prompt resampling requires at least two base entries")
@@ -796,6 +899,9 @@ def run_oracle_alpha_stability_suite(
             for resample_index in range(resample_count)
         )
         resample_metrics = _stability_metrics_for_runs((base_run, *resample_runs))
+        resample_per_sequence_metrics = _prompt_matched_stability_metrics_for_runs(
+            (base_run, *resample_runs)
+        )
 
     return OracleAlphaStabilitySummary(
         model_name=model.cfg.model_name,
@@ -807,10 +913,13 @@ def run_oracle_alpha_stability_suite(
         base_run=base_run,
         restart_runs=restart_runs,
         restart_metrics=restart_metrics,
+        restart_per_sequence_metrics=restart_per_sequence_metrics,
         paraphrase_run=paraphrase_run,
         paraphrase_metrics=paraphrase_metrics,
+        paraphrase_per_sequence_metrics=paraphrase_per_sequence_metrics,
         resample_runs=resample_runs,
         resample_metrics=resample_metrics,
+        resample_per_sequence_metrics=resample_per_sequence_metrics,
     )
 
 
@@ -819,17 +928,20 @@ def _tuned_ridge_regularization(
     train_features: Sequence[Sequence[float]],
     train_targets: Sequence[Sequence[float]],
     regularization_grid: Sequence[float],
-) -> tuple[float, float]:
+    primary_metric: str,
+    secondary_metric: str,
+) -> tuple[float, PredictivenessSummary]:
     if len(train_features) < 2:
         raise ValueError("at least two training examples are required")
     if not regularization_grid:
         raise ValueError("regularization_grid must not be empty")
 
     best_regularization: float | None = None
-    best_mean_js: float | None = None
+    best_summary: PredictivenessSummary | None = None
     num_examples = len(train_features)
     for regularization_strength in regularization_grid:
-        holdout_js_values = []
+        fold_predictions = []
+        fold_targets = []
         for holdout_index in range(num_examples):
             fold_train_features = [
                 feature
@@ -846,20 +958,49 @@ def _tuned_ridge_regularization(
                 train_targets=fold_train_targets,
                 eval_features=[train_features[holdout_index]],
                 regularization_strength=regularization_strength,
-            )[0].tolist()
-            holdout_js_values.append(
-                jensen_shannon_divergence(
-                    _normalize_predicted_alpha(predicted),
-                    train_targets[holdout_index],
-                )
             )
+            fold_predictions.append(predicted[0].tolist())
+            fold_targets.append(train_targets[holdout_index])
 
-        mean_js = sum(holdout_js_values) / len(holdout_js_values)
-        if best_mean_js is None or mean_js < best_mean_js:
+        candidate_summary = predictiveness_summary_from_predictions(
+            train_targets=train_targets,
+            eval_targets=fold_targets,
+            predictions=fold_predictions,
+        )
+        if best_summary is None:
             best_regularization = float(regularization_strength)
-            best_mean_js = mean_js
+            best_summary = candidate_summary
+            continue
 
-    return best_regularization, best_mean_js
+        primary_delta = compare_predictiveness_metric_values(
+            metric_name=primary_metric,
+            left=predictiveness_metric_value(
+                summary=candidate_summary,
+                metric_name=primary_metric,
+            ),
+            right=predictiveness_metric_value(
+                summary=best_summary,
+                metric_name=primary_metric,
+            ),
+        )
+        secondary_delta = compare_predictiveness_metric_values(
+            metric_name=secondary_metric,
+            left=predictiveness_metric_value(
+                summary=candidate_summary,
+                metric_name=secondary_metric,
+            ),
+            right=predictiveness_metric_value(
+                summary=best_summary,
+                metric_name=secondary_metric,
+            ),
+        )
+        if primary_delta > 1e-12 or (
+            abs(primary_delta) <= 1e-12 and secondary_delta > 1e-12
+        ):
+            best_regularization = float(regularization_strength)
+            best_summary = candidate_summary
+
+    return best_regularization, best_summary
 
 
 def run_oracle_alpha_predictiveness_check(
@@ -938,6 +1079,8 @@ def run_oracle_alpha_predictiveness_check(
     selected_feature_source = None
     selected_regularization_strength = None
     tuning_mean_js_divergence = None
+    tuning_primary_metric_value = None
+    tuning_secondary_metric_value = None
     selected_train_features = None
     for feature_source in feature_sources:
         train_features = [
@@ -951,26 +1094,61 @@ def run_oracle_alpha_predictiveness_check(
         ]
         (
             candidate_regularization_strength,
-            candidate_tuning_mean_js,
+            candidate_summary,
         ) = _tuned_ridge_regularization(
             train_features=train_features,
             train_targets=train_targets,
             regularization_grid=regularization_grid,
+            primary_metric=predictiveness_plan.primary_metric,
+            secondary_metric=predictiveness_plan.secondary_metric,
+        )
+        candidate_tuning_primary_metric_value = predictiveness_metric_value(
+            summary=candidate_summary,
+            metric_name=predictiveness_plan.primary_metric,
+        )
+        candidate_tuning_secondary_metric_value = predictiveness_metric_value(
+            summary=candidate_summary,
+            metric_name=predictiveness_plan.secondary_metric,
         )
         candidate_feature_summaries.append(
             OracleAlphaPredictivenessFeatureCandidate(
                 feature_source=feature_source,
                 selected_regularization_strength=candidate_regularization_strength,
-                tuning_mean_js_divergence=candidate_tuning_mean_js,
+                tuning_primary_metric=predictiveness_plan.primary_metric,
+                tuning_primary_metric_value=candidate_tuning_primary_metric_value,
+                tuning_secondary_metric=predictiveness_plan.secondary_metric,
+                tuning_secondary_metric_value=candidate_tuning_secondary_metric_value,
+                tuning_r_squared=candidate_summary.r_squared,
+                tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
             )
         )
-        if (
-            tuning_mean_js_divergence is None
-            or candidate_tuning_mean_js < tuning_mean_js_divergence
+        if tuning_primary_metric_value is None:
+            selected_feature_source = feature_source
+            selected_regularization_strength = candidate_regularization_strength
+            tuning_primary_metric_value = candidate_tuning_primary_metric_value
+            tuning_secondary_metric_value = candidate_tuning_secondary_metric_value
+            tuning_mean_js_divergence = candidate_summary.mean_js_divergence
+            selected_train_features = train_features
+            continue
+
+        primary_delta = compare_predictiveness_metric_values(
+            metric_name=predictiveness_plan.primary_metric,
+            left=candidate_tuning_primary_metric_value,
+            right=tuning_primary_metric_value,
+        )
+        secondary_delta = compare_predictiveness_metric_values(
+            metric_name=predictiveness_plan.secondary_metric,
+            left=candidate_tuning_secondary_metric_value,
+            right=tuning_secondary_metric_value,
+        )
+        if primary_delta > 1e-12 or (
+            abs(primary_delta) <= 1e-12 and secondary_delta > 1e-12
         ):
             selected_feature_source = feature_source
             selected_regularization_strength = candidate_regularization_strength
-            tuning_mean_js_divergence = candidate_tuning_mean_js
+            tuning_primary_metric_value = candidate_tuning_primary_metric_value
+            tuning_secondary_metric_value = candidate_tuning_secondary_metric_value
+            tuning_mean_js_divergence = candidate_summary.mean_js_divergence
             selected_train_features = train_features
 
     eval_features = [
@@ -1038,6 +1216,8 @@ def run_oracle_alpha_predictiveness_check(
         control_plan_id=control_plan.plan_id,
         control_registry_id=control_registry.registry_id,
         feature_source=selected_feature_source,
+        tuning_primary_metric=predictiveness_plan.primary_metric,
+        tuning_secondary_metric=predictiveness_plan.secondary_metric,
         selected_regularization_strength=selected_regularization_strength,
         tuning_mean_js_divergence=tuning_mean_js_divergence,
         candidate_feature_summaries=tuple(candidate_feature_summaries),

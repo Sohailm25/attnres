@@ -179,3 +179,10 @@
 - Decision: keep `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat` as the best tested feature source, treat the prompt-level and hybrid comparisons as failed to improve the blocker, and move next to a bounded design review of the held-out predictiveness setup.
 - Rationale: none of the new candidates beat the existing token-aware baseline on pilot leave-one-out JS, so the confirm artifact stayed effectively unchanged. That makes more small feature-family additions look low-yield relative to checking whether the target object, tuning metric, sample size, or predictor family is the real problem.
 - Impact: the next predictiveness issue should review the sequence-level alpha target, the ridge-regression choice, the `8`-prompt pilot/confirm scale, and the alignment between pilot JS tuning and confirm routed-loss recovery before further runner changes.
+
+## [2026-03-16T23:26:00-0500] DECISION: Land the no-regret design-review fixes before changing predictiveness geometry
+
+- Trigger: the external review of the held-out predictiveness setup identified two implementation mismatches that were clearly worth fixing before any deeper predictor redesign: the runner was not actually governed by the saved predictiveness metrics, and the stability suite only reported aggregate alpha stability.
+- Decision: keep the current predictor family for now, but make the runner consult the saved primary/secondary predictiveness metrics and add prompt-matched per-sequence alpha stability metrics for restart/paraphrase/resample runs.
+- Rationale: these changes improve methodological honesty without prejudging the larger redesign choice between constrained alpha coordinates and compressed target objects.
+- Impact: the next real redesign step can now focus on geometry and target formulation rather than on config drift or overly weak stability reporting.
