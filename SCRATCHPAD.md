@@ -298,3 +298,28 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: loss-aware pilot tuning still preferred the raw-simplex target (`pilot mean improvement=+0.0990` nats) over the full-logit and compressed-logit alternatives, so the confirm result reverted to the same slightly negative raw-simplex baseline rather than recovering the earlier positive full-logit confirm result
 - Next step: stop treating target/regularization selection as the main blocker and move to `resattn-7mb` for a more fundamental predictiveness redesign
+
+## [2026-03-17T08:48:17-0500] PRE-RUN: development-model oracle-alpha pilot expansion check
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_heldout_predictiveness_check.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-pilot-expansion-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector oracle_alpha_depth_type_band_logit_vector`
+- Config: `model=gpt2-xl`, `prompt_registry=prompts/registry_v2.yaml`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot (16 prompts)`, `eval_split=confirm (8 prompts)`, `selection_metric=pilot_leave_one_out_mean_predicted_improvement_over_uniform`, `secondary_metric=mean_js_divergence`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`, `device=mps fallback cpu`
+- What I'm testing: whether doubling the saved oracle-alpha pilot surface is enough for the loss-aware target comparison to select a better-generalizing predictiveness path without changing the confirm set or predictor family.
+- Expected outcome: the run completes on the expanded pilot split, writes a directly comparable artifact, and either stabilizes target selection away from the raw-simplex negative baseline or shows that pilot size alone is not the main blocker.
+- Expected duration: ~15-25 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-pilot-expansion-check.json`
+- Resume command: rerun the command above
+- Main confound to watch: the new pilot prompts are still inline prompts rather than a benchmark dataset, so the larger split could help by smoothing idiosyncratic prompt selection rather than by fixing the target object itself.
+- Implementation verified: YES - `tests/test_prompt_registry.py` and `tests/test_scaffold.py` pass with `prompts/registry_v2.yaml` before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T08:52:22-0500] POST-RUN: development-model oracle-alpha pilot expansion check
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-pilot-expansion-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector oracle_alpha_depth_type_band_logit_vector`
+- Outcome: PARTIAL
+- Key metric: selected target `oracle_alpha_logit_vector`; `confirm_r_squared=-0.2616`; `confirm_mean_js=0.2377`; `predicted_mean_improvement=+0.0857` nats versus `oracle_mean_improvement=+1.3409`
+- Artifacts saved: `results/infrastructure/20260317-pilot-confirm-registry-v2.md`, `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-pilot-expansion-check.json`, `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-pilot-expansion-check.md`
+- Latest checkpoint: none
+- Anomalies: none
+- Next step: follow `resattn-0vx` to scale the `registry_v2` logit-target path beyond the current `16 / 8` slice

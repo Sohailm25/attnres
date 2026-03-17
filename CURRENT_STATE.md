@@ -51,7 +51,7 @@
   - applying `ln_final` plus `unembed` to that reconstructed mixture recovers the original logits exactly on the smoke prompt
   - per-layer `resid_mid` and `resid_post` identities were exact in the smoke check on local MPS
 - `known`: the pilot/confirmatory split is now saved and code-enforced:
-  - `prompts/registry_v1.yaml` is the versioned prompt registry for the current inline prompt collections
+  - `prompts/registry_v2.yaml` is the current default prompt registry for the inline prompt collections, and `prompts/registry_v1.yaml` remains as the earlier `8 / 8` pilot/confirm snapshot
   - `prompts/registry.py` centralizes registry loading plus the confirm-only access guard
   - `scripts/export_prompt_split.py` refuses confirmatory reads when exploratory mode is enabled
   - the first saved collections cover Phase 1 oracle-alpha prompts and the factual-recall tool-breakage lane
@@ -108,10 +108,16 @@
   - on `gpt2-xl`, loss-aware pilot tuning across the raw-simplex, full-logit, and compressed-logit targets still selected the raw-simplex target with `lambda=100.0`
   - the confirm result reverted to the earlier raw-simplex token-aware baseline (`R^2 = -0.2154`, mean JS `= 0.2377`, predicted mean improvement `= -0.0011` nats, `4 / 8` prompts positive), while oracle alpha itself remained strong at `+1.3409` nats over uniform
   - the blocker is now sharper: target/regularization selection alone does not solve held-out predictiveness on the current `8 / 8` prompt split
+- `known`: the first pilot-size redesign has now landed and improved the held-out result:
+  - `resattn-7mb` introduced `prompts/registry_v2.yaml`, which doubles the oracle-alpha pilot split from `8` to `16` prompts while keeping the `8` confirm prompts fixed
+  - on `gpt2-xl`, the same loss-aware target comparison now selected `oracle_alpha_logit_vector` with `lambda=0.01` instead of the raw-simplex target with `lambda=100.0`
+  - the held-out confirm routed-loss metric turned positive again (`+0.0857` nats over uniform, `5 / 8` prompts positive) while confirm mean JS stayed at `0.2377`
+  - confirm `R^2` remains negative (`-0.2616`), so pilot size looks like a real lever but not a full resolution of the predictiveness blocker
+  - the next oracle-alpha follow-up is to scale the `registry_v2` path beyond the current `16 / 8` slice rather than to switch targets again
 
 ## Immediate Next Steps
 
-1. Probe the next oracle-alpha predictiveness redesign in `resattn-7mb`.
+1. Scale the `registry_v2` loss-aware logit path beyond the current `16 / 8` slice in `resattn-0vx`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
