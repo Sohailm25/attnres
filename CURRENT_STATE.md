@@ -63,10 +63,15 @@
   - `validation/oracle_alpha_runner.py` implements a final-output development slice that optimizes a per-sequence softmax alpha vector over fixed cached residual sources
   - `scripts/run_oracle_alpha_development_slice.py` consumes the saved prompt and control registries by default and writes a JSON artifact
   - the first `gpt2-xl` pilot smoke on `2` prompts completed on local MPS and improved mean sequence loss over uniform by `1.2141` nats, but this remains a runner smoke rather than a claim-bearing result
+- `known`: the scaled development-model pilot stability suite now exists:
+  - `scripts/run_oracle_alpha_pilot_stability_suite.py` runs restart, saved-paraphrase, and prompt-resample checks against the same saved prompt and control registries
+  - the exploratory `gpt2-xl` pilot artifact on `8` prompts improved mean sequence loss over uniform by `1.2432` nats with a bootstrap interval of `[1.1482, 1.3361]`
+  - restart variation in the aggregate `final_alpha` distributions was tiny but non-zero (`mean JS = 2.87e-07`, top-1 agreement `0.60`), while saved paraphrases and prompt resampling moved the aggregate alpha distributions more strongly (`JS = 0.0305` and `0.0191`)
+  - this is still a development-model stability hardening result, not confirm-split predictiveness or a claim-bearing feasibility pass
 
 ## Immediate Next Steps
 
-1. Scale the new oracle-alpha runner beyond the two-prompt smoke in `resattn-83v`: pilot batch size, restart stability, and prompt perturbations are the next live oracle-alpha execution work.
+1. Execute the held-out alpha predictiveness check on the confirmatory split in `resattn-53q`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 4. Validate the refusal-feature discovery workflow before the safety lane becomes active.

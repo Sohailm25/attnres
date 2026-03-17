@@ -209,6 +209,23 @@ def mean_topk_jaccard_similarity(
     return _mean(similarities)
 
 
+def mean_top1_source_agreement(
+    distributions: Sequence[Sequence[float]],
+) -> float:
+    if len(distributions) < 2:
+        raise ValueError("at least two distributions are required")
+
+    def top1_index(distribution: Sequence[float]) -> int:
+        if not distribution:
+            raise ValueError("distribution must not be empty")
+        return max(range(len(distribution)), key=lambda index: distribution[index])
+
+    agreements = []
+    for left, right in itertools.combinations(distributions, 2):
+        agreements.append(1.0 if top1_index(left) == top1_index(right) else 0.0)
+    return _mean(agreements)
+
+
 def linear_alpha_predictiveness_summary(
     *,
     train_features: Sequence[Sequence[float]],

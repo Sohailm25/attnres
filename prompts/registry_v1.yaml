@@ -31,34 +31,50 @@ collections:
         split: pilot
         text: The old library on Maple Street opens every morning at
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Every morning, the old library on Maple Street opens at
       - id: oa-pilot-002
         split: pilot
         text: After the rain stopped, the sidewalk was covered with
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: When the rain ended, the sidewalk was covered with
       - id: oa-pilot-003
         split: pilot
         text: The chef added fresh basil to the bowl of
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Fresh basil went into the chef's bowl of
       - id: oa-pilot-004
         split: pilot
         text: At the edge of the forest, the campers heard
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Near the forest edge, the campers heard
       - id: oa-pilot-005
         split: pilot
         text: When the train finally arrived, the conductor announced
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: Once the train finally arrived, the conductor announced
       - id: oa-pilot-006
         split: pilot
         text: The museum guide pointed toward a room filled with
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: The museum guide gestured toward a room filled with
       - id: oa-pilot-007
         split: pilot
         text: On the kitchen table sat a jar of
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: A jar sat on the kitchen table filled with
       - id: oa-pilot-008
         split: pilot
         text: As the sun set behind the hills, the valley turned
         tags: [neutral_prefix, natural_text]
+        perturbations:
+          prompt_paraphrase: As sunset fell behind the hills, the valley turned
       - id: oa-confirm-001
         split: confirm
         text: The mechanic wiped grease from the side of the

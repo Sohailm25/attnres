@@ -22,9 +22,15 @@ transformers_logging.set_verbosity_error()
 class OracleAlphaRunnerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        from validation.oracle_alpha_runner import run_oracle_alpha_collection
+        from validation.oracle_alpha_runner import (
+            run_oracle_alpha_collection,
+            run_oracle_alpha_stability_suite,
+        )
 
         cls.run_oracle_alpha_collection = staticmethod(run_oracle_alpha_collection)
+        cls.run_oracle_alpha_stability_suite = staticmethod(
+            run_oracle_alpha_stability_suite
+        )
         with contextlib.redirect_stdout(io.StringIO()):
             with contextlib.redirect_stderr(io.StringIO()):
                 cls.model = HookedTransformer.from_pretrained(
@@ -57,6 +63,66 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         for result in summary.sequence_results:
             self.assertLessEqual(result.optimized_loss, result.uniform_loss + 1e-6)
             self.assertGreater(result.num_sources, self.model.cfg.n_layers)
+            self.assertEqual(result.num_sources, len(result.best_alpha))
+            self.assertEqual(result.num_sources, len(result.final_alpha))
+
+    def test_stability_suite_reports_restart_and_perturbation_metrics(self) -> None:
+        summary = self.run_oracle_alpha_stability_suite(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            max_sequences=3,
+            optimization_steps=4,
+            learning_rate=0.1,
+            restart_seeds=(11, 17),
+            resample_count=2,
+            resample_size=2,
+        )
+
+        self.assertEqual(3, summary.base_run.num_sequences)
+        self.assertEqual(2, len(summary.restart_runs))
+        self.assertEqual(2, len(summary.resample_runs))
+        self.assertIsNotNone(summary.paraphrase_run)
+        self.assertGreaterEqual(
+            summary.restart_metrics.mean_pairwise_js_divergence, 0.0
+        )
+        self.assertGreaterEqual(
+            summary.paraphrase_metrics.mean_pairwise_js_divergence, 0.0
+        )
+        self.assertGreaterEqual(
+            summary.resample_metrics.mean_pairwise_js_divergence, 0.0
+        )
+        self.assertLessEqual(summary.restart_metrics.mean_top1_source_agreement, 1.0)
+        self.assertLessEqual(summary.paraphrase_metrics.mean_top1_source_agreement, 1.0)
+        self.assertLessEqual(summary.resample_metrics.mean_top1_source_agreement, 1.0)
+
+    def test_different_restart_seeds_change_alpha_outputs(self) -> None:
+        first = self.run_oracle_alpha_collection(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            max_sequences=1,
+            optimization_steps=3,
+            learning_rate=0.1,
+            seed=11,
+        )
+        second = self.run_oracle_alpha_collection(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            max_sequences=1,
+            optimization_steps=3,
+            learning_rate=0.1,
+            seed=17,
+        )
+
+        self.assertNotEqual(
+            first.sequence_results[0].final_alpha,
+            second.sequence_results[0].final_alpha,
+        )
 
 
 if __name__ == "__main__":

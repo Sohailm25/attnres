@@ -16,11 +16,13 @@ class PromptRegistryTests(unittest.TestCase):
         from prompts.registry import (
             ConfirmatoryAccessError,
             load_prompt_registry,
+            perturb_prompt_entry,
             resolve_prompt_entries,
         )
 
         self.ConfirmatoryAccessError = ConfirmatoryAccessError
         self.load_prompt_registry = load_prompt_registry
+        self.perturb_prompt_entry = perturb_prompt_entry
         self.resolve_prompt_entries = resolve_prompt_entries
 
     def test_registry_file_exists(self) -> None:
@@ -64,6 +66,25 @@ class PromptRegistryTests(unittest.TestCase):
         self.assertTrue(
             all(entry.split == "confirm" for entry in confirm_entries),
         )
+
+    def test_oracle_alpha_pilot_entries_have_saved_paraphrases(self) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+
+        self.assertTrue(
+            all("prompt_paraphrase" in entry.perturbations for entry in pilot_entries),
+        )
+        paraphrased = self.perturb_prompt_entry(
+            pilot_entries[0],
+            perturbation_name="prompt_paraphrase",
+        )
+        self.assertNotEqual(pilot_entries[0].text, paraphrased.text)
+        self.assertIn("prompt_paraphrase", paraphrased.tags)
 
     def test_confirmatory_access_rejects_exploratory_mode(self) -> None:
         registry = self.load_prompt_registry()
