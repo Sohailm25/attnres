@@ -24,6 +24,7 @@ class PromptEntry:
     text: str
     split: str
     tags: tuple[str, ...]
+    perturbations: dict[str, str]
 
 
 @dataclass(frozen=True)
@@ -58,6 +59,13 @@ def _validate_collection(collection: PromptCollection) -> None:
             raise ValueError(
                 f"unsupported split {entry.split!r} in {collection.collection_id}"
             )
+        for perturbation_name, text in entry.perturbations.items():
+            if not perturbation_name:
+                raise ValueError("perturbation names must be non-empty")
+            if not text:
+                raise ValueError(
+                    f"perturbation {perturbation_name!r} must have text content"
+                )
         prompt_ids.add(entry.prompt_id)
 
     if not collection.objective_families:
@@ -85,6 +93,7 @@ def load_prompt_registry(path: Path | None = None) -> PromptRegistry:
                 text=entry["text"],
                 split=entry["split"],
                 tags=tuple(entry.get("tags", [])),
+                perturbations=dict(entry.get("perturbations", {})),
             )
             for entry in collection_raw["prompts"]
         )
@@ -117,6 +126,27 @@ def load_prompt_registry(path: Path | None = None) -> PromptRegistry:
         registry_id=raw["registry_id"],
         created_on=raw["created_on"],
         collections=collections,
+    )
+
+
+def perturb_prompt_entry(
+    entry: PromptEntry,
+    *,
+    perturbation_name: str,
+) -> PromptEntry:
+    try:
+        perturbed_text = entry.perturbations[perturbation_name]
+    except KeyError as error:
+        raise KeyError(
+            f"prompt {entry.prompt_id!r} has no perturbation {perturbation_name!r}"
+        ) from error
+
+    return PromptEntry(
+        prompt_id=f"{entry.prompt_id}:{perturbation_name}",
+        text=perturbed_text,
+        split=entry.split,
+        tags=entry.tags + (perturbation_name,),
+        perturbations={},
     )
 
 

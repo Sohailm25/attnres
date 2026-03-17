@@ -137,3 +137,10 @@
 - Decision: implement the first runner as a development-model slice that optimizes one softmax alpha vector per sequence over the final-output residual-source decomposition, reports against the preregistered nulls, and writes a JSON artifact.
 - Rationale: this is the smallest runner that genuinely exercises the fixed-representation oracle-alpha idea, the prompt/control registries, and the final-normalization-correct reconstruction path while avoiding premature expansion into full multi-layer claim-bearing analysis.
 - Impact: the repo now has a runnable oracle-alpha path plus a `gpt2-xl` pilot artifact, and the next follow-up shifts from “build any runner at all” to “scale and harden the runner with the preregistered stability perturbations.”
+
+## [2026-03-16T23:35:00-0500] DECISION: Make the pilot stability suite actually test restart variation and saved prompt perturbations
+
+- Trigger: the first `resattn-83v` stability attempt exposed two validity problems: zero-logit initialization made restart seeds deterministic, and one saved paraphrase was malformed enough to confound the prompt-perturbation comparison.
+- Decision: initialize alpha logits with tiny seed-dependent noise, summarize stability from the terminal `final_alpha` vectors rather than best-loss snapshots, and keep paraphrase perturbations as explicit saved prompt text in the registry.
+- Rationale: restart stability is meaningless if every seed follows the same optimizer path, and prompt-perturbation metrics are not interpretable if the perturbation text is broken or generated ad hoc.
+- Impact: the rerun artifact now measures a real exploratory stability surface, and future stability or predictiveness work should treat `final_alpha` plus saved perturbation text as the source of truth.

@@ -26,12 +26,16 @@ from .oracle_alpha_controls import (
     linear_alpha_predictiveness_summary,
     load_oracle_alpha_control_registry,
     mean_pairwise_js_divergence,
+    mean_top1_source_agreement,
     mean_topk_jaccard_similarity,
 )
 from .oracle_alpha_runner import (
     OracleAlphaRunSummary,
     OracleAlphaSequenceResult,
+    OracleAlphaStabilityMetrics,
+    OracleAlphaStabilitySummary,
     run_oracle_alpha_collection,
+    run_oracle_alpha_stability_suite,
 )
 
 __all__ = [
@@ -44,6 +48,8 @@ __all__ = [
     "OracleAlphaControlRegistry",
     "OracleAlphaRunSummary",
     "OracleAlphaSequenceResult",
+    "OracleAlphaStabilityMetrics",
+    "OracleAlphaStabilitySummary",
     "PredictivenessPlan",
     "PredictivenessSummary",
     "StabilitySuitePlan",
@@ -53,9 +59,11 @@ __all__ = [
     "load_oracle_alpha_control_registry",
     "max_abs_difference",
     "mean_pairwise_js_divergence",
+    "mean_top1_source_agreement",
     "mean_topk_jaccard_similarity",
     "model_backed_reconstruction_metrics",
     "run_oracle_alpha_collection",
+    "run_oracle_alpha_stability_suite",
     "rms_norm",
     "routed_logits",
     "shared_final_norm_logit_contributions",

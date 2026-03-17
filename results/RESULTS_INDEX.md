@@ -23,6 +23,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
 | GPT-2 XL development-model oracle-alpha slice | oracle_alpha | partial | `results/oracle_alpha/20260316-gpt2xl-development-slice.md` |
+| GPT-2 XL pilot stability suite | oracle_alpha | partial | `results/oracle_alpha/20260316-gpt2xl-pilot-stability-suite.md` |
 
 ## Pattern Analysis
 

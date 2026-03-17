@@ -17,6 +17,7 @@ class OracleAlphaControlTests(unittest.TestCase):
             linear_alpha_predictiveness_summary,
             load_oracle_alpha_control_registry,
             mean_pairwise_js_divergence,
+            mean_top1_source_agreement,
             mean_topk_jaccard_similarity,
         )
 
@@ -25,6 +26,7 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.linear_alpha_predictiveness_summary = linear_alpha_predictiveness_summary
         self.load_oracle_alpha_control_registry = load_oracle_alpha_control_registry
         self.mean_pairwise_js_divergence = mean_pairwise_js_divergence
+        self.mean_top1_source_agreement = mean_top1_source_agreement
         self.mean_topk_jaccard_similarity = mean_topk_jaccard_similarity
 
     def test_control_plan_file_exists(self) -> None:
@@ -80,6 +82,18 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.assertAlmostEqual(
             1.0 / 3.0,
             self.mean_topk_jaccard_similarity(distributions, k=1),
+        )
+
+    def test_mean_top1_source_agreement_scores_expected_overlap(self) -> None:
+        distributions = [
+            [0.60, 0.30, 0.10],
+            [0.50, 0.40, 0.10],
+            [0.10, 0.30, 0.60],
+        ]
+
+        self.assertAlmostEqual(
+            1.0 / 3.0,
+            self.mean_top1_source_agreement(distributions),
         )
 
     def test_linear_alpha_predictiveness_summary_is_high_on_linear_signal(self) -> None:

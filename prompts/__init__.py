@@ -7,6 +7,7 @@ from .registry import (
     PromptEntry,
     PromptRegistry,
     load_prompt_registry,
+    perturb_prompt_entry,
     resolve_prompt_entries,
 )
 
@@ -16,5 +17,6 @@ __all__ = [
     "PromptEntry",
     "PromptRegistry",
     "load_prompt_registry",
+    "perturb_prompt_entry",
     "resolve_prompt_entries",
 ]
