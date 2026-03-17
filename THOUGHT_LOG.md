@@ -487,6 +487,23 @@ Suggested entry format:
   - medium-to-high that rank spread should now drive the confirmatory tool-breakage read
   - medium that best-rank worsening will remain an important but weaker companion metric rather than the sole headline
 
+## [2026-03-17T13:52:00-0500] The Confirm Split Kept The New Story And Killed The Old One
+- Stage: analysis
+- Feel of the Experiment: This is a good confirm result because it is not trying to flatter us. The old boolean stayed dead, which is exactly what should have happened if the pilot diagnosis was real. The rank-based story, though, survived on unseen prompts and actually looks cleaner now.
+- Working Hypotheses:
+  - The Gemma tool-breakage lane should now be framed around routed-versus-original instability and rank degradation, not newly induced non-monotonicity.
+  - The next scientifically necessary step is the controlled dynamic-routing counterfactual, not another baseline rerun.
+- Hunches and Guesses:
+  - The tuned rank-range metric may end up being the best eventual headline because it captures instability even when the best token rank is not always suppressed.
+- Predictions:
+  - If the controlled dynamic-routing counterfactual materially weakens these confirm metrics, the final claim will look much stronger and cleaner than anything built on the old boolean ever would have.
+- Surprises and Tensions:
+  - The confirm split is even harsher on the old non-monotonicity story than the pilot: routed-versus-original increase stayed exactly `0 / 8` again.
+  - At the same time, tuned rank-range increase strengthened to `7 / 8`, which is a much more stable-looking signal than I expected from only eight confirm prompts.
+- Confidence:
+  - high that the confirmatory baseline stage is now complete
+  - medium-to-high that the counterfactual is the real next test, not more metric churn
+
 ## [2026-03-16T22:59:08-0500] Token Awareness Helped The Shape More Than The Outcome
 - Stage: implementation
 - Feel of the Experiment: This result is more interesting than the raw delta suggests. Preserving coarse position structure in `h_4[t]` did seem to help the predictor find alpha vectors that look a bit more like the oracle ones, but that shape improvement still refused to turn into a real routed-loss gain.

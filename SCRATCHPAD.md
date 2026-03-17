@@ -536,3 +536,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-pilot-v1/checkpoints/prompt_results/`
 - Anomalies: the boolean non-monotonicity metric saturated on the original-model baseline (`8 / 8` raw and tuned), so the pilot validates runner behavior and broad KL degradation under routing but does not yet provide an informative relative strong-claim threshold
 - Next step: use the saved pilot traces to codify stronger routed-versus-original success metrics in `resattn-ypj` before any confirmatory factual-recall run
+
+## [2026-03-17T14:18:00-0500] PRE-RUN: Gemma-2 tool-breakage baseline confirm v1
+- tmux session: `gemma-tb-confirm-v1`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1 --split confirm --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Config: `collection=tool_breakage_factual_recall_v1`, `split=confirm (8 prompts, locked)`, `exploratory=false`, `tuned_lens_checkpoint=results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`, `primary_metric=held-out KL to final distribution`, `relative_metrics=non-monotonicity increase + final-rank worsening + best-rank worsening + rank-range increase`, `device=mps fallback cpu`
+- What I'm testing: whether the locked confirm split reproduces broad same-model routed-versus-original degradation under the KL-primary metric hierarchy and whether the new relative rank metrics stay informative on unseen factual-recall prompts.
+- Expected outcome: prompt-level confirm checkpoints appear after each prompt, the run writes a reusable `summary.json`, and the confirm artifact clarifies whether tuned routed traces consistently broaden target-rank instability relative to the original baseline.
+- Expected duration: ~25-45 minutes
+- Checkpoint path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/checkpoints/prompt_results`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/confirm.log`
+- Resume command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --model-name google/gemma-2-2b --device mps --output-dir results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1 --split confirm --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Main confound to watch: the first-token factual-recall target may still understate answer-string instability on multi-token targets, so the confirm write-up must preserve the answer-token caveat even if the rank-based metrics replicate cleanly.
+- Implementation verified: YES - the pilot run completed with prompt-level resume checkpoints and the saved metric-hardening step regenerated the summary from cached prompt results successfully.
+- Status: LAUNCHING
+
+## [2026-03-17T13:51:26-0500] POST-RUN: Gemma-2 tool-breakage baseline confirm v1
+- Outcome: SUCCESS
+- Key metric: routing worsened tuned-lens mean KL from `3.3834` to `5.9061` and tuned final-position KL from `5.9851` to `8.8947` on the locked `8`-prompt confirm split
+- Artifacts saved: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/summary.json`, `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1.md`, `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/checkpoints/prompt_results/`
+- Latest checkpoint: `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1/checkpoints/prompt_results/`
+- Anomalies: the non-monotonicity-increase metric stayed `0 / 8` under both raw and tuned lens, so the confirm read still depends on the codified rank-instability surface rather than the legacy boolean
+- Next step: use `resattn-g09` to add the controlled dynamic-routing counterfactual before making the strong Gemma tool-breakage claim

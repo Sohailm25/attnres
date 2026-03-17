@@ -303,3 +303,16 @@
   - tuned routed traces worsen the final-layer target rank on `4 / 8` prompts
   That makes rank-based summaries the smallest honest way to preserve the prereg “non-monotonicity or rank-instability” language without inventing a new runner or rerunning Gemma before the confirm step.
 - Impact: the next tool-breakage issue should run the locked confirm split using the codified relative rank metrics, while the later controlled dynamic-routing counterfactual remains a separate blocker for the strong claim.
+
+## [2026-03-17T13:52:00-0500] DECISION: Treat the locked Gemma confirm split as a confirmatory rank-instability pass, not a final strong-claim pass
+
+- Trigger: `resattn-6te` completed the first locked same-model Gemma factual-recall confirm run using the metric surface codified in `resattn-ypj`.
+- Decision: record the confirm artifact as a successful confirmatory baseline pass for routed-versus-original KL degradation and rank instability, but keep the strong tool-breakage claim blocked on the later controlled dynamic-routing counterfactual.
+- Rationale: the confirm result reproduces the same-model degradation story on unseen prompts:
+  - mean tuned-lens KL worsened from `3.3834` to `5.9061`
+  - final-position tuned-lens KL worsened from `5.9851` to `8.8947`
+  - tuned rank-range increase is `7 / 8`
+  - tuned final-target-rank worsening is `5 / 8`
+  - raw final-target-rank worsening is `6 / 8`
+  At the same time, routed-versus-original non-monotonicity increase remains `0 / 8` under both raw and tuned lens, so the confirm result still does not rescue the old absolute boolean story. The honest confirm read is “routing increases rank instability and often worsens answer-token rank,” not “routing newly induces non-monotonic curves.”
+- Impact: the next tool-breakage issue should focus on the prereg-required controlled dynamic-routing counterfactual rather than on re-running the same confirm baseline or revisiting the metric surface again.

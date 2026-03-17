@@ -192,11 +192,27 @@
     - routed traces worsen the best observed target rank on `4 / 8` prompts under both raw and tuned lens
     - routed traces worsen the final-layer target rank on `4 / 8` prompts under both raw and tuned lens
   - interpretation: the current pilot does not support a strong claim via the legacy non-monotonicity boolean, but it does support moving to a confirmatory run on a clearer rank-based instability surface
-  - `resattn-6te` is now the next tool-breakage blocker: run the locked confirm split with the codified relative rank metrics before the later controlled dynamic-routing counterfactual
+  - `resattn-6te` has now landed the first locked confirm-split factual-recall baseline on the same Gemma-2 model:
+    - `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1.md` is the confirm artifact on `8` unseen factual-recall prompts with `exploratory=false`
+    - the confirm split reproduces broad KL-primary degradation under routing:
+      - mean raw KL to final increased from `11.1598` to `16.0153`
+      - mean tuned-lens KL to final increased from `3.3834` to `5.9061`
+      - final-position tuned-lens KL increased from `5.9851` to `8.8947`
+      - mean tuned top-1 dropped from `0.5095` to `0.3024`
+      - final-position tuned top-1 dropped from `0.1442` to `0.1154`
+    - the codified confirm metric surface is informative:
+      - non-monotonicity increase stayed `0 / 8` under both raw and tuned lens
+      - raw final-target-rank worsening is `6 / 8`
+      - tuned final-target-rank worsening is `5 / 8`
+      - raw target-rank-range increase is `5 / 8`
+      - tuned target-rank-range increase is `7 / 8`
+      - raw and tuned best-target-rank worsening are both `4 / 8`
+    - interpretation: the locked confirm split supports a same-model rank-instability story under routing, not the legacy absolute non-monotonicity story
+  - `resattn-g09` is now the next tool-breakage blocker: add the controlled dynamic-routing counterfactual before making the strong Gemma tool-breakage claim
 
 ## Immediate Next Steps
 
-1. Use `resattn-6te` to run the first confirmatory Gemma factual-recall baseline with the codified relative rank metrics.
+1. Use `resattn-g09` to run the controlled dynamic-routing counterfactual for the Gemma tool-breakage claim.
 2. Take `resattn-7hb` to build the small local AttnRes reproduction that will serve as the strong Figure 8 proxy.
 3. Validate the refusal-feature discovery workflow in `resattn-3f1` before the safety lane becomes active.
 4. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
