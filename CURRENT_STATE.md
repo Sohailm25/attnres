@@ -97,10 +97,15 @@
   - on `gpt2-xl`, that geometry change improved the held-out routed-loss metric from `-0.0011` nats to `+0.0693` nats over uniform on average, with `5 / 8` confirm prompts improving
   - the descriptive alpha-recovery metrics got worse at the same time (`R^2 = -0.3291`, mean JS `= 0.2457` versus the previous `-0.2154` and `0.2377`), and the selected ridge penalty still saturated at `100.0`
   - strong interpretation therefore remains blocked; the next follow-up is a compressed target or another lower-dimensional reformulation rather than more raw logit-target iteration
+- `known`: the first compressed predictiveness target is now implemented and compared:
+  - `resattn-3ns` added `oracle_alpha_depth_type_band_logit_vector`, which compresses oracle alpha into deterministic depth-band-by-source-type group logits and lifts back to full-source alpha with train-only within-group templates
+  - on `gpt2-xl`, that compressed target improved confirm descriptive alpha recovery relative to the full-source logit target (`R^2 = -0.2241`, mean JS `= 0.2380`) and broke the previous `100.0` ridge-saturation pattern by selecting `0.0001`
+  - the held-out routed-loss metric fell back slightly below uniform (`-0.0031` nats, `3 / 8` prompts positive), so compression helped the descriptive side but not the current primary claim-bearing objective
+  - the next follow-up is to make target and regularization selection loss-aware rather than to keep swapping targets blindly
 
 ## Immediate Next Steps
 
-1. Evaluate a compressed oracle-alpha predictiveness target in `resattn-3ns`.
+1. Make oracle-alpha predictiveness selection loss-aware in `resattn-xaa`.
 2. Decide the tuned-lens path for Gemma-2 tool-breakage: custom lens training versus a secondary-model comparison.
 3. Validate the refusal-feature discovery workflow before the safety lane becomes active.
 4. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.

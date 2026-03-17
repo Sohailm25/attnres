@@ -248,3 +248,28 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: the constrained target finally made held-out predicted loss positive on average, but descriptive alpha-recovery metrics regressed relative to the raw-simplex token-aware baseline and the selected ridge penalty stayed at `100.0`
 - Next step: follow `resattn-3ns` with a compressed or lower-dimensional predictiveness target rather than more raw logit-target iteration
+
+## [2026-03-17T17:05:00-0500] PRE-RUN: development-model oracle-alpha compressed depth-type-band target check
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_heldout_predictiveness_check.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-depth-type-band-logit-target-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --target-name oracle_alpha_depth_type_band_logit_vector --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat'`
+- Config: `model=gpt2-xl`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_split=confirm`, `target=oracle_alpha_depth_type_band_logit_vector`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat`, `device=mps fallback cpu`
+- What I'm testing: whether compressing the alpha target into deterministic depth-band-by-source-type group logits improves held-out predictiveness relative to the full-source logit target while keeping the same feature surface.
+- Expected outcome: the run completes on the saved split, writes a compressed-target artifact, and shows whether lower target dimensionality improves routed-loss recovery without making alpha-shape diagnostics unusably worse.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-depth-type-band-logit-target-check.json`
+- Resume command: rerun the command above
+- Main confound to watch: if routed loss improves only because the lift-back template is too coarse, the result may trade away too much descriptive alpha fidelity to support a stronger interpretation.
+- Implementation verified: YES - `tests/test_oracle_alpha_controls.py` and `tests/test_oracle_alpha_runner.py` pass with the compressed target path and runner override before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T17:10:00-0500] POST-RUN: development-model oracle-alpha compressed depth-type-band target check
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-depth-type-band-logit-target-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --target-name oracle_alpha_depth_type_band_logit_vector --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat'`
+- Outcome: PARTIAL
+- Key metric: `confirm_r_squared=-0.2241`; `confirm_mean_js=0.2380`; `predicted_mean_improvement=-0.0031` nats versus `oracle_mean_improvement=+1.3409`
+- Artifacts saved: `results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-depth-type-band-logit-target-check.json`
+- Latest checkpoint: none
+- Anomalies: the compressed target improved descriptive alpha metrics and broke the earlier `lambda=100.0` saturation by selecting `0.0001`, but it lost the positive held-out routed-loss gain of the full-source logit target
+- Next step: follow `resattn-xaa` with loss-aware target and regularization selection rather than another blind target swap

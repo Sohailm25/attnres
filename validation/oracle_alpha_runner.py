@@ -778,6 +778,23 @@ def _stability_metrics_for_runs(
     )
 
 
+def _shared_source_labels_for_runs(
+    runs: Sequence[OracleAlphaRunSummary],
+) -> tuple[str, ...]:
+    if not runs:
+        raise ValueError("at least one run is required")
+    if not runs[0].sequence_results:
+        raise ValueError("runs must contain at least one sequence result")
+    reference = runs[0].sequence_results[0].source_labels
+    for run in runs:
+        for result in run.sequence_results:
+            if result.source_labels != reference:
+                raise ValueError(
+                    "predictiveness runs must share the same source labels"
+                )
+    return reference
+
+
 def run_oracle_alpha_stability_suite(
     *,
     model: HookedTransformer,
@@ -920,6 +937,7 @@ def _tuned_ridge_regularization(
     train_features: Sequence[Sequence[float]],
     train_targets: Sequence[Sequence[float]],
     target_name: str,
+    source_labels: Sequence[str] | None,
     regularization_grid: Sequence[float],
     primary_metric: str,
     secondary_metric: str,
@@ -949,6 +967,7 @@ def _tuned_ridge_regularization(
             fold_train_target_matrix = alpha_target_matrix(
                 target_name=target_name,
                 distributions=fold_train_targets,
+                source_labels=source_labels,
             )
             predicted_target = ridge_regression_predictions(
                 train_features=fold_train_features,
@@ -959,6 +978,8 @@ def _tuned_ridge_regularization(
             predicted_distribution = alpha_target_predictions_to_distributions(
                 target_name=target_name,
                 predictions=predicted_target.tolist(),
+                source_labels=source_labels,
+                train_distributions=fold_train_targets,
             )
             fold_predictions.append(predicted_distribution[0].tolist())
             fold_targets.append(train_targets[holdout_index])
@@ -1015,11 +1036,13 @@ def run_oracle_alpha_predictiveness_check(
     seed: int = 0,
     regularization_grid: Sequence[float] = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0),
     candidate_feature_sources: Sequence[str] | None = None,
+    target_name_override: str | None = None,
     prepend_bos: bool | None = None,
 ) -> OracleAlphaPredictivenessSummary:
     control_registry = load_oracle_alpha_control_registry()
     control_plan = control_registry.plans[collection_id]
     predictiveness_plan = control_plan.predictiveness
+    target_name = target_name_override or predictiveness_plan.target
     if predictiveness_plan.model_family != "ridge_regression":
         raise ValueError("predictiveness plan must use ridge_regression")
 
@@ -1076,6 +1099,7 @@ def run_oracle_alpha_predictiveness_check(
 
     train_targets = [list(result.final_alpha) for result in train_run.sequence_results]
     eval_targets = [list(result.final_alpha) for result in eval_run.sequence_results]
+    source_labels = _shared_source_labels_for_runs((train_run, eval_run))
     candidate_feature_summaries = []
     selected_feature_source = None
     selected_regularization_strength = None
@@ -1099,7 +1123,8 @@ def run_oracle_alpha_predictiveness_check(
         ) = _tuned_ridge_regularization(
             train_features=train_features,
             train_targets=train_targets,
-            target_name=predictiveness_plan.target,
+            target_name=target_name,
+            source_labels=source_labels,
             regularization_grid=regularization_grid,
             primary_metric=predictiveness_plan.primary_metric,
             secondary_metric=predictiveness_plan.secondary_metric,
@@ -1163,8 +1188,9 @@ def run_oracle_alpha_predictiveness_check(
         for entry in eval_entries
     ]
     selected_train_target_matrix = alpha_target_matrix(
-        target_name=predictiveness_plan.target,
+        target_name=target_name,
         distributions=train_targets,
+        source_labels=source_labels,
     )
     predicted_eval_targets = ridge_regression_predictions(
         train_features=selected_train_features,
@@ -1173,8 +1199,10 @@ def run_oracle_alpha_predictiveness_check(
         regularization_strength=selected_regularization_strength,
     )
     predicted_eval_alphas = alpha_target_predictions_to_distributions(
-        target_name=predictiveness_plan.target,
+        target_name=target_name,
         predictions=predicted_eval_targets.tolist(),
+        source_labels=source_labels,
+        train_distributions=train_targets,
     )
     predictiveness_summary = predictiveness_summary_from_predictions(
         train_targets=train_targets,
@@ -1219,7 +1247,7 @@ def run_oracle_alpha_predictiveness_check(
         collection_id=collection_id,
         train_split=predictiveness_plan.train_split,
         eval_split=predictiveness_plan.eval_split,
-        target=predictiveness_plan.target,
+        target=target_name,
         control_plan_id=control_plan.plan_id,
         control_registry_id=control_registry.registry_id,
         feature_source=selected_feature_source,

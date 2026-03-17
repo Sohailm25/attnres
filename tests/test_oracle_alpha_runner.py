@@ -266,6 +266,30 @@ class OracleAlphaRunnerTests(unittest.TestCase):
         )
         self.assertEqual(4, len(summary.candidate_feature_summaries))
 
+    def test_predictiveness_check_accepts_depth_type_band_logit_target_override(
+        self,
+    ) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=(
+                "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat",
+            ),
+            target_name_override="oracle_alpha_depth_type_band_logit_vector",
+        )
+
+        self.assertEqual("oracle_alpha_depth_type_band_logit_vector", summary.target)
+        self.assertEqual(1, len(summary.candidate_feature_summaries))
+        for prediction in summary.eval_predictions:
+            self.assertEqual(prediction.num_sources, len(prediction.predicted_alpha))
+            self.assertAlmostEqual(1.0, sum(prediction.predicted_alpha), places=6)
+
 
 if __name__ == "__main__":
     unittest.main()

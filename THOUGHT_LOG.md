@@ -237,6 +237,25 @@ Suggested entry format:
 - Interesting facts:
   - The constrained target moved predicted mean improvement to `+0.0693` nats over uniform with `5 / 8` confirm prompts positive, while oracle alpha stayed at `+1.3409`.
   - The selected ridge penalty still saturated at `100.0`, which means the shrinkage story did not disappear just because the target geometry got better.
+
+## [2026-03-17T17:15:00-0500] Compression Fixed The Shape Story But Not The Loss Story
+- Stage: analysis
+- Feel of the Experiment: This is the cleanest tradeoff we have seen so far. Compression made the predictor look saner in the descriptive metrics and stopped the pathological regularization choice, but it also gave back the one concrete win the full logit target had earned, which was positive held-out routed loss.
+- Working Hypotheses:
+  - The repo is now looking less like “find the right target” and more like “align target selection with the actual objective.”
+- Hunches and Guesses:
+  - The next improvement probably comes from loss-aware pilot selection or a hybrid criterion, not from another single target swap.
+- Predictions:
+  - If we keep choosing by `R^2` and JS alone, we will keep finding predictors that look tidier than they behave.
+- Surprises and Tensions:
+  - The compressed target almost exactly recovered the old raw-simplex descriptive metrics while the full logit target kept the only positive routed-loss delta.
+  - The ridge strength dropping from `100.0` to `0.0001` is a strong sign that compression changed the geometry/conditioning story materially, not just a tiny bit.
+- Confidence:
+  - medium that target dimensionality matters
+  - medium that selection-objective mismatch is now the dominant blocker in the oracle-alpha lane
+- Interesting facts:
+  - The compressed depth-type-band logit target reached confirm `R^2 = -0.2241` and mean JS `= 0.2380`, almost matching the old raw-simplex token-aware baseline.
+  - That same target dropped predicted mean improvement back to `-0.0031` nats and only `3 / 8` confirm prompts improved over uniform.
   - low that further pooled-state variants alone will solve the confirm-split predictiveness problem
 - Interesting facts:
   - The best tested internal feature summary improved predicted mean loss from `-0.0348` to `-0.0010` nats versus uniform.

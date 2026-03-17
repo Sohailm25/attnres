@@ -193,3 +193,10 @@
 - Decision: add `oracle_alpha_logit_vector` as the first constrained target, keep evaluation on recovered simplex alpha distributions, and rerun the held-out check with the current best token-aware feature source fixed.
 - Rationale: geometry mismatch was the clearest no-regret design flaw, and changing only the target coordinates isolates that fix from further feature-family churn.
 - Impact: the held-out routed-loss metric improved to `+0.0693` nats over uniform on average, but confirm `R^2` and mean JS both regressed and the selected ridge penalty remained `100.0`; the next issue should test compressed or lower-dimensional targets rather than iterating this raw logit-target path further.
+
+## [2026-03-17T17:15:00-0500] DECISION: Use a compressed depth-type-band logit target as the first lower-dimensional predictiveness comparison
+
+- Trigger: `resattn-3ns` needed one bounded compressed target that could be compared directly against the full-source logit target without inventing speculative clusters or changing the feature surface.
+- Decision: add `oracle_alpha_depth_type_band_logit_vector`, which compresses oracle alpha into deterministic depth-band-by-source-type group logits and lifts those predictions back to full-source alpha using train-only within-group templates.
+- Rationale: this is the smallest lower-dimensional target that is architecture-grounded, reproducible across runs, and consistent with the current constraint that claim-bearing statistics still operate at the sequence level.
+- Impact: the compressed target improved confirm `R^2` and mean JS and eliminated the `lambda=100` shrinkage regime, but routed-loss recovery fell back slightly below uniform; the next issue should make selection explicitly loss-aware rather than assume the descriptive alpha metrics are enough.

@@ -38,6 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--optimization-steps", type=int, default=20)
     parser.add_argument("--learning-rate", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=11)
+    parser.add_argument("--target-name", default=None)
     parser.add_argument(
         "--regularization-grid",
         type=float,
@@ -103,6 +104,7 @@ def main() -> int:
         seed=args.seed,
         regularization_grid=tuple(args.regularization_grid),
         candidate_feature_sources=tuple(args.candidate_feature_sources),
+        target_name_override=args.target_name,
     )
     output_path.write_text(json.dumps(asdict(summary), separators=(",", ":")) + "\n")
     return 0

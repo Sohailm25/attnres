@@ -24,8 +24,10 @@ ALLOWED_PREDICTIVENESS_METRICS = {"r_squared", "mean_js_divergence"}
 ALLOWED_PREDICTIVENESS_TARGETS = {
     "oracle_alpha_vector",
     "oracle_alpha_logit_vector",
+    "oracle_alpha_depth_type_band_logit_vector",
 }
 ALPHA_TARGET_EPSILON = 1e-12
+DEPTH_BAND_NAMES = ("early", "mid", "late")
 
 
 @dataclass(frozen=True)
@@ -110,16 +112,137 @@ def _validated_distribution_matrix(
     return matrix / row_sums
 
 
+def _validated_source_labels(
+    source_labels: Sequence[str] | None,
+    *,
+    expected_num_sources: int,
+) -> tuple[str, ...]:
+    if source_labels is None:
+        raise ValueError("source_labels are required for this predictiveness target")
+    labels = tuple(source_labels)
+    if len(labels) != expected_num_sources:
+        raise ValueError("source_labels must match the target source dimension")
+    if not labels:
+        raise ValueError("source_labels must not be empty")
+    return labels
+
+
+def _depth_type_band_group_structure(
+    source_labels: Sequence[str],
+) -> tuple[tuple[str, ...], np.ndarray]:
+    parsed_layers = []
+    parsed_kinds = []
+    for label in source_labels:
+        if label in {"embed", "pos_embed"}:
+            parsed_layers.append(None)
+            parsed_kinds.append(label)
+            continue
+        layer_token, separator, suffix = label.partition("_")
+        if not separator or not layer_token.isdigit():
+            raise ValueError(f"unsupported source label {label!r}")
+        if suffix not in {"attn_out", "mlp_out"}:
+            raise ValueError(f"unsupported source label {label!r}")
+        parsed_layers.append(int(layer_token))
+        parsed_kinds.append(suffix)
+
+    unique_layers = sorted({layer for layer in parsed_layers if layer is not None})
+    band_lookup: dict[int, str] = {}
+    for band_name, layer_chunk in zip(
+        DEPTH_BAND_NAMES,
+        np.array_split(np.asarray(unique_layers, dtype=int), len(DEPTH_BAND_NAMES)),
+        strict=True,
+    ):
+        for layer in layer_chunk.tolist():
+            band_lookup[int(layer)] = band_name
+
+    ordered_group_names: list[str] = []
+    group_indices = []
+    group_name_to_index: dict[str, int] = {}
+    for label, layer, kind in zip(
+        source_labels,
+        parsed_layers,
+        parsed_kinds,
+        strict=True,
+    ):
+        if label in {"embed", "pos_embed"}:
+            group_name = label
+        else:
+            band_name = band_lookup[layer]
+            source_kind = "attn" if kind == "attn_out" else "mlp"
+            group_name = f"{band_name}_{source_kind}"
+        if group_name not in group_name_to_index:
+            group_name_to_index[group_name] = len(ordered_group_names)
+            ordered_group_names.append(group_name)
+        group_indices.append(group_name_to_index[group_name])
+
+    return tuple(ordered_group_names), np.asarray(group_indices, dtype=int)
+
+
+def _compressed_distribution_matrix(
+    *,
+    distributions: np.ndarray,
+    group_indices: np.ndarray,
+    num_groups: int,
+) -> np.ndarray:
+    compressed = np.zeros((distributions.shape[0], num_groups), dtype=float)
+    for source_index, group_index in enumerate(group_indices.tolist()):
+        compressed[:, group_index] += distributions[:, source_index]
+    return compressed
+
+
+def _group_template_matrix(
+    *,
+    train_distributions: np.ndarray,
+    group_indices: np.ndarray,
+    num_groups: int,
+) -> np.ndarray:
+    templates = np.zeros((num_groups, train_distributions.shape[1]), dtype=float)
+    for group_index in range(num_groups):
+        mask = group_indices == group_index
+        group_width = int(mask.sum())
+        if group_width < 1:
+            raise ValueError("each compressed target group must contain a source")
+        group_slice = train_distributions[:, mask]
+        group_mass = group_slice.sum(axis=1, keepdims=True)
+        normalized = np.zeros_like(group_slice)
+        nonzero_rows = group_mass[:, 0] > 0.0
+        if np.any(nonzero_rows):
+            normalized[nonzero_rows] = (
+                group_slice[nonzero_rows] / group_mass[nonzero_rows]
+            )
+        if np.any(~nonzero_rows):
+            normalized[~nonzero_rows] = 1.0 / group_width
+        template = normalized.mean(axis=0)
+        template /= template.sum()
+        templates[group_index, mask] = template
+    return templates
+
+
 def alpha_target_matrix(
     *,
     target_name: str,
     distributions: Sequence[Sequence[float]],
+    source_labels: Sequence[str] | None = None,
 ) -> np.ndarray:
     matrix = _validated_distribution_matrix(distributions)
     if target_name == "oracle_alpha_vector":
         return matrix
     if target_name == "oracle_alpha_logit_vector":
         stabilized = np.clip(matrix, a_min=ALPHA_TARGET_EPSILON, a_max=None)
+        logits = np.log(stabilized)
+        return logits - logits.mean(axis=1, keepdims=True)
+    if target_name == "oracle_alpha_depth_type_band_logit_vector":
+        labels = _validated_source_labels(
+            source_labels,
+            expected_num_sources=matrix.shape[1],
+        )
+        group_names, group_indices = _depth_type_band_group_structure(labels)
+        compressed = _compressed_distribution_matrix(
+            distributions=matrix,
+            group_indices=group_indices,
+            num_groups=len(group_names),
+        )
+        stabilized = np.clip(compressed, a_min=ALPHA_TARGET_EPSILON, a_max=None)
         logits = np.log(stabilized)
         return logits - logits.mean(axis=1, keepdims=True)
     raise ValueError(f"unsupported predictiveness target {target_name!r}")
@@ -129,6 +252,8 @@ def alpha_target_predictions_to_distributions(
     *,
     target_name: str,
     predictions: Sequence[Sequence[float]],
+    source_labels: Sequence[str] | None = None,
+    train_distributions: Sequence[Sequence[float]] | None = None,
 ) -> np.ndarray:
     matrix = np.asarray(predictions, dtype=float)
     if matrix.ndim != 2:
@@ -148,6 +273,35 @@ def alpha_target_predictions_to_distributions(
         shifted = matrix - matrix.max(axis=1, keepdims=True)
         exponentiated = np.exp(shifted)
         return exponentiated / exponentiated.sum(axis=1, keepdims=True)
+    if target_name == "oracle_alpha_depth_type_band_logit_vector":
+        if train_distributions is None:
+            raise ValueError(
+                "train_distributions are required to lift compressed target predictions"
+            )
+        labels = _validated_source_labels(
+            source_labels,
+            expected_num_sources=len(source_labels) if source_labels is not None else 0,
+        )
+        train_matrix = _validated_distribution_matrix(train_distributions)
+        if train_matrix.shape[1] != len(labels):
+            raise ValueError(
+                "train_distributions must share the same source dimension as source_labels"
+            )
+        group_names, group_indices = _depth_type_band_group_structure(labels)
+        if matrix.shape[1] != len(group_names):
+            raise ValueError(
+                "predictions must match the compressed target dimension for source_labels"
+            )
+        shifted = matrix - matrix.max(axis=1, keepdims=True)
+        exponentiated = np.exp(shifted)
+        grouped = exponentiated / exponentiated.sum(axis=1, keepdims=True)
+        templates = _group_template_matrix(
+            train_distributions=train_matrix,
+            group_indices=group_indices,
+            num_groups=len(group_names),
+        )
+        lifted = grouped @ templates
+        return lifted / lifted.sum(axis=1, keepdims=True)
     raise ValueError(f"unsupported predictiveness target {target_name!r}")
 
 
