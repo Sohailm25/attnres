@@ -57,3 +57,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Artifacts saved: `results/infrastructure/20260316-gpt2xl-reconstruction-smoke.json`
 - Anomalies: an initial MPS residual mismatch disappeared after changing reconstruction accumulation from bulk reduction to forward-order summation
 - Next step: treat model-backed reconstruction as green and move the remaining claim-bearing blockers back to the pilot/confirmatory split plus identifiability controls
+
+## [2026-03-16T23:05:00-0500] PRE-RUN: development-model oracle-alpha slice
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_development_slice.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_development_slice.py --output results/oracle_alpha/20260316-gpt2xl-development-slice.json --max-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Config: `model=gpt2-xl`, `collection=oracle_alpha_phase1_v1`, `split=pilot`, `exploratory=true`, `device=mps fallback cpu`
+- What I'm testing: the first development-model oracle-alpha runner can consume the saved prompt and control registries, optimize a per-sequence alpha vector on fixed residual sources, and emit a real JSON artifact.
+- Expected outcome: the run completes on a tiny pilot slice, optimized loss is never worse than uniform, and the artifact records sequence-level improvements plus preregistered null summaries.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260316-gpt2xl-development-slice.json`
+- Resume command: rerun the command above
+- Main confound to watch: MPS execution or model-loading quirks could dominate the first runner slice before the actual alpha optimization logic is exercised.
+- Implementation verified: YES - `tests/test_oracle_alpha_runner.py` passes on `tiny-stories-1M` before this run.
+- Status: LAUNCHING
+
+## [2026-03-16T23:08:00-0500] POST-RUN: development-model oracle-alpha slice
+- Command: `.venv/bin/python scripts/run_oracle_alpha_development_slice.py --output results/oracle_alpha/20260316-gpt2xl-development-slice.json --max-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Outcome: SUCCESS
+- Key metric: `sequence_mean_improvement=1.2141` nats over uniform on `2` pilot prompts
+- Artifacts saved: `results/oracle_alpha/20260316-gpt2xl-development-slice.json`
+- Anomalies: none
+- Next step: treat the runner as live and promote the next follow-up to scaling the pilot slice plus stability perturbations beyond this two-prompt smoke

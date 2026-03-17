@@ -130,3 +130,10 @@
 - Decision: add `configs/oracle_alpha_controls_v1.yaml` plus `validation/oracle_alpha_controls.py` so the current Phase 1 control suite is durable, validated, and importable even before runner code exists.
 - Rationale: the honest current need is methodological discipline, not fake benchmark wiring. Saving the control plan now prevents later runner code from quietly changing bootstrap size, perturbation types, held-out evaluation, or MIB handling.
 - Impact: claim-bearing oracle-alpha work now has a source-of-truth control config, reusable bootstrap/stability/predictiveness helpers, and an explicit `planned` MIB anchor with a revisit trigger once a runner exists.
+
+## [2026-03-16T23:08:00-0500] DECISION: Start the first oracle-alpha execution path as a final-output development slice
+
+- Trigger: `resattn-myh` needed to turn the saved prompt and control registries into a real execution path without pretending the full claim-bearing experiment stack already existed.
+- Decision: implement the first runner as a development-model slice that optimizes one softmax alpha vector per sequence over the final-output residual-source decomposition, reports against the preregistered nulls, and writes a JSON artifact.
+- Rationale: this is the smallest runner that genuinely exercises the fixed-representation oracle-alpha idea, the prompt/control registries, and the final-normalization-correct reconstruction path while avoiding premature expansion into full multi-layer claim-bearing analysis.
+- Impact: the repo now has a runnable oracle-alpha path plus a `gpt2-xl` pilot artifact, and the next follow-up shifts from “build any runner at all” to “scale and harden the runner with the preregistered stability perturbations.”
