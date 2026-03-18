@@ -97,6 +97,10 @@ target search.
   - the rerun emitted only predictiveness-progress lines, which is consistent
     with reusing saved oracle and feature artifacts rather than recomputing the
     full campaign
+- The tracked machine-readable surface now includes:
+  - `summary.json`
+  - `campaign_manifest.json`
+  - `predictiveness_progress.json`
 
 # Interpretation
 
