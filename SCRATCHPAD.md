@@ -1802,3 +1802,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/checkpoints/prompt_results/tb4-confirm-032-6b7f637f29.json`
 - Anomalies: none; the exact-command rerun reused the full prompt checkpoint set in `9.98` seconds and the checkpoint timestamp hash stayed unchanged. The full local `summary.json` is intentionally left untracked because it is large and the smaller `metrics.json` captures the artifact-level read.
 - Next step: close `resattn-czd`, then use `resattn-apy` as the donor-arm follow-up on the one-token surface.
+
+## [2026-03-18T11:36:28-0500] PRE-RUN: Gemma one-token matched-family v4 donor-arm counterfactual
+- tmux session: `tb-v4-donor-arms`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4 > results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `baseline=tool_breakage_factual_recall_v4 confirm`, `fixed_alpha=tool_breakage_factual_recall_v4 pilot`, `prompts=32`, `controls=legacy cyclic + within-family donor + cross-family donor + fixed-alpha mean`
+- What I'm testing: whether the strong one-token `v4` routed-versus-original confirm baseline survives the explicit donor-arm controls well enough to reopen the broader prompt-specific same-model Gemma tool-breakage claim.
+- Expected outcome: routed stays clearly worse than `pilot_mean_alpha` and turns the primary tuned mean-KL metric positive against the donor arms more broadly than the mixed `v3` surface did.
+- Expected duration: ~25-75 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the donor-arm margins stay mixed even after the one-token redesign, the earlier author-family reversal was only part of the problem and the stronger prompt-specific same-model claim should remain bounded.
+- Implementation verified: YES - the donor-arm runner already produced the saved `v3` artifacts, both local `v4` summary paths exist, and the exact-command reruns on the `v4` pilot and confirm baselines reused checkpoints cleanly.
+- Status: LAUNCHING
+
+## [2026-03-18T13:41:00-0500] POST-RUN: Gemma one-token matched-family v4 donor-arm counterfactual
+- Outcome: SUCCESS
+- Key metric: the one-token `v4` redesign improved the donor-arm surface relative to `v3`, but did not fully reopen the broader prompt-specific same-model claim (`within_family_permuted_alpha` mean tuned KL delta routed-minus-arm `= +0.0165`, `prompt_permuted_alpha = -0.0139`, `cross_family_permuted_alpha = -0.2297`, `pilot_mean_alpha = +0.2642`).
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/checkpoints/prompt_results/tb4-confirm-032-c2257a8f17.json`
+- Anomalies: none; the exact-command rerun reused the full checkpoint set in `10.07` seconds and the checkpoint timestamp hash stayed unchanged.
+- Next step: close `resattn-apy` as a mixed improvement, then use `resattn-8h7` to profile the family-conditioned `v4` donor-arm heterogeneity before any further prompt-surface redesign.

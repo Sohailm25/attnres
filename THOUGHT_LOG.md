@@ -1524,3 +1524,25 @@ Suggested entry format:
   - capital confirm mean tuned KL delta under routing `= +2.9547`
   - element confirm mean tuned KL delta under routing `= +2.9847`
   - moon confirm mean tuned KL delta under routing `= +2.8556`
+## [2026-03-18T13:41:30-0500] The One-Token Donor-Arm Rerun Helped, But Did Not Fully Reopen The Claim
+- Stage: experiment
+- Feel of the Experiment: This is a real improvement, not a wash. The one-token redesign fixed enough of the old donor-arm problem that the old `v3` freeze is too pessimistic now. But it also exposed a different family-specific failure instead of making the pooled story clean.
+- Working Hypotheses:
+  - The answer-format confound was real, because the within-family donor arm flipped from aggregate-negative to slightly positive.
+  - The remaining blocker is now mostly about donor pairing and prompt style in the moon family, not just the old author-family continuation issue.
+- Hunches and Guesses:
+  - A family-conditioned `v4` profile will show that the moon cross-family mapping is the sharpest mismatch worth understanding before any more surface redesign.
+  - Capitals and elements are now the cleanest prompt-specific same-model signal on the one-token surface.
+- Predictions:
+  - `8h7` will probably recommend either remapping the cross-family donor pairing for moons or freezing the claim at a new mixed boundary rather than doing another pooled rerun.
+  - If a future moon-specific cleanup works, the one-token surface could still support a noticeably stronger same-model story than `v3`.
+- Surprises and Tensions:
+  - Authors improved, but they did not fully normalize; they are still slightly negative against the within-family donor arm.
+  - The cross-family arm got worse rather than better, almost entirely because moons collapsed.
+- Confidence:
+  - high that `apy` should close as mixed improvement rather than pass/fail
+  - high that `8h7` is the next honest follow-up if this lane continues
+- Interesting facts:
+  - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.0165`
+  - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0139`
+  - moon routed minus `cross_family_permuted_alpha` mean tuned KL `= -2.9112`

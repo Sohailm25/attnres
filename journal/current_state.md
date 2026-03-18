@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-czd`
-- Focus: `resattn-czd` has now landed the locked one-token `v4` confirm baseline; the next direct tool-breakage follow-up is the donor-arm counterfactual on this redesigned surface.
-- Experimental status: the one-token surface is now a confirm-supported reopening signal. The overall tuned-lens breakage signal stayed strong and every family, including authors, was positive on mean tuned KL under routing on the locked split.
-- Critical reminder: the next real test is `resattn-apy`. Do not reopen broader claims from the confirm baseline alone; use the donor-arm rerun to judge whether the stronger prompt-specific same-model read actually improves on `v4`.
+- Branch: `wip/resattn-scaffold`
+- Focus: `resattn-apy` has now landed the one-token `v4` donor-arm rerun; the next direct tool-breakage follow-up is `resattn-8h7`, the family-conditioned profile on that saved artifact.
+- Experimental status: the one-token surface is now a real mixed improvement over `v3`. The within-family donor arm is no longer aggregate-negative, but the broader prompt-specific same-model claim is still blocked because the cross-family donor arm remains stronger on aggregate.
+- Critical reminder: do not reopen the broader same-model claim from the pooled `v4` donor-arm artifact alone. Use `resattn-8h7` to diagnose the family-conditioned `v4` heterogeneity, especially the moon-family cross-family failure, before any further prompt-surface redesign.

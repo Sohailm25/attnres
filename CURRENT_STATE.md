@@ -532,6 +532,26 @@
       - all `32` prompt checkpoints kept the same timestamp hash under the exact-command rerun
       - the exact-command rerun completed in `9.98` seconds
     - interpretation: the one-token matched-family surface is now strong enough to justify returning to donor-arm controls. The stronger prompt-specific same-model claim is still not reopened yet, but the donor-arm rerun is no longer premature on this redesigned surface
+  - `resattn-apy` now lands that donor-arm rerun on the one-token `v4` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4.md` and `.json` are the dynamic-control artifact on `tool_breakage_factual_recall_v4`
+    - the redesigned surface materially improves the old donor-arm read relative to `v3`:
+      - routed minus `prompt_permuted_alpha` mean tuned KL improves from `-0.0982` to `-0.0139`
+      - routed minus `within_family_permuted_alpha` mean tuned KL improves from `-0.0768` to `+0.0165`
+      - routed minus `pilot_mean_alpha` mean tuned KL stays clearly positive at `+0.2642`
+      - routed minus `cross_family_permuted_alpha` mean tuned KL falls to `-0.2297`
+    - the final-position tuned KL read is slightly healthier than the primary aggregate except for the cross-family arm:
+      - `prompt_permuted_alpha = +0.2545`
+      - `pilot_mean_alpha = +0.8221`
+      - `within_family_permuted_alpha = +0.2960`
+      - `cross_family_permuted_alpha = -0.2900`
+    - the family-conditioned read shows the old author-format problem is smaller, but not the only blocker:
+      - authors remain slightly negative against the within-family donor arm (`-0.0985`) and clearly negative against the cross-family donor arm (`-0.5753`)
+      - capitals and elements are positive against both donor arms
+      - moons are now the main cross-family spoiler (`routed minus cross-family mean tuned KL = -2.9112`)
+    - resume durability is verified on the finished donor-arm output directory:
+      - all `32` prompt checkpoints kept the same timestamp hash under the exact-command rerun
+      - the exact-command rerun completed in `10.07` seconds
+    - interpretation: the one-token redesign is a real partial reopening of the donor-arm story, not a full clear. The stronger prompt-specific same-model claim is healthier than on `v3`, but it is still mixed because the cross-family donor arm remains stronger on aggregate. The next disciplined move is family-conditioned `v4` profiling, not another pooled rerun
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control

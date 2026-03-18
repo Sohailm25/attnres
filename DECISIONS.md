@@ -1029,3 +1029,22 @@
   - every family is `8 / 8` positive on mean tuned KL under routing on the locked split
   - this is now a materially stronger baseline position than the saved `v3` family boundary, so the donor-arm rerun is no longer premature
 - Impact: `resattn-czd` can close once the artifact lands. The next tool-breakage issue is `resattn-apy`: the donor-arm counterfactual on `tool_breakage_factual_recall_v4`.
+
+## [2026-03-18T13:41:00-0500] DECISION: Close `resattn-apy` as a real donor-arm improvement, but keep the broader prompt-specific same-model claim mixed
+
+- Trigger: `resattn-apy` reran the explicit donor-arm counterfactual on the one-token `tool_breakage_factual_recall_v4` confirm surface.
+- Decision: close `resattn-apy` as a mixed improvement. The one-token redesign materially improves the donor-arm picture relative to `v3`, so the old freeze is no longer the right wording. But do not reopen the stronger prompt-specific same-model Gemma claim broadly yet, because the cross-family donor arm still beats routed on the primary tuned mean-KL metric.
+- Rationale:
+  - the primary donor-arm picture is healthier than `v3`:
+    - routed minus `within_family_permuted_alpha` mean tuned KL moves from `-0.0768` to `+0.0165`
+    - routed minus `prompt_permuted_alpha` mean tuned KL moves from `-0.0982` to `-0.0139`
+    - routed minus `pilot_mean_alpha` mean tuned KL stays clearly positive at `+0.2642`
+  - but the stronger pooled reopening is still blocked:
+    - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.2297`
+    - routed minus `cross_family_permuted_alpha` final-position tuned KL `= -0.2900`
+  - the family read shows the redesign changed the bottleneck rather than simply making everything pass:
+    - authors are still slightly negative versus the within-family donor arm (`-0.0985`), but much less damaging than on `v3`
+    - capitals and elements are positive versus both donor arms
+    - moons are now the largest cross-family spoiler (`-2.9112`)
+  - this means the right next move is diagnosis, not another pooled rerun
+- Impact: `resattn-apy` can close once the artifact lands. The next preserved tool-breakage follow-up is `resattn-8h7`, which profiles the family-conditioned `v4` donor-arm heterogeneity and decides whether the next honest move is moon-prompt redesign, donor-pair remapping, or a new mixed boundary freeze.
