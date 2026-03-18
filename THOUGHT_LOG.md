@@ -1414,3 +1414,24 @@ Suggested entry format:
 - Interesting facts:
   - `v3` confirm mean tuned KL delta `= +2.9127` versus `v2` confirm `+2.7644`
   - `v3` confirm tuned best-target-rank worsening `= 0.65625`
+## [2026-03-18T10:24:30-0500] The Broader Donor-Arm Test Did Not Broaden The Claim
+- Stage: experiment
+- Feel of the Experiment: This was the right place to stop. The broader control answered the question cleanly enough that another immediate rerun would mostly be goalpost movement.
+- Working Hypotheses:
+  - The same-model tool-breakage lane has a solid bounded baseline story and a cleared fixed-alpha objection.
+  - The stronger prompt-specific donor-arm story is not broad enough yet on the expanded surface.
+- Hunches and Guesses:
+  - The author family is the real spoiler on the broader within-family aggregate.
+  - If this lane reopens, it should reopen through family-conditioned analysis, not a bigger pooled run.
+- Predictions:
+  - A write-up that emphasizes “bounded same-model breakage plus mixed donor-arm control” will hold up better than trying to force a stronger dynamic-routing story.
+- Surprises and Tensions:
+  - Routed still won on `18 / 32` prompts against the within-family donor arm by mean tuned KL, but lost on the aggregate because the author-family negatives were larger.
+  - Final-position tuned KL stayed positive versus the within-family donor arm even while the mean tuned KL aggregate turned negative.
+- Confidence:
+  - high that `4g2` should close as mixed
+  - high that the same-model tool-breakage claim should now stay bounded at this surface
+- Interesting facts:
+  - Routed minus `within_family_permuted_alpha` mean tuned KL `= -0.0768`
+  - Routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.0560`
+  - `subcategory_author_fact` mean routed-minus-within-family KL `= -0.3678`

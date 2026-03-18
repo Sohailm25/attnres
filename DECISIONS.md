@@ -937,3 +937,22 @@
   - tuned best-target-rank worsening rises to `0.65625`
   This is enough to say the expanded surface is not diluting the lane. The remaining question is now the larger donor-arm control, not whether the broader matched-family baseline was a bad idea.
 - Impact: `resattn-cky` can close once the confirm artifact lands. The next tool-breakage issue is `resattn-4g2`: the donor-arm counterfactual on `tool_breakage_factual_recall_v3`.
+
+## [2026-03-18T10:24:25-0500] DECISION: Close `resattn-4g2` as the final mixed boundary on the broader matched-family surface
+
+- Trigger: `resattn-4g2` ran the explicit donor-arm counterfactual on the locked `tool_breakage_factual_recall_v3` confirm surface.
+- Decision: close the issue as mixed and treat the same-model tool-breakage claim as bounded at this broader surface. Do not spend another immediate run on more prompt-surface scaling or another donor-control redesign. If this lane reopens later, start with `resattn-mxf` and analyze the family-conditioned heterogeneity first.
+- Rationale: the broader `v3` control split answers the main scaling question cleanly:
+  - the fixed-alpha objection stays clearly weaker than routed:
+    - routed minus `pilot_mean_alpha` mean tuned KL `= +0.8056`
+    - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.1740`
+  - the stronger prompt-specific story does not broaden enough on the primary metric:
+    - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.0768`
+    - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.0560`
+    - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0982`
+  - the metric conflict is real rather than a simple collapse:
+    - routed beats the within-family donor arm on mean tuned KL on `18 / 32` prompts
+    - routed beats the within-family donor arm on final-position tuned KL by `+0.2198` on average
+    - but `subcategory_author_fact` drags the within-family mean aggregate negative (`-0.3678`) while `subcategory_element_symbol` still favors routed (`+0.1624`)
+  This is enough to freeze the stronger same-model escalation honestly: the lane has a strong baseline and a cleared fixed-alpha objection, but not a broad positive within-family donor-control result on the primary metric.
+- Impact: `resattn-4g2` can close once the artifact lands. Tool-breakage should no longer be the default next engineering lane; if it resumes later, use `resattn-mxf` to analyze family-conditioned heterogeneity rather than launching another larger run by reflex.

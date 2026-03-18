@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-cky`
-- Focus: `resattn-cky` has now landed the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`; the next meaningful move is `resattn-4g2`, the larger donor-arm counterfactual on that same surface.
-- Experimental status: the larger balanced confirm read slightly strengthened the aligned same-model breakage story rather than washing it out. The tuned KL delta rose to `+2.9127`, while the relative rank metrics stayed alive on the 32-prompt surface.
-- Critical reminder: the next uncertainty is now the donor-arm control on the broader confirm set, not whether the larger matched-family surface itself is viable.
+- Branch: `wip/resattn-4g2`
+- Focus: `resattn-4g2` has now landed the donor-arm counterfactual on the broader `tool_breakage_factual_recall_v3` surface; the tool-breakage lane should now be treated as scientifically bounded at this result unless `resattn-mxf` uncovers a cleaner family-conditioned story.
+- Experimental status: the broader `v3` surface preserved the strong baseline and the fixed-alpha gap, but it did not preserve a positive routed-minus-within-family mean tuned KL aggregate. The stronger same-model tool-breakage claim therefore stays narrow and mixed.
+- Critical reminder: if tool-breakage work resumes later, the next disciplined move is family-conditioned analysis of the `v3` donor-arm heterogeneity, not another prompt-surface expansion or another generic control rerun.

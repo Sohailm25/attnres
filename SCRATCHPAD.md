@@ -1730,3 +1730,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/checkpoints/prompt_results/tb3-confirm-032-f4645fc040.json`
 - Anomalies: none; the full local `summary.json` is intentionally left untracked because it exceeds the pre-commit added-file limit, and the exact-command rerun reused the prompt checkpoints in `10.01` seconds while leaving their timestamps unchanged.
 - Next step: close `resattn-cky`, then run `resattn-4g2` for the larger donor-arm counterfactual on the same `v3` surface.
+
+## [2026-03-18T10:31:00-0500] PRE-RUN: Gemma matched-family v3 donor-arm counterfactual
+- tmux session: `tb-v3-donor-arms`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `baseline=tool_breakage_factual_recall_v3 confirm`, `fixed_alpha=tool_breakage_factual_recall_v3 pilot`, `prompts=32`, `controls=legacy cyclic + within-family donor + cross-family donor + fixed-alpha mean`
+- What I'm testing: whether the narrow donor-arm advantage from `tool_breakage_factual_recall_v2` survives the broader balanced `v3` confirm surface strongly enough to support a broader same-model tool-breakage read.
+- Expected outcome: the run writes prompt checkpoints and keeps routed at least slightly worse than the explicit within-family donor arm on the tuned primary metric, while the fixed-alpha arm remains clearly weaker.
+- Expected duration: ~25-75 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the donor-arm margins shrink materially on `v3`, the earlier `v2` aggregate may have been too prompt-surface-specific even though the larger baseline remained strong.
+- Implementation verified: YES - the donor-arm runner already passed full tests on the `v2` surface, and both local `v3` baseline summary paths exist with checkpointed prompt results.
+- Status: LAUNCHING
+
+## [2026-03-18T10:24:25-0500] POST-RUN: Gemma matched-family v3 donor-arm counterfactual
+- Outcome: SUCCESS
+- Key metric: routed still clearly beats the fixed-alpha control (`mean tuned KL delta routed-minus-arm = +0.8056`) but no longer keeps a positive routed-minus-within-family mean tuned KL aggregate on the broader `v3` surface (`-0.0768`), even though routed stays slightly worse than the within-family arm on final-position tuned KL (`+0.2198`) and wins on `18 / 32` prompts by mean tuned KL.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3/checkpoints/prompt_results/tb3-confirm-032-f4645fc040.json`
+- Anomalies: none; exact-command rerun reused the full four-arm checkpoints and finished in `9.98` seconds while leaving all prompt checkpoint timestamps unchanged.
+- Next step: close `resattn-4g2` as mixed and treat the stronger same-model tool-breakage claim as bounded at the current `v3` donor-arm result. If the lane reopens later, start with `resattn-mxf` rather than another larger rerun.

@@ -435,6 +435,27 @@
       - all `32` prompt checkpoints kept their original timestamps from the first run
       - the exact-command rerun completed in `10.01` seconds and rewrote only the local untracked `summary.json`
     - interpretation: the expanded matched-family surface is now a real confirmatory baseline, not just a pilot idea. The next efficient move is the donor-arm counterfactual on this larger surface
+  - `resattn-4g2` now lands that larger donor-arm counterfactual on the locked `v3` confirm surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3.md` is the broader donor-arm control artifact on `tool_breakage_factual_recall_v3`
+    - the fixed-alpha objection remains clearly weaker than routed:
+      - routed minus `pilot_mean_alpha` mean tuned KL `= +0.8056`
+      - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.1740`
+    - the broader donor-arm read does not preserve a positive within-family primary-metric gap:
+      - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.0768`
+      - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.0560`
+      - routed minus legacy `prompt_permuted_alpha` mean tuned KL `= -0.0982`
+    - the conflict is real rather than a simple collapse:
+      - routed beats the within-family donor arm on mean tuned KL on `18 / 32` prompts
+      - routed beats the within-family donor arm on final-position tuned KL by `+0.2198` on average
+      - routed increases tuned target-rank range versus the within-family donor arm on `20 / 32` prompts (`0.625`)
+    - family-conditioned heterogeneity is now the main residual story:
+      - `subcategory_author_fact` mean routed-minus-within-family KL `= -0.3678`
+      - `subcategory_element_symbol` mean routed-minus-within-family KL `= +0.1624`
+      - capitals and moons sit near zero on that within-family mean-KL contrast
+    - resume durability is verified on the finished donor-arm output directory:
+      - all `32` prompt checkpoints kept their original timestamps from the first run
+      - the exact-command rerun completed in `9.98` seconds and rewrote only `summary.json`
+    - interpretation: the tool-breakage lane now has a strong bounded same-model baseline plus a cleared fixed-alpha objection, but the broader `v3` donor-arm control does not support a stronger prompt-specific escalation on the primary metric. The current claim boundary should freeze here unless a later family-conditioned analysis justifies reopening it
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -775,9 +796,9 @@
 
 ## Immediate Next Steps
 
-1. Run `resattn-4g2`, the donor-arm counterfactual on the locked `tool_breakage_factual_recall_v3` confirm surface.
-2. Treat `tool_breakage_factual_recall_v3` as the new main matched-family surface for this lane; use `v2` as the bridge artifact that motivated the larger confirm read.
-3. Treat the stronger same-model Gemma tool-breakage claim as one run away from a broader control read: the larger confirm baseline is now strong enough that the only remaining high-value question in this batch is whether the donor-arm advantage survives on `v3`.
+1. Treat `tool_breakage_factual_recall_v3` as the main matched-family surface for this lane and freeze the stronger same-model tool-breakage claim at the current `v3` donor-arm boundary.
+2. If tool-breakage work resumes later, start with `resattn-mxf`: family-conditioned analysis of the broader donor-arm heterogeneity, especially the author-family drag on the within-family mean-KL aggregate.
+3. Treat the current tool-breakage story as bounded but real: strong routed-versus-original and fixed-alpha gaps survive on the broader surface, but the broader within-family donor-control result stays mixed on the primary metric.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
