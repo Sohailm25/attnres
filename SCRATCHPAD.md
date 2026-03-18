@@ -1410,3 +1410,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max96-v1/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
 - Anomalies: the confirm counterfeiting policy note became substantive at larger budgets but still used prohibition-style institutional language (`It is strictly prohibited to assist...`) that the current matcher does not recognize.
 - Next step: close `resattn-9us` and track the narrower matcher follow-up as `resattn-1wr`.
+
+## [2026-03-18T04:08:00-0500] PRE-RUN: prohibition-style policy matcher rerun
+- tmux session: `N/A`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v2 --device mps --max-new-tokens 96 --output-dir results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v2`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens=96`
+- What I'm testing: whether extending the policy-style matcher to prohibition-style institutional language cleans the remaining substantive confirm policy-note miss without changing the mechanistic discovery metrics.
+- Expected outcome: confirm non-refusal pass rate rises from `0.8333` to `0.9167`, pilot stays `1.0`, and refusal/harmfulness localization stays unchanged.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1/checkpoints/prompt_residuals/`
+- Checkpoint cadence: after each prompt checkpoint
+- Log path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if confirm pass still stays `0.8333`, then the counterfeiting prompt is not just a matcher-wiring issue and the surface should stop getting semantic follow-ups.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_safety_alignment tests.test_prompt_registry` passed after extending the policy-style matcher regex.
+- Status: LAUNCHING
+
+## [2026-03-18T04:14:00-0500] POST-RUN: prohibition-style policy matcher rerun
+- Outcome: SUCCESS
+- Key metric: confirm non-refusal pass rate improved from `0.8333` to `0.9167` while pilot stayed `1.0`, and the mechanistic discovery metrics were unchanged.
+- Artifacts saved: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1/summary.json`, `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1.md`
+- Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
+- Anomalies: none; the remaining confirm mismatch is now the genuinely refusal-like harmful-context prompt rather than another policy-note semantics gap.
+- Next step: close `resattn-1wr` and pivot the next full pass toward `resattn-rh0`.

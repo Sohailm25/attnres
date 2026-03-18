@@ -490,6 +490,15 @@
       - the pilot infrastructure note becomes policy-style compliant only after the larger budget reveals explicit `cannot and will not condone` language
       - the confirm counterfeiting note becomes substantive at larger budgets but still uses prohibition-style institutional language (`It is strictly prohibited to assist...`) that the current matcher does not yet recognize
     - interpretation: completion budget was part of the residual problem, but the remaining confirm miss is now clearly a narrower policy-style matcher issue rather than just truncation
+  - `resattn-1wr` now resolves that narrower prohibition-style matcher gap:
+    - `validation/safety_alignment.py` now treats prohibition-style institutional language such as `It is strictly prohibited to assist...` as policy-style compliant behavior
+    - the rerun artifact `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1.md` keeps the mechanistic read fixed:
+      - refusal localization `= layer 22`
+      - harmfulness localization `= layer 18`
+      - refusal and harmfulness confirm pair accuracy both stay `1.0`
+      - pilot non-refusal pass rate stays `1.0`
+      - confirm non-refusal pass rate improves from `0.8333` to `0.9167`
+    - interpretation: the current broadened surface is now behaviorally clean enough that the only remaining confirm mismatch is a genuinely refusal-like harmful-context completion rather than a semantics bug
   - `resattn-5eo` now lands the prereg-required primary-model routing-regime comparison on Gemma:
     - `validation/comparison_regimes.py` and `scripts/run_oracle_alpha_regime_comparison.py` now implement the checkpointed softmax versus unconstrained versus top-k comparison path
     - `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` is the first full primary-model regime artifact on the locked `128`-prompt confirm surface
@@ -507,8 +516,8 @@
 
 ## Immediate Next Steps
 
-1. If safety prompt-surface work resumes, use `resattn-1wr` to extend the policy-style matcher to prohibition-style institutional language and rerun the broadened validation once.
-2. Treat the primary-model oracle lane as operationally ready for larger reruns; there are no remaining ready oracle-infrastructure blockers.
+1. Use `resattn-rh0` to plan the next larger stratified primary-model Gemma oracle-alpha campaign beyond `registry_v4`.
+2. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
