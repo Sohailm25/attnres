@@ -1314,3 +1314,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/checkpoints/`
 - Anomalies: the first launch failed because the bracketed feature-source name was not shell-quoted; the rerun fixed that and the smoke completed cleanly.
 - Next step: close `resattn-9co` and move the remaining ready queue to `resattn-ac2`.
+
+## [2026-03-18T03:40:00-0500] PRE-RUN: tag-aware broadened refusal-surface validation
+- tmux session: `N/A`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v2 --device mps --output-dir results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v2`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens=32`
+- What I'm testing: whether the tag-aware behavior semantics make the broadened-surface validation artifact reflect intentional refusal-style compliance rather than treating it as failure.
+- Expected outcome: direction localization and pair accuracy stay strong, and the broadened non-refusal behavior rates improve relative to the old role-only validator.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1/checkpoints/prompt_residuals/`
+- Checkpoint cadence: after each prompt checkpoint
+- Log path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the behavior rates do not improve, then the issue is not just validator semantics and the broadened prompt wording itself is less behaviorally clean than it looked.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_safety_alignment tests.test_prompt_registry` passed after adding tag-aware behavior modes.
+- Status: LAUNCHING
+
+## [2026-03-18T04:15:00-0500] POST-RUN: tag-aware broadened refusal-surface validation
+- Outcome: SUCCESS
+- Key metric: confirm non-refusal behavior pass rate improved from `0.6667` to `0.8333` while refusal/harmfulness localization and confirm pair accuracy stayed unchanged.
+- Artifacts saved: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1/summary.json`, `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1.md`
+- Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
+- Anomalies: the tag-aware rerun fixed the old refusal-style false negatives, but some policy-note benign prompts still do not match the current first-person refusal marker and one harmful-context confirm prompt still elicited a genuine refusal-style completion.
+- Next step: close `resattn-ac2` and track the narrower policy-style follow-up as `resattn-7km`.

@@ -705,3 +705,14 @@
   - the log captures per-regularization progress lines during tuning
   This is enough to say the campaign path no longer looks dead once oracle checkpointing is complete.
 - Impact: `resattn-9co` can close. The oracle lane is now operationally ready for larger reruns, and the only remaining ready issue is `resattn-ac2`.
+
+## [2026-03-18T04:15:00-0500] DECISION: Close `resattn-ac2` by making safety behavior expectations tag-aware
+
+- Trigger: `resattn-ac2` targeted the broadened aligned-Gemma surface after `resattn-mo5` showed that the old validator was treating some intentionally refusal-style compliant prompts as failures simply because they were not in the `refusal` role.
+- Decision: derive expected behavior from prompt tags first, not from role alone, and rerun the broadened validation artifact with the new semantics.
+- Rationale: this is the smallest fix that actually addresses the exposed defect. The updated rerun keeps the mechanistic story unchanged while improving the behavior summary:
+  - refusal and harmfulness localization stay at layers `22` and `18`
+  - both confirm pair accuracies stay `1.0`
+  - confirm non-refusal behavior pass rate improves from `0.6667` to `0.8333`
+  The remaining misses are now narrower and more honest: one harmful-context prompt still elicits a genuine refusal-style completion, and some policy-note benign prompts still fall outside the current first-person refusal marker. That residual gap is a new issue, not a reason to keep `ac2` open.
+- Impact: `resattn-ac2` can close. Future safety prompt-surface work should use the tag-aware validator, and the new follow-up is `resattn-7km` for policy-style compliant behavior modes.
