@@ -1089,13 +1089,35 @@
       - feature checkpoints store one aggregated vector per prompt
       - no token ids, `h_1[t]`, `h_4[t]`, or other per-token supervision are persisted
     - interpretation: the next honest Phase 6 move is not immediate training. It is a pilot-only per-token export slice so the router-distillation lane has the supervision it actually requires
+  - `resattn-1ot` now lands that pilot-only per-token export slice on the saved Gemma campaign:
+    - `validation/router_training_export.py` and `scripts/export_router_distillation_pilot_dataset.py` provide a dedicated export path rather than mutating oracle campaign semantics
+    - `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/` now persists a training-ready pilot dataset:
+      - `256` prompt exports
+      - `4013` total tokens
+      - balanced `64 x 4` stratum coverage
+      - per-prompt fields:
+        - `prompt_id`
+        - `prompt`
+        - `split`
+        - `target_text`
+        - `tags`
+        - `perturbations`
+        - `token_ids`
+        - `h_1[t]`
+        - `h_4[t]`
+        - `source_labels`
+        - `final_alpha`
+    - the completed output now passes the real resume check after the schema refresh:
+      - old prompt checkpoints missing `tags` / `perturbations` are recomputed in place
+      - an exact-command rerun against the completed output directory reuses the refreshed checkpoints with unchanged sample hash and completes in `10.07s`
+    - interpretation: the router-training lane is no longer blocked by missing pilot supervision; the next honest Phase 6 move is the prereg pilot router comparison (`h_1[t]` versus `h_4[t]`), not more export plumbing
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
-2. Start Phase 6 with the smallest honest data-readiness slice:
-   - the saved `registry_v5` campaign does not persist token ids or per-token hidden states
-   - the next core implementation move is pilot-only per-token export, not immediate router training
+2. Start Phase 6 with the smallest honest model-training slice:
+   - the saved `registry_v5` pilot export now persists token ids plus per-token `h_1[t]` and `h_4[t]` joined to sequence-level `final_alpha`
+   - the next core implementation move is `resattn-m6r`: pilot router distillation on that saved dataset, with the prereg `h_1[t]` versus `h_4[t]` comparison logged before any confirmatory training
 3. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
 4. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

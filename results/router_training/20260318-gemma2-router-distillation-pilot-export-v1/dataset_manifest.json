@@ -1,0 +1,4630 @@
+{
+  "checkpoint_dir": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports",
+  "collection_id": "oracle_alpha_phase1_v1",
+  "dataset_fields": [
+    "prompt_id",
+    "prompt",
+    "split",
+    "target_text",
+    "tags",
+    "perturbations",
+    "token_ids",
+    "h_1[t]",
+    "h_4[t]",
+    "source_labels",
+    "final_alpha"
+  ],
+  "entries": [
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-001-52957fa8f5.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The capital city of France is",
+      "prompt_id": "oa5-pilot-factual_recall-001",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-001-82179a511e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Mira had 7 pencils, gave away 2, and bought 3 more. Mira now has",
+      "prompt_id": "oa5-pilot-reasoning_math-001",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-001-fa9978d73c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def clean_names(names):\n    return [name.strip() for name in",
+      "prompt_id": "oa5-pilot-code_procedural-001",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-001-0d0c446075.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Near the market gate, a street vendor set a crate of lemons beside the",
+      "prompt_id": "oa5-pilot-general_text-001",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-002-142243d908.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Travel guides note that the capital of France is",
+      "prompt_id": "oa5-pilot-factual_recall-002",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-002-5c9b8e9bd6.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 20,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After giving away 2 of the 7 pencils and then buying 3 more, Mira has",
+      "prompt_id": "oa5-pilot-reasoning_math-002",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-002-37c864c52c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 33,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def clean_names(names):\n    cleaned = []\n    for name in names:\n        cleaned.append(name.strip())\n    return",
+      "prompt_id": "oa5-pilot-code_procedural-002",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-002-c59c69853c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the market gate, the street vendor balanced a crate of lemons on the",
+      "prompt_id": "oa5-pilot-general_text-002",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-003-e900307f8d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "On most maps, the capital of France appears as",
+      "prompt_id": "oa5-pilot-factual_recall-003",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-003-5eb4bb82da.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Mira counted 7 pencils, lost 2, and added 3 later. The new total is",
+      "prompt_id": "oa5-pilot-reasoning_math-003",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-003-6393aa863a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def clean_names(names):\n    return list(map(lambda name: name.strip(),",
+      "prompt_id": "oa5-pilot-code_procedural-003",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-003-948d962930.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the market gate, a street vendor reached for a crate of lemons under the",
+      "prompt_id": "oa5-pilot-general_text-003",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-004-f7595e387f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In a geography quiz, the capital of France would be",
+      "prompt_id": "oa5-pilot-factual_recall-004",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-004-c73e29bb88.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Mira starts with 7 pencils. If Mira gives away 2 and gets 3 back later, the total becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-004",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-004-e6d4705e3c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "clean_names = lambda names: [name.strip() for name in",
+      "prompt_id": "oa5-pilot-code_procedural-004",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-004-1292fb8947.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 15,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A street vendor passed the market gate carrying a crate of lemons toward the",
+      "prompt_id": "oa5-pilot-general_text-004",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-005-bf2fe8de09.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The capital city of Japan is",
+      "prompt_id": "oa5-pilot-factual_recall-005",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-005-ec221bd944.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Jonah had 12 marbles, gave away 5, and bought 4 more. Jonah now has",
+      "prompt_id": "oa5-pilot-reasoning_math-005",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-005-ba5f268694.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def lowercase_tags(tags):\n    return [tag.lower() for tag in",
+      "prompt_id": "oa5-pilot-code_procedural-005",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-005-1b69c234fa.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Near the brick path, a gardener set a watering can beside the",
+      "prompt_id": "oa5-pilot-general_text-005",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-006-85dfa4575d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Travel guides note that the capital of Japan is",
+      "prompt_id": "oa5-pilot-factual_recall-006",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-006-92784ca71d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After giving away 5 of the 12 marbles and then buying 4 more, Jonah has",
+      "prompt_id": "oa5-pilot-reasoning_math-006",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-006-cfdb5d7778.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 33,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def lowercase_tags(tags):\n    cleaned = []\n    for tag in tags:\n        cleaned.append(tag.lower())\n    return",
+      "prompt_id": "oa5-pilot-code_procedural-006",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-006-e41838f9d7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the brick path, the gardener balanced a watering can on the",
+      "prompt_id": "oa5-pilot-general_text-006",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-007-cf5200ba77.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "On most maps, the capital of Japan appears as",
+      "prompt_id": "oa5-pilot-factual_recall-007",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-007-fc4dde346a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Jonah counted 12 marbles, lost 5, and added 4 later. The new total is",
+      "prompt_id": "oa5-pilot-reasoning_math-007",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-007-ef2edd3889.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def lowercase_tags(tags):\n    return list(map(lambda tag: tag.lower(),",
+      "prompt_id": "oa5-pilot-code_procedural-007",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-007-e62f23d6a1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 15,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the brick path, a gardener reached for a watering can under the",
+      "prompt_id": "oa5-pilot-general_text-007",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-008-6cdc20241a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In a geography quiz, the capital of Japan would be",
+      "prompt_id": "oa5-pilot-factual_recall-008",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-008-56042be469.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Jonah starts with 12 marbles. If Jonah gives away 5 and gets 4 back later, the total becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-008",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-008-c820889ed3.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "lowercase_tags = lambda tags: [tag.lower() for tag in",
+      "prompt_id": "oa5-pilot-code_procedural-008",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-008-838d158def.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A gardener passed the brick path carrying a watering can toward the",
+      "prompt_id": "oa5-pilot-general_text-008",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-009-f1fbf86c97.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The capital city of Brazil is",
+      "prompt_id": "oa5-pilot-factual_recall-009",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-009-48bbf3d232.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Avery had 18 tickets, gave away 6, and bought 2 more. Avery now has",
+      "prompt_id": "oa5-pilot-reasoning_math-009",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-009-dbe5d861ca.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 20,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def titlecase_titles(titles):\n    return [title.title() for title in",
+      "prompt_id": "oa5-pilot-code_procedural-009",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-009-d2292f885e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Near the reading room, a librarian set a book cart beside the",
+      "prompt_id": "oa5-pilot-general_text-009",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-010-777d753dcc.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Travel guides note that the capital of Brazil is",
+      "prompt_id": "oa5-pilot-factual_recall-010",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-010-de56736fdf.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After giving away 6 of the 18 tickets and then buying 2 more, Avery has",
+      "prompt_id": "oa5-pilot-reasoning_math-010",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-010-5265a1b6cc.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 34,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def titlecase_titles(titles):\n    cleaned = []\n    for title in titles:\n        cleaned.append(title.title())\n    return",
+      "prompt_id": "oa5-pilot-code_procedural-010",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-010-1d01ddf74a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the reading room, the librarian balanced a book cart on the",
+      "prompt_id": "oa5-pilot-general_text-010",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-011-425815efc2.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "On most maps, the capital of Brazil appears as",
+      "prompt_id": "oa5-pilot-factual_recall-011",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-011-e6f8a95f06.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Avery counted 18 tickets, lost 6, and added 2 later. The new total is",
+      "prompt_id": "oa5-pilot-reasoning_math-011",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-011-154d0b7bf1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def titlecase_titles(titles):\n    return list(map(lambda title: title.title(),",
+      "prompt_id": "oa5-pilot-code_procedural-011",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-011-f35cc3e388.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 15,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the reading room, a librarian reached for a book cart under the",
+      "prompt_id": "oa5-pilot-general_text-011",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-012-05a2c9e1b3.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In a geography quiz, the capital of Brazil would be",
+      "prompt_id": "oa5-pilot-factual_recall-012",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-012-3994a660a2.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Avery starts with 18 tickets. If Avery gives away 6 and gets 2 back later, the total becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-012",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-012-64203f1f85.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "titlecase_titles = lambda titles: [title.title() for title in",
+      "prompt_id": "oa5-pilot-code_procedural-012",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-012-c1d5da7fad.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A librarian passed the reading room carrying a book cart toward the",
+      "prompt_id": "oa5-pilot-general_text-012",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-013-d9d11b56e9.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The capital city of Kenya is",
+      "prompt_id": "oa5-pilot-factual_recall-013",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-013-1268d57ad4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Leah had 11 stickers, gave away 3, and bought 5 more. Leah now has",
+      "prompt_id": "oa5-pilot-reasoning_math-013",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-013-008d7bd5ba.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def normalize_codes(codes):\n    return [code.strip() for code in",
+      "prompt_id": "oa5-pilot-code_procedural-013",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-013-1bfd570774.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Near the cafe window, a cyclist set a helmet beside the",
+      "prompt_id": "oa5-pilot-general_text-013",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-014-512549ac84.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Travel guides note that the capital of Kenya is",
+      "prompt_id": "oa5-pilot-factual_recall-014",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-014-5f21c61578.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After giving away 3 of the 11 stickers and then buying 5 more, Leah has",
+      "prompt_id": "oa5-pilot-reasoning_math-014",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-014-2499328d1c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 33,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def normalize_codes(codes):\n    cleaned = []\n    for code in codes:\n        cleaned.append(code.strip())\n    return",
+      "prompt_id": "oa5-pilot-code_procedural-014",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-014-6bc9fc51ff.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the cafe window, the cyclist balanced a helmet on the",
+      "prompt_id": "oa5-pilot-general_text-014",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-015-a85bc94409.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "On most maps, the capital of Kenya appears as",
+      "prompt_id": "oa5-pilot-factual_recall-015",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-015-64b5cd8637.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Leah counted 11 stickers, lost 3, and added 5 later. The new total is",
+      "prompt_id": "oa5-pilot-reasoning_math-015",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-015-2edf38f8d0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "def normalize_codes(codes):\n    return list(map(lambda code: code.strip(),",
+      "prompt_id": "oa5-pilot-code_procedural-015",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-015-c9e7e7e2a6.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the cafe window, a cyclist reached for a helmet under the",
+      "prompt_id": "oa5-pilot-general_text-015",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-016-acfac870b0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In a geography quiz, the capital of Kenya would be",
+      "prompt_id": "oa5-pilot-factual_recall-016",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_capital_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-016-1895dfffa0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Leah starts with 11 stickers. If Leah gives away 3 and gets 5 back later, the total becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-016",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_arithmetic_story"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-016-d1dbe972c0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "normalize_codes = lambda codes: [code.strip() for code in",
+      "prompt_id": "oa5-pilot-code_procedural-016",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_python_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-016-783e53f5b8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A cyclist passed the cafe window carrying a helmet toward the",
+      "prompt_id": "oa5-pilot-general_text-016",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_street_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-017-0d4269e5f5.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The novel Pride and Prejudice was written by",
+      "prompt_id": "oa5-pilot-factual_recall-017",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-017-b1471d9092.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the shuttle begins at 7:10 AM and lasts 35 minutes, it ends at",
+      "prompt_id": "oa5-pilot-reasoning_math-017",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-017-38da1d69dc.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT customer_id, COUNT(*)\nFROM orders\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-017",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-017-71787f7beb.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the ward station, a nurse set a clipboard beside the",
+      "prompt_id": "oa5-pilot-general_text-017",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-018-2615cf4ed0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Literature students learn that Pride and Prejudice was written by",
+      "prompt_id": "oa5-pilot-factual_recall-018",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-018-8fbacd321b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "the shuttle starts at 7:10 AM. 35 minutes later, the time will be",
+      "prompt_id": "oa5-pilot-reasoning_math-018",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-018-dc7d0b7007.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT customer_id, AVG(total_amount)\nFROM orders\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-018",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-018-142ac6b291.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the ward station, a nurse reached for a clipboard near the",
+      "prompt_id": "oa5-pilot-general_text-018",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-019-095cd5243d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 8,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The author of Pride and Prejudice is",
+      "prompt_id": "oa5-pilot-factual_recall-019",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-019-6ab65e1ddc.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A schedule shows the shuttle at 7:10 AM for 35 minutes. The finish time is",
+      "prompt_id": "oa5-pilot-reasoning_math-019",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-019-ffbb43cd7c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT customer_id, MAX(total_amount)\nFROM orders\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-019",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-019-bb6918bfea.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The nurse checked a clipboard before crossing the ward station toward the",
+      "prompt_id": "oa5-pilot-general_text-019",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-020-74c3e04706.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Most library catalogs list Pride and Prejudice under",
+      "prompt_id": "oa5-pilot-factual_recall-020",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-020-ae244571bf.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "When the shuttle begins at 7:10 AM and runs for 35 minutes, it wraps up at",
+      "prompt_id": "oa5-pilot-reasoning_math-020",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-020-aa85535888.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT customer_id\nFROM orders\nORDER BY created_at DESC,",
+      "prompt_id": "oa5-pilot-code_procedural-020",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-020-6f75847dff.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the ward station, a nurse rested a clipboard on the",
+      "prompt_id": "oa5-pilot-general_text-020",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-021-63cbba56e4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The novel 1984 was written by",
+      "prompt_id": "oa5-pilot-factual_recall-021",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-021-d0b88af92e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the train begins at 3:25 PM and lasts 45 minutes, it ends at",
+      "prompt_id": "oa5-pilot-reasoning_math-021",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-021-ce049200eb.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT agent_id, COUNT(*)\nFROM tickets\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-021",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-021-cc2c16985b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the drafting table, an engineer set a blueprint beside the",
+      "prompt_id": "oa5-pilot-general_text-021",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-022-bb63ac603b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Literature students learn that 1984 was written by",
+      "prompt_id": "oa5-pilot-factual_recall-022",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-022-87b4ea6d10.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "the train starts at 3:25 PM. 45 minutes later, the time will be",
+      "prompt_id": "oa5-pilot-reasoning_math-022",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-022-c06db9c4f8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT agent_id, AVG(resolution_minutes)\nFROM tickets\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-022",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-022-8c7eca4407.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the drafting table, an engineer reached for a blueprint near the",
+      "prompt_id": "oa5-pilot-general_text-022",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-023-628ade76ba.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The author of 1984 is",
+      "prompt_id": "oa5-pilot-factual_recall-023",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-023-4c57fc0e07.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A schedule shows the train at 3:25 PM for 45 minutes. The finish time is",
+      "prompt_id": "oa5-pilot-reasoning_math-023",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-023-5e0c8eab3a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT agent_id, MAX(resolution_minutes)\nFROM tickets\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-023",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-023-719b61a431.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The engineer checked a blueprint before crossing the drafting table toward the",
+      "prompt_id": "oa5-pilot-general_text-023",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-024-8c8eb7e917.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Most library catalogs list 1984 under",
+      "prompt_id": "oa5-pilot-factual_recall-024",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-024-115c4e10f8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "When the train begins at 3:25 PM and runs for 45 minutes, it wraps up at",
+      "prompt_id": "oa5-pilot-reasoning_math-024",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-024-40478e083f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT agent_id\nFROM tickets\nORDER BY closed_at DESC,",
+      "prompt_id": "oa5-pilot-code_procedural-024",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-024-b144c6b572.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the drafting table, an engineer rested a blueprint on the",
+      "prompt_id": "oa5-pilot-general_text-024",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-025-18d1836532.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The novel Beloved was written by",
+      "prompt_id": "oa5-pilot-factual_recall-025",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-025-3f69af03db.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the ferry begins at 11:40 AM and lasts 50 minutes, it ends at",
+      "prompt_id": "oa5-pilot-reasoning_math-025",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-025-1859b71a22.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT region, COUNT(*)\nFROM shipments\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-025",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-025-8c5676a85f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the storage room, an archivist set a box of files beside the",
+      "prompt_id": "oa5-pilot-general_text-025",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-026-6e6b404dcb.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Literature students learn that Beloved was written by",
+      "prompt_id": "oa5-pilot-factual_recall-026",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-026-12f3fec186.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "the ferry starts at 11:40 AM. 50 minutes later, the time will be",
+      "prompt_id": "oa5-pilot-reasoning_math-026",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-026-56fe5eae7b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT region, AVG(delivery_days)\nFROM shipments\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-026",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-026-d61d42ddff.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the storage room, an archivist reached for a box of files near the",
+      "prompt_id": "oa5-pilot-general_text-026",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-027-b4337620b7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 6,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The author of Beloved is",
+      "prompt_id": "oa5-pilot-factual_recall-027",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-027-be4743b01e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A schedule shows the ferry at 11:40 AM for 50 minutes. The finish time is",
+      "prompt_id": "oa5-pilot-reasoning_math-027",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-027-f230b32325.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT region, MAX(delivery_days)\nFROM shipments\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-027",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-027-d52510ccd2.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The archivist checked a box of files before crossing the storage room toward the",
+      "prompt_id": "oa5-pilot-general_text-027",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-028-750aad472f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Most library catalogs list Beloved under",
+      "prompt_id": "oa5-pilot-factual_recall-028",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-028-28e4072c07.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "When the ferry begins at 11:40 AM and runs for 50 minutes, it wraps up at",
+      "prompt_id": "oa5-pilot-reasoning_math-028",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-028-05011a56f3.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT region\nFROM shipments\nORDER BY shipped_at DESC,",
+      "prompt_id": "oa5-pilot-code_procedural-028",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-028-1d3bbc031b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the storage room, an archivist rested a box of files on the",
+      "prompt_id": "oa5-pilot-general_text-028",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-029-9e7fdb223e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 8,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The novel The Trial was written by",
+      "prompt_id": "oa5-pilot-factual_recall-029",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-029-7d4ca82f72.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the lecture begins at 1:15 PM and lasts 90 minutes, it ends at",
+      "prompt_id": "oa5-pilot-reasoning_math-029",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-029-ebf85a22b9.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT user_id, COUNT(*)\nFROM sessions\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-029",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-029-9772dcde38.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the news desk, an editor set a style guide beside the",
+      "prompt_id": "oa5-pilot-general_text-029",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-030-fcb65f8aa8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Literature students learn that The Trial was written by",
+      "prompt_id": "oa5-pilot-factual_recall-030",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-030-de2dbe3466.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "the lecture starts at 1:15 PM. 90 minutes later, the time will be",
+      "prompt_id": "oa5-pilot-reasoning_math-030",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-030-5644574e38.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT user_id, AVG(duration_seconds)\nFROM sessions\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-030",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-030-02cb7bc242.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 15,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the news desk, an editor reached for a style guide near the",
+      "prompt_id": "oa5-pilot-general_text-030",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-031-99a8891014.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The author of The Trial is",
+      "prompt_id": "oa5-pilot-factual_recall-031",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-031-53e6eb637b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A schedule shows the lecture at 1:15 PM for 90 minutes. The finish time is",
+      "prompt_id": "oa5-pilot-reasoning_math-031",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-031-14ed7d343a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT user_id, MAX(duration_seconds)\nFROM sessions\nGROUP BY",
+      "prompt_id": "oa5-pilot-code_procedural-031",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-031-014e36e169.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The editor checked a style guide before crossing the news desk toward the",
+      "prompt_id": "oa5-pilot-general_text-031",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-032-78d0a729f6.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 8,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Most library catalogs list The Trial under",
+      "prompt_id": "oa5-pilot-factual_recall-032",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_author_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-032-599689a467.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "When the lecture begins at 1:15 PM and runs for 90 minutes, it wraps up at",
+      "prompt_id": "oa5-pilot-reasoning_math-032",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_schedule_reasoning"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-032-16c714b33f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "SELECT user_id\nFROM sessions\nORDER BY started_at DESC,",
+      "prompt_id": "oa5-pilot-code_procedural-032",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_sql_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-032-48ca659b57.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the news desk, an editor rested a style guide on the",
+      "prompt_id": "oa5-pilot-general_text-032",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_workplace_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-033-79f409a379.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The chemical symbol for hydrogen is",
+      "prompt_id": "oa5-pilot-factual_recall-033",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-033-ebcd29c963.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The sequence 2, 4, 6, 8 continues with",
+      "prompt_id": "oa5-pilot-reasoning_math-033",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-033-9e2c53bd84.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "find logs -name '*.log' -print |",
+      "prompt_id": "oa5-pilot-code_procedural-033",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-033-be243fe065.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After the fog passed over the riverbank, everything looked",
+      "prompt_id": "oa5-pilot-general_text-033",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-034-3a28e3d09e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In the periodic table, hydrogen is abbreviated as",
+      "prompt_id": "oa5-pilot-factual_recall-034",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-034-d80da81a8d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A worksheet lists 2, 4, 6, 8; the next number would be",
+      "prompt_id": "oa5-pilot-reasoning_math-034",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-034-4fb6bb4a93.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "grep -R '*.log' logs |",
+      "prompt_id": "oa5-pilot-code_procedural-034",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-034-4abd534662.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Across the riverbank, the fog made the air feel",
+      "prompt_id": "oa5-pilot-general_text-034",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-035-abc4c49c63.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Chemistry notes write the symbol for hydrogen as",
+      "prompt_id": "oa5-pilot-factual_recall-035",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-035-772819593d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 20,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Continuing the pattern 2, 4, 6, 8, the next term is",
+      "prompt_id": "oa5-pilot-reasoning_math-035",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-035-6e5f86b817.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "tar -czf logs-backup.tar.gz logs/",
+      "prompt_id": "oa5-pilot-code_procedural-035",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-035-5bb9ad6d84.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the riverbank, the fog left the landscape looking",
+      "prompt_id": "oa5-pilot-general_text-035",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-036-a4308569a4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A lab chart would mark hydrogen with the symbol",
+      "prompt_id": "oa5-pilot-factual_recall-036",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-036-6359cb7321.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the pattern 2, 4, 6, 8 is extended one more step, it becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-036",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-036-deba780389.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 5,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "systemctl status nginx |",
+      "prompt_id": "oa5-pilot-code_procedural-036",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-036-0c4bb249f2.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The fog above the riverbank turned the whole scene",
+      "prompt_id": "oa5-pilot-general_text-036",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-037-eeadb7861b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The chemical symbol for oxygen is",
+      "prompt_id": "oa5-pilot-factual_recall-037",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-037-e65e305fa1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The sequence 3, 6, 9, 12 continues with",
+      "prompt_id": "oa5-pilot-reasoning_math-037",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-037-2638f409f8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "find reports -name '*.csv' -print |",
+      "prompt_id": "oa5-pilot-code_procedural-037",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-037-9ba37dd81d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After the sunlight passed over the pine ridge, everything looked",
+      "prompt_id": "oa5-pilot-general_text-037",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-038-78ffaf0e52.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In the periodic table, oxygen is abbreviated as",
+      "prompt_id": "oa5-pilot-factual_recall-038",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-038-18091f8975.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A worksheet lists 3, 6, 9, 12; the next number would be",
+      "prompt_id": "oa5-pilot-reasoning_math-038",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-038-6d6e87a38e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "grep -R '*.csv' reports |",
+      "prompt_id": "oa5-pilot-code_procedural-038",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-038-04a68b276a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Across the pine ridge, the sunlight made the air feel",
+      "prompt_id": "oa5-pilot-general_text-038",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-039-b5c64493c4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Chemistry notes write the symbol for oxygen as",
+      "prompt_id": "oa5-pilot-factual_recall-039",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-039-26ee6c06a4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Continuing the pattern 3, 6, 9, 12, the next term is",
+      "prompt_id": "oa5-pilot-reasoning_math-039",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-039-d9b9ae9eb1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "tar -czf reports-archive.tar.gz reports/",
+      "prompt_id": "oa5-pilot-code_procedural-039",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-039-d4e0720c27.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the pine ridge, the sunlight left the landscape looking",
+      "prompt_id": "oa5-pilot-general_text-039",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-040-35a2d90a35.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A lab chart would mark oxygen with the symbol",
+      "prompt_id": "oa5-pilot-factual_recall-040",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-040-1ab5457b69.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the pattern 3, 6, 9, 12 is extended one more step, it becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-040",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-040-c68c2b4fef.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 6,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "systemctl status postgresql |",
+      "prompt_id": "oa5-pilot-code_procedural-040",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-040-d362a67be7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The sunlight above the pine ridge turned the whole scene",
+      "prompt_id": "oa5-pilot-general_text-040",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-041-178caeb906.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The chemical symbol for carbon is",
+      "prompt_id": "oa5-pilot-factual_recall-041",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-041-011bc29b09.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The sequence 5, 10, 15, 20 continues with",
+      "prompt_id": "oa5-pilot-reasoning_math-041",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-041-70887cbb6b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "find images -name '*.png' -print |",
+      "prompt_id": "oa5-pilot-code_procedural-041",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-041-0fe0c09387.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After the mist passed over the meadow grass, everything looked",
+      "prompt_id": "oa5-pilot-general_text-041",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-042-f2003204f7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In the periodic table, carbon is abbreviated as",
+      "prompt_id": "oa5-pilot-factual_recall-042",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-042-dfb4e1c745.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A worksheet lists 5, 10, 15, 20; the next number would be",
+      "prompt_id": "oa5-pilot-reasoning_math-042",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-042-0cc4ee1d53.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "grep -R '*.png' images |",
+      "prompt_id": "oa5-pilot-code_procedural-042",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-042-2fdb0f779b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Across the meadow grass, the mist made the air feel",
+      "prompt_id": "oa5-pilot-general_text-042",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-043-bd6911116c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Chemistry notes write the symbol for carbon as",
+      "prompt_id": "oa5-pilot-factual_recall-043",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-043-d9aced3eb8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Continuing the pattern 5, 10, 15, 20, the next term is",
+      "prompt_id": "oa5-pilot-reasoning_math-043",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-043-8580f47697.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "tar -czf images-pack.tar.gz images/",
+      "prompt_id": "oa5-pilot-code_procedural-043",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-043-8557c096d9.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the meadow grass, the mist left the landscape looking",
+      "prompt_id": "oa5-pilot-general_text-043",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-044-dfb229d612.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A lab chart would mark carbon with the symbol",
+      "prompt_id": "oa5-pilot-factual_recall-044",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-044-e46666c8c6.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 26,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the pattern 5, 10, 15, 20 is extended one more step, it becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-044",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-044-1d3bcad754.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 5,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "systemctl status docker |",
+      "prompt_id": "oa5-pilot-code_procedural-044",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-044-92e412a71d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The mist above the meadow grass turned the whole scene",
+      "prompt_id": "oa5-pilot-general_text-044",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-045-2da9372b17.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 7,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The chemical symbol for sodium is",
+      "prompt_id": "oa5-pilot-factual_recall-045",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-045-35b39953b8.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The sequence 1, 4, 9, 16 continues with",
+      "prompt_id": "oa5-pilot-reasoning_math-045",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-045-91d04c081d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "find configs -name '*.yaml' -print |",
+      "prompt_id": "oa5-pilot-code_procedural-045",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-045-ef35011b83.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "After the rain passed over the stone walkway, everything looked",
+      "prompt_id": "oa5-pilot-general_text-045",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-046-e03a7255be.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "In the periodic table, sodium is abbreviated as",
+      "prompt_id": "oa5-pilot-factual_recall-046",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-046-a14c54d774.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A worksheet lists 1, 4, 9, 16; the next number would be",
+      "prompt_id": "oa5-pilot-reasoning_math-046",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-046-a8649035c5.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "grep -R '*.yaml' configs |",
+      "prompt_id": "oa5-pilot-code_procedural-046",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-046-1087359aec.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Across the stone walkway, the rain made the air feel",
+      "prompt_id": "oa5-pilot-general_text-046",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-047-9f984212f4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Chemistry notes write the symbol for sodium as",
+      "prompt_id": "oa5-pilot-factual_recall-047",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-047-7f26b2d0e1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Continuing the pattern 1, 4, 9, 16, the next term is",
+      "prompt_id": "oa5-pilot-reasoning_math-047",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-047-2a11db8651.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "tar -czf configs-snapshot.tar.gz configs/",
+      "prompt_id": "oa5-pilot-code_procedural-047",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-047-aca8514f42.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the stone walkway, the rain left the landscape looking",
+      "prompt_id": "oa5-pilot-general_text-047",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-048-cac371a310.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A lab chart would mark sodium with the symbol",
+      "prompt_id": "oa5-pilot-factual_recall-048",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_element_symbol"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-048-6269f602b3.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If the pattern 1, 4, 9, 16 is extended one more step, it becomes",
+      "prompt_id": "oa5-pilot-reasoning_math-048",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_number_sequence"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-048-da5fcff130.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 5,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "systemctl status redis |",
+      "prompt_id": "oa5-pilot-code_procedural-048",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_shell_snippet"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-048-fae098ef10.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The rain above the stone walkway turned the whole scene",
+      "prompt_id": "oa5-pilot-general_text-048",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_nature_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-049-0fb437abeb.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The best-known major moon orbiting Jupiter is",
+      "prompt_id": "oa5-pilot-factual_recall-049",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-049-c67c8555b6.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A bottle holds 750 units and a pitcher holds 2000 units. The larger one is the",
+      "prompt_id": "oa5-pilot-reasoning_math-049",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-049-e281d5cdcd.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "To service the air filter, first place the unit near the panel and then check the",
+      "prompt_id": "oa5-pilot-code_procedural-049",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-049-13d914df04.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the sidewalk, the neighbors stacked folding chairs near the",
+      "prompt_id": "oa5-pilot-general_text-049",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-050-fd956ba4a2.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Astronomy students learn that a major moon of Jupiter is",
+      "prompt_id": "oa5-pilot-factual_recall-050",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-050-37dced22cf.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 26,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Between the bottle at 750 units and the pitcher at 2000 units, the bigger option is the",
+      "prompt_id": "oa5-pilot-reasoning_math-050",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-050-d055b0d0aa.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 16,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Before finishing the air filter, set the unit beside the panel and review the",
+      "prompt_id": "oa5-pilot-code_procedural-050",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-050-fb51e5bb8f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Inside the sidewalk, the neighbors arranged folding chairs beside the",
+      "prompt_id": "oa5-pilot-general_text-050",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-051-dd11a769b4.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A solar-system chart would label a major moon of Jupiter as",
+      "prompt_id": "oa5-pilot-factual_recall-051",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-051-ca619c60eb.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 28,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A note lists the bottle as 750 units and the pitcher as 2000 units. The larger item is the",
+      "prompt_id": "oa5-pilot-reasoning_math-051",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-051-d8c31b8491.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A technician completing the air filter would position the unit near the panel before opening the",
+      "prompt_id": "oa5-pilot-code_procedural-051",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-051-dfee922321.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the sidewalk, the neighbors carried folding chairs toward the",
+      "prompt_id": "oa5-pilot-general_text-051",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-052-5ee9c6cb2e.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "One widely recognized moon associated with Jupiter is",
+      "prompt_id": "oa5-pilot-factual_recall-052",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-052-ddeb98d437.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 26,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If one bottle measures 750 units while one pitcher measures 2000 units, the larger object is the",
+      "prompt_id": "oa5-pilot-reasoning_math-052",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-052-6d16e4720a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The checklist for the air filter says to keep the unit by the panel and then inspect the",
+      "prompt_id": "oa5-pilot-code_procedural-052",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-052-9ed9dd0bd9.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 12,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The neighbors left folding chairs resting near the sidewalk's",
+      "prompt_id": "oa5-pilot-general_text-052",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-053-c539db3dc7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The best-known major moon orbiting Saturn is",
+      "prompt_id": "oa5-pilot-factual_recall-053",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-053-853baec4c7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A backpack holds 6 units and a duffel bag holds 18 units. The larger one is the",
+      "prompt_id": "oa5-pilot-reasoning_math-053",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-053-969612b494.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "To service the kitchen scale, first place the reference weight near the display and then check the",
+      "prompt_id": "oa5-pilot-code_procedural-053",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-053-97e1acc33d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the playground wall, the children stacked chalk drawings near the",
+      "prompt_id": "oa5-pilot-general_text-053",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-054-ecbe003927.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Astronomy students learn that a major moon of Saturn is",
+      "prompt_id": "oa5-pilot-factual_recall-054",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-054-37bf011d0c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Between the backpack at 6 units and the duffel bag at 18 units, the bigger option is the",
+      "prompt_id": "oa5-pilot-reasoning_math-054",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-054-7ab118e27c.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 17,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Before finishing the kitchen scale, set the reference weight beside the display and review the",
+      "prompt_id": "oa5-pilot-code_procedural-054",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-054-34dbff76f7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Inside the playground wall, the children arranged chalk drawings beside the",
+      "prompt_id": "oa5-pilot-general_text-054",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-055-389bc95cb1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A solar-system chart would label a major moon of Saturn as",
+      "prompt_id": "oa5-pilot-factual_recall-055",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-055-8f279c3237.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A note lists the backpack as 6 units and the duffel bag as 18 units. The larger item is the",
+      "prompt_id": "oa5-pilot-reasoning_math-055",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-055-764b75daab.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A technician completing the kitchen scale would position the reference weight near the display before opening the",
+      "prompt_id": "oa5-pilot-code_procedural-055",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-055-61886328bf.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the playground wall, the children carried chalk drawings toward the",
+      "prompt_id": "oa5-pilot-general_text-055",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-056-c9c2b34aac.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "One widely recognized moon associated with Saturn is",
+      "prompt_id": "oa5-pilot-factual_recall-056",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-056-57d1914333.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 23,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If one backpack measures 6 units while one duffel bag measures 18 units, the larger object is the",
+      "prompt_id": "oa5-pilot-reasoning_math-056",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-056-0f3380082b.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 20,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The checklist for the kitchen scale says to keep the reference weight by the display and then inspect the",
+      "prompt_id": "oa5-pilot-code_procedural-056",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-056-ced4914c31.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The children left chalk drawings resting near the playground wall's",
+      "prompt_id": "oa5-pilot-general_text-056",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-057-e5fd813608.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The best-known major moon orbiting Earth is",
+      "prompt_id": "oa5-pilot-factual_recall-057",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-057-8632220434.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 25,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A flash drive holds 32 units and a external drive holds 512 units. The larger one is the",
+      "prompt_id": "oa5-pilot-reasoning_math-057",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-057-b6f378c2ca.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 20,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "To service the report export, first place the summary page near the file name and then check the",
+      "prompt_id": "oa5-pilot-code_procedural-057",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-057-af20302b9d.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the food pantry, the volunteers stacked cardboard boxes near the",
+      "prompt_id": "oa5-pilot-general_text-057",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-058-f80c594c60.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Astronomy students learn that a major moon of Earth is",
+      "prompt_id": "oa5-pilot-factual_recall-058",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-058-c0c5cc180f.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 26,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Between the flash drive at 32 units and the external drive at 512 units, the bigger option is the",
+      "prompt_id": "oa5-pilot-reasoning_math-058",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-058-ded39ebeb1.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Before finishing the report export, set the summary page beside the file name and review the",
+      "prompt_id": "oa5-pilot-code_procedural-058",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-058-137d42a862.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Inside the food pantry, the volunteers arranged cardboard boxes beside the",
+      "prompt_id": "oa5-pilot-general_text-058",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-059-d997a242ab.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A solar-system chart would label a major moon of Earth as",
+      "prompt_id": "oa5-pilot-factual_recall-059",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-059-381050275a.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 28,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A note lists the flash drive as 32 units and the external drive as 512 units. The larger item is the",
+      "prompt_id": "oa5-pilot-reasoning_math-059",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-059-ff467d6152.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A technician completing the report export would position the summary page near the file name before opening the",
+      "prompt_id": "oa5-pilot-code_procedural-059",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-059-76035ed546.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the food pantry, the volunteers carried cardboard boxes toward the",
+      "prompt_id": "oa5-pilot-general_text-059",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-060-91b00fa8ec.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "One widely recognized moon associated with Earth is",
+      "prompt_id": "oa5-pilot-factual_recall-060",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-060-e30b626c50.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 26,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If one flash drive measures 32 units while one external drive measures 512 units, the larger object is the",
+      "prompt_id": "oa5-pilot-reasoning_math-060",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-060-cfe9153c66.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The checklist for the report export says to keep the summary page by the file name and then inspect the",
+      "prompt_id": "oa5-pilot-code_procedural-060",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-060-0682a51959.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The volunteers left cardboard boxes resting near the food pantry's",
+      "prompt_id": "oa5-pilot-general_text-060",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-061-d8f4d4c0f0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 10,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The best-known major moon orbiting Mars is",
+      "prompt_id": "oa5-pilot-factual_recall-061",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-061-9f186fb152.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A ladder holds 8 units and a scaffold holds 12 units. The larger one is the",
+      "prompt_id": "oa5-pilot-reasoning_math-061",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-061-e5f7ba1798.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 20,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "To service the bike chain, first place the rear wheel near the master link and then check the",
+      "prompt_id": "oa5-pilot-code_procedural-061",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-061-ec83d545b0.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "At the parking lot, the parents stacked soccer bags near the",
+      "prompt_id": "oa5-pilot-general_text-061",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-062-f0d0f411db.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 11,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Astronomy students learn that a major moon of Mars is",
+      "prompt_id": "oa5-pilot-factual_recall-062",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-062-16a545ef67.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Between the ladder at 8 units and the scaffold at 12 units, the bigger option is the",
+      "prompt_id": "oa5-pilot-reasoning_math-062",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-062-70fe63f4ac.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 18,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Before finishing the bike chain, set the rear wheel beside the master link and review the",
+      "prompt_id": "oa5-pilot-code_procedural-062",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-062-9ce56cc6fb.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "Inside the parking lot, the parents arranged soccer bags beside the",
+      "prompt_id": "oa5-pilot-general_text-062",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-063-4db2d59980.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 14,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A solar-system chart would label a major moon of Mars as",
+      "prompt_id": "oa5-pilot-factual_recall-063",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-063-f702c84454.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 24,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A note lists the ladder as 8 units and the scaffold as 12 units. The larger item is the",
+      "prompt_id": "oa5-pilot-reasoning_math-063",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-063-cff2623bfe.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 19,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "A technician completing the bike chain would position the rear wheel near the master link before opening the",
+      "prompt_id": "oa5-pilot-code_procedural-063",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-063-844b095d85.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "By the parking lot, the parents carried soccer bags toward the",
+      "prompt_id": "oa5-pilot-general_text-063",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-factual_recall-064-eb2941e051.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 9,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "One widely recognized moon associated with Mars is",
+      "prompt_id": "oa5-pilot-factual_recall-064",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_factual_recall",
+        "subcategory_moon_fact"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-reasoning_math-064-ebbbcaec78.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 22,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "If one ladder measures 8 units while one scaffold measures 12 units, the larger object is the",
+      "prompt_id": "oa5-pilot-reasoning_math-064",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_reasoning_math",
+        "subcategory_magnitude_comparison"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-064-7827ac8581.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 21,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The checklist for the bike chain says to keep the rear wheel by the master link and then inspect the",
+      "prompt_id": "oa5-pilot-code_procedural-064",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_code_procedural",
+        "subcategory_procedure_text"
+      ],
+      "target_text": null
+    },
+    {
+      "checkpoint_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-general_text-064-984a2160a7.pt",
+      "d_model": 2304,
+      "num_sources": 53,
+      "num_tokens": 13,
+      "perturbation_names": [
+        "prompt_paraphrase"
+      ],
+      "prompt": "The parents left soccer bags resting near the parking lot's",
+      "prompt_id": "oa5-pilot-general_text-064",
+      "split": "pilot",
+      "tags": [
+        "oracle_alpha",
+        "stratum_general_text",
+        "subcategory_community_scene"
+      ],
+      "target_text": null
+    }
+  ],
+  "model_name": "gemma-2-2b",
+  "output_dir": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1",
+  "split": "pilot"
+}

@@ -1855,3 +1855,25 @@ Suggested entry format:
   - oracle checkpoints already persist sequence-level `final_alpha`
   - feature checkpoints persist only one aggregated vector per prompt
   - no token ids or per-token hidden states are saved in the current campaign
+## [2026-03-18T16:10:00-0500] Phase 6 Is Finally Past The Data-Readiness Excuse
+- Stage: router-distillation export
+- Feel of the Experiment: This is the kind of infrastructure result that matters because it removes a fake blocker. The repo no longer gets to say “router training is next once we cache the right things.” The right things are now cached on the real Gemma pilot surface.
+- Working Hypotheses:
+  - The next genuine uncertainty is model-side: whether a small 2-layer router on `h_1[t]` or `h_4[t]` can recover enough of the saved oracle signal on pilot.
+  - The aggregation choice from per-token router outputs back to sequence-level alpha will become the next real design fork only after the first pilot fit exists.
+- Hunches and Guesses:
+  - `h_1[t]` is still the right prereg favorite, but the saved `h_4[t]` export makes the comparison cheap enough that there is no reason to guess.
+  - Balanced `64 x 4` pilot coverage will matter more than squeezing another export field into the dataset.
+- Predictions:
+  - The first router pilot will expose the real bottleneck quickly: either token-level input choice, sequence aggregation, or model capacity.
+  - If Phase 6 stalls now, it will be for modeling reasons rather than missing supervision.
+- Surprises and Tensions:
+  - The export path itself was not the hard part. The subtle bug was schema drift: it was easy to make the manifest more complete than the saved prompt checkpoints until the invalidation guard was explicit.
+  - Once that was fixed, the completed rerun was very fast. Resume reuse on the full output is only `10.07s`.
+- Confidence:
+  - high that `1ot` should close as a pass
+  - high that the next honest move is router fitting, not more export plumbing
+- Interesting facts:
+  - full pilot export size: `256` prompts, `4013` total tokens
+  - prompt checkpoint sample hash stayed unchanged after exact-command rerun: `6dd29ee0a297d5c085c4e895aa4a64a624aa1d41`
+  - every exported prompt still carries `prompt_paraphrase` metadata, which will matter for future pilot-side robustness checks

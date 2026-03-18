@@ -1356,3 +1356,34 @@
   - `resattn-5qd` can close once the readiness artifact lands.
   - the next core implementation issue should be pilot-only per-token export for Phase 6.
   - the repo should keep centering the paper story on the saved Gemma oracle artifacts while Phase 6 data readiness catches up.
+
+## [2026-03-18T16:10:00-0500] DECISION: Close `resattn-1ot` by freezing the Phase 6 pilot export schema and moving next to router fitting
+
+- Trigger: `resattn-1ot` added the dedicated export module, refreshed the real Gemma pilot export after the schema patch, and verified resume reuse on the completed output directory.
+- Decision: close `resattn-1ot` as a pass. Do not widen the export surface yet. Treat the saved pilot export as the Phase 6 dataset of record and move next to the prereg pilot router comparison (`h_1[t]` versus `h_4[t]`) on that saved dataset.
+- Rationale:
+  - the export now persists the pilot supervision Phase 6 actually needs:
+    - `prompt_id`
+    - `prompt`
+    - `split`
+    - `target_text`
+    - `tags`
+    - `perturbations`
+    - `token_ids`
+    - `h_1[t]`
+    - `h_4[t]`
+    - `source_labels`
+    - `final_alpha`
+  - the real Gemma artifact is broad enough for a meaningful pilot:
+    - `256` prompt exports
+    - `4013` total tokens
+    - balanced `64 x 4` stratum coverage
+    - `53` routing sources per prompt
+  - the export path is operationally trustworthy now:
+    - stale prompt checkpoints missing `tags` and `perturbations` are recomputed in place
+    - an exact-command rerun against the completed output reuses refreshed checkpoints with unchanged sample hash and finishes in `10.07s`
+  - another export tweak before trying router fitting would be busywork unless a real training blocker appears
+- Impact:
+  - `resattn-1ot` can close once the artifact lands.
+  - `resattn-m6r` is now the next core Phase 6 issue.
+  - the truthful router-training boundary moves from “missing data” to “first pilot model comparison not yet run.”

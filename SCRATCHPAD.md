@@ -263,6 +263,71 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: none
 - Next step: keep the bridge fixed and treat `resattn-oi7` as the next honest tool-breakage follow-up if this lane resumes
 
+## [2026-03-18T18:20:00-0500] PRE-RUN: Gemma router-distillation pilot export calibration
+- tmux session: N/A
+- Script: `scripts/export_router_distillation_pilot_dataset.py`
+- Command: `.venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration --max-sequences 2`
+- Config: `split=pilot`, `max_sequences=2`, `exports=token_ids+h_1[t]+h_4[t]+final_alpha`, `checkpoint_format=.pt`
+- What I'm testing: the dedicated pilot export path can reuse saved oracle checkpoints, write per-prompt token-state checkpoints, and emit a compact manifest/summary on the real Gemma campaign.
+- Expected outcome: two prompt exports complete on local MPS, checkpoint payloads have the expected fields, and rerun behavior reuses the saved checkpoints.
+- Expected duration: ~2-5 minutes
+- Checkpoint path: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration/checkpoints/prompt_exports`
+- Checkpoint cadence: every prompt
+- Log path: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration/run.log`
+- Resume command: `.venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration --max-sequences 2`
+- Main confound to watch: export could silently drift from the saved oracle checkpoint schema or save prompt checkpoints without enough metadata to drive the later router pilot.
+- Implementation verified: YES - `tests.test_router_training_export` and `tests.test_oracle_alpha_campaign` are green before this run.
+- Status: LAUNCHING
+
+## [2026-03-18T18:29:00-0500] POST-RUN: Gemma router-distillation pilot export calibration
+- Command: `.venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration --max-sequences 2`
+- Outcome: SUCCESS
+- Key metric: `2` prompt exports written with `d_model=2304`, `num_sources=53`, and rerun checkpoint hash unchanged
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration/summary.json`, `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1-calibration/dataset_manifest.json`
+- Anomalies: first launch exposed a script import-path bug; fixed by adding the repo root to `sys.path` before rerun
+- Next step: launch the full `256`-prompt pilot export in tmux on the final output directory
+
+## [2026-03-18T18:31:00-0500] PRE-RUN: Gemma router-distillation pilot export v1
+- tmux session: `rt-1ot-export`
+- Script: `scripts/export_router_distillation_pilot_dataset.py`
+- Command: `/usr/bin/time -p .venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 > results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log 2>&1`
+- Config: `split=pilot`, `max_sequences=all(256)`, `exports=token_ids+h_1[t]+h_4[t]+final_alpha`, `checkpoint_format=.pt`
+- What I'm testing: the full saved Gemma pilot surface can be exported into a training-ready per-token dataset with resumable prompt checkpoints and a compact committed manifest.
+- Expected outcome: all pilot prompts export cleanly, prompt checkpoints are written under the ignored checkpoint directory, and the final manifest/summary document the Phase 6 training fields without another oracle rerun.
+- Expected duration: ~15-45 minutes
+- Checkpoint path: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports`
+- Checkpoint cadence: every prompt
+- Log path: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log`
+- Resume command: `/usr/bin/time -p .venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 > results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log 2>&1`
+- Main confound to watch: the export might appear to finish while leaving a partial prompt-checkpoint set or a manifest that does not fully describe the saved training fields.
+- Implementation verified: YES - `tests.test_router_training_export` and `tests.test_oracle_alpha_campaign` are green, and the exact calibration rerun reused checkpoints with unchanged timestamp hash.
+- Status: LAUNCHING
+
+## [2026-03-18T19:05:00-0500] PRE-RUN: Gemma router-distillation pilot export v1 schema refresh
+- tmux session: N/A
+- Script: `scripts/export_router_distillation_pilot_dataset.py`
+- Command: `/usr/bin/time -p .venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 > results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log 2>&1`
+- Config: `split=pilot`, `max_sequences=all(256)`, `exports=token_ids+h_1[t]+h_4[t]+final_alpha+tags+perturbations`, `checkpoint_format=.pt`
+- What I'm testing: the completed Gemma pilot export directory is recomputed in place when old prompt checkpoints are missing newly required metadata fields.
+- Expected outcome: all prompt checkpoints are rewritten with `tags` and `perturbations`, and the committed manifest/summary matches the on-disk checkpoint payload schema.
+- Expected duration: ~10-30 minutes
+- Checkpoint path: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports`
+- Checkpoint cadence: every prompt
+- Log path: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log`
+- Resume command: `/usr/bin/time -p .venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 > results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log 2>&1`
+- Main confound to watch: stale prompt checkpoints could still be reused if the schema guard misses a required field and leave the committed manifest more complete than the actual checkpoint payloads.
+- Implementation verified: YES - `tests.test_router_training_export` and `tests.test_oracle_alpha_campaign` are green after the schema patch that added `tags`, `perturbations`, and checkpoint invalidation.
+- Status: LAUNCHING
+
+## [2026-03-18T16:10:31-0500] POST-RUN: Gemma router-distillation pilot export v1 schema refresh
+- Command: `/usr/bin/time -p .venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 > results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/run.log 2>&1`
+- Outcome: SUCCESS
+- Key metric: full pilot export refreshed to the final schema on `256` prompts / `4013` tokens, and exact-command rerun reused the completed output in `10.07s`
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/dataset_manifest.json`, `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1.md`
+- Latest checkpoint: `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports/oa5-pilot-code_procedural-001-fa9978d73c.pt`
+- Anomalies: one manifest inspection accidentally used bare `python`; reran with `.venv/bin/python` and confirmed the saved manifest plus prompt checkpoints carry `tags` and `perturbations`
+- Next step: start the first Phase 6 pilot router fit on the saved dataset, comparing `h_1[t]` against `h_4[t]`
+
 ## [2026-03-17T16:25:00-0500] PRE-RUN: compact-subword capacity-first Figure 8 proxy follow-up
 - tmux session: `attnres-111-capacity`
 - Script: `scripts/run_attnres_proxy_viability.py`

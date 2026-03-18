@@ -1,0 +1,21 @@
+{
+  "checkpoint_dir": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/checkpoints/prompt_exports",
+  "collection_id": "oracle_alpha_phase1_v1",
+  "exported_fields": [
+    "prompt_id",
+    "prompt",
+    "split",
+    "target_text",
+    "tags",
+    "perturbations",
+    "token_ids",
+    "h_1[t]",
+    "h_4[t]",
+    "source_labels",
+    "final_alpha"
+  ],
+  "manifest_path": "results/router_training/20260318-gemma2-router-distillation-pilot-export-v1/dataset_manifest.json",
+  "model_name": "gemma-2-2b",
+  "num_prompts": 256,
+  "split": "pilot"
+}

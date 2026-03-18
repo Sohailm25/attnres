@@ -124,8 +124,9 @@ Register every experimental artifact here. Never delete entries; mark superseded
 ## Router Training
 
 | Artifact | Lane | Status | Path |
-| Gemma-2 router-distillation readiness audit v1 | router_training | pass | `results/router_training/20260318-gemma2-router-distillation-readiness-audit-v1.md` |
 |---|---|---|---|
+| Gemma-2 router-distillation readiness audit v1 | router_training | pass | `results/router_training/20260318-gemma2-router-distillation-readiness-audit-v1.md` |
+| Gemma-2 router-distillation pilot export v1 | router_training | pass | `results/router_training/20260318-gemma2-router-distillation-pilot-export-v1.md` |
 
 ## Safety Alignment
 
