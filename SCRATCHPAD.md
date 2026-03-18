@@ -1634,3 +1634,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/checkpoints/prompt_results/tb2-confirm-016-6ca2e00125.json`
 - Anomalies: none; exact-command rerun against the finished output reused the saved prompt checkpoints and completed in `10.11` seconds, rewriting only `summary.json`.
 - Next step: close `resattn-4ny` and run the controlled dynamic-routing counterfactual on the matched-family `v2` surface.
+
+## [2026-03-18T09:50:38-0500] PRE-RUN: Gemma matched-family dynamic-routing counterfactual
+- tmux session: `tb-v2-counterfactual`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `baseline=tool_breakage_factual_recall_v2 confirm`, `fixed_alpha=tool_breakage_factual_recall_v2 pilot`, `prompts=16`, `controls=prompt-permuted dynamic + fixed-alpha mean`
+- What I'm testing: whether the stronger same-model breakage signal on the matched-family `v2` surface survives the prereg-required dynamic-routing control, rather than collapsing to “any non-uniform alpha mix breaks tools”.
+- Expected outcome: the routed arm remains worse than the counterfactual arms on the KL-primary and rank-instability metrics often enough to keep the stronger same-model claim alive on the aligned surface.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the routed arm only matches the fixed-alpha or prompt-permuted arms, the aligned baseline result is still real but the stronger dynamic claim remains blocked.
+- Implementation verified: YES - the existing counterfactual runner already accepts arbitrary baseline and fixed-alpha summary paths, and the matched-family `v2` pilot/confirm outputs both exist locally with prompt-level checkpoints.
+- Status: LAUNCHING
+
+## [2026-03-18T09:55:02-0500] POST-RUN: Gemma matched-family dynamic-routing counterfactual
+- Outcome: SUCCESS
+- Key metric: routed stays much worse than the fixed-alpha control (`mean tuned KL delta routed-minus-arm = +1.0917`) but only roughly ties the mostly within-family prompt-permuted dynamic control on mean tuned KL (`-0.0123`) while staying worse on final-position tuned KL (`+0.3533`).
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2/checkpoints/prompt_results/tb2-confirm-016-6ca2e00125.json`
+- Anomalies: none; the current cyclic prompt-permuted control is within-family on `12 / 16` prompts and cross-family only on the four family-boundary transitions, which makes the mixed result more informative than a generic across-surface shuffle.
+- Next step: close `resattn-qww` as mixed, then run `resattn-o3n` to split the dynamic donor control into explicit within-family and cross-family arms before freezing the stronger same-model claim.

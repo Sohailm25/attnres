@@ -351,6 +351,31 @@
       - all `16` prompt checkpoints kept their original timestamps from the first run
       - the exact-command rerun completed in `10.11` seconds and rewrote only `summary.json`
     - interpretation: `tool_breakage_factual_recall_v2` should now be treated as the main bounded same-model baseline surface for this lane. The next direct strong-claim step is the controlled dynamic-routing counterfactual on `v2`, not another baseline reshuffle
+  - `resattn-qww` now lands that matched-family dynamic-routing counterfactual on the aligned `v2` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2.md` is the first counterfactual artifact on `tool_breakage_factual_recall_v2`
+    - the fixed-alpha objection is weakened cleanly on the aligned surface:
+      - `pilot_mean_alpha` mean tuned KL over original `= +1.6727`
+      - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0917`
+      - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.3894`
+      - routed worsens final target rank versus `pilot_mean_alpha` on `11 / 16` prompts
+      - routed increases tuned target-rank range versus `pilot_mean_alpha` on `13 / 16` prompts
+    - the prompt-permuted dynamic control is now a tighter and narrower blocker than on the old `v1` surface:
+      - `prompt_permuted_alpha` mean tuned KL over original `= +2.7768`
+      - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0123`
+      - routed minus `prompt_permuted_alpha` final-position tuned KL `= +0.3533`
+      - routed worsens final target rank versus `prompt_permuted_alpha` on `7 / 16` prompts
+      - routed worsens best target rank versus `prompt_permuted_alpha` on `8 / 16` prompts
+      - routed increases tuned target-rank range versus `prompt_permuted_alpha` on `8 / 16` prompts
+    - the donor mapping itself matters:
+      - the current cyclic `prompt_permuted_alpha` control is already within-family on `12 / 16` prompts because the confirm ids are grouped by family
+      - only the four family-boundary transitions are cross-family, so the mixed result is more informative than a generic across-surface shuffle
+    - family-conditioned tension remains visible:
+      - element prompts are the clearest family where routed is worse than the prompt-permuted arm on both mean and final-position tuned KL
+      - author prompts are the clearest family pulling the other way on mean tuned KL
+    - resume durability is verified on the finished counterfactual output directory:
+      - all `16` prompt checkpoints kept their original timestamps from the first run
+      - the exact-command rerun completed in `10.22` seconds and rewrote only `summary.json`
+    - interpretation: the stronger same-model tool-breakage claim is still blocked, but the remaining blocker is now sharper. The next worthwhile move is to decompose the donor control into explicit within-family and cross-family arms rather than freezing the whole lane or rerunning the same aggregate control
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -691,11 +716,11 @@
 
 ## Immediate Next Steps
 
-1. Run the controlled dynamic-routing counterfactual on `tool_breakage_factual_recall_v2`, because the matched-family confirm baseline is now strong enough that the remaining blocker for the stronger same-model claim is the explicit control, not baseline quality.
+1. Run `resattn-o3n`, which splits the matched-family dynamic counterfactual into explicit within-family and cross-family donor arms before this lane is frozen again.
 2. Treat `tool_breakage_factual_recall_v2` as the main bounded baseline surface for this lane; the old mixed factual baseline stays as contextual evidence only.
-3. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
-4. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
-5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
+3. Treat the stronger same-model Gemma tool-breakage claim as still blocked: the fixed-alpha objection is weakened, but routed does not yet clearly beat the mostly within-family prompt-permuted dynamic control on the tuned primary metric.
+4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
+5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 
 ## Phase 1 Gate

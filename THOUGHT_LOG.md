@@ -1329,3 +1329,25 @@ Suggested entry format:
 - Interesting facts:
   - The final rerun moved confirm non-refusal pass rate to `0.9167`.
   - The only remaining confirm miss is now a genuinely refusal-like harmful-context output, not a policy-note marker failure.
+## [2026-03-18T09:56:00-0500] The Aligned Dynamic Counterfactual Got Sharper, Not Cleaner
+- Stage: experiment
+- Feel of the Experiment: This was the right control to run next. The result is still mixed, but it is much more informative than the old `v1` counterfactual because the aligned surface and family balance removed a lot of easy excuses.
+- Working Hypotheses:
+  - The fixed-alpha objection is now substantially weaker on the aligned `v2` surface.
+  - The remaining dynamic-control ambiguity is probably family-conditioned rather than purely aggregate.
+- Hunches and Guesses:
+  - The current cyclic prompt-permuted arm is already a mostly within-family control because the confirm ids are grouped by family, so the next honest split is explicit within-family versus cross-family donors rather than another generic rerun.
+  - Element prompts look like the strongest candidate family for a true prompt-specific routing story; authors look weakest.
+- Predictions:
+  - If an explicit within-family donor arm still nearly matches routed on mean tuned KL, the strong same-model claim should stay blocked cleanly.
+  - If routed clearly beats the within-family arm while only tying or losing to the cross-family arm, the lane gets much more interesting again.
+- Surprises and Tensions:
+  - The prompt-permuted control did not simply flatten the story. It nearly tied routed on mean tuned KL but lost on final-position tuned KL, which is a narrower and more uncomfortable result than the old broad negative.
+  - The donor mapping turned out to be within-family on `12 / 16` prompts, which makes the mixed result harder to wave away as a coarse across-family mismatch artifact.
+- Confidence:
+  - high that `qww` should close as mixed
+  - medium-high that `o3n` is the right next tool-breakage move if this lane continues
+- Interesting facts:
+  - Routed minus `pilot_mean_alpha` mean tuned KL is `+1.0917`.
+  - Routed minus `prompt_permuted_alpha` mean tuned KL is only `-0.0123`, but routed is still worse on final-position tuned KL by `+0.3533`.
+  - Family breakdown is not uniform: elements favor routed-worse-than-permuted, while authors skew the other way on mean tuned KL.

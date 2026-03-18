@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-4ny`
-- Focus: `resattn-4ny` has now confirmed the matched-family tool-breakage surface; the next meaningful move is the dynamic-routing counterfactual on `tool_breakage_factual_recall_v2`.
-- Experimental status: the repo now has a better-aligned bounded baseline for the Gemma tool-breakage lane. `tool_breakage_factual_recall_v2` beats the old mixed `v1` surface on the KL-primary confirm read while keeping the rank metrics alive on a larger confirm set.
-- Critical reminder: the stronger same-model claim is still blocked on the explicit dynamic-routing counterfactual, not on another baseline refresh.
+- Branch: `wip/resattn-qww`
+- Focus: `resattn-qww` has now run the matched-family dynamic-routing counterfactual; the next meaningful move is `resattn-o3n`, which splits the donor controls into explicit within-family and cross-family arms.
+- Experimental status: the repo now has a stronger aligned tool-breakage baseline plus a mixed but sharper dynamic-control result. On `tool_breakage_factual_recall_v2`, routed remains much worse than the fixed-alpha control, but the current cyclic prompt-permuted control nearly matches routed on mean tuned KL while routed stays worse on final-position tuned KL.
+- Critical reminder: the stronger same-model claim is still blocked on prompt-specific dynamic-control evidence, not on baseline quality. The current prompt-permuted control is already within-family on `12 / 16` prompts, so the next read should separate within-family and cross-family donor effects instead of rerunning the same aggregate control.

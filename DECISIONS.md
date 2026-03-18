@@ -872,3 +872,23 @@
   - new `v2` tuned target-rank-range increase `= 0.6875`
   So `v2` gives a better-aligned surface, a larger confirm prompt count, and a stronger KL-primary read without collapsing the relative instability metrics.
 - Impact: `resattn-4ny` can close once the confirm artifact lands. The next direct strong-claim step is the dynamic-routing counterfactual on `tool_breakage_factual_recall_v2`.
+
+## [2026-03-18T09:55:02-0500] DECISION: Close `resattn-qww` as a mixed but sharper dynamic-control read and continue with donor-arm decomposition
+
+- Trigger: `resattn-qww` finished the controlled dynamic-routing counterfactual on the aligned `tool_breakage_factual_recall_v2` confirm surface.
+- Decision: close the issue as mixed. Keep the stronger same-model claim blocked, but do not freeze the lane completely yet. Continue with `resattn-o3n`, which decomposes the current prompt-permuted arm into explicit within-family and cross-family donor controls.
+- Rationale: the aligned `v2` surface moved the dynamic-control result in a scientifically useful direction without fully clearing it:
+  - against the fixed pilot-mean alpha control, routed is still clearly worse on the tuned primary metric:
+    - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0917`
+    - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.3894`
+    - routed worsens final target rank versus `pilot_mean_alpha` on `11 / 16` prompts
+  - against the current cyclic prompt-permuted arm, the result is narrower and mixed:
+    - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0123`
+    - routed minus `prompt_permuted_alpha` final-position tuned KL `= +0.3533`
+    - routed worsens final target rank versus `prompt_permuted_alpha` on `7 / 16` prompts
+    - routed worsens best target rank versus `prompt_permuted_alpha` on `8 / 16` prompts
+  - the current cyclic donor arm is already mostly within-family because the confirm ids are grouped by family:
+    - `12 / 16` donor assignments stay within family
+    - only the four family-boundary transitions are cross-family
+  So the next underexplored question is not “rerun the same control again.” It is whether the remaining gap is truly prompt-specific or only family-level.
+- Impact: `resattn-qww` can close once the artifact lands. `resattn-o3n` is now the right next tool-breakage follow-up, and the Gemma strong same-model claim should stay blocked until routed clearly beats an explicit within-family donor control.
