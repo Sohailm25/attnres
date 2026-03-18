@@ -586,3 +586,13 @@
   - all `26` `resid_mid` and `resid_post` identities exact
   That removes the main remaining reason to keep the primary model out of the oracle lane.
 - Impact: `resattn-2s0` can close once the artifact and state docs land. The next oracle-alpha issue is `resattn-7cs`, the first bounded Gemma feasibility slice.
+
+## [2026-03-17T20:24:00-0500] DECISION: Treat the first bounded Gemma oracle-alpha slice as a clean primary-spine feasibility pass
+
+- Trigger: `resattn-7cs` ran the existing bounded development-slice runner unchanged on `google/gemma-2-2b` after primary-spine reconstruction readiness cleared.
+- Decision: close the first primary-model oracle-alpha slice as a successful feasibility pass and move the next blocker forward to the saved pilot stability suite.
+- Rationale: the runner executed cleanly on the primary spine and returned a materially positive bounded artifact:
+  - mean sequence improvement over uniform `= +2.1634` nats on `2` pilot prompts
+  - mean null losses stayed above the optimized slice (`random_dirichlet = 6.6138`, `magnitude_proportional = 6.5578`, `last_layer_only = 24.7532`)
+  That is enough to show that the existing oracle runner is not development-model-only in its basic execution path.
+- Impact: `resattn-7cs` can close once the artifact and state docs land. The next oracle-alpha issue becomes `resattn-a7j`, which scales the primary-model lane to the full saved pilot stability suite.

@@ -79,10 +79,16 @@ to overclaim from mixed results. It is not yet aligned in the stronger sense of
 having fully closed the secondary interpretability story.
 
 The biggest remaining end-state risk is still that the strongest positive
-oracle-alpha result is development-model-only. The primary-spine backend
-readiness question is now narrower than before because `resattn-2s0` has
-cleared model-backed reconstruction on `google/gemma-2-2b`, but the first real
-primary-model oracle-alpha execution is still the next scientific priority.
+oracle-alpha result is development-model-only. The primary-spine readiness
+question is narrower than before because:
+
+- `resattn-2s0` has cleared model-backed reconstruction on `google/gemma-2-2b`
+- `resattn-7cs` has already produced the first bounded primary-model oracle
+  artifact on `google/gemma-2-2b`
+
+But the strongest positive oracle result is still the prereg-scale
+development-model artifact, so the next scientific priority is now scaling the
+primary-model lane beyond the `2`-prompt feasibility slice.
 
 ## Scientific Locks That Are Being Respected
 
@@ -421,8 +427,8 @@ If the reviewer wants the shortest path through the repo:
 
 The most important next scientific move is now:
 
-- `resattn-7cs`: run the first bounded primary-model Gemma oracle-alpha
-  feasibility slice now that primary-spine reconstruction readiness is green
+- `resattn-a7j`: run the primary-model Gemma oracle-alpha pilot stability suite
+  now that the first bounded feasibility slice is green
 
 The next strategic decision after that is:
 
@@ -440,12 +446,12 @@ The deferred infrastructure cleanup is:
 
 From the repo's current scientific position, the most reviewer-relevant next
 question is no longer just the Figure 8 strategic decision. It is whether the
-main oracle-alpha story can start to move from the development model onto the
-primary Gemma spine. `resattn-1lk` still matters, but it is now the next
-freeze-or-escalate choice on a mixed lane, not the top way to reduce overall
-paper risk.
+main oracle-alpha story can move from a `2`-prompt primary-model feasibility
+slice to a stable saved pilot artifact on the primary Gemma spine.
+`resattn-1lk` still matters, but it is the next freeze-or-escalate choice on a
+mixed lane, not the top way to reduce overall paper risk.
 
-If `resattn-7cs` succeeds, the strongest final paper can remain centered on:
+If `resattn-a7j` succeeds, the strongest final paper can remain centered on:
 
 - robust frozen-model oracle-alpha feasibility
 - coarse routing-structure analysis
