@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
@@ -142,6 +143,38 @@ class ProjectionInterventionArmSummary:
 
 
 @dataclass(frozen=True)
+class ProjectionTrajectorySummary:
+    label: str
+    mean_projection_by_layer: tuple[float, ...]
+    selected_layer_mean: float
+    final_layer_mean: float
+
+
+@dataclass(frozen=True)
+class MediatorPartitionSummary:
+    threshold: float
+    active_prompt_ids: tuple[str, ...]
+    inactive_prompt_ids: tuple[str, ...]
+    active_role_counts: dict[str, int]
+    inactive_role_counts: dict[str, int]
+    active_mean_projection: float
+    inactive_mean_projection: float
+
+
+@dataclass(frozen=True)
+class TrajectoryInterventionComparisonSummary:
+    arm_name: str
+    direction_name: str
+    position_name: str
+    target_role: str
+    selected_layer: int
+    baseline_trajectory: ProjectionTrajectorySummary
+    intervened_trajectory: ProjectionTrajectorySummary
+    selected_layer_delta: float
+    final_layer_delta: float
+
+
+@dataclass(frozen=True)
 class RefusalFeatureDiscoverySummary:
     model_name: str
     collection_id: str
@@ -175,6 +208,27 @@ class RefusalDirectionInterventionSummary:
     harmfulness_projection_summary: DirectionProjectionSummary
     refusal_harmfulness_direction_cosine: float
     arm_summaries: tuple[ProjectionInterventionArmSummary, ...]
+
+
+@dataclass(frozen=True)
+class MediatorConditionedSafetyRoutingSummary:
+    model_name: str
+    collection_id: str
+    pilot_num_groups: int
+    confirm_num_groups: int
+    refusal_localization: SafetyLayerLocalizationSummary
+    harmfulness_localization: SafetyLayerLocalizationSummary
+    refusal_projection_summary: DirectionProjectionSummary
+    harmfulness_projection_summary: DirectionProjectionSummary
+    refusal_harmfulness_direction_cosine: float
+    mediator_partition: MediatorPartitionSummary
+    refusal_role_trajectories: tuple[ProjectionTrajectorySummary, ...]
+    harmfulness_role_trajectories: tuple[ProjectionTrajectorySummary, ...]
+    mediator_active_trajectory: ProjectionTrajectorySummary
+    mediator_inactive_trajectory: ProjectionTrajectorySummary
+    trajectory_intervention_summaries: tuple[
+        TrajectoryInterventionComparisonSummary, ...
+    ]
 
 
 def _prompt_role(prompt_id: str) -> str:
@@ -334,6 +388,130 @@ def build_direction_projection_summary(
         positive_mean=positive_mean,
         negative_mean=negative_mean,
         mean_gap=positive_mean - negative_mean,
+    )
+
+
+def build_projection_trajectory_summary(
+    *,
+    label: str,
+    residuals_by_layer: torch.Tensor,
+    direction: torch.Tensor,
+    selected_layer: int,
+) -> ProjectionTrajectorySummary:
+    if residuals_by_layer.ndim != 3:
+        raise ValueError("residuals_by_layer must have shape [groups, layers, d_model]")
+    if direction.ndim != 1 or direction.shape[0] != residuals_by_layer.shape[-1]:
+        raise ValueError("direction must have shape [d_model]")
+    if selected_layer < 0 or selected_layer >= residuals_by_layer.shape[1]:
+        raise ValueError("selected_layer is out of bounds")
+
+    normalized_direction = _normalized_direction(direction).to(
+        device=residuals_by_layer.device,
+        dtype=residuals_by_layer.dtype,
+    )
+    mean_projection_by_layer = torch.einsum(
+        "gld,d->gl",
+        residuals_by_layer,
+        normalized_direction,
+    ).mean(dim=0)
+    trajectory = tuple(float(value) for value in mean_projection_by_layer.tolist())
+    return ProjectionTrajectorySummary(
+        label=label,
+        mean_projection_by_layer=trajectory,
+        selected_layer_mean=trajectory[selected_layer],
+        final_layer_mean=trajectory[-1],
+    )
+
+
+def build_mediator_partition_summary(
+    *,
+    prompt_ids: Sequence[str],
+    roles: Sequence[str],
+    projection_scores: Sequence[float],
+    threshold: float,
+) -> MediatorPartitionSummary:
+    if not (len(prompt_ids) == len(roles) == len(projection_scores)):
+        raise ValueError("prompt_ids, roles, and projection_scores must align")
+
+    active_prompt_ids = tuple(
+        prompt_id
+        for prompt_id, projection in zip(prompt_ids, projection_scores, strict=True)
+        if projection >= threshold
+    )
+    inactive_prompt_ids = tuple(
+        prompt_id
+        for prompt_id, projection in zip(prompt_ids, projection_scores, strict=True)
+        if projection < threshold
+    )
+    if not active_prompt_ids or not inactive_prompt_ids:
+        raise ValueError("threshold must produce both active and inactive prompts")
+
+    active_roles = [
+        role
+        for role, projection in zip(roles, projection_scores, strict=True)
+        if projection >= threshold
+    ]
+    inactive_roles = [
+        role
+        for role, projection in zip(roles, projection_scores, strict=True)
+        if projection < threshold
+    ]
+    active_scores = [
+        projection for projection in projection_scores if projection >= threshold
+    ]
+    inactive_scores = [
+        projection for projection in projection_scores if projection < threshold
+    ]
+    return MediatorPartitionSummary(
+        threshold=float(threshold),
+        active_prompt_ids=active_prompt_ids,
+        inactive_prompt_ids=inactive_prompt_ids,
+        active_role_counts=dict(sorted(Counter(active_roles).items())),
+        inactive_role_counts=dict(sorted(Counter(inactive_roles).items())),
+        active_mean_projection=float(sum(active_scores) / len(active_scores)),
+        inactive_mean_projection=float(sum(inactive_scores) / len(inactive_scores)),
+    )
+
+
+def build_trajectory_intervention_comparison_summary(
+    *,
+    arm_name: str,
+    direction_name: str,
+    position_name: str,
+    target_role: str,
+    selected_layer: int,
+    baseline_residuals_by_layer: torch.Tensor,
+    intervened_residuals_by_layer: torch.Tensor,
+    direction: torch.Tensor,
+) -> TrajectoryInterventionComparisonSummary:
+    baseline_trajectory = build_projection_trajectory_summary(
+        label=f"{arm_name}_baseline",
+        residuals_by_layer=baseline_residuals_by_layer,
+        direction=direction,
+        selected_layer=selected_layer,
+    )
+    intervened_trajectory = build_projection_trajectory_summary(
+        label=f"{arm_name}_intervened",
+        residuals_by_layer=intervened_residuals_by_layer,
+        direction=direction,
+        selected_layer=selected_layer,
+    )
+    return TrajectoryInterventionComparisonSummary(
+        arm_name=arm_name,
+        direction_name=direction_name,
+        position_name=position_name,
+        target_role=target_role,
+        selected_layer=selected_layer,
+        baseline_trajectory=baseline_trajectory,
+        intervened_trajectory=intervened_trajectory,
+        selected_layer_delta=(
+            intervened_trajectory.selected_layer_mean
+            - baseline_trajectory.selected_layer_mean
+        ),
+        final_layer_delta=(
+            intervened_trajectory.final_layer_mean
+            - baseline_trajectory.final_layer_mean
+        ),
     )
 
 
@@ -554,6 +732,65 @@ def _collect_prompt_checkpoint(
     }
     torch.save(checkpoint, checkpoint_path)
     return checkpoint
+
+
+def _collect_prompt_residuals_with_optional_intervention(
+    *,
+    model: HookedTransformer,
+    prompt_text: str,
+    intervention: ProjectionInterventionArmConfig | None,
+    direction_by_name: dict[str, torch.Tensor],
+) -> dict[str, torch.Tensor]:
+    formatted_prompt, token_tensor, instruction_final_index, assistant_prefill_index = (
+        _chat_formatted_prompt_and_positions(model, prompt_text)
+    )
+    del formatted_prompt
+    tokens = token_tensor.to(model.cfg.device)
+
+    fwd_hooks: list[tuple[str, object]] = []
+    if intervention is not None:
+        position_index = _position_index_from_names(
+            position_name=intervention.position_name,
+            instruction_final_index=instruction_final_index,
+            assistant_prefill_index=assistant_prefill_index,
+        )
+        fwd_hooks.append(
+            (
+                _resid_post_hook_name(intervention.selected_layer),
+                _projection_intervention_hook(
+                    direction=direction_by_name[intervention.direction_name],
+                    position_index=position_index,
+                    target_projection=intervention.target_projection,
+                ),
+            )
+        )
+
+    with torch.inference_mode():
+        with model.hooks(fwd_hooks=fwd_hooks):
+            _, cache = model.run_with_cache(
+                tokens,
+                return_type="logits",
+                names_filter=_resid_post_name_filter,
+            )
+
+    instruction_final = torch.stack(
+        [
+            cache[("resid_post", layer)][0, instruction_final_index, :].detach().cpu()
+            for layer in range(model.cfg.n_layers)
+        ],
+        dim=0,
+    )
+    assistant_prefill = torch.stack(
+        [
+            cache[("resid_post", layer)][0, assistant_prefill_index, :].detach().cpu()
+            for layer in range(model.cfg.n_layers)
+        ],
+        dim=0,
+    )
+    return {
+        "instruction_final_residuals": instruction_final,
+        "assistant_prefill_residuals": assistant_prefill,
+    }
 
 
 def _selected_entries_from_groups(
@@ -925,6 +1162,100 @@ def save_refusal_direction_intervention_artifacts(
     summary_path = output_dir / "summary.json"
     summary_path.write_text(json.dumps(asdict(summary), indent=2))
     return summary_path
+
+
+def save_mediator_conditioned_safety_routing_artifacts(
+    summary: MediatorConditionedSafetyRoutingSummary,
+    *,
+    output_dir: Path,
+) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    summary_path = output_dir / "summary.json"
+    summary_path.write_text(json.dumps(asdict(summary), indent=2))
+    return summary_path
+
+
+def _checkpoint_projection_trajectory_summary(
+    *,
+    label: str,
+    checkpoints_by_prompt_id: dict[str, dict[str, object]],
+    prompt_ids: Sequence[str],
+    position_name: str,
+    direction: torch.Tensor,
+    selected_layer: int,
+) -> ProjectionTrajectorySummary:
+    key = f"{position_name}_residuals"
+    residuals = torch.stack(
+        [checkpoints_by_prompt_id[prompt_id][key] for prompt_id in prompt_ids],
+        dim=0,
+    ).to(dtype=torch.float32)
+    return build_projection_trajectory_summary(
+        label=label,
+        residuals_by_layer=residuals,
+        direction=direction,
+        selected_layer=selected_layer,
+    )
+
+
+def _role_projection_trajectory_summary(
+    *,
+    label: str,
+    groups: Sequence[SafetyPromptGroup],
+    checkpoints_by_prompt_id: dict[str, dict[str, object]],
+    role: str,
+    position_name: str,
+    direction: torch.Tensor,
+    selected_layer: int,
+) -> ProjectionTrajectorySummary:
+    residuals = _residual_matrix_for_groups(
+        groups,
+        checkpoints_by_prompt_id,
+        role=role,
+        position_name=position_name,
+    )
+    return build_projection_trajectory_summary(
+        label=label,
+        residuals_by_layer=residuals,
+        direction=direction,
+        selected_layer=selected_layer,
+    )
+
+
+def _run_trajectory_intervention_summary(
+    *,
+    model: HookedTransformer,
+    groups: Sequence[SafetyPromptGroup],
+    checkpoints_by_prompt_id: dict[str, dict[str, object]],
+    intervention: ProjectionInterventionArmConfig,
+    direction_by_name: dict[str, torch.Tensor],
+) -> TrajectoryInterventionComparisonSummary:
+    baseline_residuals: list[torch.Tensor] = []
+    intervened_residuals: list[torch.Tensor] = []
+    key = f"{intervention.position_name}_residuals"
+
+    for group in groups:
+        entry = getattr(group, f"{intervention.target_role}_entry")
+        baseline_residuals.append(
+            checkpoints_by_prompt_id[entry.prompt_id][key].to(dtype=torch.float32)
+        )
+        intervened = _collect_prompt_residuals_with_optional_intervention(
+            model=model,
+            prompt_text=entry.text,
+            intervention=intervention,
+            direction_by_name=direction_by_name,
+        )
+        intervened_residuals.append(intervened[key].to(dtype=torch.float32))
+
+    return build_trajectory_intervention_comparison_summary(
+        arm_name=intervention.arm_name,
+        direction_name=intervention.direction_name,
+        position_name=intervention.position_name,
+        target_role=intervention.target_role,
+        selected_layer=intervention.selected_layer,
+        baseline_residuals_by_layer=torch.stack(baseline_residuals, dim=0),
+        intervened_residuals_by_layer=torch.stack(intervened_residuals, dim=0),
+        direction=direction_by_name[intervention.direction_name],
+    )
 
 
 def run_refusal_feature_discovery_validation(
@@ -1349,4 +1680,328 @@ def run_refusal_direction_intervention_check(
         arm_summaries=arm_summaries,
     )
     save_refusal_direction_intervention_artifacts(summary, output_dir=output_dir)
+    return summary
+
+
+def run_mediator_conditioned_safety_routing_analysis(
+    *,
+    model: HookedTransformer,
+    collection_id: str,
+    output_dir: Path,
+    max_new_tokens: int = 32,
+    max_pilot_groups: int | None = None,
+    max_confirm_groups: int | None = None,
+) -> MediatorConditionedSafetyRoutingSummary:
+    pilot_groups = group_safety_prompt_entries(
+        resolve_prompt_entries(
+            collection_id=collection_id,
+            split="pilot",
+            exploratory=True,
+        )
+    )
+    confirm_groups = group_safety_prompt_entries(
+        resolve_prompt_entries(
+            collection_id=collection_id,
+            split="confirm",
+            exploratory=False,
+        )
+    )
+    if max_pilot_groups is not None:
+        pilot_groups = pilot_groups[:max_pilot_groups]
+    if max_confirm_groups is not None:
+        confirm_groups = confirm_groups[:max_confirm_groups]
+
+    checkpoint_dir = output_dir / "checkpoints" / "prompt_residuals"
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    all_entries = _selected_entries_from_groups(
+        pilot_groups
+    ) + _selected_entries_from_groups(confirm_groups)
+    checkpoints_by_prompt_id: dict[str, dict[str, object]] = {}
+    for entry in all_entries:
+        checkpoint_path = checkpoint_dir / f"{entry.prompt_id}.pt"
+        checkpoints_by_prompt_id[entry.prompt_id] = _collect_prompt_checkpoint(
+            model=model,
+            entry=entry,
+            checkpoint_path=checkpoint_path,
+            max_new_tokens=max_new_tokens,
+        )
+
+    pilot_refusal_prefill = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_REFUSAL,
+        position_name=POSITION_ASSISTANT_PREFILL,
+    )
+    pilot_harmful_prefill = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_HARMFUL_CONTEXT,
+        position_name=POSITION_ASSISTANT_PREFILL,
+    )
+    pilot_benign_prefill = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_BENIGN,
+        position_name=POSITION_ASSISTANT_PREFILL,
+    )
+    pilot_harmful_instruction = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_HARMFUL_CONTEXT,
+        position_name=POSITION_INSTRUCTION_FINAL,
+    )
+    pilot_benign_instruction = _residual_matrix_for_groups(
+        pilot_groups,
+        checkpoints_by_prompt_id,
+        role=ROLE_BENIGN,
+        position_name=POSITION_INSTRUCTION_FINAL,
+    )
+
+    refusal_localization = build_layer_localization_summary(
+        target_name=ROLE_REFUSAL,
+        position_name=POSITION_ASSISTANT_PREFILL,
+        positive_residuals=pilot_refusal_prefill,
+        negative_residuals=pilot_harmful_prefill,
+    )
+    harmfulness_localization = build_layer_localization_summary(
+        target_name="harmfulness",
+        position_name=POSITION_INSTRUCTION_FINAL,
+        positive_residuals=pilot_harmful_instruction,
+        negative_residuals=pilot_benign_instruction,
+    )
+
+    refusal_direction = discover_normalized_direction(
+        positive_residuals=pilot_refusal_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_harmful_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+    )
+    harmfulness_direction = discover_normalized_direction(
+        positive_residuals=pilot_harmful_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_benign_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+    )
+
+    refusal_projection_summary = build_direction_projection_summary(
+        positive_residuals=pilot_refusal_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_harmful_prefill[
+            :, refusal_localization.selected_layer, :
+        ],
+        direction=refusal_direction,
+    )
+    harmfulness_projection_summary = build_direction_projection_summary(
+        positive_residuals=pilot_harmful_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+        negative_residuals=pilot_benign_instruction[
+            :, harmfulness_localization.selected_layer, :
+        ],
+        direction=harmfulness_direction,
+    )
+
+    pilot_non_refusal_prefill = torch.cat(
+        (pilot_harmful_prefill, pilot_benign_prefill),
+        dim=0,
+    )
+    normalized_refusal_direction = refusal_direction.to(dtype=torch.float32)
+    pilot_refusal_scores = (
+        pilot_refusal_prefill[:, refusal_localization.selected_layer, :]
+        @ normalized_refusal_direction
+    )
+    pilot_non_refusal_scores = (
+        pilot_non_refusal_prefill[:, refusal_localization.selected_layer, :]
+        @ normalized_refusal_direction
+    )
+    mediator_threshold = float(
+        0.5
+        * (
+            float(pilot_refusal_scores.mean().item())
+            + float(pilot_non_refusal_scores.mean().item())
+        )
+    )
+
+    confirm_entries = _selected_entries_from_groups(confirm_groups)
+    confirm_prompt_ids = tuple(entry.prompt_id for entry in confirm_entries)
+    confirm_roles = tuple(_prompt_role(entry.prompt_id) for entry in confirm_entries)
+    confirm_projection_scores = []
+    for prompt_id in confirm_prompt_ids:
+        residuals = checkpoints_by_prompt_id[prompt_id][
+            "assistant_prefill_residuals"
+        ].to(dtype=torch.float32)
+        projection = float(
+            torch.dot(
+                residuals[refusal_localization.selected_layer, :],
+                normalized_refusal_direction,
+            ).item()
+        )
+        confirm_projection_scores.append(projection)
+    mediator_partition = build_mediator_partition_summary(
+        prompt_ids=confirm_prompt_ids,
+        roles=confirm_roles,
+        projection_scores=tuple(confirm_projection_scores),
+        threshold=mediator_threshold,
+    )
+
+    refusal_role_trajectories = (
+        _role_projection_trajectory_summary(
+            label=ROLE_REFUSAL,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            role=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            direction=refusal_direction,
+            selected_layer=refusal_localization.selected_layer,
+        ),
+        _role_projection_trajectory_summary(
+            label=ROLE_HARMFUL_CONTEXT,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            role=ROLE_HARMFUL_CONTEXT,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            direction=refusal_direction,
+            selected_layer=refusal_localization.selected_layer,
+        ),
+        _role_projection_trajectory_summary(
+            label=ROLE_BENIGN,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            role=ROLE_BENIGN,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            direction=refusal_direction,
+            selected_layer=refusal_localization.selected_layer,
+        ),
+    )
+    harmfulness_role_trajectories = (
+        _role_projection_trajectory_summary(
+            label=ROLE_REFUSAL,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            role=ROLE_REFUSAL,
+            position_name=POSITION_INSTRUCTION_FINAL,
+            direction=harmfulness_direction,
+            selected_layer=harmfulness_localization.selected_layer,
+        ),
+        _role_projection_trajectory_summary(
+            label=ROLE_HARMFUL_CONTEXT,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            role=ROLE_HARMFUL_CONTEXT,
+            position_name=POSITION_INSTRUCTION_FINAL,
+            direction=harmfulness_direction,
+            selected_layer=harmfulness_localization.selected_layer,
+        ),
+        _role_projection_trajectory_summary(
+            label=ROLE_BENIGN,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            role=ROLE_BENIGN,
+            position_name=POSITION_INSTRUCTION_FINAL,
+            direction=harmfulness_direction,
+            selected_layer=harmfulness_localization.selected_layer,
+        ),
+    )
+    mediator_active_trajectory = _checkpoint_projection_trajectory_summary(
+        label="mediator_active",
+        checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+        prompt_ids=mediator_partition.active_prompt_ids,
+        position_name=POSITION_ASSISTANT_PREFILL,
+        direction=refusal_direction,
+        selected_layer=refusal_localization.selected_layer,
+    )
+    mediator_inactive_trajectory = _checkpoint_projection_trajectory_summary(
+        label="mediator_inactive",
+        checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+        prompt_ids=mediator_partition.inactive_prompt_ids,
+        position_name=POSITION_ASSISTANT_PREFILL,
+        direction=refusal_direction,
+        selected_layer=refusal_localization.selected_layer,
+    )
+    direction_by_name = {
+        ROLE_REFUSAL: refusal_direction,
+        "harmfulness": harmfulness_direction,
+    }
+    trajectory_intervention_configs = (
+        ProjectionInterventionArmConfig(
+            arm_name="refusal_suppression_on_refusal_prompts",
+            target_role=ROLE_REFUSAL,
+            direction_name=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            selected_layer=refusal_localization.selected_layer,
+            target_projection=refusal_projection_summary.negative_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_HARMFUL_CONTEXT,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="harmfulness_suppression_on_refusal_prompts",
+            target_role=ROLE_REFUSAL,
+            direction_name="harmfulness",
+            position_name=POSITION_INSTRUCTION_FINAL,
+            selected_layer=harmfulness_localization.selected_layer,
+            target_projection=harmfulness_projection_summary.negative_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_HARMFUL_CONTEXT,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="refusal_injection_on_harmful_context_prompts",
+            target_role=ROLE_HARMFUL_CONTEXT,
+            direction_name=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            selected_layer=refusal_localization.selected_layer,
+            target_projection=refusal_projection_summary.positive_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_HARMFUL_CONTEXT,
+        ),
+        ProjectionInterventionArmConfig(
+            arm_name="refusal_injection_on_benign_prompts",
+            target_role=ROLE_BENIGN,
+            direction_name=ROLE_REFUSAL,
+            position_name=POSITION_ASSISTANT_PREFILL,
+            selected_layer=refusal_localization.selected_layer,
+            target_projection=refusal_projection_summary.positive_mean,
+            positive_target_role=ROLE_REFUSAL,
+            negative_target_role=ROLE_BENIGN,
+        ),
+    )
+    trajectory_intervention_summaries = tuple(
+        _run_trajectory_intervention_summary(
+            model=model,
+            groups=confirm_groups,
+            checkpoints_by_prompt_id=checkpoints_by_prompt_id,
+            intervention=intervention,
+            direction_by_name=direction_by_name,
+        )
+        for intervention in trajectory_intervention_configs
+    )
+
+    summary = MediatorConditionedSafetyRoutingSummary(
+        model_name=model.cfg.model_name,
+        collection_id=collection_id,
+        pilot_num_groups=len(pilot_groups),
+        confirm_num_groups=len(confirm_groups),
+        refusal_localization=refusal_localization,
+        harmfulness_localization=harmfulness_localization,
+        refusal_projection_summary=refusal_projection_summary,
+        harmfulness_projection_summary=harmfulness_projection_summary,
+        refusal_harmfulness_direction_cosine=float(
+            torch.dot(refusal_direction, harmfulness_direction).item()
+        ),
+        mediator_partition=mediator_partition,
+        refusal_role_trajectories=refusal_role_trajectories,
+        harmfulness_role_trajectories=harmfulness_role_trajectories,
+        mediator_active_trajectory=mediator_active_trajectory,
+        mediator_inactive_trajectory=mediator_inactive_trajectory,
+        trajectory_intervention_summaries=trajectory_intervention_summaries,
+    )
+    save_mediator_conditioned_safety_routing_artifacts(
+        summary,
+        output_dir=output_dir,
+    )
     return summary

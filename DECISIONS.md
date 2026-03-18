@@ -507,3 +507,16 @@
   - the more expressive `7`-group depth-banded view still collapses mostly to `k = 2`
   This is enough to defend a coarse routing-regime story at grouped source type, but not enough to claim broad block structure in the raw routing object.
 - Impact: `resattn-ojq` can close once the artifact and state docs land. The next overall repo step should move to another major lane rather than spending more time polishing the current raw block-structure story.
+
+## [2026-03-17T19:26:00-0500] DECISION: Close `resattn-h1p` on bounded mediator-conditioned trajectory evidence, not on prompt-level mediator separation
+
+- Trigger: the strengthened aligned-Gemma mediator-conditioned routing runner completed with confirm trajectory summaries plus intervention-conditioned trajectory comparisons on the frozen `6 / 6` prompt groups.
+- Decision: treat `resattn-h1p` as complete once the repo lands the mediator-partition summary, the role-trajectory artifact, and the intervention-conditioned trajectory comparisons, while keeping stronger safety-routing claims blocked on a later prompt-surface follow-up.
+- Rationale: the new artifact clears the narrow question that blocked the safety lane:
+  - the confirm mediator partition is still exactly role-collapsed (`6` active refusal prompts versus `12` inactive non-refusal prompts)
+  - but refusal-direction interventions at assistant-prefill layer `22` propagate large shifts to the final-layer refusal-direction trajectory:
+    - refusal suppression on refusal prompts: `-372.8501`
+    - refusal injection on harmful-context prompts: `+369.9403`
+    - refusal injection on benign prompts: `+358.7685`
+  This is enough to move beyond a descriptive role relabeling result. It is not enough to claim the current prompt set exposes a subtler mediator-active subset inside the non-refusal roles.
+- Impact: `resattn-h1p` can close honestly as a bounded stage-3 safety artifact. The repo should now treat stronger safety-routing language as dependent on `resattn-mo5`, a broader or less role-collapsed prompt-surface follow-up, rather than on more rewrites of this same frozen collection.

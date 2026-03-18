@@ -17,11 +17,17 @@ class SafetyAlignmentTests(unittest.TestCase):
             DirectionSeparationMetrics,
             DirectionProjectionSummary,
             InterventionBehaviorSummary,
+            MediatorPartitionSummary,
+            ProjectionTrajectorySummary,
             SafetyLayerLocalizationSummary,
+            TrajectoryInterventionComparisonSummary,
             _projection_intervention_hook,
             build_continuation_preference_summary,
             build_direction_projection_summary,
             build_intervention_behavior_summary,
+            build_mediator_partition_summary,
+            build_projection_trajectory_summary,
+            build_trajectory_intervention_comparison_summary,
             group_safety_prompt_entries,
             build_layer_localization_summary,
             discover_normalized_direction,
@@ -34,7 +40,12 @@ class SafetyAlignmentTests(unittest.TestCase):
         self.DirectionSeparationMetrics = DirectionSeparationMetrics
         self.DirectionProjectionSummary = DirectionProjectionSummary
         self.InterventionBehaviorSummary = InterventionBehaviorSummary
+        self.MediatorPartitionSummary = MediatorPartitionSummary
+        self.ProjectionTrajectorySummary = ProjectionTrajectorySummary
         self.SafetyLayerLocalizationSummary = SafetyLayerLocalizationSummary
+        self.TrajectoryInterventionComparisonSummary = (
+            TrajectoryInterventionComparisonSummary
+        )
         self.projection_intervention_hook = staticmethod(_projection_intervention_hook)
         self.build_continuation_preference_summary = staticmethod(
             build_continuation_preference_summary
@@ -44,6 +55,15 @@ class SafetyAlignmentTests(unittest.TestCase):
         )
         self.build_intervention_behavior_summary = staticmethod(
             build_intervention_behavior_summary
+        )
+        self.build_mediator_partition_summary = staticmethod(
+            build_mediator_partition_summary
+        )
+        self.build_projection_trajectory_summary = staticmethod(
+            build_projection_trajectory_summary
+        )
+        self.build_trajectory_intervention_comparison_summary = staticmethod(
+            build_trajectory_intervention_comparison_summary
         )
         self.group_safety_prompt_entries = staticmethod(group_safety_prompt_entries)
         self.build_layer_localization_summary = staticmethod(
@@ -256,6 +276,99 @@ class SafetyAlignmentTests(unittest.TestCase):
         )
         self.assertAlmostEqual(1.15, summary.intervened_margin, places=6)
         self.assertAlmostEqual(0.15, summary.margin_delta, places=6)
+
+    def test_build_projection_trajectory_summary_projects_mean_depth_profile(
+        self,
+    ) -> None:
+        residuals = torch.tensor(
+            [
+                [[1.0, 0.0], [2.0, 0.0], [3.0, 0.0]],
+                [[2.0, 0.0], [4.0, 0.0], [6.0, 0.0]],
+            ],
+            dtype=torch.float32,
+        )
+        direction = torch.tensor([1.0, 0.0], dtype=torch.float32)
+
+        summary = self.build_projection_trajectory_summary(
+            label="active",
+            residuals_by_layer=residuals,
+            direction=direction,
+            selected_layer=1,
+        )
+
+        self.assertEqual("active", summary.label)
+        self.assertEqual((1.5, 3.0, 4.5), summary.mean_projection_by_layer)
+        self.assertAlmostEqual(3.0, summary.selected_layer_mean, places=6)
+        self.assertAlmostEqual(4.5, summary.final_layer_mean, places=6)
+
+    def test_build_mediator_partition_summary_splits_prompt_roles_by_threshold(
+        self,
+    ) -> None:
+        summary = self.build_mediator_partition_summary(
+            prompt_ids=(
+                "sa-confirm-001-refusal",
+                "sa-confirm-001-harmful_context",
+                "sa-confirm-001-benign",
+                "sa-confirm-002-refusal",
+            ),
+            roles=("refusal", "harmful_context", "benign", "refusal"),
+            projection_scores=(2.0, 0.5, -0.5, 1.5),
+            threshold=1.0,
+        )
+
+        self.assertEqual(1.0, summary.threshold)
+        self.assertEqual(
+            ("sa-confirm-001-refusal", "sa-confirm-002-refusal"),
+            summary.active_prompt_ids,
+        )
+        self.assertEqual(
+            ("sa-confirm-001-harmful_context", "sa-confirm-001-benign"),
+            summary.inactive_prompt_ids,
+        )
+        self.assertEqual({"refusal": 2}, summary.active_role_counts)
+        self.assertEqual(
+            {"benign": 1, "harmful_context": 1},
+            summary.inactive_role_counts,
+        )
+        self.assertAlmostEqual(1.75, summary.active_mean_projection, places=6)
+        self.assertAlmostEqual(0.0, summary.inactive_mean_projection, places=6)
+
+    def test_build_trajectory_intervention_comparison_summary_reports_layer_deltas(
+        self,
+    ) -> None:
+        baseline = torch.tensor(
+            [
+                [[1.0, 0.0], [2.0, 0.0], [3.0, 0.0]],
+                [[1.0, 0.0], [2.0, 0.0], [3.0, 0.0]],
+            ],
+            dtype=torch.float32,
+        )
+        intervened = torch.tensor(
+            [
+                [[0.5, 0.0], [1.0, 0.0], [1.5, 0.0]],
+                [[0.5, 0.0], [1.0, 0.0], [1.5, 0.0]],
+            ],
+            dtype=torch.float32,
+        )
+        direction = torch.tensor([1.0, 0.0], dtype=torch.float32)
+
+        summary = self.build_trajectory_intervention_comparison_summary(
+            arm_name="refusal_suppression_on_refusal_prompts",
+            direction_name="refusal",
+            position_name="assistant_prefill",
+            target_role="refusal",
+            selected_layer=1,
+            baseline_residuals_by_layer=baseline,
+            intervened_residuals_by_layer=intervened,
+            direction=direction,
+        )
+
+        self.assertEqual(
+            "refusal_suppression_on_refusal_prompts",
+            summary.arm_name,
+        )
+        self.assertAlmostEqual(-1.0, summary.selected_layer_delta, places=6)
+        self.assertAlmostEqual(-1.5, summary.final_layer_delta, places=6)
 
 
 if __name__ == "__main__":

@@ -999,3 +999,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: none
 - Anomalies: grouped-source compression did make the structure cleaner, but the matched random-control silhouette also rose sharply, so the honest update is coarse-regime evidence rather than a block-structure pass
 - Next step: close `resattn-ojq`, keep the raw block-structure gate unpassed, and move overall repo priority to `resattn-h1p`
+
+## [2026-03-17T19:15:20-0500] PRE-RUN: aligned Gemma mediator-conditioned safety routing v1
+- tmux session: `safety-h1p-routing`
+- Script: `scripts/run_mediator_conditioned_safety_routing_analysis.py`
+- Command: `.venv/bin/python scripts/run_mediator_conditioned_safety_routing_analysis.py --device mps --max-new-tokens 24 --output-dir results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_discovery_v1`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens=24`
+- What I'm testing: whether the validated refusal mediator also organizes a distinct depth-trajectory pattern on the frozen confirm prompts when prompts are partitioned by mediator activation rather than descriptive refusal labels alone.
+- Expected outcome: the run reuses prompt-level checkpoints, writes a summary-only mediator-conditioned trajectory artifact, and shows cleaner refusal-direction depth separation for mediator-active prompts than for mediator-inactive prompts.
+- Expected duration: ~10-25 minutes
+- Checkpoint path: `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1/checkpoints/prompt_residuals/`
+- Checkpoint cadence: prompt-level residual checkpoints written on first prompt access
+- Log path: `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1/run.log`
+- Resume command: `.venv/bin/python scripts/run_mediator_conditioned_safety_routing_analysis.py --device mps --max-new-tokens 24 --output-dir results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1`
+- Main confound to watch: the mediator-active partition could collapse back to the refusal role labels exactly, in which case the artifact would be little more than a relabeled role trajectory summary instead of a real mediator-conditioned read.
+- Implementation verified: YES - `tests.test_safety_alignment` now covers the new trajectory and partition helpers before launch.
+- Status: LAUNCHING
+
+## [2026-03-17T19:24:00-0500] POST-RUN: aligned Gemma mediator-conditioned safety routing v1
+- Outcome: SUCCESS
+- Key metric: the confirm mediator partition still collapses to `6` refusal versus `12` non-refusal prompts, but refusal-direction interventions change the final-layer refusal trajectory by `-372.8501` on refusal prompts, `+369.9403` on harmful-context prompts, and `+358.7685` on benign prompts
+- Artifacts saved: `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1/summary.json`, `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1.md`
+- Latest checkpoint: `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1/checkpoints/prompt_residuals/sa-confirm-006-refusal.pt`
+- Anomalies: the mediator-active partition remained exactly role-collapsed on this frozen prompt set, so the artifact supports bounded trajectory claims rather than a richer prompt-subset story; rerunning the exact command reused checkpoints and completed in `11.55` seconds
+- Next step: close `resattn-h1p` as a bounded stage-3 safety artifact and return to the open Figure 8 and Gemma decision issues

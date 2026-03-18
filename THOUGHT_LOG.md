@@ -801,3 +801,25 @@ Suggested entry format:
 - Interesting facts:
   - Raw-source best `k` stayed `2` on all `128 / 128` resamples.
   - The `source_type` view produced a much more balanced full-sample `k = 2` split (`87 / 41`) than either the raw-source view (`126 / 2`) or the `depth_thirds_by_type` view (`117 / 11`).
+
+## [2026-03-17T19:26:00-0500] The Safety Mediator Still Collapses To Refusal Labels, But It Finally Moves Whole Trajectories
+- Stage: implementation
+- Feel of the Experiment: This was the right place to push harder. The first version of `h1p` looked too much like a relabeled refusal partition. After adding intervention-conditioned trajectories, the artifact became scientifically worth keeping even though the prompt split is still too clean.
+- Working Hypotheses:
+  - The aligned-Gemma refusal mediator changes full-depth refusal-style trajectories, not just the local selected-layer coefficient.
+  - The current frozen prompt collection is too role-aligned to expose a finer mediator-active subset inside non-refusal prompts.
+- Hunches and Guesses:
+  - The important number here is the final-layer shift after intervening at refusal layer `22`, not the selected-layer shift itself. The selected-layer change is partly built into the intervention design; the downstream persistence is the real signal.
+  - Safety routing now looks more bottlenecked by prompt-surface diversity than by analysis plumbing.
+- Predictions:
+  - A broader aligned-Gemma prompt surface with softer refusal structure would be more informative than another rewrite of this same `6 / 6` collection.
+  - If a later prompt surface still role-collapses under the mediator threshold, the safety lane may simply be too templated for the routing question we want.
+- Surprises and Tensions:
+  - The mediator partition stayed exactly refusal versus non-refusal, which is weaker than I wanted.
+  - But the refusal-direction interventions still moved final-layer refusal trajectories by about `±360` to `±370`, which is much harder to dismiss as a role-label summary.
+- Confidence:
+  - medium-high that `resattn-h1p` is worth closing
+  - medium that stronger safety-routing claims now depend on prompt-surface redesign rather than more analysis refactoring
+- Interesting facts:
+  - Refusal suppression on refusal prompts changed the final-layer refusal-direction trajectory by `-372.8501`.
+  - Refusal injection on harmful-context prompts changed the same final-layer trajectory by `+369.9403`.

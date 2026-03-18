@@ -335,13 +335,25 @@
       - refusal injection on benign prompts also raised refusal-versus-benign preference by `0.2374` without producing greedy refusal flips
       - the matched harmfulness injection control on benign prompts stayed flat at `0.0`
     - interpretation: the localized refusal direction now has causal bite on the aligned-Gemma confirm split, and the harmfulness control does not recapitulate that effect; at the same time, greedy refusal behavior remains mostly saturated and the benign-prompt shift means this should be treated as bounded mediator evidence rather than a perfectly selective refusal switch
+  - `resattn-h1p` now lands the first mediator-conditioned safety routing artifact on aligned Gemma:
+    - `validation/safety_alignment.py` and `scripts/run_mediator_conditioned_safety_routing_analysis.py` now implement prompt-level mediator partitioning, refusal and harmfulness depth trajectories, and intervention-conditioned trajectory comparisons on the frozen aligned-Gemma prompt set
+    - `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1.md` is the first full stage-3 safety artifact on the frozen `6 / 6` aligned-Gemma prompt groups
+    - the confirm mediator partition is still role-collapsed:
+      - pilot refusal threshold `= 79.0206`
+      - active prompts `= 6`, all `refusal`
+      - inactive prompts `= 12`, split across `harmful_context` and `benign`
+    - but the intervention-conditioned trajectories move beyond a pure relabeling read:
+      - refusal suppression on refusal prompts changes the final-layer refusal-direction trajectory by `-372.8501`
+      - refusal injection on harmful-context prompts changes the same final-layer trajectory by `+369.9403`
+      - refusal injection on benign prompts changes the same final-layer trajectory by `+358.7685`
+    - interpretation: the aligned-Gemma refusal mediator now supports a bounded mediator-conditioned depth-trajectory analysis, but the current prompt set is still too clean to separate mediator-active prompts from refusal labels alone; stronger safety-routing claims remain blocked on a broader or less role-collapsed prompt surface
 
 ## Immediate Next Steps
 
-1. Use `resattn-h1p` for mediator-conditioned safety routing analysis on aligned Gemma now that the bounded causal mediator check is in place.
-2. Use `resattn-8xu` to choose the next bounded Figure 8 redesign now that `resattn-fby` shows best-checkpoint selection helps but does not fix the widened `wikitext-103` regime.
-3. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
-4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
+1. Use `resattn-8xu` to choose the next bounded Figure 8 redesign now that best-checkpoint export improved the widened `wikitext-103` proxy without fixing the lane.
+2. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
+3. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
+4. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
 ## Phase 1 Gate
