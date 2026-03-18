@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-scaffold`
-- Focus: `resattn-1wr` is the last narrow safety-surface semantics pass; after it lands, the next meaningful move is `resattn-rh0` on the stronger primary-model oracle lane
-- Experimental status: the broadened aligned-Gemma safety surface is now largely behaviorally clean for this prompt family. The prohibition-style rerun keeps the mechanistic results unchanged and moves confirm non-refusal pass rate to `0.9167`, leaving only one genuinely refusal-like harmful-context mismatch. That means the safety semantics cleanup is basically done, while the biggest remaining upside is still on the primary `google/gemma-2-2b` oracle path.
-- Critical reminder: if I continue after this, it should be because I am deliberately pivoting to `resattn-rh0`, not because the current safety surface still has obvious hygiene debt.
+- Branch: `wip/resattn-rh0`
+- Focus: `resattn-rh0` is now the planning freeze for the next larger primary-model Gemma oracle campaign; after it lands, the immediate execution step is `resattn-gad`
+- Experimental status: the repo has enough positive primary-model oracle signal that the next clean leverage point is prompt-surface expansion rather than more method tuning. The frozen plan is a stratified `registry_v5` with four explicit strata, `64` pilot prompts and `256` confirm prompts per stratum, plus a required calibration slice before any full launch.
+- Critical reminder: the next scale-up should change the prompt surface only. Do not reopen target-family or feature-family redesign inside the first `registry_v5` campaign.

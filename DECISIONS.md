@@ -754,3 +754,10 @@
   - the only remaining confirm mismatch is the genuinely refusal-like `sa2-confirm-003-harmful_context`
   That is enough to say the broadened surface is now behaviorally clean enough for bounded interpretation. Another semantics pass on the same prompt family would be diminishing-return cleanup rather than a real scientific move.
 - Impact: `resattn-1wr` can close. Safety-surface semantics are now effectively frozen on this family, and the next repo priority should return to the stronger primary-model oracle lane, tracked as `resattn-rh0`.
+
+## [2026-03-18T07:05:00-0500] DECISION: Freeze the next Gemma oracle scale-up as a stratified prompt-surface expansion, not a method redesign
+
+- Trigger: `resattn-rh0` asked for the next larger primary-model Gemma oracle campaign plan beyond `registry_v4`, after the repo already cleared positive held-out loss recovery, grouped pattern structure, and the primary-model regime comparison.
+- Decision: plan the next oracle scale-up as a generated `registry_v5` with four explicit strata (`factual_recall`, `reasoning_math`, `code_procedural`, `general_text`) and target counts of `64` pilot plus `256` confirm prompts per stratum. Keep the current oracle method surface fixed and require one small calibration slice before any tmux-backed full launch.
+- Rationale: the current underexploited upside is no longer another predictor tweak. It is testing whether the strongest primary-model oracle signal survives a materially broader prompt surface with explicit category tags. Changing prompt surface alone is the cleanest next experiment because it maximizes scientific leverage without reopening already-positive method questions.
+- Impact: `resattn-rh0` can close once the plan doc lands. The next implementation issue is `resattn-gad`, which should generate `registry_v5`, preserve the existing collection id and control-plan compatibility, add any minimal deterministic-generation support, and run a calibration slice before deciding on the full campaign launch.

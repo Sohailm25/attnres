@@ -516,11 +516,12 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-rh0` to plan the next larger stratified primary-model Gemma oracle-alpha campaign beyond `registry_v4`.
+1. Use `resattn-gad` to generate `registry_v5` for the next larger stratified primary-model Gemma oracle-alpha campaign beyond `registry_v4`.
 2. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
+6. Keep the next oracle scale-up method-fixed: change the prompt surface and stratification first, not the target family or feature family.
 
 ## Phase 1 Gate
 

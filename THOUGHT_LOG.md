@@ -219,6 +219,21 @@ Suggested entry format:
 - Confidence:
   - medium that mean-pooled `h_4[t]` is the right internal baseline to beat
 
+## [2026-03-18T07:05:00-0500] The Next Gemma Oracle Win Should Come From Breadth, Not Cleverness
+- Stage: planning
+- Feel of the Experiment: The repo finally feels disciplined enough to cash in on its strongest positive lane instead of orbiting it. The main temptation now is overdesign: inventing a fancier oracle method when the obvious underexplored lever is simply a broader primary-model prompt surface.
+- Working Hypotheses:
+  - The next useful Gemma oracle result will come from stratification across prompt families rather than another target or feature redesign.
+- Hunches and Guesses:
+  - If the v5 campaign changes the story materially, it will do so by exposing stratum-conditioned routing differences, not by overturning the already-positive held-out loss result.
+- Predictions:
+  - A larger stratified surface will keep the softmax competition story alive and likely sharpen coarse source-type structure before it sharpens raw block structure.
+- Surprises and Tensions:
+  - The cleanest implementation path is not glamorous. It is a deterministic prompt generator, round-robin ordering, and a calibration slice. That feels more like tedious infrastructure than a new experiment, but it is probably the right scientific move.
+- Confidence:
+  - high that the primary-model oracle lane is the right place to invest next
+  - medium-high that prompt-surface expansion is a better next lever than another method tweak
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.
