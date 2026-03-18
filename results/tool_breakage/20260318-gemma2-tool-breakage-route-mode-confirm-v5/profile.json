@@ -1,0 +1,542 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v5",
+  "split": "confirm",
+  "exploratory": false,
+  "summary_path": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json",
+  "profile_summary": {
+    "num_prompts": 20,
+    "group_tag_prefixes": [
+      "subcategory_",
+      "route_mode_"
+    ],
+    "prompt_profiles": [
+      {
+        "prompt_id": "tb5-confirm-001",
+        "prompt": "On most maps, the capital of Australia appears as",
+        "split": "confirm",
+        "target_text": "Canberra",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_2"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.6729626996765057,
+        "mean_tuned_final_position_kl_increase_under_routing": 4.260765121323997,
+        "final_target_rank_delta_under_routing": 8.0,
+        "best_target_rank_delta_under_routing": 8.0,
+        "target_rank_range_delta_under_routing": 73950.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-002",
+        "prompt": "On most maps, the capital of Portugal appears as",
+        "split": "confirm",
+        "target_text": "Lisbon",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_2"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.32560677093044,
+        "mean_tuned_final_position_kl_increase_under_routing": 4.7051143263860675,
+        "final_target_rank_delta_under_routing": -1.0,
+        "best_target_rank_delta_under_routing": -1.0,
+        "target_rank_range_delta_under_routing": 48772.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-003",
+        "prompt": "The capital city of Egypt is",
+        "split": "confirm",
+        "target_text": "Cairo",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_3"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.7220949033765534,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.9103476406666093,
+        "final_target_rank_delta_under_routing": 10.0,
+        "best_target_rank_delta_under_routing": 10.0,
+        "target_rank_range_delta_under_routing": 66835.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-004",
+        "prompt": "The capital city of South Korea is",
+        "split": "confirm",
+        "target_text": "Seoul",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_3"
+        },
+        "mean_tuned_kl_increase_under_routing": 1.8792022410466767,
+        "mean_tuned_final_position_kl_increase_under_routing": 1.59011843890095,
+        "final_target_rank_delta_under_routing": -1.0,
+        "best_target_rank_delta_under_routing": -1.0,
+        "target_rank_range_delta_under_routing": 41707.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-005",
+        "prompt": "In a geography quiz, the capital of Peru would be",
+        "split": "confirm",
+        "target_text": "Lima",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_4"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.694478302671856,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.738907840304399,
+        "final_target_rank_delta_under_routing": -2.0,
+        "best_target_rank_delta_under_routing": -2.0,
+        "target_rank_range_delta_under_routing": 96903.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-006",
+        "prompt": "In a geography quiz, the capital of Thailand would be",
+        "split": "confirm",
+        "target_text": "Bangkok",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_4"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.5551313656721435,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.2212357349747505,
+        "final_target_rank_delta_under_routing": -7.0,
+        "best_target_rank_delta_under_routing": -7.0,
+        "target_rank_range_delta_under_routing": 18600.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-007",
+        "prompt": "The chemical symbol for iron is",
+        "split": "confirm",
+        "target_text": "Fe",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_1"
+        },
+        "mean_tuned_kl_increase_under_routing": 3.3048248410979375,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.066821272484958,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 0.0,
+        "target_rank_range_delta_under_routing": -76618.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": false
+      },
+      {
+        "prompt_id": "tb5-confirm-008",
+        "prompt": "The chemical symbol for calcium is",
+        "split": "confirm",
+        "target_text": "Ca",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_1"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.9288839183256923,
+        "mean_tuned_final_position_kl_increase_under_routing": 5.818082044545847,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 0.0,
+        "target_rank_range_delta_under_routing": 196.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-009",
+        "prompt": "In the periodic table, potassium is abbreviated as",
+        "split": "confirm",
+        "target_text": "K",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_5"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.3267757953547585,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.338361633834071,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 0.0,
+        "target_rank_range_delta_under_routing": -105679.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": false
+      },
+      {
+        "prompt_id": "tb5-confirm-010",
+        "prompt": "In the periodic table, helium is abbreviated as",
+        "split": "confirm",
+        "target_text": "He",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_5"
+        },
+        "mean_tuned_kl_increase_under_routing": 3.1864309270973674,
+        "mean_tuned_final_position_kl_increase_under_routing": 8.820028845686466,
+        "final_target_rank_delta_under_routing": 240.0,
+        "best_target_rank_delta_under_routing": 35.0,
+        "target_rank_range_delta_under_routing": 66733.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-011",
+        "prompt": "A lab chart would mark mercury with the symbol",
+        "split": "confirm",
+        "target_text": "Hg",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_9"
+        },
+        "mean_tuned_kl_increase_under_routing": 3.0799553070336025,
+        "mean_tuned_final_position_kl_increase_under_routing": 3.6391370702208055,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 0.0,
+        "target_rank_range_delta_under_routing": 142479.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-012",
+        "prompt": "Chemistry notes write the symbol for neon as",
+        "split": "confirm",
+        "target_text": "Ne",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_9"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.4189657083272604,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.028245483310177,
+        "final_target_rank_delta_under_routing": 104.0,
+        "best_target_rank_delta_under_routing": 14.0,
+        "target_rank_range_delta_under_routing": -127255.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": false
+      },
+      {
+        "prompt_id": "tb5-confirm-013",
+        "prompt": "Literature students learn that War and Peace was written by",
+        "split": "confirm",
+        "target_text": "Tolstoy",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_6"
+        },
+        "mean_tuned_kl_increase_under_routing": 3.1006410135395037,
+        "mean_tuned_final_position_kl_increase_under_routing": 8.234911464548741,
+        "final_target_rank_delta_under_routing": -1.0,
+        "best_target_rank_delta_under_routing": -1.0,
+        "target_rank_range_delta_under_routing": 32855.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-014",
+        "prompt": "Literature students learn that Gulliver's Travels was written by",
+        "split": "confirm",
+        "target_text": "Swift",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_6"
+        },
+        "mean_tuned_kl_increase_under_routing": 3.449896279794092,
+        "mean_tuned_final_position_kl_increase_under_routing": 5.008385220847021,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 2.0,
+        "target_rank_range_delta_under_routing": 16612.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-015",
+        "prompt": "Most library catalogs list Ulysses under",
+        "split": "confirm",
+        "target_text": "Joyce",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_7"
+        },
+        "mean_tuned_kl_increase_under_routing": 5.344149407050841,
+        "mean_tuned_final_position_kl_increase_under_routing": 8.650856716594157,
+        "final_target_rank_delta_under_routing": 12088.0,
+        "best_target_rank_delta_under_routing": 4219.0,
+        "target_rank_range_delta_under_routing": 100663.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-016",
+        "prompt": "Most library catalogs list Paradise Lost under",
+        "split": "confirm",
+        "target_text": "Milton",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_7"
+        },
+        "mean_tuned_kl_increase_under_routing": 4.482989418087527,
+        "mean_tuned_final_position_kl_increase_under_routing": 4.8709004677993315,
+        "final_target_rank_delta_under_routing": 450.0,
+        "best_target_rank_delta_under_routing": 450.0,
+        "target_rank_range_delta_under_routing": 107844.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-017",
+        "prompt": "The novel The Great Gatsby was written by",
+        "split": "confirm",
+        "target_text": "Fitzgerald",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_11"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.4326793353606124,
+        "mean_tuned_final_position_kl_increase_under_routing": 1.282882978190453,
+        "final_target_rank_delta_under_routing": -7.0,
+        "best_target_rank_delta_under_routing": -7.0,
+        "target_rank_range_delta_under_routing": 146305.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-018",
+        "prompt": "The novel The Stranger was written by",
+        "split": "confirm",
+        "target_text": "Camus",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_11"
+        },
+        "mean_tuned_kl_increase_under_routing": 3.2373331006853663,
+        "mean_tuned_final_position_kl_increase_under_routing": 5.040231311568418,
+        "final_target_rank_delta_under_routing": -9.0,
+        "best_target_rank_delta_under_routing": -9.0,
+        "target_rank_range_delta_under_routing": 205720.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-019",
+        "prompt": "The author of Frankenstein is",
+        "split": "confirm",
+        "target_text": "Shelley",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_12"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.086595888912248,
+        "mean_tuned_final_position_kl_increase_under_routing": 4.685646042388935,
+        "final_target_rank_delta_under_routing": 20.0,
+        "best_target_rank_delta_under_routing": 20.0,
+        "target_rank_range_delta_under_routing": 4919.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-confirm-020",
+        "prompt": "The author of The Handmaid's Tale is",
+        "split": "confirm",
+        "target_text": "Atwood",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_12"
+        },
+        "mean_tuned_kl_increase_under_routing": 1.8996712090828134,
+        "mean_tuned_final_position_kl_increase_under_routing": 3.136293805553578,
+        "final_target_rank_delta_under_routing": -323.0,
+        "best_target_rank_delta_under_routing": -323.0,
+        "target_rank_range_delta_under_routing": 54255.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      }
+    ],
+    "group_summaries": {
+      "subcategory_": {
+        "by_tag": {
+          "subcategory_author_fact": {
+            "prompt_count": 8,
+            "mean_tuned_kl_increase_under_routing": 3.2542444565641255,
+            "mean_tuned_final_position_kl_increase_under_routing": 5.113763500936329,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.375,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 1527.25,
+            "mean_best_target_rank_delta_under_routing": 543.875,
+            "mean_target_rank_range_delta_under_routing": 83646.625
+          },
+          "subcategory_capital_fact": {
+            "prompt_count": 6,
+            "mean_tuned_kl_increase_under_routing": 2.474912713895696,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.0710815170927956,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.3333333333333333,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.3333333333333333,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 1.1666666666666667,
+            "mean_best_target_rank_delta_under_routing": 1.1666666666666667,
+            "mean_target_rank_range_delta_under_routing": 57794.5
+          },
+          "subcategory_element_symbol": {
+            "prompt_count": 6,
+            "mean_tuned_kl_increase_under_routing": 2.87430608287277,
+            "mean_tuned_final_position_kl_increase_under_routing": 4.118446058347054,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.3333333333333333,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.3333333333333333,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+            "mean_final_target_rank_delta_under_routing": 57.333333333333336,
+            "mean_best_target_rank_delta_under_routing": 8.166666666666666,
+            "mean_target_rank_range_delta_under_routing": -16690.666666666668
+          }
+        }
+      },
+      "route_mode_": {
+        "by_tag": {
+          "route_mode_author_cluster_11": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 2.8350062180229894,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.1615571448794353,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": -8.0,
+            "mean_best_target_rank_delta_under_routing": -8.0,
+            "mean_target_rank_range_delta_under_routing": 176012.5
+          },
+          "route_mode_author_cluster_12": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 1.9931335489975306,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.9109699239712565,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": -151.5,
+            "mean_best_target_rank_delta_under_routing": -151.5,
+            "mean_target_rank_range_delta_under_routing": 29587.0
+          },
+          "route_mode_author_cluster_6": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 3.275268646666798,
+            "mean_tuned_final_position_kl_increase_under_routing": 6.621648342697881,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": -0.5,
+            "mean_best_target_rank_delta_under_routing": 0.5,
+            "mean_target_rank_range_delta_under_routing": 24733.5
+          },
+          "route_mode_author_cluster_7": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 4.913569412569184,
+            "mean_tuned_final_position_kl_increase_under_routing": 6.760878592196745,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 6269.0,
+            "mean_best_target_rank_delta_under_routing": 2334.5,
+            "mean_target_rank_range_delta_under_routing": 104253.5
+          },
+          "route_mode_capital_cluster_2": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 2.4992847353034726,
+            "mean_tuned_final_position_kl_increase_under_routing": 4.482939723855033,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 3.5,
+            "mean_best_target_rank_delta_under_routing": 3.5,
+            "mean_target_rank_range_delta_under_routing": 61361.0
+          },
+          "route_mode_capital_cluster_3": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 2.300648572211615,
+            "mean_tuned_final_position_kl_increase_under_routing": 2.2502330397837795,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 4.5,
+            "mean_best_target_rank_delta_under_routing": 4.5,
+            "mean_target_rank_range_delta_under_routing": 54271.0
+          },
+          "route_mode_capital_cluster_4": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 2.624804834172,
+            "mean_tuned_final_position_kl_increase_under_routing": 2.4800717876395746,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": -4.5,
+            "mean_best_target_rank_delta_under_routing": -4.5,
+            "mean_target_rank_range_delta_under_routing": 57751.5
+          },
+          "route_mode_element_cluster_1": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 3.116854379711815,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.942451658515403,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+            "mean_final_target_rank_delta_under_routing": 0.0,
+            "mean_best_target_rank_delta_under_routing": 0.0,
+            "mean_target_rank_range_delta_under_routing": -38211.0
+          },
+          "route_mode_element_cluster_5": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 2.756603361226063,
+            "mean_tuned_final_position_kl_increase_under_routing": 5.579195239760268,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+            "mean_final_target_rank_delta_under_routing": 120.0,
+            "mean_best_target_rank_delta_under_routing": 17.5,
+            "mean_target_rank_range_delta_under_routing": -19473.0
+          },
+          "route_mode_element_cluster_9": {
+            "prompt_count": 2,
+            "mean_tuned_kl_increase_under_routing": 2.7494605076804315,
+            "mean_tuned_final_position_kl_increase_under_routing": 2.8336912767654914,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+            "mean_final_target_rank_delta_under_routing": 52.0,
+            "mean_best_target_rank_delta_under_routing": 7.0,
+            "mean_target_rank_range_delta_under_routing": 7612.0
+          }
+        }
+      }
+    }
+  }
+}

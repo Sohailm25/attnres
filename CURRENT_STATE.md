@@ -355,6 +355,28 @@
       - the exact-command rerun reused the checkpoint set in `10.16` seconds with an unchanged timestamp hash
       - rerunning the saved-artifact profile command reproduced the same JSON hash in `3.59` seconds
     - interpretation: `v5` is now the active main surface for the factual tool-breakage bridge. The next honest step is a locked confirm baseline on `v5`, not a return to pooled `v4` reruns
+  - `resattn-138` now lands the locked confirm baseline on that narrowed `v5` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/metrics.json` is the tracked confirm baseline summary
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/profile.json` is the saved-artifact confirm read by route mode and family
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5.md` is the confirm write-up
+    - the confirm baseline stays clearly positive overall:
+      - mean tuned KL increase under routing `= +2.9065`
+      - final-position mean tuned KL increase under routing `= +4.2024`
+      - tuned final-target-rank worsening fraction `= 0.35`
+      - tuned target-rank-range increase fraction `= 0.85`
+    - the narrowed family read is clean:
+      - authors `= +3.2542`
+      - capitals `= +2.4749`
+      - elements `= +2.8743`
+      - all narrowed families are `100%` positive on tuned mean KL increase under routing
+    - the route-mode confirm read also holds:
+      - all `10 / 10` targeted confirm modes are positive on tuned mean KL increase under routing
+      - the strongest confirm mode is author `cluster 7` (`+4.9136`)
+      - the weakest confirm mode is author `cluster 12` (`+1.9931`) and it still stays positive
+    - resume durability is verified:
+      - the exact-command rerun reused the checkpoint set in `9.99` seconds with an unchanged timestamp hash
+      - rerunning the saved-artifact profile command reproduced the same JSON hash in `3.38` seconds
+    - interpretation: the narrowed `v5` bridge now has a real confirm pass. The next tool-breakage question is no longer whether `v5` has signs of life; it is whether donor-arm controls stay supportive on this narrowed surface
   - `resattn-dat` now bridges that factual-recall structure back into the bounded Gemma tool-breakage lane without another model run:
     - `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json` and `.md` compare the saved factual-recall raw-source cluster families against the existing Gemma factual-recall tool-breakage prompts using the saved prompt-level `oracle_alpha` vectors from the pilot and confirm baseline artifacts
     - the bridge result is clean for the overlapping families:
@@ -976,7 +998,7 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-138` as the next bounded tool-breakage execution issue: run the locked Gemma confirm baseline on `tool_breakage_factual_recall_v5` and keep the write-up stratified by intended route mode as well as by family.
+1. Take `resattn-hth` as the next bounded tool-breakage execution issue: rerun the donor-arm counterfactual on the narrowed `tool_breakage_factual_recall_v5` surface and keep the write-up stratified by intended route mode as well as by family.
 2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
@@ -991,7 +1013,7 @@
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
 5. Keep tool-breakage as a bounded extension lane:
    - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
-   - if tool-breakage resumes beyond `resattn-138`, do not return to pooled reruns first
+   - if tool-breakage resumes beyond `resattn-hth`, do not return to pooled reruns first
 6. Keep safety as the next extension lane after the mode-aware factual bridge pass:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse

@@ -1700,3 +1700,25 @@ Suggested entry format:
   - overall `v5` pilot mean tuned KL delta `= +2.8378`
   - authors `= +3.2970`
   - route modes with final-rank worsening `= 5 / 10`
+## [2026-03-18T15:13:00-0500] The Confirm Split Strengthened The Narrowed Bridge
+- Stage: tool-breakage confirm
+- Feel of the Experiment: This is a stronger result than the pilot because it closes the obvious “nice pilot, weak confirm” escape hatch. The narrowed bridge held, and the confirm read is still structured rather than mushy.
+- Working Hypotheses:
+  - The active factual tool-breakage question should now shift to donor-arm controls on `v5`.
+  - The moon sidecar is even less justified as the main next move now that the narrowed bridge has a confirm pass.
+- Hunches and Guesses:
+  - The donor-arm rerun on `v5` will probably stay healthier than `v4` because the surface is no longer mode-blind.
+  - The most fragile confirm mode is author `cluster 12`, not the whole author family.
+- Predictions:
+  - `hth` will be the real discriminator for whether the narrowed bridge supports a stronger same-model statement.
+  - If `hth` turns mixed again, the mixture will be interpretable at the mode level instead of collapsing back into pooled family confusion.
+- Surprises and Tensions:
+  - Author `cluster 7` became the strongest confirm mode while still carrying full final-rank worsening; that is a useful reminder that KL and rank metrics are not the same object.
+  - The confirm split reduced the overall final-rank-worsening fraction to `0.35` even while the range-increase fraction stayed high at `0.85`.
+- Confidence:
+  - high that `138` should close positive
+  - high that `hth` is the next honest move over `a1w`
+- Interesting facts:
+  - overall `v5` confirm mean tuned KL delta `= +2.9065`
+  - strongest confirm mode `= route_mode_author_cluster_7` at `+4.9136`
+  - weakest confirm mode `= route_mode_author_cluster_12` at `+1.9931`

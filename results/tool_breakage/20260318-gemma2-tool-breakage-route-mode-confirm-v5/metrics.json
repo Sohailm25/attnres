@@ -1,0 +1,171 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v5",
+  "split": "confirm",
+  "exploratory": false,
+  "num_prompts": 20,
+  "mean_tuned_kl_increase_under_routing": 2.90646342165619,
+  "final_position_mean_tuned_kl_increase_under_routing": 4.202363673006487,
+  "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.35,
+  "fraction_tuned_routing_increases_target_rank_range_prompts": 0.85,
+  "by_subcategory": {
+    "subcategory_author_fact": {
+      "prompt_count": 8,
+      "mean_tuned_kl_increase_under_routing": 3.2542444565641255,
+      "mean_tuned_final_position_kl_increase_under_routing": 5.113763500936329,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.375,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": 1527.25,
+      "mean_best_target_rank_delta_under_routing": 543.875,
+      "mean_target_rank_range_delta_under_routing": 83646.625
+    },
+    "subcategory_capital_fact": {
+      "prompt_count": 6,
+      "mean_tuned_kl_increase_under_routing": 2.474912713895696,
+      "mean_tuned_final_position_kl_increase_under_routing": 3.0710815170927956,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.3333333333333333,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.3333333333333333,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": 1.1666666666666667,
+      "mean_best_target_rank_delta_under_routing": 1.1666666666666667,
+      "mean_target_rank_range_delta_under_routing": 57794.5
+    },
+    "subcategory_element_symbol": {
+      "prompt_count": 6,
+      "mean_tuned_kl_increase_under_routing": 2.87430608287277,
+      "mean_tuned_final_position_kl_increase_under_routing": 4.118446058347054,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.3333333333333333,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.3333333333333333,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+      "mean_final_target_rank_delta_under_routing": 57.333333333333336,
+      "mean_best_target_rank_delta_under_routing": 8.166666666666666,
+      "mean_target_rank_range_delta_under_routing": -16690.666666666668
+    }
+  },
+  "by_route_mode": {
+    "route_mode_author_cluster_11": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 2.8350062180229894,
+      "mean_tuned_final_position_kl_increase_under_routing": 3.1615571448794353,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": -8.0,
+      "mean_best_target_rank_delta_under_routing": -8.0,
+      "mean_target_rank_range_delta_under_routing": 176012.5
+    },
+    "route_mode_author_cluster_12": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 1.9931335489975306,
+      "mean_tuned_final_position_kl_increase_under_routing": 3.9109699239712565,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": -151.5,
+      "mean_best_target_rank_delta_under_routing": -151.5,
+      "mean_target_rank_range_delta_under_routing": 29587.0
+    },
+    "route_mode_author_cluster_6": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 3.275268646666798,
+      "mean_tuned_final_position_kl_increase_under_routing": 6.621648342697881,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": -0.5,
+      "mean_best_target_rank_delta_under_routing": 0.5,
+      "mean_target_rank_range_delta_under_routing": 24733.5
+    },
+    "route_mode_author_cluster_7": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 4.913569412569184,
+      "mean_tuned_final_position_kl_increase_under_routing": 6.760878592196745,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": 6269.0,
+      "mean_best_target_rank_delta_under_routing": 2334.5,
+      "mean_target_rank_range_delta_under_routing": 104253.5
+    },
+    "route_mode_capital_cluster_2": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 2.4992847353034726,
+      "mean_tuned_final_position_kl_increase_under_routing": 4.482939723855033,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": 3.5,
+      "mean_best_target_rank_delta_under_routing": 3.5,
+      "mean_target_rank_range_delta_under_routing": 61361.0
+    },
+    "route_mode_capital_cluster_3": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 2.300648572211615,
+      "mean_tuned_final_position_kl_increase_under_routing": 2.2502330397837795,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": 4.5,
+      "mean_best_target_rank_delta_under_routing": 4.5,
+      "mean_target_rank_range_delta_under_routing": 54271.0
+    },
+    "route_mode_capital_cluster_4": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 2.624804834172,
+      "mean_tuned_final_position_kl_increase_under_routing": 2.4800717876395746,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+      "mean_final_target_rank_delta_under_routing": -4.5,
+      "mean_best_target_rank_delta_under_routing": -4.5,
+      "mean_target_rank_range_delta_under_routing": 57751.5
+    },
+    "route_mode_element_cluster_1": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 3.116854379711815,
+      "mean_tuned_final_position_kl_increase_under_routing": 3.942451658515403,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+      "mean_final_target_rank_delta_under_routing": 0.0,
+      "mean_best_target_rank_delta_under_routing": 0.0,
+      "mean_target_rank_range_delta_under_routing": -38211.0
+    },
+    "route_mode_element_cluster_5": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 2.756603361226063,
+      "mean_tuned_final_position_kl_increase_under_routing": 5.579195239760268,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+      "mean_final_target_rank_delta_under_routing": 120.0,
+      "mean_best_target_rank_delta_under_routing": 17.5,
+      "mean_target_rank_range_delta_under_routing": -19473.0
+    },
+    "route_mode_element_cluster_9": {
+      "prompt_count": 2,
+      "mean_tuned_kl_increase_under_routing": 2.7494605076804315,
+      "mean_tuned_final_position_kl_increase_under_routing": 2.8336912767654914,
+      "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+      "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+      "fraction_tuned_routing_increases_target_rank_range_prompts": 0.5,
+      "mean_final_target_rank_delta_under_routing": 52.0,
+      "mean_best_target_rank_delta_under_routing": 7.0,
+      "mean_target_rank_range_delta_under_routing": 7612.0
+    }
+  }
+}

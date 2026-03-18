@@ -1192,3 +1192,28 @@
   - `resattn-xfg` can close once the pilot artifact lands.
   - `resattn-138` is now the next bounded tool-breakage execution issue: run the locked confirm baseline on `tool_breakage_factual_recall_v5`.
   - `resattn-a1w` remains a moon-only sidecar rather than the main next move.
+
+## [2026-03-18T15:13:00-0500] DECISION: Close `resattn-138` as a confirm pass for the narrowed `v5` bridge and move the next tool-breakage question to donor-arm controls
+
+- Trigger: `resattn-138` ran the locked Gemma routed-versus-original confirm baseline on `tool_breakage_factual_recall_v5` and summarized it by intended route mode as well as by family.
+- Decision: close `resattn-138` as a real confirm pass for the narrowed route-mode-aware bridge. Keep `tool_breakage_factual_recall_v5` as the active factual tool-breakage surface. The next honest step is now the donor-arm counterfactual on this narrowed surface, not another prompt-surface redesign.
+- Rationale:
+  - the confirm baseline stayed clearly positive overall:
+    - mean tuned KL increase under routing `= +2.9065`
+    - final-position mean tuned KL increase under routing `= +4.2024`
+  - the narrowed family read is clean:
+    - authors `= +3.2542`
+    - capitals `= +2.4749`
+    - elements `= +2.8743`
+    - every narrowed family is `100%` positive on the primary tuned mean-KL metric
+  - the route-mode confirm read also holds:
+    - all `10 / 10` targeted confirm modes are positive on tuned mean KL increase under routing
+    - the remaining mixed signal is still mode-specific rather than family-global
+  - the claim boundary remains explicit:
+    - moon prompts are still excluded
+    - the singleton author outlier is still excluded
+    - so this is a confirm pass for the narrowed bridge, not a broad reopening of the full factual tool-breakage lane
+- Impact:
+  - `resattn-138` can close once the confirm artifact lands.
+  - `resattn-hth` is now the next bounded tool-breakage issue: rerun the donor-arm counterfactual on the narrowed `v5` confirm surface and keep the write-up stratified by route mode and family.
+  - `resattn-a1w` remains a moon-only sidecar.

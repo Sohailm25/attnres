@@ -1874,3 +1874,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/checkpoints/prompt_results/tb5-pilot-010-413e56d141.json`
 - Anomalies: none; the exact-command rerun reused the checkpoint set in `10.16` seconds with an unchanged timestamp hash, and rerunning the saved-artifact profile command reproduced the same JSON hash in `3.59` seconds.
 - Next step: close `resattn-xfg`, then take `resattn-138` for the locked `v5` confirm baseline rather than returning to pooled `v4` reruns.
+
+## [2026-03-18T14:59:14-0500] PRE-RUN: Gemma route-mode-aware one-token v5 confirm baseline
+- tmux session: `tb-v5-confirm`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v5 --split confirm --device mps --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5 > results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v5`, `split=confirm`, `prompts=20`, `target_modes=capital(2/3/4), element(1/5/9), author(6/7/11/12)`, `moon_prompts=excluded`
+- What I'm testing: whether the narrowed `v5` route-mode-aware bridge stays positive on the locked confirm split and preserves a structured route-mode read rather than collapsing back into pooled family ambiguity.
+- Expected outcome: the confirm run stays clearly positive overall, the family read remains positive across the narrowed bridge families, and the mixed rank-instability signal stays concentrated in a subset of author, capital, and element modes.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because `v5` excludes moon prompts by design, a clean confirm result should be interpreted as a positive read for the narrowed route-mode bridge, not as a broad reopening of the full factual tool-breakage lane.
+- Implementation verified: YES - the baseline runner already produced the saved `v5` pilot artifact with prompt-level checkpoints, the saved baseline profile runner reproduced the pilot profile JSON hash, and the `v5` surface already passed registry and generator tests.
+- Status: LAUNCHING
+
+## [2026-03-18T15:13:00-0500] POST-RUN: Gemma route-mode-aware one-token v5 confirm baseline
+- Outcome: SUCCESS
+- Key metric: the locked `v5` confirm surface stayed clearly positive overall (`mean tuned KL delta = +2.9065`, final-position tuned KL delta `= +4.2024`) and every targeted confirm route mode stayed positive on the primary tuned mean-KL metric.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/metrics.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/profile.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/checkpoints/prompt_results/tb5-confirm-020-9bddacad4d.json`
+- Anomalies: none; the exact-command rerun reused the checkpoint set in `9.99` seconds with an unchanged timestamp hash, and rerunning the saved-artifact profile command reproduced the same JSON hash in `3.38` seconds.
+- Next step: close `resattn-138`, then take `resattn-hth` for the donor-arm counterfactual on the narrowed `v5` surface.
