@@ -967,3 +967,25 @@ Suggested entry format:
 - Interesting facts:
   - The full saved `8`-prompt Gemma pilot suite kept mean improvement over uniform at `1.7613` nats.
   - The qualitative stability pattern matches the dev model: restarts are tiny, perturbations matter.
+
+## [2026-03-18T00:55:00-0500] The Primary Spine Finally Cleared The Held-Out Oracle Test That Mattered
+- Stage: implementation
+- Feel of the Experiment: This is the first result that really changes the paper shape. The important part is not just that Gemma stayed positive; it is that the positive held-out story is now strong enough that the development-model-only objection is no longer the center of gravity.
+- Working Hypotheses:
+  - The next oracle question is now structure on the primary model rather than more existence checks.
+  - The slightly negative `R^2` is a warning about target geometry and metric interpretation, not a reason to dismiss the loss result.
+- Hunches and Guesses:
+  - The hybrid source winning on Gemma probably means lexical or prompt-level information matters more on the primary spine than it did on the earlier dev-model sweeps.
+  - If Gemma pattern analysis is also cleaner than `gpt2-xl`, the repo will feel much more like a primary-spine paper than a development-model proof-of-concept with interesting extensions.
+- Predictions:
+  - `resattn-2sb` is now the right oracle follow-up, not another tiny predictiveness redesign.
+  - `resattn-b4q` should turn out to be an implementation win rather than a scientific argument.
+- Surprises and Tensions:
+  - The run stayed on `lambda = 100.0` and still produced a strong held-out loss result. That is a real reminder that Euclidean alpha-fit metrics and routed-loss recovery are not telling the same story.
+  - The bounded check took about an hour because the ridge path is numerically wasteful in the `n << d` regime. That is annoying, but it is also a clean engineering problem rather than a conceptual collapse.
+- Confidence:
+  - high that the biggest remaining oracle-paper weakness just got much smaller
+  - medium-high that primary-model pattern analysis is now the highest-value scientific move
+- Interesting facts:
+  - The confirm predicted mean improvement over uniform was `+1.0428` nats with `123 / 128` prompts positive.
+  - The confirm oracle mean improvement over uniform was `+2.5525` nats with `128 / 128` prompts positive.

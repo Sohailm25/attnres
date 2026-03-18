@@ -214,6 +214,25 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             self.assertGreaterEqual(prediction.predicted_loss, 0.0)
             self.assertGreaterEqual(prediction.js_divergence_to_oracle, 0.0)
 
+    def test_predictiveness_check_uses_model_agnostic_mib_omission_rationale(
+        self,
+    ) -> None:
+        summary = self.run_oracle_alpha_predictiveness_check(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            max_train_sequences=3,
+            max_eval_sequences=2,
+            optimization_steps=4,
+            learning_rate=0.1,
+            seed=11,
+            regularization_grid=(1e-3, 1e-1, 1.0),
+            candidate_feature_sources=("mean_pooled_h_1[t]_resid_post_layer_0",),
+        )
+
+        self.assertEqual("omitted", summary.mib_status)
+        self.assertNotIn("development-model", summary.mib_rationale)
+        self.assertIn("current runner stage", summary.mib_rationale)
+
     def test_tuned_ridge_regularization_can_select_on_predicted_loss_improvement(
         self,
     ) -> None:

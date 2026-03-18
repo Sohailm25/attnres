@@ -607,3 +607,23 @@
   - paraphrase and resample perturbations move the alpha summaries materially rather than trivially
   This is enough to say the primary model is now at the same qualitative stage the development model reached before held-out predictiveness.
 - Impact: `resattn-a7j` can close once the artifact and state docs land. The next oracle-alpha issue should be the first primary-model held-out predictiveness check on the saved confirm split.
+
+## [2026-03-18T00:52:00-0500] DECISION: Treat the first primary-model Gemma held-out predictiveness artifact as a real oracle pass with mixed alpha-shape recovery
+
+- Trigger: `resattn-js8` completed the held-out oracle-alpha predictiveness check on `google/gemma-2-2b` using the saved `96 / 128` `registry_v4` pilot/confirm split.
+- Decision: close `resattn-js8` as a successful primary-model held-out routed-loss-recovery artifact and move the next oracle question to primary-model pattern analysis rather than more small predictor tweaks.
+- Rationale: the confirm result is strongly positive on the codified primary metric:
+  - predicted mean improvement over uniform `= +1.0428` nats with bootstrap interval `[0.9495, 1.1331]`
+  - predicted positive prompts `= 123 / 128`
+  - oracle mean improvement over uniform `= +2.5525` nats with bootstrap interval `[2.4603, 2.6442]`
+  - oracle positive prompts `= 128 / 128`
+  - the confirm oracle beat `uniform`, `random_dirichlet`, `magnitude_proportional`, and `last_layer_only` on every prompt
+  The result is still mixed on Euclidean alpha-shape metrics (`R^2 = -0.0632`, mean JS `= 0.1478`, selected `lambda = 100.0`), so the honest update is “primary-model held-out loss recovery is real” rather than “exact primary-model alpha recovery is solved.”
+- Impact: the biggest remaining oracle-paper weakness is no longer that the strongest positive result lives only on the development model. The next oracle-alpha issue becomes `resattn-2sb`, which should analyze the primary-model alpha structure on the saved artifact.
+
+## [2026-03-18T00:54:00-0500] DECISION: Track the primary-model held-out predictiveness runtime bottleneck as infrastructure, not as scientific failure
+
+- Trigger: `resattn-js8` completed cleanly, but the bounded run took about an hour because the current ridge helper solves the high-dimensional primal system for each leave-one-out fold in the `n << d` regime.
+- Decision: record the runtime bottleneck as follow-up issue `resattn-b4q` and do not reinterpret the long wall-clock as evidence against the scientific result itself.
+- Rationale: sampling the live process showed the run was doing real numerical work in `np.linalg.solve`, not hanging in model I/O or an implementation deadlock. The wall-clock problem is the current ridge formulation and the lack of progress artifacts during the numerical sweep, not the validity of the finished metrics.
+- Impact: future primary-model reruns should move to an `n << d`-appropriate ridge path or comparable fix, but the next scientific action remains `resattn-2sb` rather than another immediate predictiveness rerun.

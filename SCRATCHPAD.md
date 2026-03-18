@@ -334,6 +334,30 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: none
 - Next step: close the primary-model pilot stability issue and run the first primary-model held-out predictiveness check
 
+## [2026-03-17T20:47:00-0500] PRE-RUN: primary-model Gemma held-out oracle-alpha predictiveness check
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_heldout_predictiveness_check.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --model-name google/gemma-2-2b --output results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.json --optimization-steps 20 --learning-rate 0.1 --seed 11 --device mps`
+- Config: `model=google/gemma-2-2b`, `collection=oracle_alpha_phase1_v1`, `train_split=pilot`, `eval_split=confirm`, `candidate_feature_sources=default saved set`, `candidate_targets=runner defaults`, `steps=20`, `lr=0.1`, `seed=11`
+- What I'm testing: whether the saved primary-model pilot signal generalizes beyond descriptive fitting to the confirm split under the existing held-out predictiveness machinery.
+- Expected outcome: the run completes on local MPS, writes a real held-out artifact, and either preserves positive routed-loss recovery on confirm or exposes the same structural blocker seen earlier on the development model.
+- Expected duration: ~10-25 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.json`
+- Resume command: rerun the exact command above
+- Main confound to watch: the current default feature family may be less appropriate on Gemma than on `gpt2-xl`, so a weak held-out result would diagnose the current predictor surface before it diagnoses the whole primary-model oracle lane.
+- Implementation verified: YES - `resattn-a7j` already showed the primary model clears the saved pilot stability suite on the same prompt and control registries.
+- Status: LAUNCHING
+
+## [2026-03-18T00:49:00-0500] POST-RUN: primary-model Gemma held-out oracle-alpha predictiveness check
+- Outcome: SUCCESS
+- Key metric: predicted mean improvement over uniform on the saved `128`-prompt confirm split was `+1.0428` nats with bootstrap interval `[0.9495, 1.1331]`, while the confirm oracle stayed at `+2.5525` nats with `128 / 128` prompts positive
+- Artifacts saved: `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.json`, `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.md`
+- Latest checkpoint: none
+- Anomalies: the bounded run took about an hour because the current ridge helper solves the high-dimensional primal system in the `n << d` regime and emits no intermediate progress artifact during the numerical sweep; the saved JSON also needed a post-run wording fix after the MIB rationale string incorrectly referenced a development-model runner stage
+- Next step: close `resattn-js8`, move the next oracle question to primary-model pattern analysis in `resattn-2sb`, and track the runtime bottleneck separately in `resattn-b4q`
+
 ## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
 - Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
 - Outcome: SUCCESS
