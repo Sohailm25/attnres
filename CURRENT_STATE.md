@@ -292,6 +292,19 @@
       - moon facts split into an MLP-heavier cluster (`mean MLP mass = 0.5307`) and an attention-heavier cluster (`mean attention mass = 0.5638`)
       - author facts fragment into several routing modes with both MLP-heavy and more mixed source-type balances
     - interpretation: the first strong raw-source cluster story on the primary model is semantic-family-conditioned factual recall, not one broad mixed-surface block structure pass. This makes the block-structure lane meaningfully live on the primary model while keeping the full-surface prereg gate unpassed
+  - `resattn-2mx` now characterizes those factual families as route modes rather than only cluster-pure labels:
+    - `results/block_structure/20260318-gemma2-factual-route-modes-v1.json` and `.md` summarize the saved factual `k = 12` split at the within-family mode level
+    - every factual family contains multiple route modes with clear source signatures:
+      - authors: `5` modes with mean within-family centroid JS `= 0.1533`
+      - capitals: `3` modes with mean within-family centroid JS `= 0.1610`
+      - elements: `3` modes with mean within-family centroid JS `= 0.2096`
+      - moons: `2` modes with mean within-family centroid JS `= 0.1770`
+    - the differentiating signatures are mechanistic rather than only semantic:
+      - capitals include both an attention-heavier `17_attn_out` regime and an MLP-heavier `2_mlp_out` / `14_mlp_out` regime
+      - elements split into strongly separated MLP-heavier and attention-heavier regimes
+      - authors fragment across multiple mixed and MLP-heavy regimes rather than one author-specific template shard
+      - moons form a clean attention-heavy versus MLP-heavy binary split
+    - interpretation: the next oracle-to-extension bridge should stay on factual families, not shift to reasoning/math. The real next bridge question is mode-aware coverage inside capitals, elements, and authors, while moon follow-up stays bounded because the one-token tool-breakage lane is still mixed there
   - `resattn-dat` now bridges that factual-recall structure back into the bounded Gemma tool-breakage lane without another model run:
     - `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json` and `.md` compare the saved factual-recall raw-source cluster families against the existing Gemma factual-recall tool-breakage prompts using the saved prompt-level `oracle_alpha` vectors from the pilot and confirm baseline artifacts
     - the bridge result is clean for the overlapping families:
@@ -913,20 +926,23 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-pjd` as the main lane: synthesize the saved primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts into the next truthful Gemma-centered claim about an effective depth mixture.
-2. Take `resattn-2mx` as the next main oracle analysis: characterize factual-recall routing modes on the saved `registry_v5` artifact more mechanistically than simple subcategory purity.
-3. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
+1. Take `resattn-unp` as the next main bridge analysis: audit one-token tool-breakage `v4` coverage of the saved factual route modes so the extension lane is mode-aware rather than only family-aware.
+2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
+3. Treat the next extension bridge as factual-family-conditioned and mode-aware:
+   - capitals, elements, and authors are the strongest bridge families after `resattn-2mx`
+   - reasoning/math remains a real secondary structure lane, but it is not yet the best next bridge target
+   - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
 4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
 5. Keep tool-breakage as a bounded extension lane:
    - the one-token `v4` surface improved the family story, but the authoritative boundary is still family-conditioned mixed
-   - if tool-breakage resumes, start with `resattn-a1w`, the moon-family prompt-style audit, not another pooled rerun
-6. Keep safety as the next extension lane after the factual-recall oracle pass:
+   - if tool-breakage resumes beyond `resattn-unp`, do not return to pooled reruns first
+6. Keep safety as the next extension lane after the mode-aware factual bridge pass:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
 7. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.

@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-pjd`
-- Focus: `resattn-2mx` is now the main-lane issue. The next scientific pass should characterize factual-recall routing modes on the saved Gemma `registry_v5` oracle artifact.
-- Experimental status: the center of gravity is back on the primary Gemma oracle lane, and the next question is no longer “does the signal exist?” It is “what structure inside the strongest factual stratum actually explains that signal?”
-- Critical reminder: do not drift back to broad reruns or frozen lanes. `resattn-a1w` stays a bounded sidecar, and Figure 8 stays frozen.
+- Branch: `wip/resattn-2mx`
+- Focus: `resattn-unp` is now the main bridge issue. The next scientific pass should audit one-token tool-breakage `v4` coverage of the saved factual route modes from the Gemma `registry_v5` oracle artifact.
+- Experimental status: the center of gravity stays on the primary Gemma oracle lane, but the bridge unit changed. The next question is no longer “which factual families matter?” It is “which factual route modes are actually covered by the current extension surface?”
+- Critical reminder: do not drift back to broad reruns, pooled tool-breakage reruns, or frozen lanes. `resattn-a1w` stays a moon-specific sidecar, and Figure 8 stays frozen.

@@ -1104,3 +1104,24 @@
     - characterize the factual route modes more mechanistically
     - then decide the next bridge into extension lanes from that saved structure
 - Impact: `resattn-pjd` can close once the synthesis memo lands. `resattn-2mx` is now the main oracle issue, `resattn-a1w` remains the bounded tool-breakage sidecar, and the Figure 8 lane stays frozen.
+
+## [2026-03-18T13:05:56-0500] DECISION: Close `resattn-2mx` and make the next bridge mode-aware inside factual recall
+
+- Trigger: `resattn-2mx` built the saved factual route-mode artifact from the Gemma `registry_v5` oracle run and the saved factual cluster profile.
+- Decision: close `resattn-2mx` as a positive narrowing result. Do not shift the next bridge to reasoning/math. Stay on factual recall, but change the bridge unit from family labels to route modes. The next main issue is now `resattn-unp`: audit one-token tool-breakage coverage of these saved factual route modes.
+- Rationale:
+  - factual recall remains the strongest raw-source structure surface:
+    - factual raw-source silhouette `= 0.4709`
+    - reasoning/math raw-source silhouette `= 0.2456`
+  - the new artifact shows that factual families are internally differentiated in a meaningful way rather than only cluster-pure:
+    - authors split into `5` modes with mean within-family centroid JS `= 0.1533`
+    - capitals split into `3` modes with mean within-family centroid JS `= 0.1610`
+    - elements split into `3` modes with mean within-family centroid JS `= 0.2096`
+    - moons split into `2` modes with mean within-family centroid JS `= 0.1770`
+  - those modes have concrete source signatures:
+    - capitals include both attention-heavier and MLP-heavier regimes
+    - elements have the strongest within-family separation
+    - authors fragment across several mixed and MLP-heavy regimes
+    - moons are structurally real but still extension-risky because the one-token tool-breakage lane remains mixed there
+  - that means the next honest bridge question is no longer “factual versus reasoning/math.” It is “which factual route modes are actually covered by the one-token tool-breakage surface?”
+- Impact: `resattn-2mx` can close once the artifact lands. `resattn-unp` is now the next main bridge issue, `resattn-a1w` stays a bounded moon-family sidecar, and the main oracle story should keep centering grouped structure plus factual route modes rather than another mixed-surface rerun.

@@ -1612,3 +1612,25 @@ Suggested entry format:
   - factual-recall raw-source silhouette `= 0.4709`
   - factual-recall best `k = 12`
   - reasoning/math raw-source silhouette `= 0.2456`
+## [2026-03-18T13:05:56-0500] The Bridge Question Changed From Families To Modes
+- Stage: analysis
+- Feel of the Experiment: This was the right kind of narrowing pass. It did not just restate the factual-family result; it exposed that the families themselves are internally structured enough to change how the next bridge should be designed.
+- Working Hypotheses:
+  - The next extension should stay on factual recall, not move to reasoning/math.
+  - The one-token tool-breakage lane is now under-specified at the mode level even when it looks acceptable at the family level.
+- Hunches and Guesses:
+  - Elements are the cleanest bridge family because they combine high within-family separation with a positive same-model tool-breakage read.
+  - Capitals and authors should stay in the main bridge, while moons should stay bounded until their prompt-style ambiguity is resolved.
+- Predictions:
+  - A mode-aware audit of the one-token `v4` surface will find missing or under-covered factual modes even when family labels overlap.
+  - That audit will probably matter more than a fresh reasoning/math extension right now.
+- Surprises and Tensions:
+  - The family story was already real, but the element family turned out to be more internally separated than capitals or authors.
+  - Moons are structurally clean on the oracle side even though they remain the messiest extension family.
+- Confidence:
+  - high that `resattn-unp` is the right next bridge issue
+  - medium-high that `a1w` should remain sidecar only
+- Interesting facts:
+  - author mode count `= 5`
+  - capital mode count `= 3`
+  - element mean within-family centroid JS `= 0.2096`
