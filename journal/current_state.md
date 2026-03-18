@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-scaffold`
-- Focus: `resattn-8h7` has now landed the authoritative one-token `v4` family profile; the only preserved tool-breakage follow-up is `resattn-a1w`, the moon-family prompt-style audit.
-- Experimental status: the one-token surface is now frozen at a family-conditioned mixed boundary. Elements are cleanly positive, authors and capitals are near ties, and moons remain the blocker on the stronger prompt-specific same-model claim.
-- Critical reminder: do not reopen the pooled one-token tool-breakage claim with another aggregate rerun. If this lane continues, start with `resattn-a1w` and justify any redesign from the moon-family failure directly.
+- Branch: `wip/resattn-pjd`
+- Focus: `resattn-pjd` is now the main-lane issue. The next scientific pass should synthesize the primary-model `registry_v5` Gemma oracle, pattern-analysis, and regime-comparison artifacts into the strongest truthful effective-depth-mixture claim.
+- Experimental status: the center of gravity is back on the primary Gemma oracle lane. The strongest current result is broad held-out-positive oracle recovery on `registry_v5`, with meaningful grouped and stratum-conditioned structure. Tool-breakage and safety remain bounded extension lanes from here.
+- Critical reminder: do not let stale task momentum pull the project back into pooled tool-breakage reruns or Figure 8 rescue work. If tool-breakage continues, keep it narrow with `resattn-a1w`. The main next move is Gemma oracle synthesis.

@@ -1568,3 +1568,25 @@ Suggested entry format:
   - element routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.8831`
   - author routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.2805`
   - moon routed minus `pilot_mean_alpha` mean tuned KL `= -1.1565`
+## [2026-03-18T12:56:00-0500] The Project Center Of Gravity Has Moved Back To Gemma Oracle
+- Stage: synthesis
+- Feel of the Experiment: The repo is healthier than the stale task ordering made it look. The strongest finding is no longer a development-model feasibility win or a bounded tool-breakage curiosity. It is a broad primary-model oracle result with meaningful held-out predictiveness and regime separation.
+- Working Hypotheses:
+  - The most novel truthful claim is now about a primary-model effective depth mixture on Gemma, not about global raw block structure or strong same-model tool-breakage.
+  - The right next discovery move is to explain where that Gemma signal lives: grouped structure, stratum-conditioned structure, and especially factual recall.
+- Hunches and Guesses:
+  - The factual-recall stratum is the cleanest bridge between the main oracle result and the bounded tool-breakage lane.
+  - The softmax regime result is underweighted in the current narrative and should move into the core story.
+- Predictions:
+  - A careful `registry_v5` synthesis pass will tighten the paper story more than another small extension run.
+  - If that synthesis holds up, later extension lanes will look like corroborating mechanisms rather than rescue attempts.
+- Surprises and Tensions:
+  - The docs still had the project mentally centered on tool-breakage even after the strongest positive result moved to the primary Gemma oracle lane.
+  - The raw `~8`-cluster dream is weaker than the grouped and stratum-conditioned structure that actually showed up.
+- Confidence:
+  - high that the main lane should now be `resattn-pjd`
+  - high that tool-breakage should stay bounded unless the moon-family audit reveals something unexpectedly clean
+- Interesting facts:
+  - Gemma `registry_v5` oracle mean improvement `= +1.6299`
+  - Gemma `registry_v5` predicted mean improvement `= +0.8292`
+  - Gemma `registry_v5` confirm `R^2 = 0.2392`

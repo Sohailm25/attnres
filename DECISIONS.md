@@ -1066,3 +1066,23 @@
   - the worst moon cross-family outliers all pair moon prompts with capital donors, so the remaining ambiguity is narrow and concrete rather than pooled and vague
   - because the pooled `v4` donor-arm artifact is already mixed, another pooled rerun would blur the actual decision instead of sharpening it
 - Impact: `resattn-8h7` can close once the artifact lands. The next preserved tool-breakage follow-up is `resattn-a1w`: audit the one-token moon-family prompt style before any further prompt-surface redesign or donor-pair remap.
+
+## [2026-03-18T12:55:00-0500] DECISION: Reprioritize the main lane around primary-model oracle synthesis instead of further tool-breakage iteration
+
+- Trigger: a repo-wide review of the saved artifacts showed that the strongest positive result is now the Gemma `registry_v5` oracle artifact, not the bounded tool-breakage lane.
+- Decision: make primary-model oracle synthesis the main scientific lane again. Treat tool-breakage and safety as bounded extension lanes from here unless a new methodological defect forces a return.
+- Rationale:
+  - the strongest positive result is now on the primary model, not the development model:
+    - `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1.md` reports oracle mean improvement `= +1.6299` nats on `1024` confirm prompts
+    - held-out predicted improvement stays strongly positive at `+0.8292`
+    - alpha-shape recovery is materially better than the earlier mixed phase (`R^2 = 0.2392`, mean JS `= 0.0985`)
+  - the main truthful structure result is more specific than the original broad raw-clustering hope:
+    - grouped coarse structure is strong
+    - stratum-conditioned raw-source structure is strong, especially factual recall
+    - the prereg global raw `~8`-cluster gate is still not passed
+  - the regime-comparison lane is already a core thesis result:
+    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
+  - the tool-breakage lane is now bounded rather than frontier-setting:
+    - `v4` improved the family story, but the authoritative boundary is still family-conditioned mixed
+  - the Figure 8 lane is operationally informative but strategically frozen; more rescue work there would be less truthful than deepening the stronger Gemma oracle story
+- Impact: the next main issue is `resattn-pjd`, which synthesizes the primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts into the next truthful claim about effective depth mixture on Gemma. The next preserved tool-breakage issue remains `resattn-a1w`, but it is no longer the main project spine.

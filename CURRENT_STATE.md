@@ -3,7 +3,7 @@
 **Last updated:** 2026-03-18
 **Updated by:** codex-gpt5
 **Status:** in_progress
-**Current phase:** Phase 3 - Tool-breakage and safety routing analysis
+**Current phase:** Phase 2/3 - Primary-model oracle synthesis with bounded tool-breakage and safety extensions
 
 ## Active Thesis Lock
 
@@ -913,12 +913,22 @@
 
 ## Immediate Next Steps
 
-1. Treat `tool_breakage_factual_recall_v3` as the main matched-family surface for this lane and freeze the stronger same-model tool-breakage claim at the current `v3` donor-arm boundary.
-2. Keep that boundary family-conditioned rather than pooled: elements remain the cleanest positive family, authors are the clearest negative family, and the current author-family drag is entangled with multiword-target / first-token format.
-3. If tool-breakage work resumes later, start with `resattn-apy`: rerun donor-arm controls on the one-token `v4` surface, which now has a clean positive confirm baseline across all four families.
-4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
-5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
-6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
+1. Take `resattn-pjd` as the main lane: synthesize the saved primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts into the next truthful Gemma-centered claim about an effective depth mixture.
+2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
+   - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
+   - strong grouped coarse structure
+   - strong stratum-conditioned raw-source structure, especially factual recall
+   Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
+3. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
+   - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
+   - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
+4. Keep tool-breakage as a bounded extension lane:
+   - the one-token `v4` surface improved the family story, but the authoritative boundary is still family-conditioned mixed
+   - if tool-breakage resumes, start with `resattn-a1w`, the moon-family prompt-style audit, not another pooled rerun
+5. Keep safety as the next extension lane after the oracle synthesis pass:
+   - the aligned-Gemma workflow is methodologically strong
+   - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
+6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
 
 ## Phase 1 Gate
 
