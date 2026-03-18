@@ -867,3 +867,23 @@ Suggested entry format:
 - Interesting facts:
   - The best loss delta across the sweep was only `+0.0368`, still negative.
   - The strongest persistence came from dropout (`0.1855`) rather than stronger weight decay.
+
+## [2026-03-17T19:58:00-0500] The Gemma Control Story Is Done Unless Something New Breaks
+- Stage: planning
+- Feel of the Experiment: This one is cleaner than it feels emotionally. The lane already told us the hard thing: prompt-matched routing is not uniquely worst under the current counterfactual. Running a fancier control right now would mostly be a way of arguing with an answer I do not like.
+- Working Hypotheses:
+  - The current Gemma claim boundary is the right one to freeze.
+  - A finer control on the same tiny confirm surface would add more ambiguity than truth.
+- Hunches and Guesses:
+  - If this lane ever reopens, it should be because the confirm surface gets meaningfully larger or because we find a genuine methodological defect in the current permutation control, not because the current result is inconvenient.
+- Predictions:
+  - `resattn-5d9` should close without a follow-up issue.
+  - Future reviewer pressure, if it comes, will probably ask for a larger confirm set before it asks for a more baroque dynamic control.
+- Surprises and Tensions:
+  - The easiest way to waste time from here would be to convince myself that a more “semantic” donor control is obviously more valid. Right now the repo has not earned that assumption.
+- Confidence:
+  - high that `resattn-5d9` should close as a no-follow-up freeze decision
+  - medium that the Gemma lane should stay deprioritized behind the Figure 8 redesign question
+- Interesting facts:
+  - The prompt-permuted dynamic control was not just similar to routed; it was more damaging on tuned mean KL by `0.3082`.
+  - The routed-versus-prompt-permuted tuned rank-range increase was only `2 / 8`.

@@ -542,3 +542,14 @@
   - best new entropy gap `= -0.0533`
   Dropout improved deep embedding persistence, but no arm restored a routed win or materially improved the layer-type-specialization signature. That means the faithful “just stabilize this regime” explanation is now weak.
 - Impact: `resattn-bux` can close once the artifact and state docs land. The next Figure 8 issue becomes `resattn-9fo`, which should choose the smallest honest objective-level redesign instead of reopening regularization or another same-regime rerun.
+
+## [2026-03-17T19:58:00-0500] DECISION: Freeze the current Gemma dynamic-control claim boundary and do not add a finer same-model control now
+
+- Trigger: `resattn-5d9` asked whether the mixed `resattn-g09` counterfactual result justified a narrower follow-up control or whether that would amount to moving the goalposts.
+- Decision: close `resattn-5d9` by freezing the current same-model Gemma claim boundary and declining any finer dynamic-control follow-up for now.
+- Rationale: the existing counterfactual already answers the decisive question:
+  - routed is clearly worse than the fixed `pilot_mean_alpha` control
+  - routed is not worse than the prompt-permuted dynamic control on the tuned primary metric
+  - the rank-based confirm diagnostics versus the prompt-permuted control are also weak (`4 / 8` final-rank worsening, `2 / 8` rank-range increase)
+  That is enough to block the strong prompt-matched-routing claim. A narrower donor-matching control on the same `8`-prompt confirm surface would currently read more like post-hoc rescue than like a missing prerequisite.
+- Impact: `resattn-5d9` can close once the memo and state docs land. The Gemma lane should stay frozen at the current mixed claim boundary unless a later methodological defect or larger confirm surface justifies reopening the control design.
