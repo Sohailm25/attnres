@@ -1,5 +1,5 @@
-# ABOUTME: Runs the first pilot-only router-distillation comparison on the saved Gemma export.
-# ABOUTME: Compares h_1[t] and h_4[t] with one explicit token-to-sequence aggregation rule before confirmatory training.
+# ABOUTME: Runs the pilot-only router-distillation comparison on the saved Gemma export.
+# ABOUTME: Compares candidate router inputs and target parameterizations with one explicit token-to-sequence aggregation rule before confirmatory training.
 
 from __future__ import annotations
 
@@ -39,6 +39,12 @@ def parse_args() -> argparse.Namespace:
         nargs="+",
         default=("h_1[t]", "h_4[t]"),
         help="Router input fields to compare on the pilot split",
+    )
+    parser.add_argument(
+        "--candidate-target-names",
+        nargs="+",
+        default=("oracle_alpha_vector",),
+        help="Target parameterizations to compare on the pilot split",
     )
     parser.add_argument(
         "--aggregation",
@@ -113,6 +119,7 @@ def main() -> None:
     summary = run_router_distillation_pilot_comparison(
         export_dir=Path(args.export_dir),
         candidate_input_fields=tuple(args.candidate_input_fields),
+        candidate_target_names=tuple(args.candidate_target_names),
         aggregation=args.aggregation,
         eval_fraction=args.eval_fraction,
         hidden_dim=args.hidden_dim,

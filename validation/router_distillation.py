@@ -1,5 +1,5 @@
 # ABOUTME: Fits the smallest honest Phase 6 router-distillation pilot on saved per-token exports.
-# ABOUTME: Compares h_1[t] versus h_4[t] on a held-out pilot split using one explicit sequence-aggregation rule.
+# ABOUTME: Compares router inputs and target parameterizations on one held-out pilot split using an explicit sequence-aggregation rule.
 
 from __future__ import annotations
 
@@ -15,6 +15,8 @@ import torch.nn.functional as F
 
 from .oracle_alpha_controls import (
     PredictivenessSummary,
+    alpha_target_matrix,
+    alpha_target_predictions_to_distributions,
     compare_predictiveness_metric_values,
     predictiveness_summary_from_predictions,
 )
@@ -24,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 READINESS_TARGET_R_SQUARED = 0.5
 ALLOWED_INPUT_FIELDS = {"h_1[t]", "h_4[t]"}
 ALLOWED_AGGREGATIONS = {"mean_token_logits_then_softmax"}
+ALLOWED_TARGET_NAMES = {"oracle_alpha_vector", "oracle_alpha_logit_vector"}
 
 
 @dataclass(frozen=True)
@@ -53,6 +56,7 @@ class RouterDistillationPilotDataset:
 @dataclass(frozen=True)
 class RouterDistillationInputSummary:
     input_field: str
+    target_name: str
     aggregation: str
     hidden_dim: int
     learning_rate: float
@@ -68,6 +72,8 @@ class RouterDistillationInputSummary:
     mean_predicted_entropy: float
     mean_oracle_entropy: float
     eval_summary: PredictivenessSummary
+    train_prompt_ids: tuple[str, ...] = ()
+    eval_prompt_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -76,16 +82,23 @@ class RouterDistillationComparisonSummary:
     model_name: str
     split: str
     aggregation: str
+    candidate_target_names: tuple[str, ...]
     selection_primary_metric: str
     selection_secondary_metric: str
     readiness_target_r_squared: float
     train_prompt_count: int
     eval_prompt_count: int
     selected_input_field: str
+    selected_target_name: str
+    target_changed_input_ranking: bool
     selected_meets_readiness_target: bool
     train_prompt_ids: tuple[str, ...]
     eval_prompt_ids: tuple[str, ...]
     input_summaries: tuple[RouterDistillationInputSummary, ...]
+
+    @property
+    def candidate_summaries(self) -> tuple[RouterDistillationInputSummary, ...]:
+        return self.input_summaries
 
 
 class _SequenceRouterMLP(torch.nn.Module):
@@ -179,6 +192,20 @@ def aggregate_token_logits_to_sequence_alpha(
     aggregation: str,
     token_mask: torch.Tensor | None = None,
 ) -> torch.Tensor:
+    sequence_logits = _aggregate_token_logits_to_sequence_logits(
+        token_logits=token_logits,
+        aggregation=aggregation,
+        token_mask=token_mask,
+    )
+    return torch.softmax(sequence_logits, dim=-1)
+
+
+def _aggregate_token_logits_to_sequence_logits(
+    *,
+    token_logits: torch.Tensor,
+    aggregation: str,
+    token_mask: torch.Tensor | None = None,
+) -> torch.Tensor:
     if aggregation not in ALLOWED_AGGREGATIONS:
         raise ValueError(f"unsupported aggregation {aggregation!r}")
     if token_logits.ndim not in {2, 3}:
@@ -201,10 +228,66 @@ def aggregate_token_logits_to_sequence_alpha(
     mask = token_mask.to(dtype=token_logits.dtype).unsqueeze(-1)
     counts = mask.sum(dim=1).clamp_min(1.0)
     sequence_logits = (token_logits * mask).sum(dim=1) / counts
-    sequence_alpha = torch.softmax(sequence_logits, dim=-1)
     if squeeze_batch:
-        return sequence_alpha.squeeze(0)
-    return sequence_alpha
+        return sequence_logits.squeeze(0)
+    return sequence_logits
+
+
+def target_matrix_for_router_distillation(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    target_name: str,
+) -> torch.Tensor:
+    if target_name not in ALLOWED_TARGET_NAMES:
+        raise ValueError(f"unsupported target name {target_name!r}")
+    if not examples:
+        raise ValueError("examples must not be empty")
+    source_labels = tuple(examples[0].source_labels)
+    target_matrix = alpha_target_matrix(
+        target_name=target_name,
+        distributions=[example.final_alpha.tolist() for example in examples],
+        source_labels=source_labels,
+    )
+    return torch.tensor(target_matrix, dtype=torch.float32)
+
+
+def _prediction_matrix_to_alpha(
+    *,
+    prediction_matrix: torch.Tensor,
+    target_name: str,
+    train_examples: Sequence[RouterDistillationExample],
+    source_labels: Sequence[str],
+) -> torch.Tensor:
+    distributions = alpha_target_predictions_to_distributions(
+        target_name=target_name,
+        predictions=prediction_matrix.detach().cpu().tolist(),
+        source_labels=source_labels,
+        train_distributions=[
+            example.final_alpha.tolist() for example in train_examples
+        ],
+    )
+    return torch.tensor(
+        distributions, dtype=torch.float32, device=prediction_matrix.device
+    )
+
+
+def _prediction_matrix_for_target(
+    *,
+    token_logits: torch.Tensor,
+    aggregation: str,
+    token_mask: torch.Tensor,
+    target_name: str,
+) -> torch.Tensor:
+    sequence_logits = _aggregate_token_logits_to_sequence_logits(
+        token_logits=token_logits,
+        aggregation=aggregation,
+        token_mask=token_mask,
+    )
+    if target_name == "oracle_alpha_vector":
+        return torch.softmax(sequence_logits, dim=-1)
+    if target_name == "oracle_alpha_logit_vector":
+        return sequence_logits - sequence_logits.mean(dim=-1, keepdim=True)
+    raise ValueError(f"unsupported target name {target_name!r}")
 
 
 def _input_tensor_for_field(
@@ -303,12 +386,14 @@ def _collate_examples(
     input_field: str,
     mean: torch.Tensor,
     std: torch.Tensor,
+    target_lookup: dict[str, torch.Tensor],
     device: torch.device,
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     if not examples:
         raise ValueError("batch must not be empty")
     max_tokens = max(int(example.token_ids.shape[0]) for example in examples)
     input_dim = int(mean.shape[0])
+    target_dim = int(target_lookup[examples[0].prompt_id].shape[0])
     num_sources = int(examples[0].final_alpha.shape[0])
     states = torch.zeros(
         (len(examples), max_tokens, input_dim),
@@ -317,6 +402,11 @@ def _collate_examples(
     )
     mask = torch.zeros((len(examples), max_tokens), dtype=torch.bool, device=device)
     targets = torch.zeros(
+        (len(examples), target_dim),
+        dtype=torch.float32,
+        device=device,
+    )
+    alpha_targets = torch.zeros(
         (len(examples), num_sources),
         dtype=torch.float32,
         device=device,
@@ -329,17 +419,21 @@ def _collate_examples(
         num_tokens = int(normalized_states.shape[0])
         states[batch_index, :num_tokens] = normalized_states
         mask[batch_index, :num_tokens] = True
-        targets[batch_index] = example.final_alpha.to(device=device)
-    return states, mask, targets
+        targets[batch_index] = target_lookup[example.prompt_id].to(device=device)
+        alpha_targets[batch_index] = example.final_alpha.to(device=device)
+    return states, mask, targets, alpha_targets
 
 
 def _evaluate_router(
     *,
     model: _SequenceRouterMLP,
     examples: Sequence[RouterDistillationExample],
+    train_examples: Sequence[RouterDistillationExample],
     input_field: str,
+    target_name: str,
     mean: torch.Tensor,
     std: torch.Tensor,
+    target_lookup: dict[str, torch.Tensor],
     aggregation: str,
     batch_size: int,
     device: torch.device,
@@ -350,28 +444,37 @@ def _evaluate_router(
     targets: list[list[float]] = []
     predicted_entropies: list[float] = []
     oracle_entropies: list[float] = []
+    source_labels = tuple(examples[0].source_labels)
     with torch.no_grad():
         for batch_start in range(0, len(examples), batch_size):
             batch_examples = examples[batch_start : batch_start + batch_size]
-            states, mask, batch_targets = _collate_examples(
+            states, mask, batch_targets, batch_alpha_targets = _collate_examples(
                 batch_examples,
                 input_field=input_field,
                 mean=mean,
                 std=std,
+                target_lookup=target_lookup,
                 device=device,
             )
             token_logits = model.forward_token_logits(states)
-            batch_predictions = aggregate_token_logits_to_sequence_alpha(
+            batch_predictions = _prediction_matrix_for_target(
                 token_logits=token_logits,
                 token_mask=mask,
                 aggregation=aggregation,
+                target_name=target_name,
             )
             losses.append(float(F.mse_loss(batch_predictions, batch_targets).item()))
-            predictions.extend(batch_predictions.cpu().tolist())
-            targets.extend(batch_targets.cpu().tolist())
+            batch_alpha_predictions = _prediction_matrix_to_alpha(
+                prediction_matrix=batch_predictions,
+                target_name=target_name,
+                train_examples=train_examples,
+                source_labels=source_labels,
+            )
+            predictions.extend(batch_alpha_predictions.cpu().tolist())
+            targets.extend(batch_alpha_targets.cpu().tolist())
             for predicted_alpha, target_alpha in zip(
-                batch_predictions.cpu().tolist(),
-                batch_targets.cpu().tolist(),
+                batch_alpha_predictions.cpu().tolist(),
+                batch_alpha_targets.cpu().tolist(),
                 strict=True,
             ):
                 predicted_entropies.append(
@@ -404,6 +507,7 @@ def _fit_router_for_input(
     train_examples: Sequence[RouterDistillationExample],
     eval_examples: Sequence[RouterDistillationExample],
     input_field: str,
+    target_name: str,
     aggregation: str,
     hidden_dim: int,
     learning_rate: float,
@@ -415,6 +519,22 @@ def _fit_router_for_input(
     device: torch.device,
 ) -> RouterDistillationInputSummary:
     mean, std = _standardization_stats(train_examples, input_field=input_field)
+    train_target_matrix = target_matrix_for_router_distillation(
+        examples=train_examples,
+        target_name=target_name,
+    )
+    eval_target_matrix = target_matrix_for_router_distillation(
+        examples=eval_examples,
+        target_name=target_name,
+    )
+    train_target_lookup = {
+        example.prompt_id: train_target_matrix[index]
+        for index, example in enumerate(train_examples)
+    }
+    eval_target_lookup = {
+        example.prompt_id: eval_target_matrix[index]
+        for index, example in enumerate(eval_examples)
+    }
     model = _SequenceRouterMLP(
         input_dim=int(mean.shape[0]),
         hidden_dim=hidden_dim,
@@ -441,21 +561,23 @@ def _fit_router_for_input(
             seed=seed,
             epoch=epoch,
         ):
-            states, mask, targets = _collate_examples(
+            states, mask, targets, _ = _collate_examples(
                 batch_examples,
                 input_field=input_field,
                 mean=mean,
                 std=std,
+                target_lookup=train_target_lookup,
                 device=device,
             )
             optimizer.zero_grad(set_to_none=True)
             token_logits = model.forward_token_logits(states)
-            predicted_alpha = aggregate_token_logits_to_sequence_alpha(
+            predicted_target = _prediction_matrix_for_target(
                 token_logits=token_logits,
                 token_mask=mask,
                 aggregation=aggregation,
+                target_name=target_name,
             )
-            loss = F.mse_loss(predicted_alpha, targets)
+            loss = F.mse_loss(predicted_target, targets)
             loss.backward()
             optimizer.step()
             epoch_losses.append(float(loss.item()))
@@ -463,9 +585,12 @@ def _fit_router_for_input(
         eval_loss, _, _, _ = _evaluate_router(
             model=model,
             examples=eval_examples,
+            train_examples=train_examples,
             input_field=input_field,
+            target_name=target_name,
             mean=mean,
             std=std,
+            target_lookup=eval_target_lookup,
             aggregation=aggregation,
             batch_size=batch_size,
             device=device,
@@ -487,9 +612,12 @@ def _fit_router_for_input(
     train_loss, _, _, _ = _evaluate_router(
         model=model,
         examples=train_examples,
+        train_examples=train_examples,
         input_field=input_field,
+        target_name=target_name,
         mean=mean,
         std=std,
+        target_lookup=train_target_lookup,
         aggregation=aggregation,
         batch_size=batch_size,
         device=device,
@@ -502,15 +630,19 @@ def _fit_router_for_input(
     ) = _evaluate_router(
         model=model,
         examples=eval_examples,
+        train_examples=train_examples,
         input_field=input_field,
+        target_name=target_name,
         mean=mean,
         std=std,
+        target_lookup=eval_target_lookup,
         aggregation=aggregation,
         batch_size=batch_size,
         device=device,
     )
     return RouterDistillationInputSummary(
         input_field=input_field,
+        target_name=target_name,
         aggregation=aggregation,
         hidden_dim=hidden_dim,
         learning_rate=learning_rate,
@@ -526,6 +658,8 @@ def _fit_router_for_input(
         mean_predicted_entropy=mean_predicted_entropy,
         mean_oracle_entropy=mean_oracle_entropy,
         eval_summary=eval_summary,
+        train_prompt_ids=tuple(example.prompt_id for example in train_examples),
+        eval_prompt_ids=tuple(example.prompt_id for example in eval_examples),
     )
 
 
@@ -533,6 +667,44 @@ def compare_router_input_sources(
     *,
     examples: Sequence[RouterDistillationExample],
     candidate_input_fields: Sequence[str],
+    candidate_target_names: Sequence[str] = ("oracle_alpha_vector",),
+    aggregation: str,
+    eval_fraction: float,
+    hidden_dim: int,
+    learning_rate: float,
+    weight_decay: float = 1e-4,
+    batch_size: int = 16,
+    max_epochs: int = 300,
+    patience: int = 40,
+    seed: int = 11,
+    device: str = "cpu",
+    collection_id: str = "unknown",
+    model_name: str = "unknown",
+) -> RouterDistillationComparisonSummary:
+    return compare_router_target_parameterizations(
+        examples=examples,
+        candidate_input_fields=candidate_input_fields,
+        candidate_target_names=candidate_target_names,
+        aggregation=aggregation,
+        eval_fraction=eval_fraction,
+        hidden_dim=hidden_dim,
+        learning_rate=learning_rate,
+        weight_decay=weight_decay,
+        batch_size=batch_size,
+        max_epochs=max_epochs,
+        patience=patience,
+        seed=seed,
+        device=device,
+        collection_id=collection_id,
+        model_name=model_name,
+    )
+
+
+def compare_router_target_parameterizations(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    candidate_input_fields: Sequence[str],
+    candidate_target_names: Sequence[str],
     aggregation: str,
     eval_fraction: float,
     hidden_dim: int,
@@ -550,9 +722,14 @@ def compare_router_input_sources(
         raise ValueError(f"unsupported aggregation {aggregation!r}")
     if not candidate_input_fields:
         raise ValueError("candidate_input_fields must not be empty")
+    if not candidate_target_names:
+        raise ValueError("candidate_target_names must not be empty")
     for input_field in candidate_input_fields:
         if input_field not in ALLOWED_INPUT_FIELDS:
             raise ValueError(f"unsupported input field {input_field!r}")
+    for target_name in candidate_target_names:
+        if target_name not in ALLOWED_TARGET_NAMES:
+            raise ValueError(f"unsupported target name {target_name!r}")
 
     train_examples, eval_examples = stratified_router_train_eval_split(
         examples,
@@ -563,41 +740,66 @@ def compare_router_input_sources(
 
     input_summaries = []
     selected_summary: RouterDistillationInputSummary | None = None
-    for input_field in candidate_input_fields:
-        summary = _fit_router_for_input(
-            train_examples=train_examples,
-            eval_examples=eval_examples,
-            input_field=input_field,
-            aggregation=aggregation,
-            hidden_dim=hidden_dim,
-            learning_rate=learning_rate,
-            weight_decay=weight_decay,
-            batch_size=batch_size,
-            max_epochs=max_epochs,
-            patience=patience,
-            seed=seed,
-            device=torch_device,
-        )
-        input_summaries.append(summary)
-        if selected_summary is None:
-            selected_summary = summary
-            continue
-        primary_delta = compare_predictiveness_metric_values(
-            metric_name="r_squared",
-            left=summary.eval_summary.r_squared,
-            right=selected_summary.eval_summary.r_squared,
-        )
-        if primary_delta > 1e-12:
-            selected_summary = summary
-            continue
-        if abs(primary_delta) <= 1e-12:
-            secondary_delta = compare_predictiveness_metric_values(
-                metric_name="mean_js_divergence",
-                left=summary.eval_summary.mean_js_divergence,
-                right=selected_summary.eval_summary.mean_js_divergence,
+    best_input_by_target: dict[str, str] = {}
+    for target_name in candidate_target_names:
+        best_for_target: RouterDistillationInputSummary | None = None
+        for input_field in candidate_input_fields:
+            summary = _fit_router_for_input(
+                train_examples=train_examples,
+                eval_examples=eval_examples,
+                input_field=input_field,
+                target_name=target_name,
+                aggregation=aggregation,
+                hidden_dim=hidden_dim,
+                learning_rate=learning_rate,
+                weight_decay=weight_decay,
+                batch_size=batch_size,
+                max_epochs=max_epochs,
+                patience=patience,
+                seed=seed,
+                device=torch_device,
             )
-            if secondary_delta > 1e-12:
+            input_summaries.append(summary)
+            if selected_summary is None:
                 selected_summary = summary
+            else:
+                primary_delta = compare_predictiveness_metric_values(
+                    metric_name="r_squared",
+                    left=summary.eval_summary.r_squared,
+                    right=selected_summary.eval_summary.r_squared,
+                )
+                if primary_delta > 1e-12:
+                    selected_summary = summary
+                elif abs(primary_delta) <= 1e-12:
+                    secondary_delta = compare_predictiveness_metric_values(
+                        metric_name="mean_js_divergence",
+                        left=summary.eval_summary.mean_js_divergence,
+                        right=selected_summary.eval_summary.mean_js_divergence,
+                    )
+                    if secondary_delta > 1e-12:
+                        selected_summary = summary
+
+            if best_for_target is None:
+                best_for_target = summary
+                continue
+            primary_delta = compare_predictiveness_metric_values(
+                metric_name="r_squared",
+                left=summary.eval_summary.r_squared,
+                right=best_for_target.eval_summary.r_squared,
+            )
+            if primary_delta > 1e-12:
+                best_for_target = summary
+                continue
+            if abs(primary_delta) <= 1e-12:
+                secondary_delta = compare_predictiveness_metric_values(
+                    metric_name="mean_js_divergence",
+                    left=summary.eval_summary.mean_js_divergence,
+                    right=best_for_target.eval_summary.mean_js_divergence,
+                )
+                if secondary_delta > 1e-12:
+                    best_for_target = summary
+        assert best_for_target is not None
+        best_input_by_target[target_name] = best_for_target.input_field
 
     assert selected_summary is not None
     return RouterDistillationComparisonSummary(
@@ -605,12 +807,15 @@ def compare_router_input_sources(
         model_name=model_name,
         split="pilot",
         aggregation=aggregation,
+        candidate_target_names=tuple(candidate_target_names),
         selection_primary_metric="r_squared",
         selection_secondary_metric="mean_js_divergence",
         readiness_target_r_squared=READINESS_TARGET_R_SQUARED,
         train_prompt_count=len(train_examples),
         eval_prompt_count=len(eval_examples),
         selected_input_field=selected_summary.input_field,
+        selected_target_name=selected_summary.target_name,
+        target_changed_input_ranking=len(set(best_input_by_target.values())) > 1,
         selected_meets_readiness_target=(
             selected_summary.eval_summary.r_squared >= READINESS_TARGET_R_SQUARED
         ),
@@ -624,6 +829,7 @@ def run_router_distillation_pilot_comparison(
     *,
     export_dir: Path,
     candidate_input_fields: Sequence[str],
+    candidate_target_names: Sequence[str] = ("oracle_alpha_vector",),
     aggregation: str,
     eval_fraction: float,
     hidden_dim: int,
@@ -639,6 +845,7 @@ def run_router_distillation_pilot_comparison(
     return compare_router_input_sources(
         examples=dataset.examples,
         candidate_input_fields=candidate_input_fields,
+        candidate_target_names=candidate_target_names,
         aggregation=aggregation,
         eval_fraction=eval_fraction,
         hidden_dim=hidden_dim,
@@ -661,6 +868,7 @@ def compact_router_distillation_summary_payload(
     payload["input_summaries"] = [
         {
             "input_field": input_summary.input_field,
+            "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,

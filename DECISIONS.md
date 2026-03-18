@@ -1407,3 +1407,24 @@
   - `resattn-m6r` can close once the artifact lands.
   - `resattn-4hj` is now the next honest Phase 6 issue.
   - the repo should treat export as solved and keep the router lane in pilot redesign mode until a fit clears the readiness target.
+
+## [2026-03-18T16:54:40-0500] DECISION: Close `resattn-4hj` as a target-geometry pass but not a router-readiness pass
+
+- Trigger: `resattn-4hj` compared `oracle_alpha_vector` versus `oracle_alpha_logit_vector` on the saved Gemma pilot export while keeping the same `192 / 64` split, the same `h_1[t]` / `h_4[t]` candidates, and the same `mean_token_logits_then_softmax` aggregation rule.
+- Decision: close `resattn-4hj` as a partial pass. Freeze `oracle_alpha_logit_vector` as the baseline target for the next pilot router-distillation slice. Do not move to confirmatory router training yet, do not lock the input choice yet, and do not jump straight to a width sweep. Treat sequence aggregation as the next honest blocker.
+- Rationale:
+  - target geometry changed the held-out pilot qualitatively:
+    - raw-alpha targets stayed in the original failure regime:
+      - `h_1[t]`: `R^2 = -0.0619`, mean JS `= 0.1584`
+      - `h_4[t]`: `R^2 = -0.0486`, mean JS `= 0.1565`
+    - alpha-logit targets moved the fit into a materially better regime:
+      - `h_1[t]`: `R^2 = 0.2722`, mean JS `= 0.0872`
+      - `h_4[t]`: `R^2 = 0.3028`, mean JS `= 0.0835`
+  - the input ranking did not change across targets, so the new result does not justify an input-choice lock
+  - the readiness gate still failed (`R^2 < 0.5`), so the lane is still pilot-stage redesign rather than confirmatory training
+  - because the target-only change moved the fit strongly without changing the split or the hidden-state ranking, the next principled lever is sequence aggregation rather than a blind capacity sweep
+  - an exact-command rerun on MPS changed the saved summary hash and moved the exact numbers slightly, but it preserved every qualitative conclusion, so the ranking and target choice are stable enough to freeze
+- Impact:
+  - `resattn-4hj` can close once the artifact lands.
+  - `resattn-914` is now the next honest Phase 6 issue.
+  - the repo should describe target geometry as a real solved sub-blocker and aggregation as the next active blocker.
