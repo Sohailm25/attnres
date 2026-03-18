@@ -322,6 +322,10 @@
   - the repo does not currently bless any custom objective change on the local Block AttnRes proxy
   - rationale: the obvious next objectives would be proxy-shaping interventions rather than paper-faithful training choices, so a positive result would be harder to trust than the current negative one
   - interpretation: the local trained-routing proxy remains valid for descriptive comparison against the published Figure 8 surface, but strong trained-routing alignment claims stay frozen until the repo either adopts a more faithful proxy or acquires stronger external justification for a specific objective change
+- `known`: `resattn-1lk` now resolves the strategic Figure 8 question conservatively:
+  - the strong Figure 8 / trained-routing lane stays frozen at the current descriptive boundary on the existing local proxy family
+  - rationale: the faithful local rescue path is exhausted on the current proxy, and no materially more faithful proxy path is currently concrete enough in the repo to justify immediate reopening
+  - consequence: the current Figure 8 artifacts remain descriptive-only for strong-claim purposes, and the repo should not reopen that lane again until a genuinely more faithful path is concrete enough to execute immediately
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -444,11 +448,11 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited only through a materially more faithful proxy.
-2. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
-3. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless another primary-model rerun becomes urgent.
-4. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
-5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
+1. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
+2. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless another primary-model rerun becomes urgent.
+3. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
+4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
+5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 
 ## Phase 1 Gate
 

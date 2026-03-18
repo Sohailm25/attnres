@@ -1033,3 +1033,24 @@ Suggested entry format:
 - Interesting facts:
   - Softmax beat unconstrained and every top-k setting on all `128` confirm prompts.
   - The mean softmax advantage over unconstrained was `0.4888` nats, and over top-k `k = 26` it was still `1.0861` nats.
+
+## [2026-03-18T02:26:00-0500] Freezing Figure 8 Feels Cleaner Than Pretending Another Tiny Proxy Pass Will Save It
+- Stage: implementation
+- Feel of the Experiment: This is a satisfying decision because it cuts off a very tempting but low-honesty loop. The current proxy is real enough to describe and not strong enough to sell.
+- Working Hypotheses:
+  - The repo is stronger if it freezes the strong Figure 8 lane now and shifts effort to live mixed lanes rather than building a speculative new proxy without a concrete faithful path.
+  - `resattn-mo5` is now the highest-value experimental extension because it can still move a bounded positive lane rather than just narrowing a known negative one.
+- Hunches and Guesses:
+  - If we had reopened the Figure 8 lane immediately, it would have turned into another round of proxy plausibility arguments rather than clean evidence.
+  - The freeze will read better to a reviewer now that the oracle lane is stronger on the primary model.
+- Predictions:
+  - The repo will feel more coherent after this because the next issue list will stop implying that Figure 8 is still an active near-term build.
+- Surprises and Tensions:
+  - It is mildly uncomfortable to freeze a lane after putting so much real work into it, but that discomfort is exactly why the freeze is probably the honest move.
+  - The better the Gemma oracle lane gets, the less excuse there is for keeping the Figure 8 lane alive on weak proxy momentum.
+- Confidence:
+  - high that freezing the strong Figure 8 lane is the right current decision
+  - medium-high that `mo5` is now the best experimental next step
+- Interesting facts:
+  - The repo already had the reopen conditions written down in `resattn-9fo`; `1lk` mostly had to admit that none of them is concrete yet.
+  - The current local proxy remains useful descriptively even though it is now frozen for strong-claim purposes.
