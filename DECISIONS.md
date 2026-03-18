@@ -694,3 +694,14 @@
   - max absolute prediction drift stayed below `2.5e-12`
   That is enough to treat the old wall-clock as an implementation defect that is now fixed rather than as a lingering practical limitation of the method.
 - Impact: `resattn-b4q` can close. The next infrastructure follow-up on the primary-model oracle lane is now `resattn-9co`, which should make the long summary stage observable while the faster ridge path runs.
+
+## [2026-03-18T03:31:00-0500] DECISION: Close `resattn-9co` by writing live campaign progress artifacts during summary-stage tuning
+
+- Trigger: `resattn-9co` targeted the remaining operational blind spot on the oracle campaign path: after the expensive oracle checkpoints were done, the repo still looked stale until the very end of the predictiveness sweep.
+- Decision: keep the final summary semantics unchanged, but make the campaign write `campaign_manifest.json` before tuning starts and update a new `predictiveness_progress.json` plus `run.log` progress lines after each completed regularization during the summary sweep.
+- Rationale: this is the smallest observability fix that answers the actual failure mode without inventing a second summary format. The smoke artifact shows the new surface clearly:
+  - manifest and progress files now exist before the final summary
+  - the progress file records train/eval counts plus completed regularization and candidate counts
+  - the log captures per-regularization progress lines during tuning
+  This is enough to say the campaign path no longer looks dead once oracle checkpointing is complete.
+- Impact: `resattn-9co` can close. The oracle lane is now operationally ready for larger reruns, and the only remaining ready issue is `resattn-ac2`.

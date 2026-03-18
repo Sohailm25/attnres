@@ -120,6 +120,14 @@
     - pilot-to-confirm fit (`96 x 9216 -> 128 x 53`) speedup `= 35.82x`
     - max absolute prediction drift stayed below `2.5e-12`
   - interpretation: the current held-out predictiveness path is no longer bottlenecked by the wrong ridge formulation on the primary-model oracle lane; future runtime complaints should now focus on other parts of the sweep, such as progress visibility, rather than the primal solve itself
+- `known`: `resattn-9co` now makes the campaign summary stage observable before the final predictiveness summary lands:
+  - `validation/oracle_alpha_runner.py` now exposes per-regularization and per-candidate progress callbacks during predictiveness tuning
+  - `validation/oracle_alpha_campaign.py` now writes `campaign_manifest.json` before the summary sweep starts and updates `predictiveness_progress.json` after each completed regularization
+  - the infrastructure smoke artifact `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co.md` demonstrates the path on a tiny `tiny-stories-1M` campaign:
+    - manifest and progress files exist alongside the final summary
+    - `predictiveness_progress.json` records train/eval counts plus completed candidate and regularization counts
+    - `run.log` captured per-regularization progress lines before final summary completion
+  - interpretation: prereg-scale campaign reruns on the oracle lane are now easier to monitor live; the remaining ready issue is no longer oracle-lane observability
 - `known`: the first held-out predictiveness artifact now exists, and it is a real blocker rather than a positive result:
   - `scripts/run_oracle_alpha_heldout_predictiveness_check.py` runs the pilot-to-confirm predictiveness check using mean-pooled `h_1[t]` features and a pilot-tuned ridge regressor
   - on `gpt2-xl`, the confirm-split result was weak for the current feature spec: `R^2 = -0.2456`, mean JS to oracle alpha `= 0.2434`, and predicted alpha vectors were slightly worse than uniform on average (`-0.0348` nats)
@@ -469,9 +477,9 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-9co`, which is now the clearest remaining efficiency/observability issue on the primary-model oracle lane after the ridge bottleneck fix.
-2. Use `resattn-ac2` before any future safety prompt-surface expansion so refusal-style non-refusal prompts can be validated under the right behavior semantics.
-3. Treat the primary-model oracle lane as operationally ready for larger reruns once summary-stage progress artifacts exist.
+1. Use `resattn-ac2` before any future safety prompt-surface expansion so refusal-style non-refusal prompts can be validated under the right behavior semantics.
+2. Treat the primary-model oracle lane as operationally ready for larger reruns; the main remaining ready work is no longer on oracle infrastructure.
+3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 

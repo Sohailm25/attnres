@@ -1092,3 +1092,19 @@ Suggested entry format:
 - Interesting facts:
   - The new helper stayed within `2.5e-12` of the legacy primal predictions on the Gemma-shaped synthetic benchmark.
   - The leave-one-out-shaped case sped up by `92.10x`, which is enough to stop thinking about the primal solve as the right default here.
+
+## [2026-03-18T03:31:00-0500] Visibility Was The Last Annoying Part Of The Campaign
+- Stage: implementation
+- Feel of the Experiment: This was the right kind of cleanup. Nothing scientific changed, but the campaign path finally feels less opaque while it works.
+- Working Hypotheses:
+  - The next truly annoying oracle-lane bottleneck will now come from a new scientific requirement, not from not knowing whether the runner is alive.
+- Hunches and Guesses:
+  - A simple progress JSON plus short log lines is probably the sweet spot here; anything fancier would have been premature.
+- Predictions:
+  - Future long runs will still be slow in places, but they should stop feeling half-broken once the oracle stage is done.
+- Surprises and Tensions:
+  - The implementation path was cleaner than expected once the callback seam existed in the runner.
+- Confidence:
+  - high that `9co` is enough for the current campaign UX problem
+- Interesting facts:
+  - The smoke run produced exactly the artifact surface we needed: manifest, progress, final summary, and two progress log lines during tuning.

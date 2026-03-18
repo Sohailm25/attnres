@@ -100,6 +100,53 @@ def _save_feature_vector(
     )
 
 
+def _campaign_manifest_payload(
+    *,
+    collection_id: str,
+    control_plan_id: str,
+    control_registry_id: str,
+    model_name: str,
+    output_dir: Path,
+    feature_sources: Sequence[str],
+    target_names: Sequence[str],
+    regularization_grid: Sequence[float],
+    optimization_steps: int,
+    learning_rate: float,
+    seed: int,
+    train_split: str,
+    eval_split: str,
+    num_train_sequences: int,
+    num_eval_sequences: int,
+    oracle_root: Path,
+    feature_root: Path,
+) -> dict[str, object]:
+    return {
+        "collection_id": collection_id,
+        "control_plan_id": control_plan_id,
+        "control_registry_id": control_registry_id,
+        "model_name": model_name,
+        "output_dir": str(output_dir),
+        "candidate_feature_sources": list(feature_sources),
+        "candidate_target_names": list(target_names),
+        "regularization_grid": [float(value) for value in regularization_grid],
+        "optimization_steps": optimization_steps,
+        "learning_rate": learning_rate,
+        "seed": seed,
+        "train_split": train_split,
+        "eval_split": eval_split,
+        "num_train_sequences": num_train_sequences,
+        "num_eval_sequences": num_eval_sequences,
+        "artifacts": {
+            "oracle_train_run": "oracle_train_run.json",
+            "oracle_eval_run": "oracle_eval_run.json",
+            "predictiveness_summary": "predictiveness_summary.json",
+            "predictiveness_progress": "predictiveness_progress.json",
+            "oracle_checkpoints": str(oracle_root),
+            "feature_checkpoints": str(feature_root),
+        },
+    }
+
+
 def _materialize_oracle_run(
     *,
     model: HookedTransformer,
@@ -227,6 +274,28 @@ def run_oracle_alpha_predictiveness_campaign(
     checkpoint_root = output_dir / "checkpoints"
     oracle_root = checkpoint_root / "oracle_runs"
     feature_root = checkpoint_root / "feature_vectors"
+    _write_json(
+        output_dir / "campaign_manifest.json",
+        _campaign_manifest_payload(
+            collection_id=collection_id,
+            control_plan_id=control_plan.plan_id,
+            control_registry_id=control_registry.registry_id,
+            model_name=model.cfg.model_name,
+            output_dir=output_dir,
+            feature_sources=feature_sources,
+            target_names=target_names,
+            regularization_grid=regularization_grid,
+            optimization_steps=optimization_steps,
+            learning_rate=learning_rate,
+            seed=seed,
+            train_split=predictiveness_plan.train_split,
+            eval_split=predictiveness_plan.eval_split,
+            num_train_sequences=len(train_entries),
+            num_eval_sequences=len(eval_entries),
+            oracle_root=oracle_root,
+            feature_root=feature_root,
+        ),
+    )
     train_run = _materialize_oracle_run(
         model=model,
         collection_id=collection_id,
@@ -270,6 +339,79 @@ def run_oracle_alpha_predictiveness_campaign(
         checkpoint_root=feature_root,
         prepend_bos=prepend_bos,
     )
+    total_candidate_pairs = len(feature_sources) * len(target_names)
+    total_regularization_evaluations = total_candidate_pairs * len(regularization_grid)
+    progress_path = output_dir / "predictiveness_progress.json"
+    progress_payload = {
+        "status": "predictiveness_running",
+        "collection_id": collection_id,
+        "control_plan_id": control_plan.plan_id,
+        "control_registry_id": control_registry.registry_id,
+        "model_name": model.cfg.model_name,
+        "num_train_sequences": len(train_entries),
+        "num_eval_sequences": len(eval_entries),
+        "total_candidate_pairs": total_candidate_pairs,
+        "completed_candidate_pairs": 0,
+        "total_regularization_evaluations": total_regularization_evaluations,
+        "completed_regularization_evaluations": 0,
+        "current_candidate": None,
+        "last_completed_regularization": None,
+        "completed_candidates": [],
+    }
+    _write_json(progress_path, progress_payload)
+
+    def _record_regularization_progress(
+        feature_source: str,
+        target_name: str,
+        regularization_summary,
+    ) -> None:
+        progress_payload["current_candidate"] = {
+            "feature_source": feature_source,
+            "target_name": target_name,
+        }
+        progress_payload["completed_regularization_evaluations"] += 1
+        progress_payload["last_completed_regularization"] = {
+            "feature_source": feature_source,
+            "target_name": target_name,
+            "regularization_strength": regularization_summary.regularization_strength,
+            "tuning_primary_metric": regularization_summary.tuning_primary_metric,
+            "tuning_primary_metric_value": (
+                regularization_summary.tuning_primary_metric_value
+            ),
+            "tuning_secondary_metric": regularization_summary.tuning_secondary_metric,
+            "tuning_secondary_metric_value": (
+                regularization_summary.tuning_secondary_metric_value
+            ),
+        }
+        _write_json(progress_path, progress_payload)
+        print(
+            "[predictiveness progress] "
+            f"{progress_payload['completed_regularization_evaluations']}/"
+            f"{total_regularization_evaluations} "
+            f"feature={feature_source} "
+            f"target={target_name} "
+            f"lambda={regularization_summary.regularization_strength}",
+            flush=True,
+        )
+
+    def _record_candidate_completion(candidate_summary) -> None:
+        progress_payload["completed_candidate_pairs"] += 1
+        progress_payload["completed_candidates"].append(
+            {
+                "feature_source": candidate_summary.feature_source,
+                "target_name": candidate_summary.target,
+                "selected_regularization_strength": (
+                    candidate_summary.selected_regularization_strength
+                ),
+                "tuning_primary_metric_value": (
+                    candidate_summary.tuning_primary_metric_value
+                ),
+                "tuning_secondary_metric_value": (
+                    candidate_summary.tuning_secondary_metric_value
+                ),
+            }
+        )
+        _write_json(progress_path, progress_payload)
 
     summary = build_oracle_alpha_predictiveness_summary(
         model=model,
@@ -284,33 +426,16 @@ def run_oracle_alpha_predictiveness_campaign(
         prepend_bos=prepend_bos,
         train_feature_vectors_by_source=train_feature_vectors_by_source,
         eval_feature_vectors_by_source=eval_feature_vectors_by_source,
+        on_candidate_regularization_evaluated=_record_regularization_progress,
+        on_candidate_completed=_record_candidate_completion,
     )
+    progress_payload["status"] = "complete"
+    progress_payload["current_candidate"] = None
+    progress_payload["selected_feature_source"] = summary.feature_source
+    progress_payload["selected_target_name"] = summary.target
+    progress_payload["selected_regularization_strength"] = (
+        summary.selected_regularization_strength
+    )
+    _write_json(progress_path, progress_payload)
     _write_json(output_dir / "predictiveness_summary.json", asdict(summary))
-    _write_json(
-        output_dir / "campaign_manifest.json",
-        {
-            "collection_id": collection_id,
-            "control_plan_id": control_plan.plan_id,
-            "control_registry_id": control_registry.registry_id,
-            "model_name": model.cfg.model_name,
-            "output_dir": str(output_dir),
-            "candidate_feature_sources": list(feature_sources),
-            "candidate_target_names": list(target_names),
-            "regularization_grid": [float(value) for value in regularization_grid],
-            "optimization_steps": optimization_steps,
-            "learning_rate": learning_rate,
-            "seed": seed,
-            "train_split": predictiveness_plan.train_split,
-            "eval_split": predictiveness_plan.eval_split,
-            "num_train_sequences": len(train_entries),
-            "num_eval_sequences": len(eval_entries),
-            "artifacts": {
-                "oracle_train_run": "oracle_train_run.json",
-                "oracle_eval_run": "oracle_eval_run.json",
-                "predictiveness_summary": "predictiveness_summary.json",
-                "oracle_checkpoints": str(oracle_root),
-                "feature_checkpoints": str(feature_root),
-            },
-        },
-    )
     return summary

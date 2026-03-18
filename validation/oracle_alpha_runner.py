@@ -1050,6 +1050,11 @@ def _tuned_ridge_regularization(
     primary_metric: str,
     secondary_metric: str,
     prepend_bos: bool | None,
+    on_regularization_summary: Callable[
+        [OracleAlphaPredictivenessRegularizationCandidate],
+        None,
+    ]
+    | None = None,
 ) -> tuple[
     float,
     PredictivenessSummary,
@@ -1124,25 +1129,26 @@ def _tuned_ridge_regularization(
                 sum(fold_improvements) / len(fold_improvements)
             )
         }
-        regularization_summaries.append(
-            OracleAlphaPredictivenessRegularizationCandidate(
-                regularization_strength=float(regularization_strength),
-                tuning_primary_metric=primary_metric,
-                tuning_primary_metric_value=predictiveness_metric_value(
-                    summary=candidate_summary,
-                    metric_name=primary_metric,
-                    metric_overrides=candidate_metric_overrides,
-                ),
-                tuning_secondary_metric=secondary_metric,
-                tuning_secondary_metric_value=predictiveness_metric_value(
-                    summary=candidate_summary,
-                    metric_name=secondary_metric,
-                    metric_overrides=candidate_metric_overrides,
-                ),
-                tuning_r_squared=candidate_summary.r_squared,
-                tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
-            )
+        regularization_summary = OracleAlphaPredictivenessRegularizationCandidate(
+            regularization_strength=float(regularization_strength),
+            tuning_primary_metric=primary_metric,
+            tuning_primary_metric_value=predictiveness_metric_value(
+                summary=candidate_summary,
+                metric_name=primary_metric,
+                metric_overrides=candidate_metric_overrides,
+            ),
+            tuning_secondary_metric=secondary_metric,
+            tuning_secondary_metric_value=predictiveness_metric_value(
+                summary=candidate_summary,
+                metric_name=secondary_metric,
+                metric_overrides=candidate_metric_overrides,
+            ),
+            tuning_r_squared=candidate_summary.r_squared,
+            tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
         )
+        regularization_summaries.append(regularization_summary)
+        if on_regularization_summary is not None:
+            on_regularization_summary(regularization_summary)
         if best_summary is None:
             best_regularization = float(regularization_strength)
             best_summary = candidate_summary
@@ -1206,6 +1212,20 @@ def build_oracle_alpha_predictiveness_summary(
     | None = None,
     eval_feature_vectors_by_source: Mapping[str, Sequence[Sequence[float]]]
     | None = None,
+    on_candidate_regularization_evaluated: Callable[
+        [
+            str,
+            str,
+            OracleAlphaPredictivenessRegularizationCandidate,
+        ],
+        None,
+    ]
+    | None = None,
+    on_candidate_completed: Callable[
+        [OracleAlphaPredictivenessFeatureCandidate],
+        None,
+    ]
+    | None = None,
 ) -> OracleAlphaPredictivenessSummary:
     control_registry = load_oracle_alpha_control_registry()
     control_plan = control_registry.plans[collection_id]
@@ -1263,6 +1283,19 @@ def build_oracle_alpha_predictiveness_summary(
                 primary_metric=predictiveness_plan.primary_metric,
                 secondary_metric=predictiveness_plan.secondary_metric,
                 prepend_bos=prepend_bos,
+                on_regularization_summary=(
+                    None
+                    if on_candidate_regularization_evaluated is None
+                    else (
+                        lambda regularization_summary,
+                        feature_source=feature_source,
+                        candidate_target_name=candidate_target_name: on_candidate_regularization_evaluated(
+                            feature_source,
+                            candidate_target_name,
+                            regularization_summary,
+                        )
+                    )
+                ),
             )
             candidate_tuning_primary_metric_value = predictiveness_metric_value(
                 summary=candidate_summary,
@@ -1274,20 +1307,21 @@ def build_oracle_alpha_predictiveness_summary(
                 metric_name=predictiveness_plan.secondary_metric,
                 metric_overrides=candidate_metric_overrides,
             )
-            candidate_feature_summaries.append(
-                OracleAlphaPredictivenessFeatureCandidate(
-                    target=candidate_target_name,
-                    feature_source=feature_source,
-                    selected_regularization_strength=candidate_regularization_strength,
-                    tuning_primary_metric=predictiveness_plan.primary_metric,
-                    tuning_primary_metric_value=candidate_tuning_primary_metric_value,
-                    tuning_secondary_metric=predictiveness_plan.secondary_metric,
-                    tuning_secondary_metric_value=candidate_tuning_secondary_metric_value,
-                    tuning_r_squared=candidate_summary.r_squared,
-                    tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
-                    regularization_summaries=regularization_summaries,
-                )
+            candidate_feature_summary = OracleAlphaPredictivenessFeatureCandidate(
+                target=candidate_target_name,
+                feature_source=feature_source,
+                selected_regularization_strength=candidate_regularization_strength,
+                tuning_primary_metric=predictiveness_plan.primary_metric,
+                tuning_primary_metric_value=candidate_tuning_primary_metric_value,
+                tuning_secondary_metric=predictiveness_plan.secondary_metric,
+                tuning_secondary_metric_value=candidate_tuning_secondary_metric_value,
+                tuning_r_squared=candidate_summary.r_squared,
+                tuning_mean_js_divergence=candidate_summary.mean_js_divergence,
+                regularization_summaries=regularization_summaries,
             )
+            candidate_feature_summaries.append(candidate_feature_summary)
+            if on_candidate_completed is not None:
+                on_candidate_completed(candidate_feature_summary)
             if tuning_primary_metric_value is None:
                 selected_feature_source = feature_source
                 selected_target_name = candidate_target_name

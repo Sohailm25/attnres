@@ -84,6 +84,20 @@ class OracleAlphaCampaignTests(unittest.TestCase):
                 ["position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat"],
                 manifest["candidate_feature_sources"],
             )
+            self.assertEqual(
+                "predictiveness_progress.json",
+                manifest["artifacts"]["predictiveness_progress"],
+            )
+            progress = json.loads(
+                (output_dir / "predictiveness_progress.json").read_text()
+            )
+            self.assertEqual("complete", progress["status"])
+            self.assertEqual(2, progress["num_train_sequences"])
+            self.assertEqual(1, progress["num_eval_sequences"])
+            self.assertEqual(1, progress["total_candidate_pairs"])
+            self.assertEqual(1, progress["completed_candidate_pairs"])
+            self.assertEqual(2, progress["total_regularization_evaluations"])
+            self.assertEqual(2, progress["completed_regularization_evaluations"])
 
     def test_campaign_resume_uses_saved_oracle_and_feature_checkpoints(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
