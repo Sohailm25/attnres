@@ -77,7 +77,7 @@
     - `random_dirichlet = 6.6138`
     - `magnitude_proportional = 6.5578`
     - `last_layer_only = 24.7532`
-  - interpretation: the primary-model oracle lane has now advanced from backend readiness to first bounded execution, but the strongest positive oracle result is still development-model-only until a larger primary-model pilot artifact lands
+  - interpretation: the primary-model oracle lane advanced from backend readiness to first bounded execution here; larger primary-model pilot and held-out artifacts have since reduced the earlier development-model-only risk
 - `known`: the scaled development-model pilot stability suite now exists:
   - `scripts/run_oracle_alpha_pilot_stability_suite.py` runs restart, saved-paraphrase, and prompt-resample checks against the same saved prompt and control registries
   - the exploratory `gpt2-xl` pilot artifact on `8` prompts improved mean sequence loss over uniform by `1.2432` nats with a bootstrap interval of `[1.1482, 1.3361]`
@@ -92,6 +92,26 @@
     - prompt-matched paraphrase JS `= 0.1434`
     - aggregate resample JS `= 0.0151`
   - interpretation: the primary-model oracle lane is now beyond bounded feasibility and into the same methodological stage the development model reached before held-out predictiveness
+- `known`: `resattn-js8` now lands the first primary-model Gemma held-out oracle-alpha predictiveness artifact on the saved prereg-scale prompt surface:
+  - `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.md` evaluates the existing held-out predictiveness runner on `google/gemma-2-2b` using the saved `96 / 128` `registry_v4` pilot/confirm split
+  - the selected target stays `oracle_alpha_logit_vector`, but the best feature source on the primary model is the hybrid token-aware internal summary plus prompt embedding:
+    - `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat`
+    - selected `lambda = 100.0`
+  - held-out routed-loss recovery is strongly positive on the confirm split:
+    - predicted mean improvement over uniform `= +1.0428` nats with bootstrap interval `[0.9495, 1.1331]`
+    - predicted positive prompts `= 123 / 128`
+    - oracle mean improvement over uniform `= +2.5525` nats with bootstrap interval `[2.4603, 2.6442]`
+    - oracle positive prompts `= 128 / 128`
+  - alpha-shape recovery is improved relative to the earlier `gpt2-xl` failures but still mixed:
+    - `R^2 = -0.0632`
+    - mean JS to oracle alpha `= 0.1478`
+  - the same confirm oracle run beat all prereg nulls on all `128` prompts:
+    - `uniform = 6.3916`
+    - `random_dirichlet = 10.5157`
+    - `magnitude_proportional = 7.3886`
+    - `last_layer_only = 20.4461`
+    - `optimized = 3.8391`
+  - interpretation: the primary-model oracle lane now clears held-out routed-loss recovery at prereg-scale prompt counts, which materially reduces the earlier development-model-only thesis risk; the honest remaining oracle question is now what structure the primary-model alphas exhibit rather than whether the primary-model loss signal exists at all
 - `known`: the first held-out predictiveness artifact now exists, and it is a real blocker rather than a positive result:
   - `scripts/run_oracle_alpha_heldout_predictiveness_check.py` runs the pilot-to-confirm predictiveness check using mean-pooled `h_1[t]` features and a pilot-tuned ridge regressor
   - on `gpt2-xl`, the confirm-split result was weak for the current feature spec: `R^2 = -0.2456`, mean JS to oracle alpha `= 0.2434`, and predicted alpha vectors were slightly worse than uniform on average (`-0.0348` nats)
@@ -393,11 +413,12 @@
 
 ## Immediate Next Steps
 
-1. Run the first primary-model Gemma held-out oracle-alpha predictiveness check on the saved confirm split now that `resattn-a7j` has cleared the pilot stability suite.
+1. Run `resattn-2sb`, the primary-model Gemma prereg-scale pattern analysis on the saved `resattn-js8` oracle artifact, so the next oracle question becomes structure on the primary spine rather than more existence checks.
 2. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy.
 3. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
-4. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
-5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
+4. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless a rerun becomes urgent.
+5. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
+6. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 
 ## Phase 1 Gate
 

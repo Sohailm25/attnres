@@ -42,6 +42,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | GPT-2 XL prereg-scale oracle-alpha campaign v4 | oracle_alpha | mixed | `results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4.md` |
 | Gemma-2 primary-model oracle-alpha development slice | oracle_alpha | partial | `results/oracle_alpha/20260317-gemma2-development-slice.md` |
 | Gemma-2 primary-model pilot stability suite | oracle_alpha | partial | `results/oracle_alpha/20260317-gemma2-pilot-stability-suite.md` |
+| Gemma-2 primary-model held-out predictiveness check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.md` |
 
 ## Pattern Analysis
 

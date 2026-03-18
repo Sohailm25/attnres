@@ -1344,10 +1344,10 @@ def build_oracle_alpha_predictiveness_summary(
     ) / len(eval_predictions)
 
     mib_rationale = (
-        "omitted for the current development-model runner stage because the "
-        "pilot/confirm prompt registry is a custom local prompt slice rather than "
-        "a benchmark-compatible task surface, so a MIB-style sanity task would be "
-        "artificial here; keep the global MIB anchor planned for a later compatible lane"
+        "omitted for the current runner stage because the pilot/confirm prompt "
+        "registry is a custom local prompt slice rather than a benchmark-compatible "
+        "task surface, so a MIB-style sanity task would be artificial here; keep "
+        "the global MIB anchor planned for a later compatible lane"
     )
 
     return OracleAlphaPredictivenessSummary(
