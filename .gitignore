@@ -17,6 +17,7 @@ results/tool_breakage/*/checkpoint.pt
 results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/summary.json
 results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/summary.json
 results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/summary.json
+results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/summary.json
 results/tool_breakage/*-calibration/
 results/oracle_alpha/*/oracle_train_run.json
 results/oracle_alpha/*/oracle_eval_run.json

@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 
+from transformers import AutoTokenizer
 import yaml
 
 
@@ -15,6 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PromptRegistryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.gemma_tokenizer = AutoTokenizer.from_pretrained("google/gemma-2-2b")
+
     def setUp(self) -> None:
         from prompts.registry import (
             ConfirmatoryAccessError,
@@ -234,6 +239,69 @@ class PromptRegistryTests(unittest.TestCase):
                 {family: expected_count for family in expected_families},
                 counts,
             )
+
+    def test_tool_breakage_v4_entries_balance_matched_factual_families(self) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v4",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+        confirm_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v4",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        self.assertEqual(16, len(pilot_entries))
+        self.assertEqual(32, len(confirm_entries))
+
+        expected_families = {
+            "subcategory_capital_fact",
+            "subcategory_element_symbol",
+            "subcategory_author_fact",
+            "subcategory_moon_fact",
+        }
+        for entries, expected_count in ((pilot_entries, 4), (confirm_entries, 8)):
+            counts = {family: 0 for family in expected_families}
+            for entry in entries:
+                subcategory_tags = [
+                    tag for tag in entry.tags if tag.startswith("subcategory_")
+                ]
+                self.assertEqual(1, len(subcategory_tags), entry.prompt_id)
+                self.assertIn("matched_routing_family", entry.tags)
+                counts[subcategory_tags[0]] += 1
+            self.assertEqual(
+                {family: expected_count for family in expected_families},
+                counts,
+            )
+
+    def test_tool_breakage_v4_targets_are_single_gemma_tokens(self) -> None:
+        registry = self.load_prompt_registry()
+        entries = tuple(
+            self.resolve_prompt_entries(
+                collection_id="tool_breakage_factual_recall_v4",
+                split="pilot",
+                exploratory=True,
+                registry=registry,
+            )
+        ) + tuple(
+            self.resolve_prompt_entries(
+                collection_id="tool_breakage_factual_recall_v4",
+                split="confirm",
+                exploratory=False,
+                registry=registry,
+            )
+        )
+
+        for entry in entries:
+            token_ids = self.gemma_tokenizer.encode(
+                f" {entry.target_text}",
+                add_special_tokens=False,
+            )
+            self.assertEqual(1, len(token_ids), entry.prompt_id)
 
     def test_safety_alignment_entries_form_matched_refusal_workflow_groups(
         self,

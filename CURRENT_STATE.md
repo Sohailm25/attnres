@@ -496,6 +496,25 @@
       - author surnames such as `Lee`, `Morrison`, `Shelley`, `Tolstoy`, `Kafka`, `Austen`
       - moon names such as `Moon`, `Titan`, `Triton`, `Europa`, `Io`, `Rhea`, `Hyperion`, `Miranda`, `Ariel`
     - interpretation: if the tool-breakage lane resumes later, the next valid run is `resattn-t0p`, which builds `v4` and reruns only the pilot baseline. A metric redesign on the current `v3` surface would mix the answer-format confound with a new objective and is therefore the wrong first move
+  - `resattn-t0p` now lands that one-token reopening pilot on the redesigned `v4` surface:
+    - `tool_breakage_factual_recall_v4` is now saved in `prompts/registry_v4.yaml` and propagated into `prompts/registry_v5.yaml`
+    - the surface keeps the same four matched families while requiring every target to be one Gemma token
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4.md` is the first pilot artifact on that surface
+    - the redesigned pilot keeps the tuned-lens breakage signal strong overall:
+      - mean tuned KL delta under routing `= +2.7594`
+      - mean final-position tuned KL delta under routing `= +2.9217`
+      - tuned final-target-rank worsening fraction `= 0.5`
+      - tuned target-rank-range increase fraction `= 0.6875`
+    - the important family read is now healthier than the saved `v3` family profile:
+      - capitals `= +2.9918`
+      - elements `= +2.7245`
+      - authors `= +2.2556`
+      - moons `= +3.0658`
+      - every family is `4 / 4` positive on mean tuned KL under routing on this pilot surface
+    - resume durability is verified on the finished pilot output directory:
+      - all `16` prompt checkpoints kept the same timestamp hash under the exact-command rerun
+      - the exact-command rerun completed in `10.57` seconds
+    - interpretation: the one-token redesign looks promising enough to justify confirmatory follow-up. It does not yet reopen the stronger prompt-specific same-model claim because donor-arm controls have not been rerun, but it removes the author family as a baseline-stage negative outlier
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -838,7 +857,7 @@
 
 1. Treat `tool_breakage_factual_recall_v3` as the main matched-family surface for this lane and freeze the stronger same-model tool-breakage claim at the current `v3` donor-arm boundary.
 2. Keep that boundary family-conditioned rather than pooled: elements remain the cleanest positive family, authors are the clearest negative family, and the current author-family drag is entangled with multiword-target / first-token format.
-3. If tool-breakage work resumes later, start with `resattn-t0p`: build a one-token matched-family `v4` surface and rerun only the pilot baseline, keeping the current model, controls, and KL-primary metric fixed.
+3. If tool-breakage work resumes later, start with `resattn-czd`: run the locked `v4` confirm baseline before reopening donor-arm controls on the one-token surface.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

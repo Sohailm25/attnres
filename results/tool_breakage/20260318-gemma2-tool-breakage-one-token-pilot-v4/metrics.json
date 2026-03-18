@@ -1,0 +1,180 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v4",
+  "split": "pilot",
+  "num_prompts": 16,
+  "mean_tuned_kl_increase_under_routing": 2.7594285103185974,
+  "final_position_mean_tuned_kl_increase_under_routing": 2.9216757540675293,
+  "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+  "fraction_tuned_routing_increases_target_rank_range_prompts": 0.6875,
+  "by_subcategory": {
+    "subcategory_author_fact": {
+      "prompt_count": 4,
+      "mean_tuned_kl_delta_under_routing": 2.2555967958941645,
+      "mean_tuned_final_position_kl_delta_under_routing": 3.0250056814055335,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 4.370937611005502,
+      "mean_final_target_rank_delta_under_routing": 268.25,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-pilot-009",
+          "target_text": "Austen",
+          "mean_tuned_kl_delta_under_routing": 1.9437537842750316,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.1241060200890596,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 5.174957046168856,
+          "final_target_rank_delta_under_routing": 3
+        },
+        {
+          "prompt_id": "tb4-pilot-010",
+          "target_text": "Orwell",
+          "mean_tuned_kl_delta_under_routing": 3.4157125515403797,
+          "mean_tuned_final_position_kl_delta_under_routing": 4.762733339233539,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.3318187922704965,
+          "final_target_rank_delta_under_routing": 758
+        },
+        {
+          "prompt_id": "tb4-pilot-011",
+          "target_text": "Lee",
+          "mean_tuned_kl_delta_under_routing": 1.8166306920969733,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.33736826666595,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 0.6936298201326281,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-pilot-012",
+          "target_text": "Morrison",
+          "mean_tuned_kl_delta_under_routing": 1.8462901556642743,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.875815099633585,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 8.283344785450026,
+          "final_target_rank_delta_under_routing": 312
+        }
+      ]
+    },
+    "subcategory_capital_fact": {
+      "prompt_count": 4,
+      "mean_tuned_kl_delta_under_routing": 2.9917737750806386,
+      "mean_tuned_final_position_kl_delta_under_routing": 3.4017377081584597,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 3.828376672900049,
+      "mean_final_target_rank_delta_under_routing": 2,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-pilot-001",
+          "target_text": "Madrid",
+          "mean_tuned_kl_delta_under_routing": 2.7561367931490306,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.436347113071511,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.9199169839266688,
+          "final_target_rank_delta_under_routing": 12
+        },
+        {
+          "prompt_id": "tb4-pilot-002",
+          "target_text": "Ottawa",
+          "mean_tuned_kl_delta_under_routing": 3.01745249706213,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.2997606893052134,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 4.004489877959713,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-pilot-003",
+          "target_text": "Rome",
+          "mean_tuned_kl_delta_under_routing": 2.9013100395291427,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.416278844475388,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.5351953560020775,
+          "final_target_rank_delta_under_routing": -4
+        },
+        {
+          "prompt_id": "tb4-pilot-004",
+          "target_text": "Tokyo",
+          "mean_tuned_kl_delta_under_routing": 3.2921957705822513,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.454564185781727,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 4.8539044737117365,
+          "final_target_rank_delta_under_routing": 0
+        }
+      ]
+    },
+    "subcategory_element_symbol": {
+      "prompt_count": 4,
+      "mean_tuned_kl_delta_under_routing": 2.7245066202860753,
+      "mean_tuned_final_position_kl_delta_under_routing": 2.9469136937998255,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 3.327298657532083,
+      "mean_final_target_rank_delta_under_routing": 5.25,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-pilot-005",
+          "target_text": "Cu",
+          "mean_tuned_kl_delta_under_routing": 2.4687837384690985,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.7318419412566493,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.1620880654081702,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-pilot-006",
+          "target_text": "Na",
+          "mean_tuned_kl_delta_under_routing": 3.2692414788927215,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.294004552930486,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.6782486439915374,
+          "final_target_rank_delta_under_routing": 1
+        },
+        {
+          "prompt_id": "tb4-pilot-007",
+          "target_text": "Ag",
+          "mean_tuned_kl_delta_under_routing": 2.5918525666904597,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.8958757486409294,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.2243911949917674,
+          "final_target_rank_delta_under_routing": 20
+        },
+        {
+          "prompt_id": "tb4-pilot-008",
+          "target_text": "Cl",
+          "mean_tuned_kl_delta_under_routing": 2.568148697092021,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.865932532371237,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 5.2444667257368565,
+          "final_target_rank_delta_under_routing": 0
+        }
+      ]
+    },
+    "subcategory_moon_fact": {
+      "prompt_count": 4,
+      "mean_tuned_kl_delta_under_routing": 3.065836850013511,
+      "mean_tuned_final_position_kl_delta_under_routing": 2.313045932906299,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 2.5617265010805568,
+      "mean_final_target_rank_delta_under_routing": 33.5,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-pilot-013",
+          "target_text": "Titan",
+          "mean_tuned_kl_delta_under_routing": 2.9502811381764613,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.951147577734306,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.2842324583325535,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-pilot-014",
+          "target_text": "Triton",
+          "mean_tuned_kl_delta_under_routing": 1.9113932459647633,
+          "mean_tuned_final_position_kl_delta_under_routing": 1.7770986256834407,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 4.183043295517564,
+          "final_target_rank_delta_under_routing": 3
+        },
+        {
+          "prompt_id": "tb4-pilot-015",
+          "target_text": "Moon",
+          "mean_tuned_kl_delta_under_routing": 2.965284491730787,
+          "mean_tuned_final_position_kl_delta_under_routing": 1.9312246609971715,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.8754824300995097,
+          "final_target_rank_delta_under_routing": 142
+        },
+        {
+          "prompt_id": "tb4-pilot-016",
+          "target_text": "Io",
+          "mean_tuned_kl_delta_under_routing": 4.436388524182034,
+          "mean_tuned_final_position_kl_delta_under_routing": 1.5927128672102788,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 0.9041478203726001,
+          "final_target_rank_delta_under_routing": -11
+        }
+      ]
+    }
+  }
+}

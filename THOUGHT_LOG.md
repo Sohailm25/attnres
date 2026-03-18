@@ -1480,3 +1480,24 @@ Suggested entry format:
   - `Canberra`, `Cairo`, `Bangkok`, `Rome`, and `Madrid` are single Gemma tokens
   - `Lee`, `Morrison`, `Shelley`, `Tolstoy`, `Kafka`, and `Austen` are single Gemma tokens
   - `Moon`, `Titan`, `Triton`, `Europa`, `Io`, `Rhea`, `Hyperion`, `Miranda`, and `Ariel` are single Gemma tokens
+## [2026-03-18T12:56:30-0500] The One-Token Pilot Looks Like a Real Reopening Signal
+- Stage: experiment
+- Feel of the Experiment: This was the outcome I wanted from the redesign test. The lane did not just stay alive overall; it also stopped making authors look uniquely broken at the baseline stage.
+- Working Hypotheses:
+  - The answer-format confound was materially suppressing the old matched-family read.
+  - The one-token surface is worth a real confirm baseline before any donor-arm rerun.
+- Hunches and Guesses:
+  - If the locked `v4` confirm stays broadly positive by family, the one-token surface will be the right place to revisit donor-arm controls.
+  - If authors stay positive on confirm, the `v3` author-family drag was at least partly format-driven.
+- Predictions:
+  - `czd` should stay clearly positive overall and keep authors out of the unique-baseline-liability role.
+  - The confirm read may still compress somewhat for moons because some of the new prompts are more stylized than the old “largest moon of X” surface.
+- Surprises and Tensions:
+  - Authors are not the weakest family by a dramatic margin anymore; they are simply the smallest positive family.
+  - The overall tuned-KL magnitude stayed close to the old `v3` pilot despite the prompt rewrite.
+- Confidence:
+  - high that `t0p` should close as a positive reopening signal
+  - medium-high that `czd` is now the right next tool-breakage move
+- Interesting facts:
+  - author pilot mean tuned KL delta under routing `= +2.2556`
+  - every family is `4 / 4` positive on mean tuned KL under routing

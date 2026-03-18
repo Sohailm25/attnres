@@ -1754,3 +1754,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v3/checkpoints/prompt_results/tb3-confirm-032-f4645fc040.json`
 - Anomalies: none; exact-command rerun reused the full four-arm checkpoints and finished in `9.98` seconds while leaving all prompt checkpoint timestamps unchanged.
 - Next step: close `resattn-4g2` as mixed and treat the stronger same-model tool-breakage claim as bounded at the current `v3` donor-arm result. If the lane reopens later, start with `resattn-mxf` rather than another larger rerun.
+
+## [2026-03-18T12:41:00-0500] PRE-RUN: Gemma one-token matched-family v4 pilot baseline
+- tmux session: `tb-v4-pilot`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v4 --split pilot --exploratory --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4 > results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v4`, `split=pilot`, `prompts=16`, `matched_families=capital/element/author/moon`, `target_constraint=one Gemma token`
+- What I'm testing: whether the family-conditioned breakage story changes materially once the matched-family surface is rewritten so every answer is a single next token under the Gemma tokenizer.
+- Expected outcome: the pilot keeps the tuned-lens breakage signal alive overall while reducing the author-family drag relative to the saved `v3` family profile.
+- Expected duration: ~15-45 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the new author prompts change both answer format and factual style too much, any improvement could reflect easier prompts rather than only the one-token constraint.
+- Implementation verified: YES - targeted registry tests passed for `tool_breakage_factual_recall_v4` family balance and one-token Gemma targets after regenerating `prompts/registry_v5.yaml`.
+- Status: LAUNCHING
+
+## [2026-03-18T12:56:00-0500] POST-RUN: Gemma one-token matched-family v4 pilot baseline
+- Outcome: SUCCESS
+- Key metric: the one-token `v4` pilot stayed strongly positive overall (`mean tuned KL delta = +2.7594`, final-position tuned KL delta `= +2.9217`) and, unlike the saved `v3` family profile, every family stayed positive on mean tuned KL under routing.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/metrics.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/checkpoints/prompt_results/tb4-pilot-016-58c787031b.json`
+- Anomalies: none; the exact-command rerun reused the full prompt checkpoint set in `10.57` seconds and the checkpoint timestamp hash stayed unchanged. The full local `summary.json` is intentionally left untracked because it is large and the smaller `metrics.json` captures the artifact-level read.
+- Next step: close `resattn-t0p`, then use `resattn-czd` as the next confirmatory follow-up on the one-token surface before reopening donor-arm controls.

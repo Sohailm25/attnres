@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-4xn`
-- Focus: `resattn-4xn` has now frozen the next Gemma tool-breakage follow-up as a one-token matched-family prompt-surface redesign rather than a metric rescue on the current `v3` surface.
-- Experimental status: the lane remains frozen at the family-conditioned `v3` boundary. The next legitimate reopening is `resattn-t0p`: build `tool_breakage_factual_recall_v4` with one-token targets under the Gemma tokenizer and rerun the pilot baseline.
-- Critical reminder: keep the model, tuned-lens baseline, donor-arm controls, and KL-primary metric fixed when `t0p` lands. The point is to isolate the answer-format confound, not to mix surface and metric changes.
+- Branch: `wip/resattn-t0p`
+- Focus: `resattn-t0p` has now landed the first one-token matched-family Gemma pilot; the next direct tool-breakage follow-up is the locked `v4` confirm baseline.
+- Experimental status: the one-token redesign looks like a real reopening signal. The overall tuned-lens breakage signal stayed strong and every family, including authors, was positive on mean tuned KL under routing on the pilot surface.
+- Critical reminder: do not jump straight back to donor-arm controls. The next disciplined move is `resattn-czd`, the `v4` confirm baseline, while keeping the current model, controls, and KL-primary metric fixed.

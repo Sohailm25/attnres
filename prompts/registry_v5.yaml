@@ -10997,6 +10997,451 @@ collections:
       - safe
       - matched_routing_family
       - subcategory_moon_fact
+  tool_breakage_factual_recall_v4:
+    lane: tool_breakage
+    description: 'One-token matched-family factual-recall prompts for the Gemma routed-versus-original
+      lens comparison lane. This surface keeps the same four matched routing families as `tool_breakage_factual_recall_v3`
+      but rewrites the answer surface so every pilot and confirm target is a single next token
+      under the `google/gemma-2-2b` tokenizer before any later prompt-specific same-model
+      escalation is attempted.
+
+      '
+    dataset_source: inline_prompts
+    objective_families:
+    - softmax-constrained
+    prompts:
+    - id: tb4-pilot-001
+      split: pilot
+      text: The capital of Spain is
+      target_text: Madrid
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-pilot-002
+      split: pilot
+      text: The capital of Canada is
+      target_text: Ottawa
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-pilot-003
+      split: pilot
+      text: The capital of Italy is
+      target_text: Rome
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-pilot-004
+      split: pilot
+      text: The capital of Japan is
+      target_text: Tokyo
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-pilot-005
+      split: pilot
+      text: The chemical symbol for copper is
+      target_text: Cu
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-pilot-006
+      split: pilot
+      text: The chemical symbol for sodium is
+      target_text: Na
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-pilot-007
+      split: pilot
+      text: The chemical symbol for silver is
+      target_text: Ag
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-pilot-008
+      split: pilot
+      text: The chemical symbol for chlorine is
+      target_text: Cl
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-pilot-009
+      split: pilot
+      text: The surname of the author of Pride and Prejudice is
+      target_text: Austen
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-pilot-010
+      split: pilot
+      text: The surname of the author of 1984 is
+      target_text: Orwell
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-pilot-011
+      split: pilot
+      text: The surname of the author of To Kill a Mockingbird is
+      target_text: Lee
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-pilot-012
+      split: pilot
+      text: The surname of the author of Beloved is
+      target_text: Morrison
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-pilot-013
+      split: pilot
+      text: The largest moon of Saturn is
+      target_text: Titan
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-pilot-014
+      split: pilot
+      text: The largest moon of Neptune is
+      target_text: Triton
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-pilot-015
+      split: pilot
+      text: The largest moon of Earth is
+      target_text: Moon
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-pilot-016
+      split: pilot
+      text: Jupiter's volcanic moon is
+      target_text: Io
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-001
+      split: confirm
+      text: The capital of Australia is
+      target_text: Canberra
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-002
+      split: confirm
+      text: The capital of Egypt is
+      target_text: Cairo
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-003
+      split: confirm
+      text: The capital of Thailand is
+      target_text: Bangkok
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-004
+      split: confirm
+      text: The capital of Kenya is
+      target_text: Nairobi
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-005
+      split: confirm
+      text: The capital of Peru is
+      target_text: Lima
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-006
+      split: confirm
+      text: The capital of South Korea is
+      target_text: Seoul
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-007
+      split: confirm
+      text: The capital of Indonesia is
+      target_text: Jakarta
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-008
+      split: confirm
+      text: The capital of Portugal is
+      target_text: Lisbon
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb4-confirm-009
+      split: confirm
+      text: The chemical symbol for iron is
+      target_text: Fe
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-010
+      split: confirm
+      text: The chemical symbol for potassium is
+      target_text: K
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-011
+      split: confirm
+      text: The chemical symbol for mercury is
+      target_text: Hg
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-012
+      split: confirm
+      text: The chemical symbol for neon is
+      target_text: Ne
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-013
+      split: confirm
+      text: The chemical symbol for zinc is
+      target_text: Zn
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-014
+      split: confirm
+      text: The chemical symbol for helium is
+      target_text: He
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-015
+      split: confirm
+      text: The chemical symbol for calcium is
+      target_text: Ca
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-016
+      split: confirm
+      text: The chemical symbol for lead is
+      target_text: Pb
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb4-confirm-017
+      split: confirm
+      text: The surname of the author of Frankenstein is
+      target_text: Shelley
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-018
+      split: confirm
+      text: The surname of the author of War and Peace is
+      target_text: Tolstoy
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-019
+      split: confirm
+      text: The surname of the author of The Trial is
+      target_text: Kafka
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-020
+      split: confirm
+      text: The surname of the author of The Handmaid's Tale is
+      target_text: Atwood
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-021
+      split: confirm
+      text: The surname of the author of Ulysses is
+      target_text: Joyce
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-022
+      split: confirm
+      text: The surname of the author of Brave New World is
+      target_text: Huxley
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-023
+      split: confirm
+      text: The surname of the author of Gulliver's Travels is
+      target_text: Swift
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-024
+      split: confirm
+      text: The surname of the author of Paradise Lost is
+      target_text: Milton
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb4-confirm-025
+      split: confirm
+      text: Jupiter's icy moon with a subsurface ocean is
+      target_text: Europa
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-026
+      split: confirm
+      text: Saturn's second-largest moon is
+      target_text: Rhea
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-027
+      split: confirm
+      text: Saturn's moon named after the Titan of watchfulness is
+      target_text: Hyperion
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-028
+      split: confirm
+      text: The Uranian moon named for Prospero's daughter is
+      target_text: Miranda
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-029
+      split: confirm
+      text: The Uranian moon named for Prospero's spirit is
+      target_text: Ariel
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-030
+      split: confirm
+      text: Saturn's moon named after the Roman god Janus is
+      target_text: Janus
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-031
+      split: confirm
+      text: Saturn's moon named after the rustic god is
+      target_text: Pan
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb4-confirm-032
+      split: confirm
+      text: Saturn's moon named after the Titan who held up the sky is
+      target_text: Atlas
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
   safety_refusal_discovery_v1:
     lane: safety_alignment
     description: 'Small matched prompt triples for validating the refusal-feature discovery

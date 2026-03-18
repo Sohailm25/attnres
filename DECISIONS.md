@@ -995,3 +995,20 @@
     - moon names such as `Moon`, `Titan`, `Triton`, `Europa`, `Io`, `Rhea`, `Hyperion`, `Miranda`, `Ariel`
   - this lets the repo hold the model, tuned-lens baseline, donor-arm controls, and KL-primary metric fixed while testing the specific answer-format confound directly
 - Impact: `resattn-4xn` can close once the decision memo lands. The next preserved follow-up is `resattn-t0p`: add `tool_breakage_factual_recall_v4` with one-token targets and run the pilot baseline only.
+
+## [2026-03-18T12:56:00-0500] DECISION: Treat the one-token v4 pilot as a real positive reopening and move next to confirm baseline
+
+- Trigger: `resattn-t0p` added `tool_breakage_factual_recall_v4`, regenerated `registry_v5`, and ran the first one-token matched-family pilot on Gemma-2.
+- Decision: close `resattn-t0p` on a positive answer. The one-token redesign is strong enough to justify a locked confirm baseline next. Do not jump straight back to donor-arm controls yet.
+- Rationale:
+  - the pilot stays strongly positive overall:
+    - mean tuned KL delta under routing `= +2.7594`
+    - mean final-position tuned KL delta under routing `= +2.9217`
+  - every family is now positive on mean tuned KL under routing:
+    - capitals `= +2.9918`
+    - elements `= +2.7245`
+    - authors `= +2.2556`
+    - moons `= +3.0658`
+  - that is a materially healthier family read than the saved `v3` family profile, where authors were the unique family that went negative against the within-family, cross-family, and fixed-alpha controls
+  - but this is still only a routed-versus-original pilot baseline, not a confirm artifact and not a donor-arm rerun
+- Impact: `resattn-t0p` can close once the artifact lands. The next disciplined tool-breakage issue is `resattn-czd`: the locked `v4` confirm baseline.
