@@ -567,3 +567,22 @@
   - matched regularization
   The obvious next objective changes would be custom proxy-shaping losses, not paper-faithful training choices. That would make a positive result harder to interpret than the current negative one.
 - Impact: `resattn-9fo` can close once the memo and state docs land. The next Figure 8 strategic issue is `resattn-1lk`, which decides whether to keep the strong lane frozen or revisit it through a more faithful proxy path rather than through a custom loss on the current tiny model.
+
+## [2026-03-17T20:12:00-0500] DECISION: Reprioritize the next scientific move to the primary Gemma oracle path and treat `resattn-1lk` as second-order
+
+- Trigger: the external review correctly pointed out that the biggest remaining paper-shape risk is still that the strongest positive oracle-alpha result lives on the development model, while the repo's ready queue only exposed `resattn-1lk`, `resattn-mo5`, and `resattn-9co`.
+- Decision: create `resattn-2s0` and `resattn-7cs`, elevate primary-spine Gemma oracle readiness above the Figure 8 strategic decision, and update the reviewer memo plus state docs so they reflect that ordering explicitly.
+- Rationale: a frozen-model paper that clears its main oracle gate only on the development model remains structurally weaker than one that at least begins to replicate on the primary spine. `resattn-1lk` still matters, but it is a freeze-or-escalate decision on a currently mixed lane; it is not the next strongest way to reduce overall thesis risk.
+- Impact: the next top scientific action is a bounded Gemma oracle-alpha feasibility slice (`resattn-7cs`). `resattn-1lk` stays next as a strategic Figure 8 decision, `resattn-mo5` stays the strongest extension candidate after that, and `resattn-9co` remains deferred cleanup.
+
+## [2026-03-17T20:18:00-0500] DECISION: Treat the primary-spine Gemma reconstruction smoke as green and move the blocker forward
+
+- Trigger: `resattn-2s0` ran the existing TransformerLens-backed reconstruction smoke unchanged on `google/gemma-2-2b`.
+- Decision: close primary-spine backend readiness for the reconstruction layer as solved on local MPS and move the oracle-alpha blocker forward from reconstruction to first bounded primary-model execution.
+- Rationale: the smoke came back exact on the primary model:
+  - `53` sources
+  - `final_residual_max_abs_error = 0.0`
+  - `uniform_logits_max_abs_error = 0.0`
+  - all `26` `resid_mid` and `resid_post` identities exact
+  That removes the main remaining reason to keep the primary model out of the oracle lane.
+- Impact: `resattn-2s0` can close once the artifact and state docs land. The next oracle-alpha issue is `resattn-7cs`, the first bounded Gemma feasibility slice.

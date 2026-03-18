@@ -259,6 +259,31 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Implementation verified: YES - the saved compact-subword artifact on the same data slice already proves `vocab_size=20000` is the correct regime, so this relaunch isolates width rather than re-testing tokenization.
 - Status: LAUNCHING
 
+## [2026-03-17T20:05:00-0500] PRE-RUN: primary-spine Gemma model-backed reconstruction smoke
+- tmux session: N/A
+- Script: `scripts/phase1_model_backed_reconstruction_smoke.py`
+- Command: `.venv/bin/python scripts/phase1_model_backed_reconstruction_smoke.py --model-name google/gemma-2-2b --prompt "The capital of France is" --device mps --fallback-device cpu --output results/infrastructure/20260317-gemma2-reconstruction-smoke.json`
+- Config: `model=google/gemma-2-2b`, `prompt="The capital of France is"`, `device=mps fallback=cpu`
+- What I'm testing: whether the existing TransformerLens-backed reconstruction smoke path works unchanged on the primary Gemma-2 model and reconstructs the model's own logits from cached sublayer writes.
+- Expected outcome: either exact residual/logit reconstruction on Gemma-2 or a concrete backend-specific blocker with inspectable evidence.
+- Expected duration: ~10-25 minutes depending on model load and local cache state
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/infrastructure/20260317-gemma2-reconstruction-smoke.json`
+- Resume command: rerun the exact command above
+- Main confound to watch: TransformerLens Gemma support, hook naming, or final-normalization handling may differ from `gpt2-xl` even if the generic reconstruction code is otherwise correct.
+- Implementation verified: YES - the same script and validation path already produce an exact `gpt2-xl` reconstruction artifact on this machine.
+- Status: LAUNCHING
+
+## [2026-03-17T20:08:00-0500] POST-RUN: primary-spine Gemma model-backed reconstruction smoke
+- Command: `.venv/bin/python scripts/phase1_model_backed_reconstruction_smoke.py --model-name google/gemma-2-2b --prompt "The capital of France is" --device mps --fallback-device cpu --output results/infrastructure/20260317-gemma2-reconstruction-smoke.json`
+- Outcome: SUCCESS
+- Key metric: `final_residual_max_abs_error=0.0`, `uniform_logits_max_abs_error=0.0`
+- Artifacts saved: `results/infrastructure/20260317-gemma2-reconstruction-smoke.json`
+- Latest checkpoint: none
+- Anomalies: none
+- Next step: close the primary-spine reconstruction readiness issue and move the top scientific priority to a bounded Gemma oracle-alpha feasibility slice
+
 ## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
 - Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
 - Outcome: SUCCESS

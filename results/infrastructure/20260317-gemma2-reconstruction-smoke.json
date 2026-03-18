@@ -1,0 +1,195 @@
+{
+  "model_name": "gemma-2-2b",
+  "prompt": "The capital of France is",
+  "device": "mps",
+  "num_sources": 53,
+  "source_labels": [
+    "embed",
+    "0_attn_out",
+    "0_mlp_out",
+    "1_attn_out",
+    "1_mlp_out",
+    "2_attn_out",
+    "2_mlp_out",
+    "3_attn_out",
+    "3_mlp_out",
+    "4_attn_out",
+    "4_mlp_out",
+    "5_attn_out",
+    "5_mlp_out",
+    "6_attn_out",
+    "6_mlp_out",
+    "7_attn_out",
+    "7_mlp_out",
+    "8_attn_out",
+    "8_mlp_out",
+    "9_attn_out",
+    "9_mlp_out",
+    "10_attn_out",
+    "10_mlp_out",
+    "11_attn_out",
+    "11_mlp_out",
+    "12_attn_out",
+    "12_mlp_out",
+    "13_attn_out",
+    "13_mlp_out",
+    "14_attn_out",
+    "14_mlp_out",
+    "15_attn_out",
+    "15_mlp_out",
+    "16_attn_out",
+    "16_mlp_out",
+    "17_attn_out",
+    "17_mlp_out",
+    "18_attn_out",
+    "18_mlp_out",
+    "19_attn_out",
+    "19_mlp_out",
+    "20_attn_out",
+    "20_mlp_out",
+    "21_attn_out",
+    "21_mlp_out",
+    "22_attn_out",
+    "22_mlp_out",
+    "23_attn_out",
+    "23_mlp_out",
+    "24_attn_out",
+    "24_mlp_out",
+    "25_attn_out",
+    "25_mlp_out"
+  ],
+  "final_residual_max_abs_error": 0.0,
+  "uniform_logits_max_abs_error": 0.0,
+  "layer_metrics": [
+    {
+      "layer": 0,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 1,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 2,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 3,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 4,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 5,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 6,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 7,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 8,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 9,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 10,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 11,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 12,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 13,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 14,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 15,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 16,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 17,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 18,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 19,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 20,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 21,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 22,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 23,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 24,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    },
+    {
+      "layer": 25,
+      "resid_mid_max_abs_error": 0.0,
+      "resid_post_max_abs_error": 0.0
+    }
+  ]
+}
