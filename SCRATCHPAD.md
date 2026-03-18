@@ -1023,3 +1023,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1/checkpoints/prompt_residuals/sa-confirm-006-refusal.pt`
 - Anomalies: the mediator-active partition remained exactly role-collapsed on this frozen prompt set, so the artifact supports bounded trajectory claims rather than a richer prompt-subset story; rerunning the exact command reused checkpoints and completed in `11.55` seconds
 - Next step: close `resattn-h1p` as a bounded stage-3 safety artifact and return to the open Figure 8 and Gemma decision issues
+
+## [2026-03-17T19:52:00-0500] PRE-RUN: Figure 8 regularization-first sweep on widened `wikitext-103`
+- tmux session: `attnres-bux-sweep`
+- Script: `scripts/run_attnres_proxy_viability.py`
+- Command: `for arm in dropout01 wd005 dropout01_wd005; do ...; done` over the widened compact-subword `wikitext-103` regime with three new settings: `(dropout=0.1, weight_decay=0.01)`, `(dropout=0.0, weight_decay=0.05)`, `(dropout=0.1, weight_decay=0.05)`
+- Config: `dataset=wikitext/wikitext-103-raw-v1`, `train=2048`, `eval=512`, `tokenizer=compact_subword:gpt2`, `vocab_size=20000`, `d_model=160`, `d_ff=640`, `n_layers=8`, `seq_len=64`, `batch_size=16`, `steps=1500`, `checkpoint_every=50`, `lr=3e-4`, `seed=11`, `device=mps`
+- What I'm testing: whether matched regularization can preserve a healthier best-checkpoint regime on the local Block AttnRes proxy before the Figure 8 lane is allowed to change the training objective.
+- Expected outcome: at least one regularization arm narrows or flips the best-checkpoint baseline-versus-AttnRes loss delta while improving the entropy gap relative to the current best-checkpoint control (`-0.0549`).
+- Expected duration: ~2-5 hours for the full three-arm sweep
+- Checkpoint path: `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/*/checkpoints/`
+- Checkpoint cadence: every `50` steps
+- Log path: `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/sweep.log`
+- Resume command: rerun the exact tmux launch command against the same output root
+- Main confound to watch: regularization might help the matched baseline as much as or more than the routed proxy, which would make the sweep scientifically useful but not a rescue.
+- Implementation verified: YES - the runner already exposes `--dropout`, best-checkpoint export, eval history, checkpoint resume, and the widened `wikitext-103` regime has completed successfully on trunk.
+- Status: LAUNCHING
+
+## [2026-03-17T19:48:30-0500] POST-RUN: Figure 8 regularization-first sweep on widened `wikitext-103`
+- Outcome: SUCCESS
+- Key metric: all three matched regularization arms stayed negative on best-checkpoint loss delta (`+0.0378`, `+0.0376`, `+0.0368`) versus the control `+0.0386`, and none materially improved the entropy gap beyond control `-0.0549`
+- Artifacts saved: `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/dropout01/summary.json`, `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/wd005/summary.json`, `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/dropout01_wd005/summary.json`, `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1.md`
+- Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/dropout01_wd005/checkpoints/attnres_best_state.pt`
+- Anomalies: dropout improved deep embedding persistence but not the actual loss-gap blocker; rerunning the exact sweep command reused all saved checkpoints and finished in `30.67` seconds
+- Next step: close `resattn-bux` as the last faithful stabilization attempt and move the Figure 8 lane to the objective-level redesign decision in `resattn-9fo`

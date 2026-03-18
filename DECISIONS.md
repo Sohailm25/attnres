@@ -530,3 +530,15 @@
   - but the proxy does not sustain a routed win and still misses the entropy ordering at the best checkpoint (`-0.0549`)
   That is a stronger case for stabilization failure than for “the standard objective can never express the desired regime.” Changing the objective now would make any positive result less faithful to the local AttnRes proxy story.
 - Impact: `resattn-8xu` can close once the memo and state docs land. The next Figure 8 issue is `resattn-bux`, which compares three matched regularization settings on the existing widened `wikitext-103` best-checkpoint-enabled regime before any objective-level change is allowed.
+
+## [2026-03-17T19:48:30-0500] DECISION: Treat matched regularization as exhausted for the widened `wikitext-103` Figure 8 proxy
+
+- Trigger: `resattn-bux` completed the three-arm regularization-first sweep on the best-checkpoint-enabled widened compact-subword `wikitext-103` proxy.
+- Decision: close the regularization-first follow-up as a useful negative result and move the Figure 8 lane to an objective-level redesign question rather than another matched stabilization sweep.
+- Rationale: the three new arms all stayed inside the control band on the metrics that actually matter:
+  - control loss delta `= +0.0386`
+  - new loss deltas `= +0.0378`, `+0.0376`, `+0.0368`
+  - control entropy gap `= -0.0549`
+  - best new entropy gap `= -0.0533`
+  Dropout improved deep embedding persistence, but no arm restored a routed win or materially improved the layer-type-specialization signature. That means the faithful “just stabilize this regime” explanation is now weak.
+- Impact: `resattn-bux` can close once the artifact and state docs land. The next Figure 8 issue becomes `resattn-9fo`, which should choose the smallest honest objective-level redesign instead of reopening regularization or another same-regime rerun.

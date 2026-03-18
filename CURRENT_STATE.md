@@ -242,6 +242,21 @@
     - deep embedding persistence improved from `0.1615` at the final checkpoint to `0.1689` at the best checkpoint
     - the entropy gap improved slightly from `-0.0574` to `-0.0549`
   - interpretation: final-checkpoint-only evaluation was overstating how weak the regime is, but checkpoint selection alone does not solve the Figure 8 lane; the baseline still wins and the entropy ordering remains inverted, so the next honest Figure 8 move is a bounded optimization or objective redesign rather than another blind rerun
+- `known`: `resattn-bux` now lands the last matched regularization check on the widened `wikitext-103` Figure 8 proxy before objective redesign:
+  - `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1.md` compares the saved best-checkpoint control against three matched regularization arms:
+    - `dropout=0.1`, `weight_decay=0.01`
+    - `dropout=0.0`, `weight_decay=0.05`
+    - `dropout=0.1`, `weight_decay=0.05`
+  - none of the arms restored a routed win:
+    - control loss delta `= +0.0386`
+    - dropout arm loss delta `= +0.0378`
+    - weight-decay arm loss delta `= +0.0376`
+    - combined arm loss delta `= +0.0368`
+  - none of the arms materially improved the entropy ordering:
+    - control entropy gap `= -0.0549`
+    - best sweep entropy gap `= -0.0533`
+  - dropout did improve deep embedding persistence (`0.1855` and `0.1836`), but not the actual blocker
+  - interpretation: matched regularization is now exhausted as the faithful rescue path for the widened `wikitext-103` proxy; the next honest Figure 8 question is objective-level redesign
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -350,7 +365,7 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-bux` for the bounded regularization-first Figure 8 sweep now that `resattn-8xu` has decided against an objective change as the next move.
+1. Use `resattn-9fo` to choose the smallest honest objective-level Figure 8 redesign now that `resattn-bux` has exhausted the matched regularization path.
 2. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
 3. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 4. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.

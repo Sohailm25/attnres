@@ -845,3 +845,25 @@ Suggested entry format:
 - Interesting facts:
   - The same run that looked strongly negative at the final checkpoint was only `+0.0386` behind the baseline at its best checkpoint.
   - Deep embedding persistence has improved monotonically across several redesigns even while the entropy ordering stayed stubbornly inverted.
+
+## [2026-03-17T19:48:30-0500] The Regularization Sweep Was The Right Last Check, And It Still Said No
+- Stage: implementation
+- Feel of the Experiment: This is the kind of negative result I trust. The three arms were close enough to the control that they rule out the comforting story without creating a lot of interpretive noise.
+- Working Hypotheses:
+  - The widened `wikitext-103` proxy is no longer mainly blocked on simple matched regularization.
+  - The next honest Figure 8 move has to change the objective rather than keep massaging the same training surface.
+- Hunches and Guesses:
+  - The dropout arms improving deep embedding persistence without touching the loss gap is exactly the awkward pattern that makes this feel like a proxy-objective mismatch rather than pure overfitting.
+  - If an objective-level redesign also fails, the repo should start taking the “small local AttnRes proxy is qualitatively different from the paper regime” possibility much more seriously.
+- Predictions:
+  - `resattn-9fo` should end up choosing one minimal objective change, not a broad search.
+  - I do not expect another small regularization tweak to change the lane qualitatively.
+- Surprises and Tensions:
+  - I expected the combined dropout-plus-weight-decay arm to either clearly help or clearly hurt. Instead it barely moved the loss gap at all.
+  - The best entropy gap improvement (`-0.0533`) is technically better than control, but not remotely enough to matter.
+- Confidence:
+  - high that `resattn-bux` should close as a useful negative result
+  - medium-high that objective redesign is now the right next Figure 8 question
+- Interesting facts:
+  - The best loss delta across the sweep was only `+0.0368`, still negative.
+  - The strongest persistence came from dropout (`0.1855`) rather than stronger weight decay.
