@@ -948,3 +948,22 @@ Suggested entry format:
 - Interesting facts:
   - The bounded `2`-prompt Gemma slice improved over uniform by `2.1634` nats.
   - The same tiny slice was already well separated from the prereg nulls.
+
+## [2026-03-17T20:39:00-0500] Gemma Now Feels Like An Actual Oracle Lane, Not A Placeholder
+- Stage: implementation
+- Feel of the Experiment: This is the first point where the primary model stops feeling aspirational. The lane now has the same basic structure the dev model had before the harder interpretive questions started.
+- Working Hypotheses:
+  - The next meaningful discriminator is held-out predictiveness on the primary model, not more pilot-side feasibility work.
+- Hunches and Guesses:
+  - The primary-model holdout might be noisier or harsher than `gpt2-xl`, but if it is, that will at least be a scientific answer instead of a missing-lane problem.
+- Predictions:
+  - The first Gemma held-out check is more likely to be mixed than outright negative, because the pilot suite already looks clean and stable.
+- Surprises and Tensions:
+  - Restart stability was even cleaner than I expected: aggregate top-1 source agreement stayed `1.0`.
+  - Paraphrases still move prompt-matched alphas a lot (`JS = 0.1434`), which is good because it means the lane is not merely learning a brittle seed artifact.
+- Confidence:
+  - high that the primary-model oracle lane is now real enough to deserve held-out scrutiny
+  - medium that the first held-out Gemma check will stay encouraging
+- Interesting facts:
+  - The full saved `8`-prompt Gemma pilot suite kept mean improvement over uniform at `1.7613` nats.
+  - The qualitative stability pattern matches the dev model: restarts are tiny, perturbations matter.

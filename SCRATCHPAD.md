@@ -309,6 +309,31 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: none
 - Next step: close the primary-model bounded feasibility issue and scale the same path to the saved pilot stability suite
 
+## [2026-03-17T20:32:00-0500] PRE-RUN: primary-model Gemma oracle-alpha pilot stability suite
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_pilot_stability_suite.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pilot_stability_suite.py --model-name google/gemma-2-2b --output results/oracle_alpha/20260317-gemma2-pilot-stability-suite.json --max-sequences 8 --optimization-steps 20 --learning-rate 0.1 --resample-count 3 --resample-size 6 --device mps`
+- Config: `model=google/gemma-2-2b`, `collection=oracle_alpha_phase1_v1`, `split=pilot`, `exploratory=true`, `max_sequences=8`, `steps=20`, `lr=0.1`, `resample_count=3`, `resample_size=6`
+- What I'm testing: whether the primary-model Gemma oracle lane stays positive and methodologically usable when scaled from the `2`-prompt smoke to the saved pilot stability suite with restart, paraphrase, and resample checks.
+- Expected outcome: the run completes cleanly on local MPS, mean pilot improvement stays positive, and restart/paraphrase/resample metrics are inspectable from one saved artifact.
+- Expected duration: ~10-25 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gemma2-pilot-stability-suite.json`
+- Resume command: rerun the exact command above
+- Main confound to watch: the primary model may stay positive on the base pilot run but show much noisier prompt-perturbation behavior than `gpt2-xl`, which would narrow the interpretation immediately.
+- Implementation verified: YES - `resattn-7cs` already showed that the same bounded runner path executes cleanly on `google/gemma-2-2b`.
+- Status: LAUNCHING
+
+## [2026-03-17T20:38:00-0500] POST-RUN: primary-model Gemma oracle-alpha pilot stability suite
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pilot_stability_suite.py --model-name google/gemma-2-2b --output results/oracle_alpha/20260317-gemma2-pilot-stability-suite.json --max-sequences 8 --optimization-steps 20 --learning-rate 0.1 --resample-count 3 --resample-size 6 --device mps`
+- Outcome: SUCCESS
+- Key metric: `sequence_mean_improvement=1.7613` nats; `restart_js=7.63e-08`; `paraphrase_js=0.0200`; `resample_js=0.0151`
+- Artifacts saved: `results/oracle_alpha/20260317-gemma2-pilot-stability-suite.json`
+- Latest checkpoint: none
+- Anomalies: none
+- Next step: close the primary-model pilot stability issue and run the first primary-model held-out predictiveness check
+
 ## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
 - Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
 - Outcome: SUCCESS
