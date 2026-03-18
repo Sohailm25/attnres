@@ -278,6 +278,31 @@ def scan_average_linkage_clusters(
     )
 
 
+def assign_average_linkage_clusters(
+    distributions: Sequence[Sequence[float]],
+    *,
+    cluster_count: int,
+) -> tuple[int, ...]:
+    if cluster_count < 2:
+        raise ValueError("cluster_count must be at least 2")
+
+    distribution_matrix = _validated_distribution_matrix(distributions)
+    if cluster_count > distribution_matrix.shape[0]:
+        raise ValueError("cluster_count must not exceed the sequence count")
+    if cluster_count == distribution_matrix.shape[0]:
+        return tuple(range(1, distribution_matrix.shape[0] + 1))
+
+    distance_matrix = _js_distance_matrix(distribution_matrix)
+    condensed = squareform(distance_matrix, checks=False)
+    linkage_matrix = linkage(condensed, method="average")
+    assignments = fcluster(
+        linkage_matrix,
+        t=cluster_count,
+        criterion="maxclust",
+    )
+    return tuple(int(value) for value in assignments.tolist())
+
+
 def _source_type_for_label(label: str) -> str:
     if label in {"embed", "pos_embed", "embedding"} or "embed" in label:
         return "embedding"

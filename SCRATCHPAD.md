@@ -1522,3 +1522,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; runtime stayed bounded at `237.16` seconds with the reduced `32 x 192` resampling budget.
 - Next step: close `resattn-xot` and pivot the next oracle follow-up toward factual-recall-focused raw-source structure rather than another mixed-surface aggregate rerun.
+
+## [2026-03-18T09:28:00-0500] PRE-RUN: Gemma factual-recall raw-source cluster profile
+- tmux session: `N/A`
+- Script: `scripts/run_oracle_alpha_subset_cluster_profile.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_subset_cluster_profile.py --run-path results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/oracle_eval_run.json --registry-path prompts/registry_v5.yaml --collection-id oracle_alpha_phase1_v1 --group-tag stratum_factual_recall --output results/block_structure/20260318-gemma2-factual-recall-cluster-profile-v1.json`
+- Config: `model=google/gemma-2-2b`, `subset=stratum_factual_recall`, `view=raw_source`, `top_sources=5`, `example_prompts=3`
+- What I'm testing: whether the strong factual-recall raw-source silhouette on the saved `registry_v5` artifact corresponds to clean subcategory structure, source-usage differences, or a more arbitrary cluster split.
+- Expected outcome: the best-`k` factual-recall clusters should show interpretable subcategory composition and top-source profiles rather than looking like arbitrary prompt shards.
+- Expected duration: ~1-5 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/block_structure/20260318-gemma2-factual-recall-cluster-profile-v1.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the best factual-recall `k = 12` split could still reflect prompt-template families rather than deeper routing structure, so I need to separate simple subcategory purity from genuinely different source-usage profiles.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_pattern_analysis.PatternAnalysisTests.test_assign_average_linkage_clusters_recovers_expected_partition` passed after adding the reusable assignment helper.
+- Status: LAUNCHING
+
+## [2026-03-18T09:29:00-0500] POST-RUN: Gemma factual-recall raw-source cluster profile
+- Outcome: SUCCESS
+- Key metric: the factual-recall raw-source split stayed strong (`silhouette = 0.4709`, random `= 0.1401`, best `k = 12`) and the clusters were nearly pure by saved factual subcategory rather than arbitrary prompt shards.
+- Artifacts saved: `results/block_structure/20260318-gemma2-factual-recall-cluster-profile-v1.json`, `results/block_structure/20260318-gemma2-factual-recall-cluster-profile-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; the profile run finished in `4.90` seconds on the saved artifact.
+- Next step: close `resattn-8y4` and decide whether the next oracle follow-up should explicitly bridge these factual-recall routing families into the bounded Gemma tool-breakage lane.

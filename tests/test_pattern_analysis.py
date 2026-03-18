@@ -14,6 +14,7 @@ class PatternAnalysisTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from validation.pattern_analysis import (
+            assign_average_linkage_clusters,
             build_grouped_view_pattern_summary,
             build_prompt_resampling_stability_summary,
             build_sequence_level_pattern_summary,
@@ -30,6 +31,9 @@ class PatternAnalysisTests(unittest.TestCase):
         )
         cls.build_sequence_level_pattern_summary = staticmethod(
             build_sequence_level_pattern_summary
+        )
+        cls.assign_average_linkage_clusters = staticmethod(
+            assign_average_linkage_clusters
         )
         cls.scan_average_linkage_clusters = staticmethod(scan_average_linkage_clusters)
         cls.summarize_source_type_mass = staticmethod(summarize_source_type_mass)
@@ -76,6 +80,24 @@ class PatternAnalysisTests(unittest.TestCase):
         self.assertEqual({2, 3, 4}, set(result.silhouette_by_k))
         self.assertEqual((2, 2), tuple(result.cluster_sizes_by_k[2]))
         self.assertAlmostEqual(0.5, result.largest_cluster_fraction_by_k[2])
+
+    def test_assign_average_linkage_clusters_recovers_expected_partition(self) -> None:
+        distributions = (
+            (0.88, 0.08, 0.02, 0.02),
+            (0.83, 0.11, 0.03, 0.03),
+            (0.02, 0.02, 0.08, 0.88),
+            (0.03, 0.03, 0.12, 0.82),
+        )
+
+        assignments = self.assign_average_linkage_clusters(
+            distributions,
+            cluster_count=2,
+        )
+
+        self.assertEqual(4, len(assignments))
+        self.assertEqual(assignments[0], assignments[1])
+        self.assertEqual(assignments[2], assignments[3])
+        self.assertNotEqual(assignments[0], assignments[2])
 
     def test_build_grouped_view_pattern_summary_aggregates_depth_and_type(self) -> None:
         source_labels = (

@@ -273,6 +273,25 @@
         - best `k = 2` with cluster sizes `254 / 2`
         - raw-source resampling oracle-beats-random fraction `= 0.125`
     - interpretation: the broadened primary-model oracle artifact should not be read as one aggregate raw clustering result. The robust grouped-routing story is broad, but the promising raw-source structure is concentrated in tighter semantic strata, especially factual recall and secondarily reasoning/math
+  - `resattn-8y4` now lands the first block-structure-style follow-up on that factual-recall signal:
+    - `results/block_structure/20260318-gemma2-factual-recall-cluster-profile-v1.json` and `.md` profile the saved `stratum_factual_recall` raw-source clusters from the `registry_v5` Gemma artifact
+    - the factual-recall raw-source result remains strong and balanced:
+      - oracle best silhouette `= 0.4709`
+      - random best silhouette `= 0.1401`
+      - best `k = 12`
+      - cluster sizes `= 33 / 32 / 32 / 32 / 18 / 16 / 16 / 16 / 16 / 16 / 16 / 13`
+      - largest cluster fraction `= 0.1289`
+    - the cluster semantics are highly organized rather than noisy:
+      - `subcategory_capital_fact` occupies `3` clusters
+      - `subcategory_element_symbol` occupies `3` clusters
+      - `subcategory_author_fact` occupies `5` clusters
+      - `subcategory_moon_fact` occupies `2` clusters
+      - all clusters are fully pure by factual subcategory except one `33`-prompt moon-fact cluster that contains a single author-fact outlier
+    - the cluster profiles also differ in source usage:
+      - capital facts include both an attention-heavier cluster (`mean attention mass = 0.6300`) and a more mixed cluster anchored by `2_mlp_out`
+      - moon facts split into an MLP-heavier cluster (`mean MLP mass = 0.5307`) and an attention-heavier cluster (`mean attention mass = 0.5638`)
+      - author facts fragment into several routing modes with both MLP-heavy and more mixed source-type balances
+    - interpretation: the first strong raw-source cluster story on the primary model is semantic-family-conditioned factual recall, not one broad mixed-surface block structure pass. This makes the block-structure lane meaningfully live on the primary model while keeping the full-surface prereg gate unpassed
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -613,9 +632,9 @@
 
 ## Immediate Next Steps
 
-1. Run a factual-recall-focused primary-model oracle follow-up on the saved `registry_v5` artifact, because that stratum now carries the clearest robust raw-source structure and the cleanest bridge to the bounded Gemma tool-breakage lane.
-2. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is now strong and factual-recall/raw-source structure is clearly above random.
-3. Keep future oracle reruns narrower and question-driven; the next broad aggregate campaign should wait until a specific underexplored hypothesis cannot be answered from the saved artifact.
+1. Bridge the factual-recall raw-source clusters back into the bounded Gemma tool-breakage lane, because the strongest new primary-model structure result now lives in the same conceptual neighborhood as the factual-recall breakage prompts.
+2. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
+3. Keep future oracle reruns narrower and question-driven; the next broad aggregate campaign should wait until a specific underexplored hypothesis cannot be answered from the saved artifacts.
 4. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

@@ -288,6 +288,26 @@ Suggested entry format:
   - Factual recall raw-source silhouette reached `0.4709` with balanced cluster sizes relative to the rest of the repo's raw-source analyses.
   - Code/procedural and general-text raw-source views stayed weak, which makes the mixed full-sample raw artifact easier to explain.
 
+## [2026-03-18T09:29:00-0500] The Factual-Recall Raw Clusters Are Actually Real
+- Stage: analysis
+- Feel of the Experiment: This is the first time the block-structure lane has felt concretely alive on the primary model instead of being a mostly negative gate. The nice part is that the signal is interpretable without needing a heroic story.
+- Working Hypotheses:
+  - The strongest bridge from the oracle lane into the bounded Gemma tool-breakage lane now runs through factual-recall routing families.
+- Hunches and Guesses:
+  - The author-fact family may be the richest place to look next because it fragments into the most distinct routing modes (`5` clusters) rather than staying nearly one-mode-per-subcategory.
+  - Moon facts are useful as a control because they are structurally clean but do not overlap the existing factual tool-breakage set.
+- Predictions:
+  - A tool-breakage bridge pass will probably show that capitals, elements, and authors sit inside different factual routing families rather than one universal “factual recall” route.
+- Surprises and Tensions:
+  - The factual clusters are more semantically pure than I expected. I thought there would be more template contamination inside the best-`k` split.
+  - The best result is still not a clean `~8`-cluster story; it is a `k = 12` family-conditioned split.
+- Confidence:
+  - high that the next oracle-adjacent step should connect these factual routing families to tool-breakage rather than reopen aggregate clustering
+  - medium that author facts will end up being the most interesting micro-family
+- Interesting facts:
+  - Capital, element, and moon facts each split into a small number of pure routing clusters, while author facts fragment more.
+  - One moon-fact cluster is MLP-heavier and another is more attention-heavy, which suggests the split is not just lexical or answer-format noise.
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.

@@ -1,0 +1,592 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "oracle_alpha_phase1_v1",
+  "split": "confirm",
+  "group_tag": "stratum_factual_recall",
+  "num_sequences": 256,
+  "num_sources": 53,
+  "raw_source_summary": {
+    "best_k": 12,
+    "best_silhouette": 0.4708653942438284,
+    "random_best_silhouette": 0.14005492719014595,
+    "cluster_sizes": [
+      33,
+      32,
+      32,
+      32,
+      18,
+      16,
+      16,
+      16,
+      16,
+      16,
+      16,
+      13
+    ],
+    "largest_cluster_fraction": 0.12890625
+  },
+  "mean_entropy": 3.4728172002599833,
+  "mean_effective_sources": 32.309174497254176,
+  "mean_top1_mass": 0.08175587783520921,
+  "subcategory_cluster_support": {
+    "subcategory_author_fact": 5,
+    "subcategory_capital_fact": 3,
+    "subcategory_element_symbol": 3,
+    "subcategory_moon_fact": 2
+  },
+  "cluster_profiles": [
+    {
+      "cluster_label": 10,
+      "size": 33,
+      "dominant_subcategory": "subcategory_moon_fact",
+      "dominant_subcategory_fraction": 0.9696969696969697,
+      "subcategory_counts": {
+        "subcategory_author_fact": 1,
+        "subcategory_moon_fact": 32
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.008478632320383763,
+        "mean_attention_mass": 0.46081551472233395,
+        "mean_mlp_mass": 0.5307058529572823
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "14_attn_out",
+          "mean_mass": 0.07021657795165524
+        },
+        {
+          "source_label": "11_attn_out",
+          "mean_mass": 0.05575092605343371
+        },
+        {
+          "source_label": "4_mlp_out",
+          "mean_mass": 0.05221846005456014
+        },
+        {
+          "source_label": "11_mlp_out",
+          "mean_mass": 0.05148975359219493
+        },
+        {
+          "source_label": "18_attn_out",
+          "mean_mass": 0.048447589869752075
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-121",
+        "oa5-confirm-factual_recall-193",
+        "oa5-confirm-factual_recall-195"
+      ],
+      "example_prompts": [
+        "The novel Things Fall Apart was written by",
+        "The best-known major moon orbiting Neptune is",
+        "A solar-system chart would label a major moon of Neptune as"
+      ]
+    },
+    {
+      "cluster_label": 3,
+      "size": 32,
+      "dominant_subcategory": "subcategory_capital_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_capital_fact": 32
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.010051509389997933,
+        "mean_attention_mass": 0.5617305455595691,
+        "mean_mlp_mass": 0.42821794505043287
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "2_mlp_out",
+          "mean_mass": 0.06779862206894904
+        },
+        {
+          "source_label": "17_attn_out",
+          "mean_mass": 0.05526461062254384
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.05364096045377664
+        },
+        {
+          "source_label": "12_attn_out",
+          "mean_mass": 0.0476256143883802
+        },
+        {
+          "source_label": "2_attn_out",
+          "mean_mass": 0.04621549497824162
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-001",
+        "oa5-confirm-factual_recall-002",
+        "oa5-confirm-factual_recall-005"
+      ],
+      "example_prompts": [
+        "The capital city of Canada is",
+        "Travel guides note that the capital of Canada is",
+        "The capital city of Spain is"
+      ]
+    },
+    {
+      "cluster_label": 8,
+      "size": 32,
+      "dominant_subcategory": "subcategory_moon_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_moon_fact": 32
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.008600021493984217,
+        "mean_attention_mass": 0.5638140894317896,
+        "mean_mlp_mass": 0.4275858890742262
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "8_mlp_out",
+          "mean_mass": 0.07585503230802715
+        },
+        {
+          "source_label": "14_attn_out",
+          "mean_mass": 0.07242777629289776
+        },
+        {
+          "source_label": "12_attn_out",
+          "mean_mass": 0.06310635071713477
+        },
+        {
+          "source_label": "16_attn_out",
+          "mean_mass": 0.05409977841190994
+        },
+        {
+          "source_label": "4_attn_out",
+          "mean_mass": 0.04959812841843814
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-194",
+        "oa5-confirm-factual_recall-196",
+        "oa5-confirm-factual_recall-198"
+      ],
+      "example_prompts": [
+        "Astronomy students learn that a major moon of Neptune is",
+        "One widely recognized moon associated with Neptune is",
+        "Astronomy students learn that a major moon of Uranus is"
+      ]
+    },
+    {
+      "cluster_label": 9,
+      "size": 32,
+      "dominant_subcategory": "subcategory_element_symbol",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_element_symbol": 32
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.0109342112692117,
+        "mean_attention_mass": 0.5468939964596964,
+        "mean_mlp_mass": 0.442171792271092
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "14_attn_out",
+          "mean_mass": 0.07216221618000418
+        },
+        {
+          "source_label": "10_mlp_out",
+          "mean_mass": 0.05002461408730596
+        },
+        {
+          "source_label": "1_attn_out",
+          "mean_mass": 0.046405816421611235
+        },
+        {
+          "source_label": "15_attn_out",
+          "mean_mass": 0.04576642714528134
+        },
+        {
+          "source_label": "2_attn_out",
+          "mean_mass": 0.04427378298714757
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-131",
+        "oa5-confirm-factual_recall-132",
+        "oa5-confirm-factual_recall-135"
+      ],
+      "example_prompts": [
+        "Chemistry notes write the symbol for iron as",
+        "A lab chart would mark iron with the symbol",
+        "Chemistry notes write the symbol for silver as"
+      ]
+    },
+    {
+      "cluster_label": 12,
+      "size": 18,
+      "dominant_subcategory": "subcategory_author_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_author_fact": 18
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.010023190311991483,
+        "mean_attention_mass": 0.5269690066965764,
+        "mean_mlp_mass": 0.463007802991432
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "6_mlp_out",
+          "mean_mass": 0.054263256697191134
+        },
+        {
+          "source_label": "12_attn_out",
+          "mean_mass": 0.05334835182616694
+        },
+        {
+          "source_label": "2_mlp_out",
+          "mean_mass": 0.05237906022618214
+        },
+        {
+          "source_label": "6_attn_out",
+          "mean_mass": 0.04518882350789176
+        },
+        {
+          "source_label": "16_attn_out",
+          "mean_mass": 0.04169274897625049
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-065",
+        "oa5-confirm-factual_recall-067",
+        "oa5-confirm-factual_recall-071"
+      ],
+      "example_prompts": [
+        "The novel Moby-Dick was written by",
+        "The author of Moby-Dick is",
+        "The author of Invisible Man is"
+      ]
+    },
+    {
+      "cluster_label": 1,
+      "size": 16,
+      "dominant_subcategory": "subcategory_element_symbol",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_element_symbol": 16
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.007339106241821205,
+        "mean_attention_mass": 0.5778558584400424,
+        "mean_mlp_mass": 0.4148050353181363
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "19_attn_out",
+          "mean_mass": 0.06903075543232262
+        },
+        {
+          "source_label": "11_attn_out",
+          "mean_mass": 0.06501780264079571
+        },
+        {
+          "source_label": "1_attn_out",
+          "mean_mass": 0.06371088232845068
+        },
+        {
+          "source_label": "5_mlp_out",
+          "mean_mass": 0.059112921357154846
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.05779154575429857
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-129",
+        "oa5-confirm-factual_recall-133",
+        "oa5-confirm-factual_recall-137"
+      ],
+      "example_prompts": [
+        "The chemical symbol for iron is",
+        "The chemical symbol for silver is",
+        "The chemical symbol for gold is"
+      ]
+    },
+    {
+      "cluster_label": 2,
+      "size": 16,
+      "dominant_subcategory": "subcategory_capital_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_capital_fact": 16
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.013277974741019157,
+        "mean_attention_mass": 0.6299806069580953,
+        "mean_mlp_mass": 0.3567414183008855
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "17_attn_out",
+          "mean_mass": 0.07632980262860656
+        },
+        {
+          "source_label": "2_attn_out",
+          "mean_mass": 0.06149537372402847
+        },
+        {
+          "source_label": "21_attn_out",
+          "mean_mass": 0.04824101191479713
+        },
+        {
+          "source_label": "4_attn_out",
+          "mean_mass": 0.047311476431787014
+        },
+        {
+          "source_label": "19_attn_out",
+          "mean_mass": 0.04681184981018305
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-003",
+        "oa5-confirm-factual_recall-007",
+        "oa5-confirm-factual_recall-011"
+      ],
+      "example_prompts": [
+        "On most maps, the capital of Canada appears as",
+        "On most maps, the capital of Spain appears as",
+        "On most maps, the capital of Australia appears as"
+      ]
+    },
+    {
+      "cluster_label": 4,
+      "size": 16,
+      "dominant_subcategory": "subcategory_capital_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_capital_fact": 16
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.012803913296587434,
+        "mean_attention_mass": 0.5547853678209417,
+        "mean_mlp_mass": 0.43241071888247096
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "2_mlp_out",
+          "mean_mass": 0.10079922107979655
+        },
+        {
+          "source_label": "14_mlp_out",
+          "mean_mass": 0.07773716887459159
+        },
+        {
+          "source_label": "18_attn_out",
+          "mean_mass": 0.06852605589665473
+        },
+        {
+          "source_label": "17_attn_out",
+          "mean_mass": 0.06425820849835873
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.053982423967681825
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-004",
+        "oa5-confirm-factual_recall-008",
+        "oa5-confirm-factual_recall-012"
+      ],
+      "example_prompts": [
+        "In a geography quiz, the capital of Canada would be",
+        "In a geography quiz, the capital of Spain would be",
+        "In a geography quiz, the capital of Australia would be"
+      ]
+    },
+    {
+      "cluster_label": 5,
+      "size": 16,
+      "dominant_subcategory": "subcategory_element_symbol",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_element_symbol": 16
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.010017793708004544,
+        "mean_attention_mass": 0.6407044320397165,
+        "mean_mlp_mass": 0.349277774252279
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "5_attn_out",
+          "mean_mass": 0.06534884695429355
+        },
+        {
+          "source_label": "18_attn_out",
+          "mean_mass": 0.06027356116101146
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.0544271218823269
+        },
+        {
+          "source_label": "17_attn_out",
+          "mean_mass": 0.049306538712698966
+        },
+        {
+          "source_label": "12_mlp_out",
+          "mean_mass": 0.045184753951616585
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-130",
+        "oa5-confirm-factual_recall-134",
+        "oa5-confirm-factual_recall-138"
+      ],
+      "example_prompts": [
+        "In the periodic table, iron is abbreviated as",
+        "In the periodic table, silver is abbreviated as",
+        "In the periodic table, gold is abbreviated as"
+      ]
+    },
+    {
+      "cluster_label": 6,
+      "size": 16,
+      "dominant_subcategory": "subcategory_author_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_author_fact": 16
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.007156303337197333,
+        "mean_attention_mass": 0.43654357297301694,
+        "mean_mlp_mass": 0.5563001236897857
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "16_mlp_out",
+          "mean_mass": 0.06261436780914664
+        },
+        {
+          "source_label": "8_mlp_out",
+          "mean_mass": 0.058863131678663194
+        },
+        {
+          "source_label": "12_mlp_out",
+          "mean_mass": 0.04439697158522904
+        },
+        {
+          "source_label": "6_attn_out",
+          "mean_mass": 0.0425815649505239
+        },
+        {
+          "source_label": "12_attn_out",
+          "mean_mass": 0.03913380495214369
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-066",
+        "oa5-confirm-factual_recall-070",
+        "oa5-confirm-factual_recall-074"
+      ],
+      "example_prompts": [
+        "Literature students learn that Moby-Dick was written by",
+        "Literature students learn that Invisible Man was written by",
+        "Literature students learn that Frankenstein was written by"
+      ]
+    },
+    {
+      "cluster_label": 7,
+      "size": 16,
+      "dominant_subcategory": "subcategory_author_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_author_fact": 16
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.01527136905003224,
+        "mean_attention_mass": 0.4966196346694402,
+        "mean_mlp_mass": 0.4881089962805276
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "4_attn_out",
+          "mean_mass": 0.06591312400996685
+        },
+        {
+          "source_label": "12_attn_out",
+          "mean_mass": 0.04873920715181157
+        },
+        {
+          "source_label": "2_attn_out",
+          "mean_mass": 0.04797735752072185
+        },
+        {
+          "source_label": "3_mlp_out",
+          "mean_mass": 0.046747952757868916
+        },
+        {
+          "source_label": "11_mlp_out",
+          "mean_mass": 0.03890664569917135
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-068",
+        "oa5-confirm-factual_recall-072",
+        "oa5-confirm-factual_recall-076"
+      ],
+      "example_prompts": [
+        "Most library catalogs list Moby-Dick under",
+        "Most library catalogs list Invisible Man under",
+        "Most library catalogs list Frankenstein under"
+      ]
+    },
+    {
+      "cluster_label": 11,
+      "size": 13,
+      "dominant_subcategory": "subcategory_author_fact",
+      "dominant_subcategory_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_author_fact": 13
+      },
+      "source_type_mass": {
+        "mean_embedding_mass": 0.009074794861576509,
+        "mean_attention_mass": 0.5275578637190135,
+        "mean_mlp_mass": 0.46336734141940994
+      },
+      "top_mean_sources": [
+        {
+          "source_label": "6_attn_out",
+          "mean_mass": 0.07197398549089065
+        },
+        {
+          "source_label": "18_attn_out",
+          "mean_mass": 0.05021880015444297
+        },
+        {
+          "source_label": "2_mlp_out",
+          "mean_mass": 0.04951966704370884
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.049277727492153645
+        },
+        {
+          "source_label": "15_attn_out",
+          "mean_mass": 0.04237531469418453
+        }
+      ],
+      "example_prompt_ids": [
+        "oa5-confirm-factual_recall-069",
+        "oa5-confirm-factual_recall-077",
+        "oa5-confirm-factual_recall-081"
+      ],
+      "example_prompts": [
+        "The novel Invisible Man was written by",
+        "The novel The Odyssey was written by",
+        "The novel Jane Eyre was written by"
+      ]
+    }
+  ]
+}

@@ -75,6 +75,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
+| Gemma-2 factual-recall raw-source cluster profile v1 | block_structure | mixed | `results/block_structure/20260318-gemma2-factual-recall-cluster-profile-v1.md` |
 
 ## Comparison Regimes
 

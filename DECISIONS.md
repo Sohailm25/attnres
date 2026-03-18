@@ -809,3 +809,22 @@
     - code/procedural and general-text raw views stay weak or near-random
   This means the promising underexplored direction is no longer “one more aggregate raw clustering pass.” It is factual-recall-focused raw-source analysis, which also has the cleanest conceptual bridge to the bounded Gemma tool-breakage lane.
 - Impact: `resattn-xot` can close once the artifact lands. The next oracle issue should focus on factual-recall-conditioned raw-source structure rather than another mixed-surface rerun.
+
+## [2026-03-18T09:29:00-0500] DECISION: Treat the first strong raw-source cluster story as subcategory-pure factual recall, not prompt noise
+
+- Trigger: `resattn-8y4` profiled the saved factual-recall subset from the `registry_v5` Gemma oracle artifact after `resattn-xot` showed that this stratum carried the strongest raw-source silhouette.
+- Decision: treat the factual-recall raw-source result as a real block-structure-style lead worth bridging to the Gemma tool-breakage lane. Do not dismiss it as mere mixed-pool leakage or prompt noise.
+- Rationale: the factual-recall profile is too structured to reduce to arbitrary shards:
+  - raw-source best silhouette stays `0.4709` versus random `0.1401`
+  - best `k = 12` with balanced cluster sizes rather than one dominant aggregate cluster
+  - cluster purity is extremely high:
+    - capital facts occupy `3` clusters
+    - element symbols occupy `3` clusters
+    - author facts occupy `5` clusters
+    - moon facts occupy `2` clusters, with only one single-author outlier in the larger moon cluster
+  - the clusters also differ in source usage rather than only in labels:
+    - one capital cluster is much more attention-heavy (`0.6300` attention mass) while another keeps a stronger `2_mlp_out` anchor
+    - moon facts split into an MLP-heavier cluster (`0.5307` MLP mass) and a more attention-heavy cluster (`0.5638` attention mass)
+    - author facts fragment into several routing modes rather than one monolithic family
+  This is enough to say the raw-source signal is semantically organized and not just a formatting artifact.
+- Impact: `resattn-8y4` can close once the artifact lands. The next high-value oracle follow-up is no longer broad clustering; it is an explicit bridge between these factual-recall routing families and the bounded Gemma tool-breakage story.
