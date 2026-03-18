@@ -975,3 +975,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-compact-subword-wikitext103-bestcheck-v1/checkpoints/attnres_best_state.pt`
 - Anomalies: both models peaked early (`baseline=900`, `attnres=850`), but the best-checkpoint Figure 8 surface only improved modestly and still kept the entropy ordering inverted
 - Next step: close `resattn-fby`, keep the widened `wikitext-103` regime as the current Figure 8 default, and move the next Figure 8 question to a bounded optimization or objective redesign issue rather than another blind rerun
+
+## [2026-03-17T18:59:59-0500] PRE-RUN: prereg-scale pattern-analysis grouped-view and resampling follow-up
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_pattern_analysis.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pattern_analysis.py --run-path results/oracle_alpha/20260317-gpt2xl-prereg-scale-campaign-v4/oracle_eval_run.json --output results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.json --random-seed 11 --max-clusters 12 --num-resamples 128 --sample-size 96`
+- Config: `model=gpt2-xl`, `split=confirm`, `view_names=raw_source/source_type/depth_thirds_by_type`, `resamples=128`, `sample_size=96`
+- What I'm testing: whether the weak prereg-scale routing structure survives grouped-source compression and prompt-resampling stability checks, or whether it still looks like an outlier-driven raw-source artifact.
+- Expected outcome: the new JSON summary preserves the existing raw-source read, adds grouped-source scans plus resampling stability, and makes it clear whether any broader cluster story survives the control extensions.
+- Expected duration: ~1-5 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.json`
+- Resume command: rerun the command above
+- Main confound to watch: grouped views can create apparently cleaner structure by collapsing source dimension, so the interpretation has to compare grouped-source gains against the matched random control and the raw-source resampling stability rather than treating any cleaner silhouette as a direct win.
+- Implementation verified: YES - `tests.test_pattern_analysis` now covers grouped views, cluster-size persistence, and resampling-stability summaries.
+- Status: LAUNCHING
+
+## [2026-03-17T19:00:00-0500] POST-RUN: prereg-scale pattern-analysis grouped-view and resampling follow-up
+- Outcome: SUCCESS
+- Key metric: raw-source structure stayed weak and `k = 2`-dominated (`0.1428` versus random `0.1093`), while grouped views strengthened only the coarse structure story (`source_type` `0.6652` versus `0.5569`; `depth_thirds_by_type` `0.3451` versus `0.2305`)
+- Artifacts saved: `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.json`, `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.md`
+- Latest checkpoint: none
+- Anomalies: grouped-source compression did make the structure cleaner, but the matched random-control silhouette also rose sharply, so the honest update is coarse-regime evidence rather than a block-structure pass
+- Next step: close `resattn-ojq`, keep the raw block-structure gate unpassed, and move overall repo priority to `resattn-h1p`

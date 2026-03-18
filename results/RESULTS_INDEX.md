@@ -44,7 +44,8 @@ Register every experimental artifact here. Never delete entries; mark superseded
 
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
-| GPT-2 XL prereg-scale sequence-level pattern analysis v1 | pattern_analysis | mixed | `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.md` |
+| GPT-2 XL prereg-scale sequence-level pattern analysis v1 | pattern_analysis | superseded | `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.md` |
+| GPT-2 XL prereg-scale pattern analysis grouped-view robustness v1 | pattern_analysis | mixed | `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.md` |
 
 ## Figure 8 Validation
 

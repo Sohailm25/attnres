@@ -779,3 +779,25 @@ Suggested entry format:
 - Interesting facts:
   - The matched baseline peaked at step `900`, while the AttnRes proxy peaked slightly earlier at `850`.
   - Best-checkpoint deep embedding persistence improved from `0.1615` to `0.1689`, but the entropy gap only moved from `-0.0574` to `-0.0549`.
+
+## [2026-03-17T19:00:00-0500] The Pattern Story Got Better Once I Stopped Asking Raw Sources To Do All The Work
+- Stage: implementation
+- Feel of the Experiment: This one clarified more than it pleased. The raw block-structure story is still weak, but the lane is not empty noise. Once I compress the routing object to grouped source types, a real coarse regime signal shows up and survives resampling.
+- Working Hypotheses:
+  - Raw-source sequence-level routing on `gpt2-xl` really does contain structure above random, but it is mostly too diffuse and too outlier-driven to support the prereg block hypothesis.
+  - The strongest stable pattern is coarse balance between embedding / attention / MLP usage, not a clean many-cluster decomposition of the raw `98`-source object.
+- Hunches and Guesses:
+  - The `source_type` view is probably closer to the right descriptive scale for this development-model artifact than the raw-source view, but it is also too compressed to carry the stronger thesis by itself.
+  - The `depth_thirds_by_type` result is the uncomfortable middle ground: more expressive than `source_type`, still above random, and still mostly collapsing to `k = 2`.
+- Predictions:
+  - If we revisit the pattern lane later, the interesting next question will be “what do the coarse grouped regimes mean?” not “can we force raw-source clustering into looking cleaner?”
+  - Without richer source surfaces or primary-model replication, the block-structure gate will stay closed.
+- Surprises and Tensions:
+  - The raw-source resampling result is stronger than I expected in one sense: it is consistently weak rather than flaky.
+  - The grouped-source views clearly help, but they also lift the random-control silhouette a lot. That is exactly why this cannot be sold as a simple victory.
+- Confidence:
+  - high that `resattn-ojq` is enough to stop hand-waving about the pattern lane
+  - medium-high that the next repo step should move to another lane rather than another immediate clustering follow-up
+- Interesting facts:
+  - Raw-source best `k` stayed `2` on all `128 / 128` resamples.
+  - The `source_type` view produced a much more balanced full-sample `k = 2` split (`87 / 41`) than either the raw-source view (`126 / 2`) or the `depth_thirds_by_type` view (`117 / 11`).
