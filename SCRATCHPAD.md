@@ -1290,3 +1290,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none
 - Next step: close `resattn-b4q` and shift the remaining oracle-lane infrastructure priority to `resattn-9co`.
+
+## [2026-03-18T03:25:00-0500] PRE-RUN: oracle campaign progress smoke
+- tmux session: `N/A`
+- Script: `scripts/run_oracle_alpha_predictiveness_campaign.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --collection-id oracle_alpha_phase1_v1 --model-name tiny-stories-1M --device cpu --max-train-sequences 2 --max-eval-sequences 1 --optimization-steps 4 --learning-rate 0.1 --regularization-grid 0.001 0.1 --candidate-feature-sources position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat --candidate-target-names oracle_alpha_logit_vector --output-dir results/infrastructure/20260318-oracle-campaign-progress-smoke-9co > results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/run.log 2>&1`
+- Config: `model=tiny-stories-1M`, `collection=oracle_alpha_phase1_v1`, `train=2`, `eval=1`, `regularization_grid=(0.001, 0.1)`
+- What I'm testing: whether the campaign runner now writes a live progress artifact and log lines during the summary stage before the final predictiveness summary lands.
+- Expected outcome: manifest exists early, `predictiveness_progress.json` is written, and `run.log` captures per-regularization progress lines before final summary completion.
+- Expected duration: ~1-3 minutes
+- Checkpoint path: `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/checkpoints/`
+- Checkpoint cadence: per prompt checkpoint plus per-regularization progress artifact update
+- Log path: `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the smoke is small and CPU-only, so it validates observability mechanics rather than large-run wall-clock behavior.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_oracle_alpha_campaign tests.test_oracle_alpha_runner` passed after adding the progress callbacks.
+- Status: LAUNCHING
+
+## [2026-03-18T03:31:00-0500] POST-RUN: oracle campaign progress smoke
+- Outcome: SUCCESS
+- Key metric: the smoke wrote `campaign_manifest.json`, `predictiveness_progress.json`, and final summary files together, and `run.log` captured the expected per-regularization progress lines before completion.
+- Artifacts saved: `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/campaign_manifest.json`, `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/predictiveness_progress.json`, `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/predictiveness_summary.json`, `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/oracle_train_run.json`, `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/oracle_eval_run.json`, `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co.md`
+- Latest checkpoint: `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co/checkpoints/`
+- Anomalies: the first launch failed because the bracketed feature-source name was not shell-quoted; the rerun fixed that and the smoke completed cleanly.
+- Next step: close `resattn-9co` and move the remaining ready queue to `resattn-ac2`.

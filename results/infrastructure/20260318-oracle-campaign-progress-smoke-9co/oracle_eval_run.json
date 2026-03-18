@@ -1,0 +1,100 @@
+{
+  "bootstrap_interval": {
+    "confidence_level": 0.95,
+    "lower": 0.23241186141967773,
+    "mean": 0.23241186141967773,
+    "num_resamples": 1000,
+    "upper": 0.23241186141967773
+  },
+  "collection_id": "oracle_alpha_phase1_v1",
+  "control_plan_id": "oracle_alpha_phase1_v1",
+  "control_registry_id": "20260316-phase1-controls-v1",
+  "exploratory": false,
+  "model_name": "TinyStories-1M",
+  "null_model_mean_losses": {
+    "last_layer_only": 8.720417022705078,
+    "magnitude_proportional": 13.166088104248047,
+    "random_dirichlet": 12.43122386932373,
+    "uniform": 5.971960067749023
+  },
+  "num_sequences": 1,
+  "sequence_mean_improvement": 0.23241186141967773,
+  "sequence_results": [
+    {
+      "best_alpha": [
+        0.052656229585409164,
+        0.060658201575279236,
+        0.06012917309999466,
+        0.053639188408851624,
+        0.06107105687260628,
+        0.05478035286068916,
+        0.05575565621256828,
+        0.051811281591653824,
+        0.03973753750324249,
+        0.04340791329741478,
+        0.05697396770119667,
+        0.07056695967912674,
+        0.05693032220005989,
+        0.0495649091899395,
+        0.054132845252752304,
+        0.05230436474084854,
+        0.058098502457141876,
+        0.06778161227703094
+      ],
+      "best_alpha_entropy": 2.881845474243164,
+      "final_alpha": [
+        0.05155095085501671,
+        0.06195595860481262,
+        0.05688556283712387,
+        0.0554267056286335,
+        0.05696483701467514,
+        0.05747174471616745,
+        0.054874904453754425,
+        0.05293856933712959,
+        0.0366998128592968,
+        0.04170263931155205,
+        0.055855173617601395,
+        0.07643632590770721,
+        0.05426829680800438,
+        0.05041883885860443,
+        0.05179470404982567,
+        0.054864995181560516,
+        0.058428820222616196,
+        0.07146111130714417
+      ],
+      "null_losses": {
+        "last_layer_only": 8.720417022705078,
+        "magnitude_proportional": 13.166088104248047,
+        "random_dirichlet": 12.43122386932373,
+        "uniform": 5.971960067749023
+      },
+      "num_sources": 18,
+      "optimized_loss": 5.739548206329346,
+      "prompt": "The mechanic wiped grease from the side of the",
+      "prompt_id": "oa-confirm-001",
+      "source_labels": [
+        "embed",
+        "pos_embed",
+        "0_attn_out",
+        "0_mlp_out",
+        "1_attn_out",
+        "1_mlp_out",
+        "2_attn_out",
+        "2_mlp_out",
+        "3_attn_out",
+        "3_mlp_out",
+        "4_attn_out",
+        "4_mlp_out",
+        "5_attn_out",
+        "5_mlp_out",
+        "6_attn_out",
+        "6_mlp_out",
+        "7_attn_out",
+        "7_mlp_out"
+      ],
+      "split": "confirm",
+      "uniform_loss": 5.971960067749023
+    }
+  ],
+  "split": "confirm"
+}
