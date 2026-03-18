@@ -1127,13 +1127,36 @@
       - with `53` sources, the pilot router is predicting an almost-uniform held-out mixture rather than useful prompt-specific routing
     - interpretation: Phase 6 is no longer blocked by export, but it is still blocked by pilot modeling design; do not lock the input choice, do not start confirmatory router training, and do not start `w_l`-analog geometry yet
     - rerun note: a compact-summary rerun on MPS moved the exact metrics slightly while preserving the same qualitative result, which further weakens any attempt to treat the tiny `h_4[t]` win as a lock
+  - `resattn-4hj` now compares raw-alpha versus alpha-logit targets on the same saved Gemma pilot export:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_pilot.py` now support a target-parameterization comparison without changing the saved export, split discipline, or sequence aggregation rule
+    - the held-out pilot comparison reused the same stratified `192 / 64` train/eval split across all four combinations:
+      - inputs: `h_1[t]`, `h_4[t]`
+      - targets: `oracle_alpha_vector`, `oracle_alpha_logit_vector`
+      - aggregation: `mean_token_logits_then_softmax`
+    - result:
+      - raw-alpha targets reproduced the original collapse:
+        - `h_1[t]`: `R^2 = -0.0619`, mean JS `= 0.1584`
+        - `h_4[t]`: `R^2 = -0.0486`, mean JS `= 0.1565`
+      - alpha-logit targets materially improved the pilot:
+        - `h_1[t]`: `R^2 = 0.2722`, mean JS `= 0.0872`
+        - `h_4[t]`: `R^2 = 0.3028`, mean JS `= 0.0835`
+      - selected combination: `oracle_alpha_logit_vector` + `h_4[t]`
+      - input ranking did not change across targets
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - target geometry was a real blocker and is now the correct frozen baseline for this lane: use `oracle_alpha_logit_vector`
+      - do not lock the input choice from this alone; `h_4[t]` is still only provisionally better
+      - the next honest blocker is sequence aggregation before a blind capacity sweep or confirmatory router training
+    - rerun note:
+      - an exact-command rerun on MPS changed the saved summary hash and moved the exact values slightly, but preserved every qualitative conclusion: `oracle_alpha_logit_vector` stayed selected, `h_4[t]` stayed best, the ranking stayed unchanged, and the readiness gate still failed
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Keep the Phase 6 lane at pilot-stage modeling design rather than moving to confirmatory router training:
-   - the saved `registry_v5` pilot export is now live and the first router pilot is landed
-   - the next core implementation move is `resattn-4hj`: compare target parameterizations on the same saved pilot export before trying to lock either the input choice or the geometry lane
+   - the saved `registry_v5` pilot export is now live and target geometry has been partially repaired on that fixed surface
+   - freeze `oracle_alpha_logit_vector` as the baseline target parameterization for the next pilot slice
+   - the next core implementation move is `resattn-914`: compare sequence aggregation rules on the same saved pilot export before a model-capacity sweep
 3. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
 4. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

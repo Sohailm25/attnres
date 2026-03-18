@@ -2032,3 +2032,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/checkpoints/prompt_results/tb5-confirm-020-9bddacad4d.json`
 - Anomalies: none; the exact-command rerun reused the checkpoint set in `9.99` seconds with an unchanged timestamp hash, and rerunning the saved-artifact profile command reproduced the same JSON hash in `3.38` seconds.
 - Next step: close `resattn-138`, then take `resattn-hth` for the donor-arm counterfactual on the narrowed `v5` surface.
+
+## [2026-03-18T16:50:22-0500] PRE-RUN: Gemma router-distillation target comparison v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_pilot.py`
+- Command: `mkdir -p results/router_training/20260318-gemma2-router-distillation-target-comparison-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260318-gemma2-router-distillation-target-comparison-v1 --candidate-input-fields 'h_1[t]' 'h_4[t]' --candidate-target-names oracle_alpha_vector oracle_alpha_logit_vector --device mps > results/router_training/20260318-gemma2-router-distillation-target-comparison-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `split=pilot`, `inputs=h_1[t]/h_4[t]`, `targets=oracle_alpha_vector/oracle_alpha_logit_vector`, `aggregation=mean_token_logits_then_softmax`, `hidden_dim=256`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether the pilot router-distillation failure is primarily target-geometry mismatch rather than missing supervision or missing input signal.
+- Expected outcome: a compact artifact that either keeps the raw-alpha path as the least-bad baseline or shows that alpha-logit targets materially improve held-out `R^2`/JS and possibly change the `h_1[t]` versus `h_4[t]` ranking.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260318-gemma2-router-distillation-target-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the aggregation rule stays fixed, a continued failure here would implicate either aggregation or model capacity rather than missing target geometry alone.
+- Implementation verified: YES - `tests.test_router_distillation` now covers raw/logit target roundtripping, fixed-split reuse across all candidate combinations, and the original `h_1[t]` versus `h_4[t]` comparison surface.
+- Status: LAUNCHING
+
+## [2026-03-18T16:54:40-0500] POST-RUN: Gemma router-distillation target comparison v1
+- Outcome: SUCCESS
+- Key metric: the target-only redesign materially improved the pilot but did not clear readiness; `oracle_alpha_logit_vector + h_4[t]` was selected with held-out `R^2 = 0.3028` and mean JS `= 0.0835`, versus raw-alpha `h_4[t]` at `R^2 = -0.0486`, mean JS `= 0.1565`.
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-target-comparison-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-target-comparison-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: exact-command rerun on MPS changed the summary hash and nudged the decimals, but preserved every qualitative conclusion: logit target stayed selected, `h_4[t]` stayed best, input ranking stayed unchanged, and readiness still failed.
+- Next step: close `resattn-4hj` as a target-geometry pass, then take `resattn-914` to compare sequence aggregation rules on the same saved pilot export before any capacity sweep.

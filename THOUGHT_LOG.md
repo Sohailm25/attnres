@@ -1900,3 +1900,25 @@ Suggested entry format:
   - `h_4[t]` held-out `R^2 = -0.0524`
   - mean predicted entropy `≈ 3.969` for both inputs versus mean oracle entropy `= 3.514`
   - rerunning after compacting the saved summary artifact changed the exact values slightly on MPS but did not change the qualitative result
+## [2026-03-18T16:54:40-0500] Target Geometry Was Real, But It Was Not The Whole Story
+- Stage: router-distillation target comparison
+- Feel of the Experiment: This is the kind of partial rescue I trust. The old failure was not fake, but it was also not the whole truth. Changing only the target geometry unlocked a large jump without magically solving the lane.
+- Working Hypotheses:
+  - `oracle_alpha_logit_vector` should stay frozen as the target baseline for the next pilot slice.
+  - The next real bottleneck is sequence aggregation, not another pass at `h_1[t]` versus `h_4[t]`.
+- Hunches and Guesses:
+  - Mean-token aggregation is probably washing out exactly the token-local structure the lane is supposed to exploit.
+  - A capacity sweep before aggregation would blur the diagnosis because the target change already did the heavy conceptual work.
+- Predictions:
+  - An aggregation comparison will move more than a width-only sweep on this fixed pilot surface.
+  - `h_4[t]` may stay slightly better than `h_1[t]`, but I still do not expect a decisive input lock until aggregation changes.
+- Surprises and Tensions:
+  - The gain from target geometry is bigger than I expected: held-out `R^2` moved from negative to `0.3028`.
+  - The exact-command rerun changed the summary hash on MPS, so the decimal-level values are not stable enough to fetishize even though the ordering is.
+- Confidence:
+  - high that `4hj` should close as a partial pass
+  - high that `914` is the next honest Phase 6 step
+- Interesting facts:
+  - raw-alpha `h_4[t]`: `R^2 = -0.0486`, mean JS `= 0.1565`
+  - alpha-logit `h_4[t]`: `R^2 = 0.3028`, mean JS `= 0.0835`
+  - input ranking stayed unchanged across targets

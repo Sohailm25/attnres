@@ -1,5 +1,5 @@
 # ABOUTME: Exercises the Phase 6 pilot router-distillation comparison on saved per-token exports.
-# ABOUTME: Pins dataset loading, sequence aggregation, stratified pilot splitting, and the h_1[t] versus h_4[t] comparison surface.
+# ABOUTME: Pins dataset loading, target handling, sequence aggregation, stratified pilot splitting, and the h_1[t] versus h_4[t] comparison surface.
 
 import json
 from pathlib import Path
@@ -16,8 +16,10 @@ class RouterDistillationTests(unittest.TestCase):
             RouterDistillationExample,
             aggregate_token_logits_to_sequence_alpha,
             compare_router_input_sources,
+            compare_router_target_parameterizations,
             load_router_distillation_pilot_dataset,
             stratified_router_train_eval_split,
+            target_matrix_for_router_distillation,
         )
 
         cls.RouterDistillationExample = RouterDistillationExample
@@ -25,11 +27,17 @@ class RouterDistillationTests(unittest.TestCase):
             aggregate_token_logits_to_sequence_alpha
         )
         cls.compare_router_input_sources = staticmethod(compare_router_input_sources)
+        cls.compare_router_target_parameterizations = staticmethod(
+            compare_router_target_parameterizations
+        )
         cls.load_router_distillation_pilot_dataset = staticmethod(
             load_router_distillation_pilot_dataset
         )
         cls.stratified_router_train_eval_split = staticmethod(
             stratified_router_train_eval_split
+        )
+        cls.target_matrix_for_router_distillation = staticmethod(
+            target_matrix_for_router_distillation
         )
 
     def test_load_router_distillation_pilot_dataset_reads_manifest_and_checkpoints(
@@ -212,6 +220,98 @@ class RouterDistillationTests(unittest.TestCase):
         self.assertEqual(
             "mean_token_logits_then_softmax",
             summaries["h_1[t]"].aggregation,
+        )
+
+    def test_target_matrix_for_router_distillation_roundtrips_raw_and_logit_targets(
+        self,
+    ) -> None:
+        examples = (
+            self._synthetic_example(
+                prompt_id="prompt-a",
+                subcategory="subcategory_capital_fact",
+                signal=1.5,
+            ),
+            self._synthetic_example(
+                prompt_id="prompt-b",
+                subcategory="subcategory_author_fact",
+                signal=-0.75,
+            ),
+        )
+
+        raw_targets = self.target_matrix_for_router_distillation(
+            examples=examples,
+            target_name="oracle_alpha_vector",
+        )
+        logit_targets = self.target_matrix_for_router_distillation(
+            examples=examples,
+            target_name="oracle_alpha_logit_vector",
+        )
+
+        expected = torch.stack([example.final_alpha for example in examples], dim=0)
+        self.assertTrue(torch.allclose(expected, raw_targets, atol=1e-6))
+        self.assertTrue(
+            torch.allclose(
+                torch.zeros(logit_targets.shape[0]),
+                logit_targets.mean(dim=1),
+                atol=1e-6,
+            )
+        )
+        self.assertTrue(
+            torch.allclose(expected, torch.softmax(logit_targets, dim=1), atol=1e-6)
+        )
+
+    def test_compare_router_target_parameterizations_reuses_one_fixed_split(
+        self,
+    ) -> None:
+        examples = [
+            self._synthetic_example(
+                prompt_id=f"prompt-{index}",
+                subcategory=(
+                    "subcategory_capital_fact"
+                    if index < 4
+                    else "subcategory_author_fact"
+                    if index < 8
+                    else "subcategory_element_fact"
+                    if index < 12
+                    else "subcategory_city_fact"
+                ),
+                signal=float(index - 7.5),
+            )
+            for index in range(16)
+        ]
+
+        comparison = self.compare_router_target_parameterizations(
+            examples=examples,
+            candidate_input_fields=("h_1[t]", "h_4[t]"),
+            candidate_target_names=(
+                "oracle_alpha_vector",
+                "oracle_alpha_logit_vector",
+            ),
+            aggregation="mean_token_logits_then_softmax",
+            eval_fraction=0.25,
+            hidden_dim=8,
+            learning_rate=0.05,
+            max_epochs=250,
+            patience=40,
+            seed=11,
+            device="cpu",
+        )
+
+        self.assertEqual(4, len(comparison.candidate_summaries))
+        self.assertEqual(
+            {"oracle_alpha_vector", "oracle_alpha_logit_vector"},
+            {summary.target_name for summary in comparison.candidate_summaries},
+        )
+        for summary in comparison.candidate_summaries:
+            self.assertEqual(comparison.train_prompt_ids, summary.train_prompt_ids)
+            self.assertEqual(comparison.eval_prompt_ids, summary.eval_prompt_ids)
+        self.assertIn(
+            comparison.selected_target_name,
+            {"oracle_alpha_vector", "oracle_alpha_logit_vector"},
+        )
+        self.assertIn(
+            comparison.selected_input_field,
+            {"h_1[t]", "h_4[t]"},
         )
 
     def _synthetic_example(
