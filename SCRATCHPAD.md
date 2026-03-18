@@ -1658,3 +1658,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2/checkpoints/prompt_results/tb2-confirm-016-6ca2e00125.json`
 - Anomalies: none; the current cyclic prompt-permuted control is within-family on `12 / 16` prompts and cross-family only on the four family-boundary transitions, which makes the mixed result more informative than a generic across-surface shuffle.
 - Next step: close `resattn-qww` as mixed, then run `resattn-o3n` to split the dynamic donor control into explicit within-family and cross-family arms before freezing the stronger same-model claim.
+
+## [2026-03-18T10:08:00-0500] PRE-RUN: Gemma matched-family donor-arm decomposition
+- tmux session: `tb-v2-donor-arms`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `baseline=tool_breakage_factual_recall_v2 confirm`, `fixed_alpha=tool_breakage_factual_recall_v2 pilot`, `prompts=16`, `controls=legacy cyclic + within-family donor + cross-family donor + fixed-alpha mean`
+- What I'm testing: whether the mixed `qww` result was hiding a prompt-specific routing effect behind a partially within-family cyclic donor arm, or whether routed still fails against an explicit within-family donor control on the aligned surface.
+- Expected outcome: the run writes prompt checkpoints and shows whether routed clearly beats the explicit within-family arm on the tuned primary metric even if the cross-family arm remains comparably damaging.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the current cyclic arm is already within-family on `12 / 16` prompts, the new within-family arm may only sharpen the interpretation slightly rather than flipping the result.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_tool_breakage` passed after adding the donor-arm builder path.
+- Status: LAUNCHING
+
+## [2026-03-18T10:05:42-0500] POST-RUN: Gemma matched-family donor-arm decomposition
+- Outcome: SUCCESS
+- Key metric: routed now exceeds both explicit donor controls on mean tuned KL, but only narrowly (`+0.0380` versus `within_family_permuted_alpha`, `+0.0089` versus `cross_family_permuted_alpha`) and with the within-family aggregate carried mainly by element prompts.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1/checkpoints/prompt_results/tb2-confirm-016-6ca2e00125.json`
+- Anomalies: none; exact-command rerun reused the full four-arm checkpoints and finished in `9.83` seconds while leaving all prompt checkpoint timestamps at their original values.
+- Next step: close `resattn-o3n` as mixed and move to `resattn-0mu`, which expands the matched-family surface before rerunning donor-arm controls on a larger confirm set.

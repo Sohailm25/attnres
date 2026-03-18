@@ -892,3 +892,20 @@
     - only the four family-boundary transitions are cross-family
   So the next underexplored question is not “rerun the same control again.” It is whether the remaining gap is truly prompt-specific or only family-level.
 - Impact: `resattn-qww` can close once the artifact lands. `resattn-o3n` is now the right next tool-breakage follow-up, and the Gemma strong same-model claim should stay blocked until routed clearly beats an explicit within-family donor control.
+
+## [2026-03-18T10:05:42-0500] DECISION: Close `resattn-o3n` as a narrow aggregate improvement and pivot next to prompt-surface expansion
+
+- Trigger: `resattn-o3n` split the old cyclic prompt-permuted control into explicit within-family and cross-family donor arms on `tool_breakage_factual_recall_v2`.
+- Decision: close the issue as mixed. The donor split weakens the old dynamic-control blocker, but the aggregate margins are too small and too family-concentrated to call this a clean strong same-model pass. The next move is `resattn-0mu`, which expands the matched-family surface before interpreting the donor-arm result more aggressively.
+- Rationale: the new control decomposition did answer the immediate geometry question:
+  - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.0380`
+  - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.0089`
+  - routed minus `within_family_permuted_alpha` final-position tuned KL `= +0.3949`
+  - routed minus `cross_family_permuted_alpha` final-position tuned KL `= +0.2056`
+  So the old dynamic blocker is weaker than it looked under the hybrid cyclic arm. But the result is still too narrow to overstate:
+  - routed beats the within-family donor arm on mean tuned KL on only `10 / 16` prompts
+  - routed beats the within-family donor arm on final-position tuned KL on only `8 / 16` prompts
+  - the within-family aggregate is carried mainly by `subcategory_element_symbol`
+  - capitals are slightly negative on mean KL versus the within-family donor arm, and authors are nearly flat
+  That makes the next underexplored uncertainty prompt-surface breadth rather than another control redesign.
+- Impact: `resattn-o3n` can close once the artifact lands. `resattn-0mu` is now the right next tool-breakage follow-up, and the current strong same-model claim should stay narrow until the donor-arm advantage survives a larger balanced matched-family surface.

@@ -376,6 +376,28 @@
       - all `16` prompt checkpoints kept their original timestamps from the first run
       - the exact-command rerun completed in `10.22` seconds and rewrote only `summary.json`
     - interpretation: the stronger same-model tool-breakage claim is still blocked, but the remaining blocker is now sharper. The next worthwhile move is to decompose the donor control into explicit within-family and cross-family arms rather than freezing the whole lane or rerunning the same aggregate control
+  - `resattn-o3n` now lands that donor-arm decomposition on the same matched-family `v2` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1.md` is the first explicit within-family versus cross-family donor-control artifact on `tool_breakage_factual_recall_v2`
+    - the donor split weakens the old dynamic blocker on the tuned primary metric:
+      - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.0380`
+      - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.0089`
+      - routed minus `within_family_permuted_alpha` final-position tuned KL `= +0.3949`
+      - routed minus `cross_family_permuted_alpha` final-position tuned KL `= +0.2056`
+    - the fixed-alpha read stays clearly weaker than routed:
+      - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0917`
+      - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.3894`
+    - the donor-arm improvement is still narrow rather than broad:
+      - routed beats the within-family donor arm on mean tuned KL on `10 / 16` prompts
+      - routed beats the within-family donor arm on final-position tuned KL on `8 / 16` prompts
+      - routed beats the cross-family donor arm on mean tuned KL on `8 / 16` prompts
+      - family structure remains heterogeneous:
+        - `subcategory_element_symbol` carries the clearest within-family advantage
+        - `subcategory_capital_fact` is slightly negative on mean KL versus the within-family donor arm
+        - `subcategory_author_fact` is near-flat on mean KL versus the within-family donor arm
+    - resume durability is verified on the finished donor-arm output directory:
+      - all `16` prompt checkpoints kept their original timestamps from the first run
+      - the exact-command rerun completed in `9.83` seconds and rewrote only `summary.json`
+    - interpretation: the current same-model tool-breakage lane is no longer blocked by an obviously wrong dynamic control, but the donor-arm advantage is too small and too concentrated to overstate. The next efficient move is a larger balanced matched-family surface, not another control redesign
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -716,9 +738,9 @@
 
 ## Immediate Next Steps
 
-1. Run `resattn-o3n`, which splits the matched-family dynamic counterfactual into explicit within-family and cross-family donor arms before this lane is frozen again.
-2. Treat `tool_breakage_factual_recall_v2` as the main bounded baseline surface for this lane; the old mixed factual baseline stays as contextual evidence only.
-3. Treat the stronger same-model Gemma tool-breakage claim as still blocked: the fixed-alpha objection is weakened, but routed does not yet clearly beat the mostly within-family prompt-permuted dynamic control on the tuned primary metric.
+1. Run `resattn-0mu`, which expands the matched-family Gemma factual-recall surface before rerunning the donor-arm counterfactual on a larger confirm set.
+2. Treat `tool_breakage_factual_recall_v2` as the main bounded baseline surface for the current tool-breakage story, but stop leaning too hard on its `16`-prompt donor-arm result now that the next uncertainty is breadth rather than control design.
+3. Treat the stronger same-model Gemma tool-breakage claim as narrow rather than blocked-by-geometry: routed now slightly exceeds both explicit donor arms on tuned mean KL, but the margins are tiny and family-concentrated.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

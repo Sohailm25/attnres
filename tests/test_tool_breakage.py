@@ -328,7 +328,7 @@ class ToolBreakageTests(unittest.TestCase):
         self.assertEqual(expected_token_id, token_id)
         self.assertTrue(token_text)
 
-    def test_build_counterfactual_alpha_controls_uses_cyclic_shift_and_fixed_mean(
+    def test_build_counterfactual_alpha_controls_adds_family_conditioned_donor_arms(
         self,
     ) -> None:
         def make_prompt_result(prompt_id: str, alpha: tuple[float, ...]) -> object:
@@ -352,19 +352,60 @@ class ToolBreakageTests(unittest.TestCase):
             make_prompt_result("tb-confirm-001", (0.9, 0.1)),
             make_prompt_result("tb-confirm-002", (0.2, 0.8)),
             make_prompt_result("tb-confirm-003", (0.6, 0.4)),
+            make_prompt_result("tb-confirm-004", (0.3, 0.7)),
         )
         pilot_prompt_results = (
             make_prompt_result("tb-pilot-001", (0.8, 0.2)),
             make_prompt_result("tb-pilot-002", (0.4, 0.6)),
         )
+        prompt_entries = (
+            PromptEntry(
+                prompt_id="tb-confirm-001",
+                text="Prompt 1",
+                split="confirm",
+                tags=("subcategory_capital_fact",),
+                perturbations={},
+                target_text="answer",
+            ),
+            PromptEntry(
+                prompt_id="tb-confirm-002",
+                text="Prompt 2",
+                split="confirm",
+                tags=("subcategory_capital_fact",),
+                perturbations={},
+                target_text="answer",
+            ),
+            PromptEntry(
+                prompt_id="tb-confirm-003",
+                text="Prompt 3",
+                split="confirm",
+                tags=("subcategory_element_symbol",),
+                perturbations={},
+                target_text="answer",
+            ),
+            PromptEntry(
+                prompt_id="tb-confirm-004",
+                text="Prompt 4",
+                split="confirm",
+                tags=("subcategory_element_symbol",),
+                perturbations={},
+                target_text="answer",
+            ),
+        )
 
         controls = self.build_counterfactual_alpha_controls(
             confirm_prompt_results=confirm_prompt_results,
             fixed_alpha_prompt_results=pilot_prompt_results,
+            prompt_entries=prompt_entries,
         )
 
         self.assertEqual(
-            ("pilot_mean_alpha", "prompt_permuted_alpha"),
+            (
+                "cross_family_permuted_alpha",
+                "pilot_mean_alpha",
+                "prompt_permuted_alpha",
+                "within_family_permuted_alpha",
+            ),
             tuple(sorted(controls["tb-confirm-001"].keys())),
         )
         self.assertEqual(
@@ -380,8 +421,52 @@ class ToolBreakageTests(unittest.TestCase):
             controls["tb-confirm-002"]["prompt_permuted_alpha"].alpha,
         )
         self.assertEqual(
-            (0.9, 0.1),
+            (0.3, 0.7),
             controls["tb-confirm-003"]["prompt_permuted_alpha"].alpha,
+        )
+        self.assertEqual(
+            "tb-confirm-002",
+            controls["tb-confirm-001"][
+                "within_family_permuted_alpha"
+            ].alpha_source_prompt_id,
+        )
+        self.assertEqual(
+            (0.2, 0.8),
+            controls["tb-confirm-001"]["within_family_permuted_alpha"].alpha,
+        )
+        self.assertEqual(
+            "tb-confirm-001",
+            controls["tb-confirm-002"][
+                "within_family_permuted_alpha"
+            ].alpha_source_prompt_id,
+        )
+        self.assertEqual(
+            "tb-confirm-003",
+            controls["tb-confirm-001"][
+                "cross_family_permuted_alpha"
+            ].alpha_source_prompt_id,
+        )
+        self.assertEqual(
+            (0.6, 0.4),
+            controls["tb-confirm-001"]["cross_family_permuted_alpha"].alpha,
+        )
+        self.assertEqual(
+            "tb-confirm-004",
+            controls["tb-confirm-002"][
+                "cross_family_permuted_alpha"
+            ].alpha_source_prompt_id,
+        )
+        self.assertEqual(
+            "tb-confirm-001",
+            controls["tb-confirm-003"][
+                "cross_family_permuted_alpha"
+            ].alpha_source_prompt_id,
+        )
+        self.assertEqual(
+            "tb-confirm-002",
+            controls["tb-confirm-004"][
+                "cross_family_permuted_alpha"
+            ].alpha_source_prompt_id,
         )
         self.assertAlmostEqual(
             0.6,

@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-qww`
-- Focus: `resattn-qww` has now run the matched-family dynamic-routing counterfactual; the next meaningful move is `resattn-o3n`, which splits the donor controls into explicit within-family and cross-family arms.
-- Experimental status: the repo now has a stronger aligned tool-breakage baseline plus a mixed but sharper dynamic-control result. On `tool_breakage_factual_recall_v2`, routed remains much worse than the fixed-alpha control, but the current cyclic prompt-permuted control nearly matches routed on mean tuned KL while routed stays worse on final-position tuned KL.
-- Critical reminder: the stronger same-model claim is still blocked on prompt-specific dynamic-control evidence, not on baseline quality. The current prompt-permuted control is already within-family on `12 / 16` prompts, so the next read should separate within-family and cross-family donor effects instead of rerunning the same aggregate control.
+- Branch: `wip/resattn-o3n`
+- Focus: `resattn-o3n` has now decomposed the matched-family donor controls; the next meaningful move is `resattn-0mu`, which expands the matched-family surface before rerunning the donor-arm counterfactual on more prompts.
+- Experimental status: the repo now has a sharper but still bounded dynamic-control read. On `tool_breakage_factual_recall_v2`, routed is slightly worse than both explicit within-family and cross-family donor controls on mean tuned KL, but the margins are tiny and the within-family aggregate is carried mainly by the element family.
+- Critical reminder: the same-model tool-breakage lane is no longer blocked by baseline quality or by an obviously wrong dynamic control. The remaining question is breadth: whether the narrow donor-arm advantage survives a larger balanced matched-family surface.

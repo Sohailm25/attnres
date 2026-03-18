@@ -424,6 +424,7 @@ def build_counterfactual_alpha_controls(
     *,
     confirm_prompt_results: Sequence[ToolBreakagePromptResult],
     fixed_alpha_prompt_results: Sequence[ToolBreakagePromptResult],
+    prompt_entries: Sequence[PromptEntry] | None = None,
 ) -> dict[str, dict[str, ToolBreakageCounterfactualControl]]:
     if len(confirm_prompt_results) < 2:
         raise ValueError("confirm_prompt_results must contain at least two prompts")
@@ -452,9 +453,41 @@ def build_counterfactual_alpha_controls(
         for index in range(alpha_length)
     )
     controls = {}
+    prompt_entries_by_id = {}
+    if prompt_entries is not None:
+        prompt_entries_by_id = {entry.prompt_id: entry for entry in prompt_entries}
+        missing_prompt_ids = {
+            result.prompt_id
+            for result in sorted_confirm
+            if result.prompt_id not in prompt_entries_by_id
+        }
+        if missing_prompt_ids:
+            raise ValueError(
+                "prompt_entries must cover all confirm prompt ids: "
+                + ", ".join(sorted(missing_prompt_ids))
+            )
+
+    family_groups: dict[str, list[ToolBreakagePromptResult]] = {}
+    family_order: list[str] = []
+    if prompt_entries_by_id:
+        for result in sorted_confirm:
+            entry = prompt_entries_by_id[result.prompt_id]
+            family_tag = next(
+                (tag for tag in entry.tags if tag.startswith("subcategory_")),
+                None,
+            )
+            if family_tag is None:
+                raise ValueError(
+                    f"prompt {result.prompt_id!r} is missing a subcategory tag"
+                )
+            if family_tag not in family_groups:
+                family_groups[family_tag] = []
+                family_order.append(family_tag)
+            family_groups[family_tag].append(result)
+
     for index, result in enumerate(sorted_confirm):
         donor = sorted_confirm[(index + 1) % len(sorted_confirm)]
-        controls[result.prompt_id] = {
+        prompt_controls = {
             "prompt_permuted_alpha": ToolBreakageCounterfactualControl(
                 arm_name="prompt_permuted_alpha",
                 alpha=tuple(float(value) for value in donor.oracle_alpha),
@@ -466,6 +499,52 @@ def build_counterfactual_alpha_controls(
                 alpha_source_prompt_id=None,
             ),
         }
+        if prompt_entries_by_id:
+            entry = prompt_entries_by_id[result.prompt_id]
+            family_tag = next(
+                (tag for tag in entry.tags if tag.startswith("subcategory_")),
+                None,
+            )
+            if family_tag is None:
+                raise ValueError(
+                    f"prompt {result.prompt_id!r} is missing a subcategory tag"
+                )
+            family_results = family_groups[family_tag]
+            family_index = next(
+                idx
+                for idx, family_result in enumerate(family_results)
+                if family_result.prompt_id == result.prompt_id
+            )
+            within_family_donor = family_results[
+                (family_index + 1) % len(family_results)
+            ]
+            family_order_index = family_order.index(family_tag)
+            donor_family_tag = family_order[
+                (family_order_index + 1) % len(family_order)
+            ]
+            donor_family_results = family_groups[donor_family_tag]
+            cross_family_donor = donor_family_results[
+                family_index % len(donor_family_results)
+            ]
+            prompt_controls["within_family_permuted_alpha"] = (
+                ToolBreakageCounterfactualControl(
+                    arm_name="within_family_permuted_alpha",
+                    alpha=tuple(
+                        float(value) for value in within_family_donor.oracle_alpha
+                    ),
+                    alpha_source_prompt_id=within_family_donor.prompt_id,
+                )
+            )
+            prompt_controls["cross_family_permuted_alpha"] = (
+                ToolBreakageCounterfactualControl(
+                    arm_name="cross_family_permuted_alpha",
+                    alpha=tuple(
+                        float(value) for value in cross_family_donor.oracle_alpha
+                    ),
+                    alpha_source_prompt_id=cross_family_donor.prompt_id,
+                )
+            )
+        controls[result.prompt_id] = prompt_controls
     return controls
 
 
@@ -1975,6 +2054,7 @@ def run_tool_breakage_dynamic_counterfactual(
     control_lookup = build_counterfactual_alpha_controls(
         confirm_prompt_results=selected_baseline_prompt_results,
         fixed_alpha_prompt_results=tuple(fixed_alpha_prompt_results.values()),
+        prompt_entries=tuple(prompt_entries),
     )
     lens = _load_tuned_lens_checkpoint(
         checkpoint_path=tuned_lens_checkpoint_path,

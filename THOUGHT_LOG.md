@@ -1351,3 +1351,25 @@ Suggested entry format:
   - Routed minus `pilot_mean_alpha` mean tuned KL is `+1.0917`.
   - Routed minus `prompt_permuted_alpha` mean tuned KL is only `-0.0123`, but routed is still worse on final-position tuned KL by `+0.3533`.
   - Family breakdown is not uniform: elements favor routed-worse-than-permuted, while authors skew the other way on mean tuned KL.
+## [2026-03-18T10:06:00-0500] The Donor-Arm Split Helped, But It Did Not Buy A Clean Strong Claim
+- Stage: experiment
+- Feel of the Experiment: This was worth doing. The old “prompt_permuted” ambiguity is gone, and the result moved in the hopeful direction, but not by enough to feel finished.
+- Working Hypotheses:
+  - The same-model dynamic-control story is now slightly positive on the tuned primary metric.
+  - The main remaining uncertainty is prompt-surface breadth, not control geometry.
+- Hunches and Guesses:
+  - A larger balanced matched-family surface is the right next stress test.
+  - If the larger surface keeps the within-family donor gap positive, the tool-breakage lane becomes much easier to defend.
+  - If the larger surface washes it out, the element family was carrying too much of the current story.
+- Predictions:
+  - The next expansion will probably keep the fixed-alpha gap strong.
+  - The real knife-edge question is whether the within-family donor gap stays positive once the current `16`-prompt confirm set stops dominating the aggregate.
+- Surprises and Tensions:
+  - Routed did beat the explicit within-family donor arm on mean tuned KL, which is better than the `qww` read, but the margin is only `+0.0380`.
+  - The cross-family donor arm did not become the main villain; it is almost a tie too (`+0.0089`), which means the lane is not just “cross-family donors are unrealistic.”
+- Confidence:
+  - high that `o3n` should close as mixed rather than pass
+  - medium-high that `0mu` is now the right next move
+- Interesting facts:
+  - Within-family donor arm: routed is worse on mean tuned KL on `10 / 16` prompts.
+  - The within-family aggregate is carried mainly by the element family; capitals are slightly negative on mean KL and authors are nearly flat.
