@@ -78,6 +78,12 @@ the right lanes, passed the key development-model feasibility gate, and refused
 to overclaim from mixed results. It is not yet aligned in the stronger sense of
 having fully closed the secondary interpretability story.
 
+The biggest remaining end-state risk is still that the strongest positive
+oracle-alpha result is development-model-only. The primary-spine backend
+readiness question is now narrower than before because `resattn-2s0` has
+cleared model-backed reconstruction on `google/gemma-2-2b`, but the first real
+primary-model oracle-alpha execution is still the next scientific priority.
+
 ## Scientific Locks That Are Being Respected
 
 The strongest sign of alignment is not a single positive result. It is that the
@@ -413,18 +419,33 @@ If the reviewer wants the shortest path through the repo:
 
 ## Current Best Next Questions
 
-The current ready issues are:
+The most important next scientific move is now:
+
+- `resattn-7cs`: run the first bounded primary-model Gemma oracle-alpha
+  feasibility slice now that primary-spine reconstruction readiness is green
+
+The next strategic decision after that is:
 
 - `resattn-1lk`: decide whether to revisit Figure 8 via a more faithful proxy or
   keep the strong-claim lane frozen
+
+The strongest extension candidate after those is:
+
 - `resattn-mo5`: broaden the aligned-Gemma safety prompt surface beyond the
   current role-collapsed mediator split
+
+The deferred infrastructure cleanup is:
+
 - `resattn-9co`: add progress artifacts for campaign summary stage
 
 From the repo's current scientific position, the most reviewer-relevant next
-decision is `resattn-1lk`. That decision determines whether the project still
-has a credible path to strong Figure 8 / trained-routing alignment, or whether
-the strongest final paper should instead center on:
+question is no longer just the Figure 8 strategic decision. It is whether the
+main oracle-alpha story can start to move from the development model onto the
+primary Gemma spine. `resattn-1lk` still matters, but it is now the next
+freeze-or-escalate choice on a mixed lane, not the top way to reduce overall
+paper risk.
+
+If `resattn-7cs` succeeds, the strongest final paper can remain centered on:
 
 - robust frozen-model oracle-alpha feasibility
 - coarse routing-structure analysis

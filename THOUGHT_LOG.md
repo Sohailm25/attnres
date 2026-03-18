@@ -908,3 +908,23 @@ Suggested entry format:
 - Interesting facts:
   - The full faithful sweep path ended with the best regularized loss delta still negative at `+0.0368`.
   - The strongest persistence improvement came from dropout, which still did not make the entropy story credible.
+
+## [2026-03-17T20:18:00-0500] The Biggest Remaining Oracle Risk Finally Got Narrower
+- Stage: implementation
+- Feel of the Experiment: This was the right place to push after the external review. The interesting part is not that Gemma worked; it is that the repo had quietly allowed "backend readiness" and "primary-model evidence" to blur together, and this smoke cleanly separates them again.
+- Working Hypotheses:
+  - The next oracle bottleneck is now actual primary-model optimization behavior, not activation plumbing.
+  - `resattn-1lk` still matters, but it should no longer sit above the primary Gemma oracle slice in the repo's mental priority stack.
+- Hunches and Guesses:
+  - If the bounded Gemma oracle slice is also clean, the whole project will feel less like “strong method on dev model, mixed extensions elsewhere” and more like an actual primary-spine paper in progress.
+- Predictions:
+  - The first Gemma oracle slice will probably surface runtime or caching pressure before it surfaces a deep conceptual blocker.
+- Surprises and Tensions:
+  - I expected at least one Gemma-specific hook or normalization quirk to show up. Instead the exact same reconstruction smoke path that worked on `gpt2-xl` came back exact on `gemma-2-2b`.
+  - That makes the remaining “dev-model-only” risk feel less excusable than it did an hour ago.
+- Confidence:
+  - high that primary-spine reconstruction readiness is now solved
+  - medium that the next bounded Gemma oracle slice will be straightforward
+- Interesting facts:
+  - Gemma-2 exposed `53` residual sources on this path: embedding plus `26` attention outputs and `26` MLP outputs.
+  - The primary-spine smoke was exact on local MPS with `final_residual_max_abs_error = 0.0` and `uniform_logits_max_abs_error = 0.0`.

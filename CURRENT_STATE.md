@@ -50,6 +50,12 @@
   - cached embedding plus per-sublayer writes reconstruct the final residual exactly when accumulated in forward order
   - applying `ln_final` plus `unembed` to that reconstructed mixture recovers the original logits exactly on the smoke prompt
   - per-layer `resid_mid` and `resid_post` identities were exact in the smoke check on local MPS
+- `known`: `resattn-2s0` now clears the same reconstruction readiness check on the primary `google/gemma-2-2b` spine:
+  - `results/infrastructure/20260317-gemma2-reconstruction-smoke.md` is the first primary-model TransformerLens-backed reconstruction artifact on local MPS
+  - cached embedding plus per-sublayer writes reconstruct the final residual exactly with `53` sources on the smoke prompt
+  - applying Gemma-2's own final normalization and unembedding to that reconstructed mixture recovers the original logits exactly (`final_residual_max_abs_error = 0.0`, `uniform_logits_max_abs_error = 0.0`)
+  - all `26` per-layer `resid_mid` and `resid_post` identity checks were exact on the smoke prompt
+  - interpretation: the biggest remaining oracle-alpha paper-shape risk is no longer primary-spine backend readiness; it is that the strongest positive oracle-alpha result still lives on the development model until the first bounded Gemma feasibility slice lands
 - `known`: the pilot/confirmatory split is now saved and code-enforced:
   - `prompts/registry_v4.yaml` is the current default prompt registry for the inline prompt collections, while `prompts/registry_v1.yaml`, `prompts/registry_v2.yaml`, and `prompts/registry_v3.yaml` remain as earlier saved prompt-surface snapshots
   - `prompts/registry.py` centralizes registry loading plus the confirm-only access guard
@@ -369,11 +375,11 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-1lk` to decide whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy now that `resattn-9fo` has declined a custom objective on the current tiny proxy.
-2. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
-3. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
-4. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
-5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
+1. Use `resattn-7cs` to run the first bounded primary-model Gemma oracle-alpha feasibility slice now that `resattn-2s0` has cleared model-backed reconstruction on the primary spine.
+2. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy.
+3. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
+4. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
+5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 
 ## Phase 1 Gate
 
