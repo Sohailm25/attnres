@@ -1850,3 +1850,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; rerunning the exact profile command reproduced the same JSON hash and completed in `3.36` seconds.
 - Next step: close `resattn-8h7`, freeze the one-token pooled claim at a family-conditioned mixed boundary, and preserve only `resattn-a1w` as the next tool-breakage follow-up.
+
+## [2026-03-18T14:48:23-0500] PRE-RUN: Gemma route-mode-aware one-token v5 pilot baseline
+- tmux session: `tb-v5-pilot`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v5 --split pilot --exploratory --device mps --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5 > results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v5`, `split=pilot`, `prompts=10`, `target_modes=capital(2/3/4), element(1/5/9), author(6/7/11/12)`, `moon_prompts=excluded`
+- What I'm testing: whether the route-mode-aware `v5` surface gives a cleaner baseline tool-breakage read by intended mode, not just by pooled family, on the primary Gemma spine.
+- Expected outcome: the pilot stays clearly positive overall and the new route-mode profile shows whether the remaining mixed story is concentrated in specific author or capital modes rather than hiding inside pooled family averages.
+- Expected duration: ~15-45 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the `v5` surface is intentionally narrower than `v4`, so any improvement could come from removing moon prompts rather than from the route-mode targeting itself; the write-up must keep that boundary explicit.
+- Implementation verified: YES - `tool_breakage_factual_recall_v5` passed registry and generator tests, the new baseline-profile helper passed unit tests, and the underlying Gemma baseline runner already produced the saved `v4` pilot and confirm artifacts with prompt-level checkpoints.
+- Status: LAUNCHING
+
+## [2026-03-18T15:03:00-0500] POST-RUN: Gemma route-mode-aware one-token v5 pilot baseline
+- Outcome: SUCCESS
+- Key metric: the `v5` pilot stayed clearly positive overall (`mean tuned KL delta = +2.8378`, final-position tuned KL delta `= +4.1369`) and every targeted route mode was positive on the primary tuned mean-KL metric.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/profile.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/checkpoints/prompt_results/tb5-pilot-010-413e56d141.json`
+- Anomalies: none; the exact-command rerun reused the checkpoint set in `10.16` seconds with an unchanged timestamp hash, and rerunning the saved-artifact profile command reproduced the same JSON hash in `3.59` seconds.
+- Next step: close `resattn-xfg`, then take `resattn-138` for the locked `v5` confirm baseline rather than returning to pooled `v4` reruns.

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import contextlib
+from dataclasses import asdict
 import io
 import unittest
 import warnings
@@ -36,6 +37,9 @@ class ToolBreakageTests(unittest.TestCase):
             summarize_tool_breakage_run,
             target_token_for_entry,
         )
+        from validation.tool_breakage_profile import (
+            build_tool_breakage_baseline_tag_profile_summary,
+        )
 
         cls.ToolBreakageLayerTrace = ToolBreakageLayerTrace
         cls.ToolBreakagePromptResult = ToolBreakagePromptResult
@@ -57,6 +61,9 @@ class ToolBreakageTests(unittest.TestCase):
         )
         cls.summarize_tool_breakage_run = staticmethod(summarize_tool_breakage_run)
         cls.target_token_for_entry = staticmethod(target_token_for_entry)
+        cls.build_tool_breakage_baseline_tag_profile_summary = staticmethod(
+            build_tool_breakage_baseline_tag_profile_summary
+        )
 
         with contextlib.redirect_stdout(io.StringIO()):
             with contextlib.redirect_stderr(io.StringIO()):
@@ -639,6 +646,215 @@ class ToolBreakageTests(unittest.TestCase):
             1.0,
             control_summary.fraction_tuned_routed_increases_target_rank_range_vs_arm_prompts,
         )
+
+    def test_build_tool_breakage_baseline_tag_profile_summary_groups_by_prefix(
+        self,
+    ) -> None:
+        def make_trace(
+            *,
+            layer: int,
+            tuned_original_kl: float,
+            tuned_routed_kl: float,
+            tuned_original_final_kl: float,
+            tuned_routed_final_kl: float,
+            tuned_original_rank: int,
+            tuned_routed_rank: int,
+        ) -> object:
+            return self.ToolBreakageLayerTrace(
+                layer=layer,
+                raw_original_mean_kl_to_final=0.0,
+                raw_routed_mean_kl_to_final=0.0,
+                tuned_original_mean_kl_to_final=tuned_original_kl,
+                tuned_routed_mean_kl_to_final=tuned_routed_kl,
+                raw_original_mean_top1_agreement=0.0,
+                raw_routed_mean_top1_agreement=0.0,
+                tuned_original_mean_top1_agreement=0.5,
+                tuned_routed_mean_top1_agreement=0.25,
+                raw_original_final_position_kl_to_final=0.0,
+                raw_routed_final_position_kl_to_final=0.0,
+                tuned_original_final_position_kl_to_final=tuned_original_final_kl,
+                tuned_routed_final_position_kl_to_final=tuned_routed_final_kl,
+                raw_original_final_position_top1_agreement=0.0,
+                raw_routed_final_position_top1_agreement=0.0,
+                tuned_original_final_position_top1_agreement=0.5,
+                tuned_routed_final_position_top1_agreement=0.25,
+                raw_original_final_position_target_probability=0.0,
+                raw_routed_final_position_target_probability=0.0,
+                tuned_original_final_position_target_probability=0.25,
+                tuned_routed_final_position_target_probability=0.1,
+                raw_original_final_position_target_rank=0,
+                raw_routed_final_position_target_rank=0,
+                tuned_original_final_position_target_rank=tuned_original_rank,
+                tuned_routed_final_position_target_rank=tuned_routed_rank,
+            )
+
+        prompt_results = [
+            asdict(
+                self.ToolBreakagePromptResult(
+                    prompt_id="tb5-pilot-001",
+                    prompt="On most maps, the capital of Canada appears as",
+                    split="pilot",
+                    target_text="Ottawa",
+                    target_token_id=1,
+                    target_token_text=" Ottawa",
+                    source_labels=("embed", "0_attn_out"),
+                    oracle_alpha=(0.4, 0.6),
+                    raw_original_non_monotonic=False,
+                    raw_routed_non_monotonic=False,
+                    tuned_original_non_monotonic=False,
+                    tuned_routed_non_monotonic=True,
+                    layer_traces=(
+                        make_trace(
+                            layer=0,
+                            tuned_original_kl=1.0,
+                            tuned_routed_kl=3.0,
+                            tuned_original_final_kl=2.0,
+                            tuned_routed_final_kl=4.0,
+                            tuned_original_rank=1,
+                            tuned_routed_rank=4,
+                        ),
+                    ),
+                )
+            ),
+            asdict(
+                self.ToolBreakagePromptResult(
+                    prompt_id="tb5-pilot-002",
+                    prompt="The capital city of Spain is",
+                    split="pilot",
+                    target_text="Madrid",
+                    target_token_id=2,
+                    target_token_text=" Madrid",
+                    source_labels=("embed", "0_attn_out"),
+                    oracle_alpha=(0.5, 0.5),
+                    raw_original_non_monotonic=False,
+                    raw_routed_non_monotonic=False,
+                    tuned_original_non_monotonic=False,
+                    tuned_routed_non_monotonic=False,
+                    layer_traces=(
+                        make_trace(
+                            layer=0,
+                            tuned_original_kl=1.5,
+                            tuned_routed_kl=2.5,
+                            tuned_original_final_kl=2.5,
+                            tuned_routed_final_kl=3.5,
+                            tuned_original_rank=2,
+                            tuned_routed_rank=2,
+                        ),
+                    ),
+                )
+            ),
+            asdict(
+                self.ToolBreakagePromptResult(
+                    prompt_id="tb5-pilot-007",
+                    prompt="Literature students learn that Beloved was written by",
+                    split="pilot",
+                    target_text="Morrison",
+                    target_token_id=3,
+                    target_token_text=" Morrison",
+                    source_labels=("embed", "0_attn_out"),
+                    oracle_alpha=(0.3, 0.7),
+                    raw_original_non_monotonic=False,
+                    raw_routed_non_monotonic=False,
+                    tuned_original_non_monotonic=False,
+                    tuned_routed_non_monotonic=True,
+                    layer_traces=(
+                        make_trace(
+                            layer=0,
+                            tuned_original_kl=0.5,
+                            tuned_routed_kl=1.0,
+                            tuned_original_final_kl=1.0,
+                            tuned_routed_final_kl=1.5,
+                            tuned_original_rank=1,
+                            tuned_routed_rank=3,
+                        ),
+                    ),
+                )
+            ),
+        ]
+        prompt_tags_by_id = {
+            "tb5-pilot-001": (
+                "subcategory_capital_fact",
+                "route_mode_capital_cluster_2",
+            ),
+            "tb5-pilot-002": (
+                "subcategory_capital_fact",
+                "route_mode_capital_cluster_3",
+            ),
+            "tb5-pilot-007": (
+                "subcategory_author_fact",
+                "route_mode_author_cluster_6",
+            ),
+        }
+
+        summary = self.build_tool_breakage_baseline_tag_profile_summary(
+            prompt_results=prompt_results,
+            prompt_tags_by_id=prompt_tags_by_id,
+        )
+
+        self.assertEqual(3, summary["num_prompts"])
+        self.assertEqual(
+            {"subcategory_", "route_mode_"},
+            set(summary["group_summaries"].keys()),
+        )
+        capital_family = summary["group_summaries"]["subcategory_"]["by_tag"][
+            "subcategory_capital_fact"
+        ]
+        self.assertEqual(2, capital_family["prompt_count"])
+        self.assertAlmostEqual(
+            1.5,
+            capital_family["mean_tuned_kl_increase_under_routing"],
+        )
+        self.assertAlmostEqual(
+            0.5,
+            capital_family["fraction_tuned_routing_worsens_final_target_rank_prompts"],
+        )
+        capital_mode = summary["group_summaries"]["route_mode_"]["by_tag"][
+            "route_mode_capital_cluster_2"
+        ]
+        self.assertEqual(1, capital_mode["prompt_count"])
+        self.assertAlmostEqual(
+            2.0,
+            capital_mode["mean_tuned_kl_increase_under_routing"],
+        )
+        author_mode = summary["group_summaries"]["route_mode_"]["by_tag"][
+            "route_mode_author_cluster_6"
+        ]
+        self.assertAlmostEqual(
+            1.0,
+            author_mode["fraction_tuned_routing_worsens_final_target_rank_prompts"],
+        )
+
+    def test_build_tool_breakage_baseline_tag_profile_summary_requires_single_tag_per_prefix(
+        self,
+    ) -> None:
+        with self.assertRaisesRegex(ValueError, "must define exactly one route_mode_"):
+            self.build_tool_breakage_baseline_tag_profile_summary(
+                prompt_results=(
+                    {
+                        "prompt_id": "tb5-pilot-001",
+                        "prompt": "Prompt",
+                        "split": "pilot",
+                        "target_text": "answer",
+                        "layer_traces": [
+                            {
+                                "tuned_original_mean_kl_to_final": 1.0,
+                                "tuned_routed_mean_kl_to_final": 2.0,
+                                "tuned_original_final_position_kl_to_final": 1.0,
+                                "tuned_routed_final_position_kl_to_final": 2.0,
+                                "tuned_original_final_position_target_rank": 1,
+                                "tuned_routed_final_position_target_rank": 2,
+                            }
+                        ],
+                    },
+                ),
+                prompt_tags_by_id={
+                    "tb5-pilot-001": (
+                        "subcategory_capital_fact",
+                        "route_mode_capital_cluster_2",
+                        "route_mode_capital_cluster_3",
+                    )
+                },
+            )
 
 
 if __name__ == "__main__":

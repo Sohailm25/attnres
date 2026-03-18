@@ -108,6 +108,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 one-token matched-family family-conditioned donor-arm profile v4 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.md` |
 | Gemma-2 one-token factual route-mode coverage v4 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-coverage-v4.md` |
 | Gemma-2 route-mode-aware one-token factual surface v5 | tool_breakage | planning | `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-surface-v5.md` |
+| Gemma-2 route-mode-aware one-token pilot v5 | tool_breakage | pass | `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5.md` |
 
 ## Training Dynamics
 

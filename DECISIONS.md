@@ -1168,3 +1168,27 @@
   - `resattn-q38` can close once the route-mode surface memo lands.
   - `resattn-xfg` is now the next bounded tool-breakage execution issue: run the first pilot on `tool_breakage_factual_recall_v5` and report results by intended route mode as well as by family.
   - `resattn-a1w` remains the moon sidecar, and future tool-breakage reruns should not fall back to pooled `v4` analysis first.
+
+## [2026-03-18T15:03:00-0500] DECISION: Close `resattn-xfg` as a positive narrowing result and move the active tool-breakage surface to `v5`
+
+- Trigger: `resattn-xfg` ran the first bounded Gemma routed-versus-original pilot on `tool_breakage_factual_recall_v5` and summarized it by intended route-mode tags as well as by family.
+- Decision: close `resattn-xfg` as a real positive narrowing result. Treat `tool_breakage_factual_recall_v5` as the active main surface for the factual tool-breakage bridge. Do not fall back to pooled `v4` reruns. The next honest step is the locked confirm baseline on `v5`.
+- Rationale:
+  - the narrowed pilot stayed clearly positive overall:
+    - mean tuned KL increase under routing `= +2.8378`
+    - final-position mean tuned KL increase under routing `= +4.1369`
+  - the family-conditioned read is clean on the narrowed bridge families:
+    - authors `= +3.2970`
+    - capitals `= +2.5546`
+    - elements `= +2.5088`
+  - the route-mode read is the key payoff:
+    - all `10 / 10` targeted pilot modes are positive on the primary tuned mean-KL metric
+    - rank-instability is no longer hidden inside pooled families; it concentrates in author `clusters 6 / 11`, capital `clusters 3 / 4`, and element `cluster 9`
+  - the remaining interpretive boundary stays explicit:
+    - this surface excludes moon prompts by design
+    - the singleton author outlier remains excluded
+    - so this is a clean positive result for the narrowed bridge, not a broad reopening of the full factual tool-breakage lane
+- Impact:
+  - `resattn-xfg` can close once the pilot artifact lands.
+  - `resattn-138` is now the next bounded tool-breakage execution issue: run the locked confirm baseline on `tool_breakage_factual_recall_v5`.
+  - `resattn-a1w` remains a moon-only sidecar rather than the main next move.

@@ -335,6 +335,26 @@
       - the singleton author outlier (`cluster 10`) stays excluded until a later stability check justifies treating it as a real mode
     - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-surface-v5.md` is the design artifact for this new surface
     - interpretation: if the tool-breakage lane resumes, the next honest execution step is to run `tool_breakage_factual_recall_v5` directly rather than squeezing more pooled analysis out of `v4`
+  - `resattn-xfg` now lands the first bounded pilot on that route-mode-aware `v5` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json` is the baseline pilot summary
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/profile.json` is the saved-artifact read by route mode and family
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5.md` is the pilot write-up
+    - the pilot stays clearly positive overall:
+      - mean tuned KL increase under routing `= +2.8378`
+      - final-position mean tuned KL increase under routing `= +4.1369`
+      - tuned final-target-rank worsening fraction `= 0.5`
+      - tuned target-rank-range increase fraction `= 0.7`
+    - the narrowed family read is clean:
+      - authors `= +3.2970`
+      - capitals `= +2.5546`
+      - elements `= +2.5088`
+    - the route-mode read is the important new discriminator:
+      - all `10 / 10` targeted pilot modes are positive on tuned mean KL increase under routing
+      - rank-instability is concentrated in author `clusters 6 / 11`, capital `clusters 3 / 4`, and element `cluster 9`
+    - resume durability is verified:
+      - the exact-command rerun reused the checkpoint set in `10.16` seconds with an unchanged timestamp hash
+      - rerunning the saved-artifact profile command reproduced the same JSON hash in `3.59` seconds
+    - interpretation: `v5` is now the active main surface for the factual tool-breakage bridge. The next honest step is a locked confirm baseline on `v5`, not a return to pooled `v4` reruns
   - `resattn-dat` now bridges that factual-recall structure back into the bounded Gemma tool-breakage lane without another model run:
     - `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json` and `.md` compare the saved factual-recall raw-source cluster families against the existing Gemma factual-recall tool-breakage prompts using the saved prompt-level `oracle_alpha` vectors from the pilot and confirm baseline artifacts
     - the bridge result is clean for the overlapping families:
@@ -956,7 +976,7 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-xfg` as the next bounded tool-breakage execution issue: run the first Gemma pilot on `tool_breakage_factual_recall_v5` and report results by intended route-mode tags as well as by family.
+1. Take `resattn-138` as the next bounded tool-breakage execution issue: run the locked Gemma confirm baseline on `tool_breakage_factual_recall_v5` and keep the write-up stratified by intended route mode as well as by family.
 2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
@@ -970,8 +990,8 @@
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
 5. Keep tool-breakage as a bounded extension lane:
-   - the one-token `v4` surface improved the family story, but the authoritative boundary is still family-conditioned mixed and was visibly mode-undercovered
-   - if tool-breakage resumes beyond `resattn-xfg`, do not return to pooled reruns first
+   - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
+   - if tool-breakage resumes beyond `resattn-138`, do not return to pooled reruns first
 6. Keep safety as the next extension lane after the mode-aware factual bridge pass:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse

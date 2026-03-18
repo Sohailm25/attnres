@@ -1678,3 +1678,25 @@ Suggested entry format:
   - `v5` main collection prompt counts `= 10` pilot / `20` confirm
   - robust targeted modes `= 10`
   - moon modes in main collection `= 0`
+## [2026-03-18T15:03:00-0500] The Narrowed Route-Mode Bridge Has Real Life
+- Stage: tool-breakage pilot
+- Feel of the Experiment: This is the kind of positive result I trust more than a flashy pooled improvement. The narrowed `v5` surface did not just stay positive overall; it exposed a sharper route-mode split inside the same healthy pilot.
+- Working Hypotheses:
+  - `v5` should now be treated as the active factual tool-breakage bridge surface.
+  - The next useful question is confirm survival on `v5`, not whether to reopen `v4`.
+- Hunches and Guesses:
+  - The main confirm risk is not broad failure. It is that a few author and capital modes may dominate the rank-instability diagnostics.
+  - Moon prompts are now more likely to stay a sidecar than to re-enter the main bridge soon.
+- Predictions:
+  - A locked `v5` confirm run will probably stay positive on mean tuned KL while keeping the mixed signal concentrated in the same subset of modes.
+  - If confirm fails, the failure will be mode-specific and therefore more informative than any old pooled `v4` rerun.
+- Surprises and Tensions:
+  - Authors are the strongest family on the narrowed pilot even though author-mode heterogeneity is still the most jagged.
+  - All targeted modes are positive on tuned mean KL, but only half avoid final target-rank worsening; that is exactly the kind of mixed-but-structured read the old family summaries could not isolate.
+- Confidence:
+  - high that `xfg` should close positive
+  - medium-high that `138` is the right next step over `a1w`
+- Interesting facts:
+  - overall `v5` pilot mean tuned KL delta `= +2.8378`
+  - authors `= +3.2970`
+  - route modes with final-rank worsening `= 5 / 10`

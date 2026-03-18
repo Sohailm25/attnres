@@ -1,0 +1,362 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v5",
+  "split": "pilot",
+  "exploratory": true,
+  "summary_path": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json",
+  "profile_summary": {
+    "num_prompts": 10,
+    "group_tag_prefixes": [
+      "subcategory_",
+      "route_mode_"
+    ],
+    "prompt_profiles": [
+      {
+        "prompt_id": "tb5-pilot-001",
+        "prompt": "On most maps, the capital of Canada appears as",
+        "split": "pilot",
+        "target_text": "Ottawa",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_2"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.6735275990795344,
+        "mean_tuned_final_position_kl_increase_under_routing": 5.456473551708489,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 1.0,
+        "target_rank_range_delta_under_routing": 91503.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-pilot-002",
+        "prompt": "The capital city of Spain is",
+        "split": "pilot",
+        "target_text": "Madrid",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_3"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.394917459090021,
+        "mean_tuned_final_position_kl_increase_under_routing": 3.005794046778017,
+        "final_target_rank_delta_under_routing": 101.0,
+        "best_target_rank_delta_under_routing": 101.0,
+        "target_rank_range_delta_under_routing": 93436.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-pilot-003",
+        "prompt": "In a geography quiz, the capital of Japan would be",
+        "split": "pilot",
+        "target_text": "Tokyo",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_capital_fact",
+          "route_mode_": "route_mode_capital_cluster_4"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.5953546504153144,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.248706285161181,
+        "final_target_rank_delta_under_routing": 5.0,
+        "best_target_rank_delta_under_routing": 5.0,
+        "target_rank_range_delta_under_routing": 57840.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-pilot-004",
+        "prompt": "The chemical symbol for copper is",
+        "split": "pilot",
+        "target_text": "Cu",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_1"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.467766681490432,
+        "mean_tuned_final_position_kl_increase_under_routing": 2.732446442394016,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 0.0,
+        "target_rank_range_delta_under_routing": -73233.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": false
+      },
+      {
+        "prompt_id": "tb5-pilot-005",
+        "prompt": "In the periodic table, silver is abbreviated as",
+        "split": "pilot",
+        "target_text": "Ag",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_5"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.442605231116221,
+        "mean_tuned_final_position_kl_increase_under_routing": 3.8424068435012417,
+        "final_target_rank_delta_under_routing": 0.0,
+        "best_target_rank_delta_under_routing": 0.0,
+        "target_rank_range_delta_under_routing": -34523.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": false
+      },
+      {
+        "prompt_id": "tb5-pilot-006",
+        "prompt": "Chemistry notes write the symbol for chlorine as",
+        "split": "pilot",
+        "target_text": "Cl",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_element_symbol",
+          "route_mode_": "route_mode_element_cluster_9"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.6161284561410585,
+        "mean_tuned_final_position_kl_increase_under_routing": 3.1733992885117632,
+        "final_target_rank_delta_under_routing": 4.0,
+        "best_target_rank_delta_under_routing": 4.0,
+        "target_rank_range_delta_under_routing": -116290.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": false
+      },
+      {
+        "prompt_id": "tb5-pilot-007",
+        "prompt": "Literature students learn that Beloved was written by",
+        "split": "pilot",
+        "target_text": "Morrison",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_6"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.84929213297325,
+        "mean_tuned_final_position_kl_increase_under_routing": 6.3046351583011875,
+        "final_target_rank_delta_under_routing": 126.0,
+        "best_target_rank_delta_under_routing": 48.0,
+        "target_rank_range_delta_under_routing": 239974.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-pilot-008",
+        "prompt": "Most library catalogs list Moby-Dick under",
+        "split": "pilot",
+        "target_text": "Melville",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_7"
+        },
+        "mean_tuned_kl_increase_under_routing": 4.165195721255329,
+        "mean_tuned_final_position_kl_increase_under_routing": 4.088212864348092,
+        "final_target_rank_delta_under_routing": -7.0,
+        "best_target_rank_delta_under_routing": -7.0,
+        "target_rank_range_delta_under_routing": 123792.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-pilot-009",
+        "prompt": "The novel Invisible Man was written by",
+        "split": "pilot",
+        "target_text": "Ellison",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_11"
+        },
+        "mean_tuned_kl_increase_under_routing": 4.10846516629681,
+        "mean_tuned_final_position_kl_increase_under_routing": 6.421417984907748,
+        "final_target_rank_delta_under_routing": 68.0,
+        "best_target_rank_delta_under_routing": 77.0,
+        "target_rank_range_delta_under_routing": 169228.0,
+        "tuned_routing_worsens_final_target_rank": true,
+        "tuned_routing_worsens_best_target_rank": true,
+        "tuned_routing_increases_target_rank_range": true
+      },
+      {
+        "prompt_id": "tb5-pilot-010",
+        "prompt": "The author of Pride and Prejudice is",
+        "split": "pilot",
+        "target_text": "Austen",
+        "tags_by_prefix": {
+          "subcategory_": "subcategory_author_fact",
+          "route_mode_": "route_mode_author_cluster_12"
+        },
+        "mean_tuned_kl_increase_under_routing": 2.0651114197456852,
+        "mean_tuned_final_position_kl_increase_under_routing": 4.095559445370991,
+        "final_target_rank_delta_under_routing": -104.0,
+        "best_target_rank_delta_under_routing": -104.0,
+        "target_rank_range_delta_under_routing": 65832.0,
+        "tuned_routing_worsens_final_target_rank": false,
+        "tuned_routing_worsens_best_target_rank": false,
+        "tuned_routing_increases_target_rank_range": true
+      }
+    ],
+    "group_summaries": {
+      "subcategory_": {
+        "by_tag": {
+          "subcategory_author_fact": {
+            "prompt_count": 4,
+            "mean_tuned_kl_increase_under_routing": 3.2970161100677684,
+            "mean_tuned_final_position_kl_increase_under_routing": 5.227456363232005,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.5,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 20.75,
+            "mean_best_target_rank_delta_under_routing": 3.5,
+            "mean_target_rank_range_delta_under_routing": 149706.5
+          },
+          "subcategory_capital_fact": {
+            "prompt_count": 3,
+            "mean_tuned_kl_increase_under_routing": 2.5545999028616233,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.570324627882562,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.6666666666666666,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 35.333333333333336,
+            "mean_best_target_rank_delta_under_routing": 35.666666666666664,
+            "mean_target_rank_range_delta_under_routing": 80926.33333333333
+          },
+          "subcategory_element_symbol": {
+            "prompt_count": 3,
+            "mean_tuned_kl_increase_under_routing": 2.508833456249237,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.2494175248023405,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.3333333333333333,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.3333333333333333,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.0,
+            "mean_final_target_rank_delta_under_routing": 1.3333333333333333,
+            "mean_best_target_rank_delta_under_routing": 1.3333333333333333,
+            "mean_target_rank_range_delta_under_routing": -74682.0
+          }
+        }
+      },
+      "route_mode_": {
+        "by_tag": {
+          "route_mode_author_cluster_11": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 4.10846516629681,
+            "mean_tuned_final_position_kl_increase_under_routing": 6.421417984907748,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 68.0,
+            "mean_best_target_rank_delta_under_routing": 77.0,
+            "mean_target_rank_range_delta_under_routing": 169228.0
+          },
+          "route_mode_author_cluster_12": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.0651114197456852,
+            "mean_tuned_final_position_kl_increase_under_routing": 4.095559445370991,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": -104.0,
+            "mean_best_target_rank_delta_under_routing": -104.0,
+            "mean_target_rank_range_delta_under_routing": 65832.0
+          },
+          "route_mode_author_cluster_6": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.84929213297325,
+            "mean_tuned_final_position_kl_increase_under_routing": 6.3046351583011875,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 126.0,
+            "mean_best_target_rank_delta_under_routing": 48.0,
+            "mean_target_rank_range_delta_under_routing": 239974.0
+          },
+          "route_mode_author_cluster_7": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 4.165195721255329,
+            "mean_tuned_final_position_kl_increase_under_routing": 4.088212864348092,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": -7.0,
+            "mean_best_target_rank_delta_under_routing": -7.0,
+            "mean_target_rank_range_delta_under_routing": 123792.0
+          },
+          "route_mode_capital_cluster_2": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.6735275990795344,
+            "mean_tuned_final_position_kl_increase_under_routing": 5.456473551708489,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 0.0,
+            "mean_best_target_rank_delta_under_routing": 1.0,
+            "mean_target_rank_range_delta_under_routing": 91503.0
+          },
+          "route_mode_capital_cluster_3": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.394917459090021,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.005794046778017,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 101.0,
+            "mean_best_target_rank_delta_under_routing": 101.0,
+            "mean_target_rank_range_delta_under_routing": 93436.0
+          },
+          "route_mode_capital_cluster_4": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.5953546504153144,
+            "mean_tuned_final_position_kl_increase_under_routing": 2.248706285161181,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 1.0,
+            "mean_final_target_rank_delta_under_routing": 5.0,
+            "mean_best_target_rank_delta_under_routing": 5.0,
+            "mean_target_rank_range_delta_under_routing": 57840.0
+          },
+          "route_mode_element_cluster_1": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.467766681490432,
+            "mean_tuned_final_position_kl_increase_under_routing": 2.732446442394016,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.0,
+            "mean_final_target_rank_delta_under_routing": 0.0,
+            "mean_best_target_rank_delta_under_routing": 0.0,
+            "mean_target_rank_range_delta_under_routing": -73233.0
+          },
+          "route_mode_element_cluster_5": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.442605231116221,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.8424068435012417,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.0,
+            "mean_final_target_rank_delta_under_routing": 0.0,
+            "mean_best_target_rank_delta_under_routing": 0.0,
+            "mean_target_rank_range_delta_under_routing": -34523.0
+          },
+          "route_mode_element_cluster_9": {
+            "prompt_count": 1,
+            "mean_tuned_kl_increase_under_routing": 2.6161284561410585,
+            "mean_tuned_final_position_kl_increase_under_routing": 3.1733992885117632,
+            "positive_prompt_fraction_tuned_kl_increase_under_routing": 1.0,
+            "fraction_tuned_routing_worsens_final_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_worsens_best_target_rank_prompts": 1.0,
+            "fraction_tuned_routing_increases_target_rank_range_prompts": 0.0,
+            "mean_final_target_rank_delta_under_routing": 4.0,
+            "mean_best_target_rank_delta_under_routing": 4.0,
+            "mean_target_rank_range_delta_under_routing": -116290.0
+          }
+        }
+      }
+    }
+  }
+}
