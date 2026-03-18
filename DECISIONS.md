@@ -671,3 +671,15 @@
   - matched regularization
   The only honest reopen conditions were already recorded in `resattn-9fo`, and none of them is currently a concrete executable path in the repo. Reopening now would therefore be a speculative new build rather than a disciplined continuation.
 - Impact: the current Figure 8 artifacts remain descriptive-only for strong-claim purposes. Repo priority moves to `resattn-mo5`, with `resattn-b4q` and `resattn-9co` still secondary. The Figure 8 lane should stay frozen until a materially more faithful proxy path is concrete enough to execute immediately.
+
+## [2026-03-18T02:31:00-0500] DECISION: Close `resattn-mo5` as a bounded negative on the broadened aligned-Gemma surface
+
+- Trigger: `resattn-mo5` finished the broadened aligned-Gemma validation and mediator-conditioned routing pass on `safety_refusal_surface_v2`.
+- Decision: close `resattn-mo5` on a negative answer to its main question rather than keeping the issue open for more prompt tuning.
+- Rationale: the broadened surface was strong enough to test the claim:
+  - refusal localization stayed at layer `22`
+  - harmfulness localization stayed clean enough to use at layer `18`
+  - refusal and harmfulness confirm pair accuracy both stayed `1.0`
+  - but the mediator-active confirm subset still collapsed exactly to the `6` outright refusal prompts, with no active `harmful_context` or `benign` prompts
+  The intervention-conditioned trajectories remained real, so this is not a broken-run artifact. It is a substantive negative result for the “softened prompt surface reveals a non-trivial mediator-active subset” hypothesis.
+- Impact: stronger safety-routing language stays blocked. The next safety follow-up is now `resattn-ac2`, which makes the behavior validator tag-aware for refusal-style non-refusal prompts before any future safety-surface broadening. Overall repo priority moves to `resattn-b4q`.
