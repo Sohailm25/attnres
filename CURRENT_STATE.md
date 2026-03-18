@@ -1111,13 +1111,29 @@
       - old prompt checkpoints missing `tags` / `perturbations` are recomputed in place
       - an exact-command rerun against the completed output directory reuses the refreshed checkpoints with unchanged sample hash and completes in `10.07s`
     - interpretation: the router-training lane is no longer blocked by missing pilot supervision; the next honest Phase 6 move is the prereg pilot router comparison (`h_1[t]` versus `h_4[t]`), not more export plumbing
+  - `resattn-m6r` now lands that first pilot router comparison on the saved Gemma export:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_pilot.py` fit the first pilot-only 2-layer router MLP against the saved sequence-level `final_alpha` targets
+    - the held-out pilot comparison used:
+      - candidate inputs `h_1[t]` and `h_4[t]`
+      - stratified `192 / 64` train/eval pilot split
+      - raw-alpha MSE objective
+      - `mean_token_logits_then_softmax` sequence aggregation
+    - result:
+      - `h_4[t]` narrowly beat `h_1[t]` on the held-out pilot metrics, but both failed the prereg readiness gate
+      - `h_1[t]`: `R^2 = -0.0599`, mean JS `= 0.1582`
+      - `h_4[t]`: `R^2 = -0.0524`, mean JS `= 0.1572`
+    - the strongest diagnostic is collapse to a near-static mixture:
+      - mean predicted entropy `≈ 3.969` for both inputs versus mean oracle entropy `= 3.514`
+      - with `53` sources, the pilot router is predicting an almost-uniform held-out mixture rather than useful prompt-specific routing
+    - interpretation: Phase 6 is no longer blocked by export, but it is still blocked by pilot modeling design; do not lock the input choice, do not start confirmatory router training, and do not start `w_l`-analog geometry yet
+    - rerun note: a compact-summary rerun on MPS moved the exact metrics slightly while preserving the same qualitative result, which further weakens any attempt to treat the tiny `h_4[t]` win as a lock
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
-2. Start Phase 6 with the smallest honest model-training slice:
-   - the saved `registry_v5` pilot export now persists token ids plus per-token `h_1[t]` and `h_4[t]` joined to sequence-level `final_alpha`
-   - the next core implementation move is `resattn-m6r`: pilot router distillation on that saved dataset, with the prereg `h_1[t]` versus `h_4[t]` comparison logged before any confirmatory training
+2. Keep the Phase 6 lane at pilot-stage modeling design rather than moving to confirmatory router training:
+   - the saved `registry_v5` pilot export is now live and the first router pilot is landed
+   - the next core implementation move is `resattn-4hj`: compare target parameterizations on the same saved pilot export before trying to lock either the input choice or the geometry lane
 3. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
 4. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

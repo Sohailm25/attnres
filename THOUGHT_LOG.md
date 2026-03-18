@@ -1877,3 +1877,26 @@ Suggested entry format:
   - full pilot export size: `256` prompts, `4013` total tokens
   - prompt checkpoint sample hash stayed unchanged after exact-command rerun: `6dd29ee0a297d5c085c4e895aa4a64a624aa1d41`
   - every exported prompt still carries `prompt_paraphrase` metadata, which will matter for future pilot-side robustness checks
+## [2026-03-18T16:32:00-0500] The First Router Pilot Failed In A Useful Way
+- Stage: router-distillation pilot
+- Feel of the Experiment: This is disappointing in the right way. The router lane is no longer blocked by missing data, and the first actual fit immediately exposed a modeling problem instead of giving a fake maybe-positive. That is valuable.
+- Working Hypotheses:
+  - The main blocker is not `h_1[t]` versus `h_4[t]` by itself.
+  - The current raw-alpha MSE target plus `mean_token_logits_then_softmax` aggregation is too collapse-prone on these diffuse `53`-source targets.
+- Hunches and Guesses:
+  - A target-space redesign is the right next lever before an aggregation sweep.
+  - The tiny `h_4[t]` win is probably real only in the narrow sense that early context is not worse than `h_1[t]`, but it is nowhere near strong enough to lock.
+- Predictions:
+  - A logit-space or compressed-target pilot will move more than another blind `h_1[t]` versus `h_4[t]` rerun.
+  - If the next pilot still predicts almost-uniform mixtures, the real blocker becomes aggregation or router output structure, not export or hidden-state choice.
+- Surprises and Tensions:
+  - The router barely trains at all in the useful sense: best epoch is `1` or `2`, and both held-out predictions stay near the uniform entropy ceiling.
+  - `h_4[t]` wins, but only by a trivial amount, so the run answers the input question only negatively.
+- Confidence:
+  - high that `m6r` should close as a negative pilot
+  - medium-high that `4hj` is the right next Phase 6 step
+- Interesting facts:
+  - `h_1[t]` held-out `R^2 = -0.0599`
+  - `h_4[t]` held-out `R^2 = -0.0524`
+  - mean predicted entropy `≈ 3.969` for both inputs versus mean oracle entropy `= 3.514`
+  - rerunning after compacting the saved summary artifact changed the exact values slightly on MPS but did not change the qualitative result

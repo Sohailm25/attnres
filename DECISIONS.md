@@ -1387,3 +1387,23 @@
   - `resattn-1ot` can close once the artifact lands.
   - `resattn-m6r` is now the next core Phase 6 issue.
   - the truthful router-training boundary moves from “missing data” to “first pilot model comparison not yet run.”
+
+## [2026-03-18T16:32:00-0500] DECISION: Close `resattn-m6r` as a pilot modeling failure, not an input-choice lock
+
+- Trigger: `resattn-m6r` ran the first pilot-only Gemma router-distillation comparison on the saved per-token export using the prereg 2-layer MLP shape, raw-alpha MSE, and `mean_token_logits_then_softmax` aggregation.
+- Decision: close `resattn-m6r` as a landed negative result. Do not lock `h_1[t]` or `h_4[t]` yet. Do not move to confirmatory router training or `w_l`-analog geometry yet. Treat the next blocker as pilot-stage modeling design on the saved export.
+- Rationale:
+  - both candidate inputs failed the held-out pilot gate:
+    - `h_1[t]`: `R^2 = -0.0599`, mean JS `= 0.1582`
+    - `h_4[t]`: `R^2 = -0.0524`, mean JS `= 0.1572`
+  - `h_4[t]` is only a tiny improvement over `h_1[t]`, which is not strong enough to justify an input lock
+  - the predicted mixtures collapse almost completely toward uniform:
+    - mean predicted entropy `≈ 3.969` for both inputs
+    - mean oracle entropy `= 3.514`
+    - with `53` sources, this is much closer to a static average mixture than to useful prompt-specific routing
+  - a rerun after compacting the saved summary artifact moved the exact numbers slightly on MPS while preserving the same qualitative failure, which further weakens any attempt to overread the tiny `h_4[t]` win
+  - that pattern points more strongly at target/objective/aggregation mismatch than at a simple `h_1[t]` versus `h_4[t]` input failure
+- Impact:
+  - `resattn-m6r` can close once the artifact lands.
+  - `resattn-4hj` is now the next honest Phase 6 issue.
+  - the repo should treat export as solved and keep the router lane in pilot redesign mode until a fit clears the readiness target.

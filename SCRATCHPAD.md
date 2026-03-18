@@ -328,6 +328,31 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: one manifest inspection accidentally used bare `python`; reran with `.venv/bin/python` and confirmed the saved manifest plus prompt checkpoints carry `tags` and `perturbations`
 - Next step: start the first Phase 6 pilot router fit on the saved dataset, comparing `h_1[t]` against `h_4[t]`
 
+## [2026-03-18T16:24:00-0500] PRE-RUN: Gemma router-distillation pilot comparison v1
+- tmux session: N/A
+- Script: `scripts/run_router_distillation_pilot.py`
+- Command: `/usr/bin/time -p .venv/bin/python scripts/run_router_distillation_pilot.py --export-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-v1 --candidate-input-fields 'h_1[t]' 'h_4[t]' --aggregation mean_token_logits_then_softmax --eval-fraction 0.25 --hidden-dim 256 --learning-rate 0.001 --weight-decay 0.0001 --batch-size 16 --max-epochs 300 --patience 40 --seed 11 --device mps > results/router_training/20260318-gemma2-router-distillation-pilot-v1/run.log 2>&1`
+- Config: `split=pilot only`, `train/eval=stratified 192/64`, `objective=MSE on sequence alpha`, `primary_metric=eval R^2`, `secondary_metric=eval mean JS`
+- What I'm testing: whether the first prereg pilot router on the saved Gemma export clears useful held-out alpha recovery at all, and whether `h_1[t]` or `h_4[t]` is the better input to lock before confirmatory training.
+- Expected outcome: one input surface wins the held-out pilot comparison cleanly enough to justify the next Phase 6 slice; the strongest optimistic case is clearing the prereg readiness target `R^2 > 0.5`.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/router_training/20260318-gemma2-router-distillation-pilot-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: sequence aggregation could dominate the result and make both inputs look worse than they really are, which would mean the next issue is an aggregation/model-design follow-up rather than an input-choice follow-up.
+- Implementation verified: YES - `tests.test_router_distillation` is green on the synthetic held-out comparison surface, and the full unit suite plus pre-commit are already green on trunk before this run.
+- Status: LAUNCHING
+
+## [2026-03-18T16:32:11-0500] POST-RUN: Gemma router-distillation pilot comparison v1
+- Command: `/usr/bin/time -p .venv/bin/python scripts/run_router_distillation_pilot.py --export-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 --output-dir results/router_training/20260318-gemma2-router-distillation-pilot-v1 --candidate-input-fields 'h_1[t]' 'h_4[t]' --aggregation mean_token_logits_then_softmax --eval-fraction 0.25 --hidden-dim 256 --learning-rate 0.001 --weight-decay 0.0001 --batch-size 16 --max-epochs 300 --patience 40 --seed 11 --device mps > results/router_training/20260318-gemma2-router-distillation-pilot-v1/run.log 2>&1`
+- Outcome: FAILURE
+- Key metric: both pilot inputs failed the prereg readiness gate; `h_4[t]` narrowly won with held-out `R^2 = -0.0524` versus `-0.0599` for `h_1[t]`
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-pilot-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-pilot-v1.md`
+- Latest checkpoint: none
+- Anomalies: predicted mixtures collapsed toward near-uniform entropy (`≈ 3.969`) for both inputs despite mean oracle entropy `= 3.514`, and a compact-summary rerun on MPS shifted the exact metrics slightly while preserving the same qualitative failure
+- Next step: compare target parameterizations on the same saved pilot export before locking the input choice or attempting confirmatory router training
+
 ## [2026-03-17T16:25:00-0500] PRE-RUN: compact-subword capacity-first Figure 8 proxy follow-up
 - tmux session: `attnres-111-capacity`
 - Script: `scripts/run_attnres_proxy_viability.py`
