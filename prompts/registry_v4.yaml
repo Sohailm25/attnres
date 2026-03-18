@@ -1210,6 +1210,140 @@ collections:
         target_text: cheetah
         tags: [factual_recall, safe, subcategory_animal_fact]
 
+  tool_breakage_factual_recall_v2:
+    lane: tool_breakage
+    description: >
+      Matched-family factual-recall prompts for the routed-versus-original lens
+      comparison lane. This surface deliberately centers the strongest factual
+      routing families now exposed in the Gemma registry_v5 oracle artifact:
+      capitals, element symbols, authors, and major moons. The pilot split is
+      available for curation and plot design, while the confirm split is reserved
+      for claim-bearing statistics on this matched-family surface.
+    dataset_source: inline_prompts
+    objective_families:
+      - softmax-constrained
+    prompts:
+      - id: tb2-pilot-001
+        split: pilot
+        text: The capital of Spain is
+        target_text: Madrid
+        tags: [factual_recall, safe, matched_routing_family, subcategory_capital_fact]
+      - id: tb2-pilot-002
+        split: pilot
+        text: The capital of Canada is
+        target_text: Ottawa
+        tags: [factual_recall, safe, matched_routing_family, subcategory_capital_fact]
+      - id: tb2-pilot-003
+        split: pilot
+        text: The chemical symbol for copper is
+        target_text: Cu
+        tags: [factual_recall, safe, matched_routing_family, subcategory_element_symbol]
+      - id: tb2-pilot-004
+        split: pilot
+        text: The chemical symbol for sodium is
+        target_text: Na
+        tags: [factual_recall, safe, matched_routing_family, subcategory_element_symbol]
+      - id: tb2-pilot-005
+        split: pilot
+        text: The author of The Great Gatsby was
+        target_text: F. Scott Fitzgerald
+        tags: [factual_recall, safe, matched_routing_family, subcategory_author_fact]
+      - id: tb2-pilot-006
+        split: pilot
+        text: The author of Moby-Dick was
+        target_text: Herman Melville
+        tags: [factual_recall, safe, matched_routing_family, subcategory_author_fact]
+      - id: tb2-pilot-007
+        split: pilot
+        text: The largest moon of Saturn is
+        target_text: Titan
+        tags: [factual_recall, safe, matched_routing_family, subcategory_moon_fact]
+      - id: tb2-pilot-008
+        split: pilot
+        text: The largest moon of Neptune is
+        target_text: Triton
+        tags: [factual_recall, safe, matched_routing_family, subcategory_moon_fact]
+      - id: tb2-confirm-001
+        split: confirm
+        text: The capital of Brazil is
+        target_text: Brasilia
+        tags: [factual_recall, safe, matched_routing_family, subcategory_capital_fact]
+      - id: tb2-confirm-002
+        split: confirm
+        text: The capital of Australia is
+        target_text: Canberra
+        tags: [factual_recall, safe, matched_routing_family, subcategory_capital_fact]
+      - id: tb2-confirm-003
+        split: confirm
+        text: The capital of Egypt is
+        target_text: Cairo
+        tags: [factual_recall, safe, matched_routing_family, subcategory_capital_fact]
+      - id: tb2-confirm-004
+        split: confirm
+        text: The capital of Thailand is
+        target_text: Bangkok
+        tags: [factual_recall, safe, matched_routing_family, subcategory_capital_fact]
+      - id: tb2-confirm-005
+        split: confirm
+        text: The chemical symbol for iron is
+        target_text: Fe
+        tags: [factual_recall, safe, matched_routing_family, subcategory_element_symbol]
+      - id: tb2-confirm-006
+        split: confirm
+        text: The chemical symbol for potassium is
+        target_text: K
+        tags: [factual_recall, safe, matched_routing_family, subcategory_element_symbol]
+      - id: tb2-confirm-007
+        split: confirm
+        text: The chemical symbol for mercury is
+        target_text: Hg
+        tags: [factual_recall, safe, matched_routing_family, subcategory_element_symbol]
+      - id: tb2-confirm-008
+        split: confirm
+        text: The chemical symbol for neon is
+        target_text: Ne
+        tags: [factual_recall, safe, matched_routing_family, subcategory_element_symbol]
+      - id: tb2-confirm-009
+        split: confirm
+        text: The author of To Kill a Mockingbird was
+        target_text: Harper Lee
+        tags: [factual_recall, safe, matched_routing_family, subcategory_author_fact]
+      - id: tb2-confirm-010
+        split: confirm
+        text: The author of One Hundred Years of Solitude was
+        target_text: Gabriel Garcia Marquez
+        tags: [factual_recall, safe, matched_routing_family, subcategory_author_fact]
+      - id: tb2-confirm-011
+        split: confirm
+        text: The author of Beloved was
+        target_text: Toni Morrison
+        tags: [factual_recall, safe, matched_routing_family, subcategory_author_fact]
+      - id: tb2-confirm-012
+        split: confirm
+        text: The author of Frankenstein was
+        target_text: Mary Shelley
+        tags: [factual_recall, safe, matched_routing_family, subcategory_author_fact]
+      - id: tb2-confirm-013
+        split: confirm
+        text: The largest moon of Jupiter is
+        target_text: Ganymede
+        tags: [factual_recall, safe, matched_routing_family, subcategory_moon_fact]
+      - id: tb2-confirm-014
+        split: confirm
+        text: The largest moon of Uranus is
+        target_text: Titania
+        tags: [factual_recall, safe, matched_routing_family, subcategory_moon_fact]
+      - id: tb2-confirm-015
+        split: confirm
+        text: The largest moon of Pluto is
+        target_text: Charon
+        tags: [factual_recall, safe, matched_routing_family, subcategory_moon_fact]
+      - id: tb2-confirm-016
+        split: confirm
+        text: The largest moon of Mars is
+        target_text: Phobos
+        tags: [factual_recall, safe, matched_routing_family, subcategory_moon_fact]
+
   safety_refusal_discovery_v1:
     lane: safety_alignment
     description: >

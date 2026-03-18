@@ -159,6 +159,44 @@ class PromptRegistryTests(unittest.TestCase):
             ]
             self.assertEqual(1, len(subcategory_tags), entry.prompt_id)
 
+    def test_tool_breakage_v2_entries_balance_matched_factual_families(self) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v2",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+        confirm_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v2",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        self.assertEqual(8, len(pilot_entries))
+        self.assertEqual(16, len(confirm_entries))
+
+        expected_families = {
+            "subcategory_capital_fact",
+            "subcategory_element_symbol",
+            "subcategory_author_fact",
+            "subcategory_moon_fact",
+        }
+        for entries, expected_count in ((pilot_entries, 2), (confirm_entries, 4)):
+            counts = {family: 0 for family in expected_families}
+            for entry in entries:
+                subcategory_tags = [
+                    tag for tag in entry.tags if tag.startswith("subcategory_")
+                ]
+                self.assertEqual(1, len(subcategory_tags), entry.prompt_id)
+                self.assertIn("matched_routing_family", entry.tags)
+                counts[subcategory_tags[0]] += 1
+            self.assertEqual(
+                {family: expected_count for family in expected_families},
+                counts,
+            )
+
     def test_safety_alignment_entries_form_matched_refusal_workflow_groups(
         self,
     ) -> None:

@@ -306,6 +306,26 @@
         - non-overlap confirm mean tuned final target-rank delta `= +71.4`
       - the largest current confirm breakage outliers are non-overlap prompts such as anatomy, biology-process, and animal facts, not the matched `capital` / `element` / `author` families
     - interpretation: the bridge is real, but it cuts against the lazy story. The current bounded tool-breakage surface underexplores the strongest primary-model factual routing families. The right next move is to expand the factual tool-breakage prompt surface around the matched families, not to reopen aggregate clustering or dynamic controls
+  - `resattn-qcn` now lands that matched-family prompt-surface expansion and its first pilot run:
+    - `tool_breakage_factual_recall_v2` is now saved in `prompts/registry_v4.yaml` and propagated into `prompts/registry_v5.yaml`
+    - the new surface is balanced around the strongest factual routing families:
+      - pilot `= 8` prompts (`2` each for `capital`, `element`, `author`, `moon`)
+      - confirm `= 16` prompts (`4` each for the same families)
+      - every prompt carries both `matched_routing_family` and one saved `subcategory_*` tag
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2.md` is the first pilot artifact on that surface
+    - the aligned pilot keeps a strong same-model tuned-lens degradation signal rather than washing it out:
+      - mean tuned KL to the final distribution increases from `3.3374` to `5.9222` (`+2.5849`)
+      - final-position tuned KL increases from `6.2867` to `9.1985` (`+2.9118`)
+      - tuned final-target-rank worsens on `4 / 8` prompts
+      - tuned target-rank range increases on `5 / 8` prompts
+    - the family-level pilot read is heterogeneous but still useful:
+      - capitals and moons carry the strongest mean final-position tuned KL deltas (`+3.9622` and `+3.2368`)
+      - authors are weakest on this pilot (`+0.8424`) but still positive
+      - element prompts keep positive KL deltas while often compressing the tuned target-rank range rather than expanding it
+    - resume durability is verified on the finished output directory:
+      - all `8` prompt checkpoints stayed at their original timestamps from the first run
+      - the exact-command rerun completed in `10.17` seconds and rewrote only `summary.json`
+    - interpretation: the matched-family surface is operationally viable and preserves the core same-model breakage signal. The next direct step is the locked confirm run on this new surface, not another metadata-only pass
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -646,9 +666,9 @@
 
 ## Immediate Next Steps
 
-1. Expand the Gemma factual-recall tool-breakage surface around the matched `capital` / `element` / `author` routing families, because the new bridge artifact shows that the current tool-breakage prompt set only partially overlaps the strongest primary-model factual structure.
-2. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
-3. Keep future oracle reruns narrower and question-driven; the next broad aggregate campaign should wait until a specific underexplored hypothesis cannot be answered from the saved artifacts.
+1. Run the locked confirm baseline on `tool_breakage_factual_recall_v2`, because the matched-family pilot stayed strongly positive on the KL-primary surface and now deserves a confirmatory read.
+2. Treat the old mixed factual tool-breakage surface as contextual evidence rather than the highest-value next baseline; the better-aligned matched-family surface is now the priority.
+3. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 4. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

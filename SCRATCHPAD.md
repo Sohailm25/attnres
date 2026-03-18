@@ -1570,3 +1570,43 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; the bridge ran entirely from saved artifacts and the output log stayed empty.
 - Next step: close `resattn-dat` and pivot the next tool-breakage pass toward an expanded matched-family factual prompt surface rather than another rerun of the current eight-prompt confirm set.
+
+## [2026-03-18T09:32:12-0500] PRE-RUN: Gemma matched-family tool-breakage pilot
+- tmux session: `tb-v2-pilot`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v2 --split pilot --exploratory --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v2`, `split=pilot`, `prompts=8`, `matched_families=capital/element/author/moon`, `tuned_lens=20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`
+- What I'm testing: whether the new matched-family tool-breakage surface is operationally clean and whether the routed-versus-original instability signal stays alive on prompts that explicitly match the strongest primary-model factual routing families.
+- Expected outcome: the run completes with prompt-level checkpoints, and at least some of the matched-family prompts show meaningful tuned-lens KL or rank-instability degradation under routing even if the effect is smaller than the old mixed factual surface.
+- Expected duration: ~10-30 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because this surface is intentionally better aligned to the oracle families, it may trade raw effect size for cleaner family structure, so a smaller average degradation would not automatically mean the surface is worse.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry.PromptRegistryTests.test_tool_breakage_v2_entries_balance_matched_factual_families tests.test_prompt_registry.PromptRegistryTests.test_registry_v5_generator_reproduces_committed_registry` passed after adding the v2 collection and regenerating `registry_v5`.
+- Status: LAUNCHING
+
+## [2026-03-18T09:33:14-0500] PRE-RUN: Gemma matched-family tool-breakage pilot relaunch
+- tmux session: `tb-v2-pilot`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v2 --split pilot --exploratory --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v2`, `split=pilot`, `prompts=8`, `matched_families=capital/element/author/moon`
+- What I'm testing: identical to the original launch; this relaunch only fixes the shell-level log-directory failure.
+- Expected outcome: the output directory exists before shell redirection, the run survives in tmux, and prompt-level checkpoints start appearing.
+- Expected duration: ~10-30 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: same as the original launch; the only new risk here is falsely treating a shell-redirection failure as a model or runner failure.
+- Implementation verified: YES - the first launch failure was traced to missing log-directory creation before shell redirection, not to Python-side logic.
+- Status: LAUNCHING
+
+## [2026-03-18T09:36:38-0500] POST-RUN: Gemma matched-family tool-breakage pilot
+- Outcome: SUCCESS
+- Key metric: the matched-family pilot kept strong tuned-lens degradation on the aligned surface (`mean tuned KL delta = +2.5849`, final-position tuned KL delta `= +2.9118`) with tuned final-target-rank worsening on `4 / 8` prompts and tuned target-rank-range increase on `5 / 8`.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/checkpoints/prompt_results/tb2-pilot-008-c30e9fbef6.json`
+- Anomalies: the first tmux launch failed before Python started because shell redirection targeted a missing directory; the relaunch fixed that with `mkdir -p`. Exact-command rerun against the finished output reused the saved prompt checkpoints and completed in `10.17` seconds, rewriting only `summary.json`.
+- Next step: close `resattn-qcn` and run the locked confirm baseline on `tool_breakage_factual_recall_v2`.

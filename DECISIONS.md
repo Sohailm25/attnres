@@ -843,3 +843,16 @@
   - the largest current confirm outliers are anatomy, biology-process, and animal facts, not the matched `capital` / `element` / `author` families
   So the right interpretation is not “the structured factual families are unimportant.” It is “the current tool-breakage prompt surface is only a partial overlap with the strongest structured factual families.”
 - Impact: `resattn-dat` can close once the artifact lands. The next tool-breakage issue should expand the prompt surface around the matched factual families before the repo spends another cycle polishing the old eight-prompt confirm set.
+
+## [2026-03-18T09:36:38-0500] DECISION: Continue directly to a matched-family confirm run rather than stopping at prompt-surface design
+
+- Trigger: `resattn-qcn` expanded the tool-breakage prompt surface around the matched factual routing families and ran the first pilot artifact on `tool_breakage_factual_recall_v2`.
+- Decision: treat the new matched-family surface as pilot-viable and continue directly to a locked confirm run. Do not stop at metadata cleanup or assume the aligned surface diluted the effect.
+- Rationale: the pilot keeps the core same-model degradation signal alive on the better-aligned surface:
+  - mean tuned KL to the final distribution rises from `3.3374` to `5.9222` (`+2.5849`)
+  - final-position tuned KL rises from `6.2867` to `9.1985` (`+2.9118`)
+  - tuned final-target-rank worsening is `4 / 8`
+  - tuned target-rank-range increase is `5 / 8`
+  - capitals and moons are especially strong on pilot KL deltas (`+3.9622` and `+3.2368`)
+  The effect is therefore still real on the aligned surface, even though the family pattern is heterogeneous and authors are weaker on this pilot (`+0.8424`).
+- Impact: `resattn-qcn` can close once the prompt-surface and pilot artifact land. The next direct tool-breakage issue is the locked confirm baseline on `tool_breakage_factual_recall_v2`.

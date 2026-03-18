@@ -328,6 +328,26 @@ Suggested entry format:
   - Overlap prompts are much closer to their nearest factual family (`mean JS = 0.2273`) than non-overlap prompts (`0.3498`).
   - The current worst confirm outlier is anatomy, not one of the structured oracle factual families.
 
+## [2026-03-18T09:36:38-0500] The Better-Aligned Tool-Breakage Surface Still Bites
+- Stage: experiment
+- Feel of the Experiment: This was the right bet. The aligned surface did not collapse into a gentle no-op once the mixed factual noise came out.
+- Working Hypotheses:
+  - The next confirm run on the matched-family surface is worth the time because the pilot kept a real same-model degradation signal while being much better aligned to the oracle structure.
+- Hunches and Guesses:
+  - Moon facts may end up being the sleeper family on the confirm split, not just a completeness add-on.
+  - Authors might stay weaker in raw effect size but cleaner in family alignment.
+- Predictions:
+  - The confirm run should stay positive on tuned KL and probably keep the tuned rank-range metric above `50%`, even if family-level heterogeneity remains.
+- Surprises and Tensions:
+  - Capitals were stronger on pilot KL than I expected.
+  - Element prompts showed positive KL but negative range deltas, which means the matched-family surface is not going to collapse into one monolithic instability signature.
+- Confidence:
+  - high that the repo should run the matched-family confirm baseline next
+  - medium that the confirm result will beat the old mixed surface on alignment clarity more than on raw effect size
+- Interesting facts:
+  - The rerun durability check was clean: prompt checkpoints stayed at their original timestamps and only `summary.json` moved.
+  - Authors are the weakest matched family on this pilot even though they were among the cleanest in the oracle-family bridge.
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.

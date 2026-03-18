@@ -93,6 +93,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 controlled dynamic-routing counterfactual smoke | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke.md` |
 | Gemma-2 controlled dynamic-routing counterfactual confirm v1 | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1.md` |
 | Gemma-2 factual-routing tool-breakage bridge v1 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.md` |
+| Gemma-2 matched-family tool-breakage pilot v2 | tool_breakage | partial | `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2.md` |
 
 ## Training Dynamics
 
