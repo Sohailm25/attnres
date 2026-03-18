@@ -55,6 +55,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | GPT-2 XL prereg-scale sequence-level pattern analysis v1 | pattern_analysis | superseded | `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-v1.md` |
 | GPT-2 XL prereg-scale pattern analysis grouped-view robustness v1 | pattern_analysis | mixed | `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.md` |
 | Gemma-2 primary-model prereg-scale pattern analysis v1 | pattern_analysis | mixed | `results/pattern_analysis/20260318-gemma2-prereg-scale-pattern-analysis-v1.md` |
+| Gemma-2 registry_v5 stratified pattern analysis v1 | pattern_analysis | mixed | `results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.md` |
 
 ## Figure 8 Validation
 

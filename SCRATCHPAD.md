@@ -1498,3 +1498,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/checkpoints/oracle_runs/confirm/oa5-confirm-general_text-256-*.json`
 - Anomalies: the first exact-command rerun was interrupted by a context handoff, so resume reuse was verified again cleanly on the finished output directory; the cached rerun finished in `319.63` seconds versus `2544.10` seconds for the original launch.
 - Next step: close `resattn-w39` and move to stratified primary-model pattern analysis on the saved `registry_v5` artifact before spending another large Gemma run.
+
+## [2026-03-18T09:05:00-0500] PRE-RUN: Gemma registry_v5 stratified pattern analysis
+- tmux session: `N/A`
+- Script: `scripts/run_oracle_alpha_pattern_analysis.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pattern_analysis.py --run-path results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/oracle_eval_run.json --output results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.json --random-seed 11 --max-clusters 12 --num-resamples 32 --sample-size 192 --registry-path prompts/registry_v5.yaml --collection-id oracle_alpha_phase1_v1 --group-tag-prefix stratum_`
+- Config: `model=google/gemma-2-2b`, `source_run=registry_v5 confirm`, `views=raw/source_type/depth_thirds_by_type`, `subset_groups=stratum_*`, `num_resamples=32`, `sample_size=192`
+- What I'm testing: whether the larger stratified Gemma oracle artifact strengthens grouped routing structure overall or within specific strata, especially factual recall, without requiring another expensive oracle rerun.
+- Expected outcome: grouped structure should stay stronger than raw-source structure overall, and at least one stratum should look materially cleaner than the mixed full-sample artifact.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the fixed `192`-prompt resample size is intentionally smaller than the old 75% default for the full `1024`-prompt run, so I need to treat resampling comparisons as within-artifact rather than directly comparable to the earlier `128`-prompt studies.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_pattern_analysis` passed after adding subset-summary support for grouped stratum analyses.
+- Status: LAUNCHING
+
+## [2026-03-18T09:09:00-0500] POST-RUN: Gemma registry_v5 stratified pattern analysis
+- Outcome: SUCCESS
+- Key metric: full-sample raw-source structure stayed weak (`silhouette = 0.1664`, `k = 2`, `1023 / 1`), but factual-recall and reasoning-math subsets showed robust raw-source structure (`0.4709` and `0.2456`, both `k = 12`, both resampling oracle-beats-random `= 1.0`).
+- Artifacts saved: `results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.json`, `results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; runtime stayed bounded at `237.16` seconds with the reduced `32 x 192` resampling budget.
+- Next step: close `resattn-xot` and pivot the next oracle follow-up toward factual-recall-focused raw-source structure rather than another mixed-surface aggregate rerun.

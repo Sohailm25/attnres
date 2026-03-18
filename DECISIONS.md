@@ -788,3 +788,24 @@
     - general text is the loosest on alpha shape (`mean JS = 0.1374`)
   Another large rerun right now would mostly duplicate evidence we already have. The underexplored upside is understanding whether the larger primary-model positive result carries clearer grouped or stratum-specific routing structure.
 - Impact: `resattn-w39` can close once the artifact and docs land. The next issue should analyze the saved `registry_v5` oracle outputs for grouped and stratum-conditioned structure before any further large-scale oracle launch.
+
+## [2026-03-18T09:09:00-0500] DECISION: Treat the broadened Gemma raw-source story as stratum-conditioned, not aggregate
+
+- Trigger: `resattn-xot` analyzed the saved `registry_v5` Gemma oracle artifact with grouped-source and per-stratum subset summaries.
+- Decision: keep the full mixed-surface raw block-structure gate unpassed, but treat factual recall and reasoning-math as the newly promising raw-source structure strata. Do not summarize the broadened Gemma artifact as one aggregate clustering result anymore.
+- Rationale: the saved analysis splits cleanly:
+  - full-sample raw-source structure is still weak and outlier-driven:
+    - oracle best silhouette `= 0.1664`
+    - random best silhouette `= 0.1417`
+    - best `k = 2` with cluster sizes `1023 / 1`
+    - resampling oracle-beats-random fraction `= 0.0938`
+  - full-sample grouped structure is robust:
+    - `source_type` best silhouette `= 0.7558` versus random `0.4681`
+    - `depth_thirds_by_type` best silhouette `= 0.5168` versus random `0.1433`
+    - both grouped views beat random on `32 / 32` resamples
+  - raw-source structure concentrates inside narrower prompt families:
+    - factual recall best raw silhouette `= 0.4709` at `k = 12`, with resampling oracle-beats-random `= 1.0`
+    - reasoning and math best raw silhouette `= 0.2456` at `k = 12`, with resampling oracle-beats-random `= 1.0`
+    - code/procedural and general-text raw views stay weak or near-random
+  This means the promising underexplored direction is no longer “one more aggregate raw clustering pass.” It is factual-recall-focused raw-source analysis, which also has the cleanest conceptual bridge to the bounded Gemma tool-breakage lane.
+- Impact: `resattn-xot` can close once the artifact lands. The next oracle issue should focus on factual-recall-conditioned raw-source structure rather than another mixed-surface rerun.

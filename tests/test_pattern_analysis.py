@@ -313,6 +313,107 @@ class PatternAnalysisTests(unittest.TestCase):
             self.assertIn("cluster_views", payload)
             self.assertIn("resampling_stability", payload)
 
+    def test_write_pattern_analysis_summary_includes_subset_summaries(self) -> None:
+        source_labels = (
+            "embed",
+            "pos_embed",
+            "0_attn_out",
+            "0_mlp_out",
+        )
+        raw_run = {
+            "model_name": "tiny-stories-1M",
+            "collection_id": "oracle_alpha_phase1_v1",
+            "split": "confirm",
+            "num_sequences": 4,
+            "sequence_mean_improvement": 0.2,
+            "bootstrap_interval": {"mean": 0.2, "lower": 0.1, "upper": 0.3},
+            "null_model_mean_losses": {"random_dirichlet": 1.2},
+            "sequence_results": [
+                {
+                    "prompt_id": "p1",
+                    "prompt": "first",
+                    "split": "confirm",
+                    "num_sources": 4,
+                    "source_labels": source_labels,
+                    "uniform_loss": 4.0,
+                    "optimized_loss": 3.8,
+                    "null_losses": {"random_dirichlet": 4.1},
+                    "best_alpha_entropy": 1.0,
+                    "best_alpha": [0.5, 0.2, 0.2, 0.1],
+                    "final_alpha": [0.5, 0.2, 0.2, 0.1],
+                },
+                {
+                    "prompt_id": "p2",
+                    "prompt": "second",
+                    "split": "confirm",
+                    "num_sources": 4,
+                    "source_labels": source_labels,
+                    "uniform_loss": 4.1,
+                    "optimized_loss": 3.9,
+                    "null_losses": {"random_dirichlet": 4.2},
+                    "best_alpha_entropy": 1.0,
+                    "best_alpha": [0.45, 0.25, 0.2, 0.1],
+                    "final_alpha": [0.45, 0.25, 0.2, 0.1],
+                },
+                {
+                    "prompt_id": "p3",
+                    "prompt": "third",
+                    "split": "confirm",
+                    "num_sources": 4,
+                    "source_labels": source_labels,
+                    "uniform_loss": 4.2,
+                    "optimized_loss": 4.0,
+                    "null_losses": {"random_dirichlet": 4.3},
+                    "best_alpha_entropy": 1.0,
+                    "best_alpha": [0.1, 0.1, 0.2, 0.6],
+                    "final_alpha": [0.1, 0.1, 0.2, 0.6],
+                },
+                {
+                    "prompt_id": "p4",
+                    "prompt": "fourth",
+                    "split": "confirm",
+                    "num_sources": 4,
+                    "source_labels": source_labels,
+                    "uniform_loss": 4.3,
+                    "optimized_loss": 4.1,
+                    "null_losses": {"random_dirichlet": 4.4},
+                    "best_alpha_entropy": 1.0,
+                    "best_alpha": [0.15, 0.1, 0.15, 0.6],
+                    "final_alpha": [0.15, 0.1, 0.15, 0.6],
+                },
+            ],
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            raw_path = Path(temp_dir) / "oracle_eval_run.json"
+            raw_path.write_text(json.dumps(raw_run))
+            output_path = Path(temp_dir) / "pattern_summary.json"
+
+            self.write_pattern_analysis_summary(
+                run_path=raw_path,
+                output_path=output_path,
+                random_seed=11,
+                max_clusters=4,
+                subset_prompt_ids_by_name={
+                    "stratum_a": ("p1", "p2"),
+                    "stratum_b": ("p3", "p4"),
+                },
+            )
+
+            payload = json.loads(output_path.read_text())
+            self.assertIn("subset_summaries", payload)
+            self.assertEqual(
+                {"stratum_a", "stratum_b"}, set(payload["subset_summaries"])
+            )
+            self.assertEqual(
+                2,
+                payload["subset_summaries"]["stratum_a"]["summary"]["num_sequences"],
+            )
+            self.assertIn(
+                "cluster_views",
+                payload["subset_summaries"]["stratum_b"],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

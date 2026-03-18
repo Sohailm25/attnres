@@ -239,6 +239,40 @@
     - `source_type` silhouette `= 0.6731` versus random `0.5569`, with oracle best cluster sizes `66 / 56 / 6` and resampling oracle-beats-random fraction `1.0000`
     - `depth_thirds_by_type` silhouette `= 0.3858` versus random `0.2305`, with oracle best cluster sizes `121 / 7` and resampling oracle-beats-random fraction `0.8750`
   - interpretation: the primary spine strengthens the grouped coarse-routing story relative to `gpt2-xl`, but the prereg raw block-structure gate remains unpassed and the raw-source `~8`-cluster hypothesis is not supported
+  - `resattn-xot` now extends that primary-model pattern analysis to the first full stratified `registry_v5` Gemma oracle artifact:
+    - `results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.json` and `.md` analyze the saved `1024`-prompt confirm-split `registry_v5` oracle outputs with grouped-source and per-stratum subset summaries
+    - the mixed full-sample read stays split:
+      - raw-source structure is still weak and aggregate-heavy:
+        - oracle best silhouette `= 0.1664`
+        - random best silhouette `= 0.1417`
+        - best `k = 2` with cluster sizes `1023 / 1`
+        - raw-source resampling oracle-beats-random fraction `= 0.0938`
+      - grouped views are robust and stronger than the earlier `registry_v4` artifact:
+        - `source_type` best silhouette `= 0.7558` versus random `0.4681`
+        - `depth_thirds_by_type` best silhouette `= 0.5168` versus random `0.1433`
+        - both grouped views beat random on `32 / 32` resamples
+    - the key new result is stratum-conditioned raw-source structure:
+      - factual recall:
+        - raw-source best silhouette `= 0.4709`
+        - random best silhouette `= 0.1401`
+        - best `k = 12`
+        - cluster sizes `= 33 / 32 / 32 / 32 / 18 / 16 / 16 / 16 / 16 / 16 / 16 / 13`
+        - raw-source resampling oracle-beats-random fraction `= 1.0`
+      - reasoning and math:
+        - raw-source best silhouette `= 0.2456`
+        - random best silhouette `= 0.1401`
+        - best `k = 12`
+        - raw-source resampling oracle-beats-random fraction `= 1.0`
+      - code and procedural text:
+        - raw-source best silhouette `= 0.1339`
+        - random best silhouette `= 0.1401`
+        - raw-source resampling oracle-beats-random fraction `= 0.375`
+      - general text:
+        - raw-source best silhouette `= 0.1301`
+        - random best silhouette `= 0.1401`
+        - best `k = 2` with cluster sizes `254 / 2`
+        - raw-source resampling oracle-beats-random fraction `= 0.125`
+    - interpretation: the broadened primary-model oracle artifact should not be read as one aggregate raw clustering result. The robust grouped-routing story is broad, but the promising raw-source structure is concentrated in tighter semantic strata, especially factual recall and secondarily reasoning/math
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -579,10 +613,10 @@
 
 ## Immediate Next Steps
 
-1. Run stratified primary-model pattern analysis on the saved `registry_v5` Gemma oracle artifact, including grouped-source and per-stratum robustness views, before any further large oracle launch.
-2. Use the saved `registry_v5` artifact to decide whether the next high-value oracle follow-up is factual-recall-focused, stratum-conditioned, or broad enough already to move attention elsewhere.
-3. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
-4. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
+1. Run a factual-recall-focused primary-model oracle follow-up on the saved `registry_v5` artifact, because that stratum now carries the clearest robust raw-source structure and the cleanest bridge to the bounded Gemma tool-breakage lane.
+2. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is now strong and factual-recall/raw-source structure is clearly above random.
+3. Keep future oracle reruns narrower and question-driven; the next broad aggregate campaign should wait until a specific underexplored hypothesis cannot be answered from the saved artifact.
+4. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 

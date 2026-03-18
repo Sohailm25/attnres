@@ -14,7 +14,10 @@ import numpy as np
 from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.spatial.distance import squareform
 
-from .oracle_alpha_controls import jensen_shannon_divergence
+from .oracle_alpha_controls import (
+    bootstrap_mean_confidence_interval,
+    jensen_shannon_divergence,
+)
 
 
 @dataclass(frozen=True)
@@ -588,6 +591,91 @@ def build_sequence_level_pattern_summary(
     )
 
 
+def _build_pattern_payload_from_sequence_results(
+    sequence_results: Sequence[Mapping[str, object]],
+    *,
+    random_seed: int,
+    max_clusters: int,
+    num_resamples: int,
+    sample_size: int | None,
+    cluster_view_names: Sequence[str],
+) -> dict[str, object]:
+    if len(sequence_results) < 2:
+        raise ValueError("at least two sequence results are required")
+
+    resolved_sample_size = sample_size
+    if resolved_sample_size is None:
+        resolved_sample_size = max(2, int(round(len(sequence_results) * 0.75)))
+    resolved_sample_size = min(resolved_sample_size, len(sequence_results))
+
+    improvements = [
+        float(result["uniform_loss"]) - float(result["optimized_loss"])
+        for result in sequence_results
+    ]
+    null_model_names = sorted(
+        {
+            null_name
+            for result in sequence_results
+            for null_name in result["null_losses"].keys()
+        }
+    )
+    null_model_mean_losses = {
+        null_name: float(
+            np.mean(
+                [float(result["null_losses"][null_name]) for result in sequence_results]
+            )
+        )
+        for null_name in null_model_names
+    }
+
+    pattern_summary = build_sequence_level_pattern_summary(
+        sequence_results,
+        random_seed=random_seed,
+        max_clusters=max_clusters,
+    )
+    cluster_views = [
+        asdict(
+            build_grouped_view_pattern_summary(
+                sequence_results,
+                view_name=view_name,
+                random_seed=random_seed,
+                max_clusters=max_clusters,
+            )
+        )
+        for view_name in cluster_view_names
+    ]
+    resampling_stability = [
+        asdict(
+            build_prompt_resampling_stability_summary(
+                sequence_results,
+                view_name=view_name,
+                random_seed=random_seed,
+                max_clusters=max_clusters,
+                num_resamples=num_resamples,
+                sample_size=resolved_sample_size,
+            )
+        )
+        for view_name in cluster_view_names
+    ]
+
+    return {
+        "num_sequences": len(sequence_results),
+        "sequence_mean_improvement": float(np.mean(improvements)),
+        "bootstrap_interval": asdict(
+            bootstrap_mean_confidence_interval(
+                improvements,
+                num_resamples=1000,
+                confidence_level=0.95,
+                seed=random_seed,
+            )
+        ),
+        "null_model_mean_losses": null_model_mean_losses,
+        "summary": asdict(pattern_summary),
+        "cluster_views": cluster_views,
+        "resampling_stability": resampling_stability,
+    }
+
+
 def write_pattern_analysis_summary(
     *,
     run_path: Path,
@@ -596,6 +684,7 @@ def write_pattern_analysis_summary(
     max_clusters: int,
     num_resamples: int = 64,
     sample_size: int | None = None,
+    subset_prompt_ids_by_name: Mapping[str, Sequence[str]] | None = None,
     cluster_view_names: Sequence[str] = (
         "raw_source",
         "source_type",
@@ -650,5 +739,24 @@ def write_pattern_analysis_summary(
         "cluster_views": cluster_views,
         "resampling_stability": resampling_stability,
     }
+    if subset_prompt_ids_by_name:
+        prompt_id_to_result = {
+            result["prompt_id"]: result for result in run_payload["sequence_results"]
+        }
+        payload["subset_summaries"] = {
+            subset_name: _build_pattern_payload_from_sequence_results(
+                [
+                    prompt_id_to_result[prompt_id]
+                    for prompt_id in prompt_ids
+                    if prompt_id in prompt_id_to_result
+                ],
+                random_seed=random_seed,
+                max_clusters=max_clusters,
+                num_resamples=num_resamples,
+                sample_size=sample_size,
+                cluster_view_names=cluster_view_names,
+            )
+            for subset_name, prompt_ids in subset_prompt_ids_by_name.items()
+        }
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(payload, indent=2) + "\n")

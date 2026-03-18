@@ -268,6 +268,26 @@ Suggested entry format:
   - The full run improved over uniform by `+1.6299` nats on `1024` confirm prompts, and the held-out predictor still recovered `+0.8292` nats.
   - Exact-command reuse on the completed output directory finished in `319.63` seconds versus `2544.10` seconds for the original launch, which means the operational side of this lane is finally behaving like durable local infrastructure.
 
+## [2026-03-18T09:09:00-0500] The Aggregate Gemma Clustering Story Was Too Blunt
+- Stage: analysis
+- Feel of the Experiment: This was exactly the kind of follow-up worth doing. The full mixed artifact by itself was headed toward another muddy “grouped yes, raw maybe” summary, but the stratum split made the signal legible.
+- Working Hypotheses:
+  - The raw-source structure story on the primary model is real, but it lives inside tighter prompt families rather than in the full mixed prompt pool.
+- Hunches and Guesses:
+  - Factual recall is now the most promising bridge between the oracle lane and the bounded Gemma tool-breakage story.
+  - Reasoning/math may support a second raw-source structure story, but it feels less immediately paper-shaping than factual recall.
+- Predictions:
+  - A factual-recall-focused follow-up will produce a cleaner raw-source cluster interpretation than any new mixed-surface aggregate rerun.
+- Surprises and Tensions:
+  - Full-sample raw-source clustering still looks basically binary and outlier-driven even though factual recall alone shows a much cleaner `k = 12` structure.
+  - The grouped `source_type` and `depth_thirds_by_type` views are almost too strong at the full-sample level, which makes them useful but also easy to overread.
+- Confidence:
+  - high that the next oracle follow-up should be factual-recall-focused
+  - medium that the repo will eventually tell a two-level story: broad grouped structure across many prompt families and cleaner raw-source structure only inside narrower families
+- Interesting facts:
+  - Factual recall raw-source silhouette reached `0.4709` with balanced cluster sizes relative to the rest of the repo's raw-source analyses.
+  - Code/procedural and general-text raw-source views stayed weak, which makes the mixed full-sample raw artifact easier to explain.
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.
