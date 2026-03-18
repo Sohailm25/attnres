@@ -520,3 +520,13 @@
     - refusal injection on benign prompts: `+358.7685`
   This is enough to move beyond a descriptive role relabeling result. It is not enough to claim the current prompt set exposes a subtler mediator-active subset inside the non-refusal roles.
 - Impact: `resattn-h1p` can close honestly as a bounded stage-3 safety artifact. The repo should now treat stronger safety-routing language as dependent on `resattn-mo5`, a broader or less role-collapsed prompt-surface follow-up, rather than on more rewrites of this same frozen collection.
+
+## [2026-03-17T19:45:00-0500] DECISION: Make the next Figure 8 redesign regularization-first and defer objective changes
+
+- Trigger: `resattn-8xu` needed to turn the mixed widened `wikitext-103` best-checkpoint artifact into a concrete next question instead of another blind rerun.
+- Decision: keep the widened compact-subword `wikitext-103` proxy and the standard next-token objective fixed, and make the next Figure 8 follow-up a bounded regularization sweep rather than an objective-level redesign.
+- Rationale: the saved proxy trail now says two things at once:
+  - the current objective can reach a healthier operating region (`200`-step positive calibration and best-checkpoint loss delta `+0.0386` instead of final-checkpoint `+0.1272`)
+  - but the proxy does not sustain a routed win and still misses the entropy ordering at the best checkpoint (`-0.0549`)
+  That is a stronger case for stabilization failure than for “the standard objective can never express the desired regime.” Changing the objective now would make any positive result less faithful to the local AttnRes proxy story.
+- Impact: `resattn-8xu` can close once the memo and state docs land. The next Figure 8 issue is `resattn-bux`, which compares three matched regularization settings on the existing widened `wikitext-103` best-checkpoint-enabled regime before any objective-level change is allowed.

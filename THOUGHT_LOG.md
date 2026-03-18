@@ -823,3 +823,25 @@ Suggested entry format:
 - Interesting facts:
   - Refusal suppression on refusal prompts changed the final-layer refusal-direction trajectory by `-372.8501`.
   - Refusal injection on harmful-context prompts changed the same final-layer trajectory by `+369.9403`.
+
+## [2026-03-17T19:45:00-0500] The Figure 8 Proxy Has Earned One Last Faithful Stabilization Attempt Before I Let Objective Drift In
+- Stage: planning
+- Feel of the Experiment: `fby` changed my mind about what the live problem is. The proxy is not just failing cleanly under the standard objective; it is reaching a healthier region and then failing to hold it. That matters because it makes objective changes look premature rather than bold.
+- Working Hypotheses:
+  - The widened `wikitext-103` proxy is still mostly a stabilization problem.
+  - If matched regularization cannot rescue the best-checkpoint gap or the entropy ordering, then the proxy objective becomes the honest next question.
+- Hunches and Guesses:
+  - Objective changes right now would feel like proxy-shopping. They might improve the paper-facing metrics, but they would also weaken the story that this is still a believable small AttnRes reproduction.
+  - A small matched sweep over dropout and weight decay is the right “last faithful chance” before opening that door.
+- Predictions:
+  - One of the regularization arms will probably narrow the best-checkpoint loss gap further.
+  - I am less confident it will actually flip the entropy ordering. That is the stricter test.
+- Surprises and Tensions:
+  - The best-checkpoint correction was big enough that I no longer believe “just change the objective” is the next disciplined move.
+  - At the same time, the entropy gap still being `-0.0549` means the current proxy cannot be defended as secretly paper-like.
+- Confidence:
+  - high that `resattn-8xu` should close in favor of a regularization-first follow-up
+  - medium that `resattn-bux` will improve stability enough to preserve the standard objective
+- Interesting facts:
+  - The same run that looked strongly negative at the final checkpoint was only `+0.0386` behind the baseline at its best checkpoint.
+  - Deep embedding persistence has improved monotonically across several redesigns even while the entropy ordering stayed stubbornly inverted.

@@ -350,7 +350,7 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-8xu` to choose the next bounded Figure 8 redesign now that best-checkpoint export improved the widened `wikitext-103` proxy without fixing the lane.
+1. Use `resattn-bux` for the bounded regularization-first Figure 8 sweep now that `resattn-8xu` has decided against an objective change as the next move.
 2. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
 3. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 4. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
