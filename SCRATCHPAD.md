@@ -382,6 +382,22 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: the first compact Gemma eval-run artifact was still too large for the large-file hook until it was reduced to the exact fields the pattern-analysis runner actually reads
 - Next step: close `resattn-2sb`, keep the raw block-structure gate unpassed on the primary model, and move the next core oracle issue to `resattn-5eo`
 
+## [2026-03-18T01:34:00-0500] PRE-RUN: primary-model Gemma oracle regime comparison v1
+- tmux session: `oa-gemma-regimes-v1`
+- Script: `scripts/run_oracle_alpha_regime_comparison.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_regime_comparison.py --model-name google/gemma-2-2b --device mps --output-dir results/comparison_regimes/20260318-gemma2-regime-comparison-v1 --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Config: `collection=oracle_alpha_phase1_v1`, `split=confirm`, `regimes=softmax, unconstrained, top-k{2,4,8,13,26}`, `steps=20`, `lr=0.1`, `seed=11`
+- What I'm testing: whether the prereg softmax-constrained regime meaningfully differs from the matched-initialization unconstrained and top-k families on the primary Gemma confirm surface.
+- Expected outcome: the runner writes resumable per-regime checkpoints under the output directory and a compact `summary.json` that compares mean loss improvement over uniform, positive-prompt counts, and sparsity summaries across regimes.
+- Expected duration: ~30-90 minutes
+- Checkpoint path: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/`
+- Checkpoint cadence: after each completed regime
+- Log path: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: unconstrained sigmoid gating has a different scale than the simplex regimes, so the interpretation has to center on preregistered loss improvement over the shared uniform baseline rather than on raw alpha magnitudes alone.
+- Implementation verified: YES - targeted regime-transform tests pass on the tiny runner path and the comparison summary path already writes and reuses per-regime checkpoints on the tiny model.
+- Status: LAUNCHING
+
 ## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
 - Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
 - Outcome: SUCCESS
@@ -1170,3 +1186,35 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/figure8_validation/20260317-attnres-proxy-regularization-sweep-bux-v1/dropout01_wd005/checkpoints/attnres_best_state.pt`
 - Anomalies: dropout improved deep embedding persistence but not the actual loss-gap blocker; rerunning the exact sweep command reused all saved checkpoints and finished in `30.67` seconds
 - Next step: close `resattn-bux` as the last faithful stabilization attempt and move the Figure 8 lane to the objective-level redesign decision in `resattn-9fo`
+
+## [2026-03-18T01:47:00-0500] POST-RUN: primary-model Gemma oracle regime comparison v1 (invalid initial top-k pass)
+- Outcome: PARTIAL
+- Key metric: softmax and unconstrained checkpoints completed cleanly, but the first `top-k-k2` checkpoint returned exactly `0.0` mean improvement over uniform on every confirm prompt.
+- Artifacts saved: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/softmax-constrained.json`, `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/unconstrained.json`
+- Latest checkpoint: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/unconstrained.json`
+- Anomalies: hard `top-k` masking with exact zero initialization left gradient flow only on the tied initial support, so the top-k results were optimization-artifact invalid rather than scientifically interpretable.
+- Next step: patch the top-k optimization path to keep an exact hard top-k forward pass while restoring support-search gradients, then relaunch from the preserved softmax and unconstrained checkpoints only.
+
+## [2026-03-18T01:49:00-0500] PRE-RUN: primary-model Gemma oracle regime comparison v1 relaunch
+- tmux session: `oa-gemma-regimes-v1`
+- Script: `scripts/run_oracle_alpha_regime_comparison.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_regime_comparison.py --model-name google/gemma-2-2b --device mps --output-dir results/comparison_regimes/20260318-gemma2-regime-comparison-v1 --optimization-steps 20 --learning-rate 0.1 --seed 11`
+- Config: `collection=oracle_alpha_phase1_v1`, `split=confirm`, `regimes=softmax, unconstrained, top-k{2,4,8,13,26}`, `steps=20`, `lr=0.1`, `seed=11`
+- What I'm testing: whether the prereg softmax-constrained regime still separates from unconstrained and the repaired top-k family on the primary Gemma confirm surface once the top-k support-search bug is removed.
+- Expected outcome: the relaunch reuses the existing softmax and unconstrained checkpoints, regenerates the top-k checkpoints only, and writes a compact `summary.json` plus markdown memo with valid regime comparisons.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/`
+- Checkpoint cadence: after each completed regime
+- Log path: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the repaired top-k optimizer now matches softmax too closely, the regime story becomes “competition matters more than sparsity at this scale” rather than “softmax is uniquely beneficial.”
+- Implementation verified: YES - new unit coverage confirms non-top-k logits receive gradient under exact zero initialization while the forward pass remains hard top-k sparse, and the comparison/regime tests remain green.
+- Status: LAUNCHING
+
+## [2026-03-18T02:06:00-0500] POST-RUN: primary-model Gemma oracle regime comparison v1 relaunch
+- Outcome: SUCCESS
+- Key metric: softmax-constrained stayed best at `+2.5525` nats over uniform, beat unconstrained (`+2.0637`) and every top-k setting on all `128` confirm prompts, and still led top-k `k = 26` by `+1.0861` nats.
+- Artifacts saved: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/summary.json`, `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md`
+- Latest checkpoint: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/top-k-k26.json`
+- Anomalies: the first top-k pass was optimization-invalid under exact zero initialization because hard masking froze support search on the arbitrary tie-broken initial support; the final artifact uses the repaired exact-forward straight-through top-k path instead.
+- Next step: close `resattn-5eo` and move the next overall scientific action to `resattn-1lk`, the conservative Figure 8 freeze-or-escalate decision.

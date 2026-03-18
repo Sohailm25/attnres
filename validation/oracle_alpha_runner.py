@@ -250,13 +250,42 @@ def _entropy(alpha: torch.Tensor) -> float:
     return float((-(safe * safe.log()).sum()).detach().cpu().item())
 
 
+def _alpha_from_regime_logits(
+    logits: torch.Tensor,
+    *,
+    regime: str,
+    top_k: int | None = None,
+) -> torch.Tensor:
+    if regime == "softmax-constrained":
+        return torch.softmax(logits, dim=0)
+    if regime == "unconstrained":
+        return torch.sigmoid(logits)
+    if regime == "top-k":
+        if top_k is None:
+            raise ValueError("top_k must be provided for the top-k regime")
+        if top_k < 1:
+            raise ValueError("top_k must be positive")
+        if top_k >= logits.shape[0]:
+            return torch.softmax(logits, dim=0)
+        topk_indices = torch.topk(logits, k=top_k).indices
+        dense_softmax = torch.softmax(logits, dim=0)
+        hard_alpha = torch.zeros_like(logits)
+        hard_alpha[topk_indices] = dense_softmax[topk_indices]
+        hard_alpha = hard_alpha / hard_alpha.sum()
+        return hard_alpha.detach() + (dense_softmax - dense_softmax.detach())
+    raise ValueError(f"unsupported oracle-alpha regime {regime!r}")
+
+
 def _initial_alpha_logits(
     *,
     num_sources: int,
     seed: int,
     device: torch.device,
     dtype: torch.dtype,
+    matched_zero_init: bool = False,
 ) -> torch.Tensor:
+    if matched_zero_init:
+        return torch.zeros(num_sources, device=device, dtype=dtype)
     generator = torch.Generator(device="cpu")
     generator.manual_seed(seed)
     noise = (
@@ -526,6 +555,9 @@ def _optimize_sequence(
     learning_rate: float,
     seed: int,
     prepend_bos: bool | None,
+    regime: str = "softmax-constrained",
+    top_k: int | None = None,
+    matched_zero_init: bool = False,
 ) -> OracleAlphaSequenceResult:
     device = torch.device(str(model.cfg.device))
     residual_stack, labels, tokens = _fixed_residual_sources(
@@ -602,6 +634,7 @@ def _optimize_sequence(
         seed=seed,
         device=device,
         dtype=residual_stack.dtype,
+        matched_zero_init=matched_zero_init,
     ).requires_grad_()
     optimizer = torch.optim.Adam([z], lr=learning_rate)
     best_loss = uniform_loss
@@ -609,7 +642,7 @@ def _optimize_sequence(
 
     for _ in range(optimization_steps):
         optimizer.zero_grad()
-        alpha = torch.softmax(z, dim=0)
+        alpha = _alpha_from_regime_logits(z, regime=regime, top_k=top_k)
         loss = _loss_for_alpha(
             model=model,
             residual_stack=residual_stack,
@@ -624,7 +657,11 @@ def _optimize_sequence(
             best_loss = loss_value
             best_alpha = alpha.detach().clone()
 
-    final_alpha = torch.softmax(z.detach(), dim=0)
+    final_alpha = _alpha_from_regime_logits(
+        z.detach(),
+        regime=regime,
+        top_k=top_k,
+    )
 
     return OracleAlphaSequenceResult(
         prompt_id=entry.prompt_id,
@@ -653,6 +690,9 @@ def run_oracle_alpha_collection(
     learning_rate: float = 0.1,
     seed: int = 0,
     prepend_bos: bool | None = None,
+    regime: str = "softmax-constrained",
+    top_k: int | None = None,
+    matched_zero_init: bool = False,
     existing_sequence_results: Mapping[str, OracleAlphaSequenceResult] | None = None,
     on_sequence_result: Callable[[OracleAlphaSequenceResult], None] | None = None,
 ) -> OracleAlphaRunSummary:
@@ -685,6 +725,9 @@ def run_oracle_alpha_collection(
                 learning_rate=learning_rate,
                 seed=seed + index,
                 prepend_bos=prepend_bos,
+                regime=regime,
+                top_k=top_k,
+                matched_zero_init=matched_zero_init,
             )
             if on_sequence_result is not None:
                 on_sequence_result(result)

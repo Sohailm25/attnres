@@ -29,12 +29,14 @@ class OracleAlphaRunnerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from validation.oracle_alpha_runner import (
+            _alpha_from_regime_logits,
             _tuned_ridge_regularization,
             run_oracle_alpha_collection,
             run_oracle_alpha_predictiveness_check,
             run_oracle_alpha_stability_suite,
         )
 
+        cls._alpha_from_regime_logits = staticmethod(_alpha_from_regime_logits)
         cls._tuned_ridge_regularization = staticmethod(_tuned_ridge_regularization)
         cls.run_oracle_alpha_collection = staticmethod(run_oracle_alpha_collection)
         cls.run_oracle_alpha_predictiveness_check = staticmethod(
@@ -152,6 +154,114 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             first.sequence_results[0].final_alpha,
             second.sequence_results[0].final_alpha,
         )
+
+    def test_alpha_from_regime_logits_matches_preregime_definitions(self) -> None:
+        import torch
+
+        logits = torch.tensor([0.0, 1.0, 2.0, 3.0], dtype=torch.float32)
+
+        softmax_alpha = self._alpha_from_regime_logits(
+            logits,
+            regime="softmax-constrained",
+        )
+        unconstrained_alpha = self._alpha_from_regime_logits(
+            logits,
+            regime="unconstrained",
+        )
+        topk_alpha = self._alpha_from_regime_logits(
+            logits,
+            regime="top-k",
+            top_k=2,
+        )
+
+        self.assertAlmostEqual(1.0, float(softmax_alpha.sum().item()), places=6)
+        self.assertTrue(torch.all(softmax_alpha > 0.0))
+        self.assertTrue(torch.all(unconstrained_alpha >= 0.0))
+        self.assertTrue(torch.all(unconstrained_alpha <= 1.0))
+        self.assertAlmostEqual(
+            float(torch.sigmoid(logits).sum().item()),
+            float(unconstrained_alpha.sum().item()),
+            places=6,
+        )
+        self.assertAlmostEqual(1.0, float(topk_alpha.sum().item()), places=6)
+        self.assertEqual(2, int(torch.count_nonzero(topk_alpha > 0.0).item()))
+
+    def test_topk_regime_allows_gradient_outside_initial_zero_tie_support(self) -> None:
+        import torch
+
+        logits = torch.zeros(6, dtype=torch.float32, requires_grad=True)
+        alpha = self._alpha_from_regime_logits(
+            logits,
+            regime="top-k",
+            top_k=2,
+        )
+        loss = (alpha * torch.arange(6, dtype=torch.float32)).sum()
+
+        loss.backward()
+
+        self.assertEqual(2, int(torch.count_nonzero(alpha > 0.0).item()))
+        self.assertAlmostEqual(1.0, float(alpha.sum().item()), places=6)
+        self.assertGreater(float(logits.grad[2:].abs().sum().item()), 0.0)
+
+    def test_run_oracle_alpha_collection_supports_matched_zero_regime_variants(
+        self,
+    ) -> None:
+        softmax = self.run_oracle_alpha_collection(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            max_sequences=1,
+            optimization_steps=0,
+            learning_rate=0.1,
+            seed=11,
+            regime="softmax-constrained",
+            matched_zero_init=True,
+        )
+        unconstrained = self.run_oracle_alpha_collection(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            max_sequences=1,
+            optimization_steps=0,
+            learning_rate=0.1,
+            seed=11,
+            regime="unconstrained",
+            matched_zero_init=True,
+        )
+        topk = self.run_oracle_alpha_collection(
+            model=self.model,
+            collection_id="oracle_alpha_phase1_v1",
+            split="pilot",
+            exploratory=True,
+            max_sequences=1,
+            optimization_steps=0,
+            learning_rate=0.1,
+            seed=11,
+            regime="top-k",
+            top_k=2,
+            matched_zero_init=True,
+        )
+
+        softmax_alpha = softmax.sequence_results[0].final_alpha
+        unconstrained_alpha = unconstrained.sequence_results[0].final_alpha
+        topk_alpha = topk.sequence_results[0].final_alpha
+
+        self.assertAlmostEqual(
+            1.0,
+            sum(softmax_alpha),
+            places=6,
+        )
+        self.assertTrue(
+            all(abs(value - softmax_alpha[0]) < 1e-6 for value in softmax_alpha)
+        )
+        self.assertTrue(all(abs(value - 0.5) < 1e-6 for value in unconstrained_alpha))
+        self.assertEqual(
+            2,
+            sum(1 for value in topk_alpha if value > 0.0),
+        )
+        self.assertAlmostEqual(1.0, sum(topk_alpha), places=6)
 
     def test_predictiveness_check_uses_pilot_to_confirm_splits(self) -> None:
         summary = self.run_oracle_alpha_predictiveness_check(

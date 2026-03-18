@@ -427,15 +427,28 @@
       - refusal injection on harmful-context prompts changes the same final-layer trajectory by `+369.9403`
       - refusal injection on benign prompts changes the same final-layer trajectory by `+358.7685`
     - interpretation: the aligned-Gemma refusal mediator now supports a bounded mediator-conditioned depth-trajectory analysis, but the current prompt set is still too clean to separate mediator-active prompts from refusal labels alone; stronger safety-routing claims remain blocked on a broader or less role-collapsed prompt surface
+  - `resattn-5eo` now lands the prereg-required primary-model routing-regime comparison on Gemma:
+    - `validation/comparison_regimes.py` and `scripts/run_oracle_alpha_regime_comparison.py` now implement the checkpointed softmax versus unconstrained versus top-k comparison path
+    - `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` is the first full primary-model regime artifact on the locked `128`-prompt confirm surface
+    - the regime result is decisive rather than marginal:
+      - softmax-constrained mean improvement over uniform `= +2.5525` nats with `128 / 128` prompts positive
+      - unconstrained mean improvement `= +2.0637` nats with `128 / 128` prompts positive
+      - top-k improves monotonically with support size but stays well below softmax:
+        - `k = 2`: `+0.0115` nats, `6 / 128` prompts positive
+        - `k = 4`: `+0.2032` nats, `47 / 128` prompts positive
+        - `k = 8`: `+0.6765` nats, `110 / 128` prompts positive
+        - `k = 13`: `+1.0891` nats, `124 / 128` prompts positive
+        - `k = 26`: `+1.4664` nats, `128 / 128` prompts positive
+      - softmax beat every alternative on all `128` confirm prompts
+    - interpretation: the primary model now supports the prereg competition story directly; softmax-constrained routing is stronger than matched unconstrained gating and than every tested sparse top-k regime on the locked confirm surface
 
 ## Immediate Next Steps
 
-1. Run `resattn-5eo`, the prereg-required softmax versus unconstrained versus top-k comparison on the primary-model Gemma oracle surface.
-2. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy.
-3. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
-4. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless a rerun becomes urgent.
-5. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
-6. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
+1. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited only through a materially more faithful proxy.
+2. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
+3. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless another primary-model rerun becomes urgent.
+4. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
+5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 
 ## Phase 1 Gate
 

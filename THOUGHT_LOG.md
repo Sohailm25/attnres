@@ -1011,3 +1011,25 @@ Suggested entry format:
 - Interesting facts:
   - `source_type` reached oracle best silhouette `0.6731` versus random `0.5569`.
   - `depth_thirds_by_type` beat random on `56 / 64` resamples, while raw-source beat random on only `23 / 64`.
+
+## [2026-03-18T02:08:00-0500] The Regime Comparison Finally Looks Like A Real Competition Story
+- Stage: implementation
+- Feel of the Experiment: This is the kind of mandatory lane that can either turn into paperwork or genuinely change the thesis. On Gemma it changed the thesis shape.
+- Working Hypotheses:
+  - The primary-model oracle lane is now strong enough that the next high-value move is reducing claim-boundary ambiguity, not squeezing out another small oracle rerun.
+  - `resattn-1lk` is probably the right next step because the Figure 8 lane is now the biggest remaining interpretive ambiguity, not the oracle lane.
+- Hunches and Guesses:
+  - The large softmax-over-unconstrained gap on every confirm prompt makes the competition story feel more robust than I expected after the earlier “positive but mixed” predictiveness artifacts.
+  - The top-k family is useful mostly as a shape-of-failure result: sparse routing can recover a lot, but it gives up too much to match dense competition on this surface.
+- Predictions:
+  - If `resattn-1lk` stays conservative and freezes the strong Figure 8 lane on the current proxy, the repo will read as more disciplined rather than less ambitious.
+  - `resattn-mo5` is more likely than `resattn-b4q` to change the paper qualitatively after that.
+- Surprises and Tensions:
+  - The first top-k run was optimization-invalid because hard zero-init support search was crippled. That was a good catch, and it would have badly understated the sparse family if left alone.
+  - Even after the repair, `k = 26` stayed more than a nat behind softmax. That is stronger separation than I expected.
+- Confidence:
+  - high that the primary-model competition story is now real
+  - medium-high that the next honest move is strategic cleanup of mixed lanes rather than more oracle machinery
+- Interesting facts:
+  - Softmax beat unconstrained and every top-k setting on all `128` confirm prompts.
+  - The mean softmax advantage over unconstrained was `0.4888` nats, and over top-k `k = 26` it was still `1.0861` nats.
