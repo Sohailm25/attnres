@@ -928,3 +928,23 @@ Suggested entry format:
 - Interesting facts:
   - Gemma-2 exposed `53` residual sources on this path: embedding plus `26` attention outputs and `26` MLP outputs.
   - The primary-spine smoke was exact on local MPS with `final_residual_max_abs_error = 0.0` and `uniform_logits_max_abs_error = 0.0`.
+
+## [2026-03-17T20:24:00-0500] The Primary Spine Finally Has A Real Oracle Artifact
+- Stage: implementation
+- Feel of the Experiment: This is the kind of quick win that actually matters. It does not solve the primary-model lane, but it removes the most annoying excuse for not touching it.
+- Working Hypotheses:
+  - The next Gemma oracle bottleneck is now scale and stability, not whether the runner can execute at all.
+  - The development-model result is still the strongest positive one, but it no longer stands alone as the only real oracle artifact in the repo.
+- Hunches and Guesses:
+  - The first full Gemma pilot suite is more likely to expose runtime and stability texture than to collapse the basic loss-improvement story.
+- Predictions:
+  - `resattn-a7j` should be a real scientific step, not just more backend hardening.
+- Surprises and Tensions:
+  - I expected the first Gemma oracle run to need at least one small runner patch. It did not.
+  - That makes the remaining dev-model-only risk feel like a scaling question now, not a capability question.
+- Confidence:
+  - high that the primary-model oracle lane is now genuinely live
+  - medium that the saved pilot stability suite will stay clean on Gemma
+- Interesting facts:
+  - The bounded `2`-prompt Gemma slice improved over uniform by `2.1634` nats.
+  - The same tiny slice was already well separated from the prereg nulls.

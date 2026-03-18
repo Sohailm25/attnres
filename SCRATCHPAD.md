@@ -284,6 +284,31 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: none
 - Next step: close the primary-spine reconstruction readiness issue and move the top scientific priority to a bounded Gemma oracle-alpha feasibility slice
 
+## [2026-03-17T20:20:00-0500] PRE-RUN: primary-model Gemma oracle-alpha feasibility slice
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_development_slice.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_development_slice.py --model-name google/gemma-2-2b --output results/oracle_alpha/20260317-gemma2-development-slice.json --max-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11 --device mps`
+- Config: `model=google/gemma-2-2b`, `collection=oracle_alpha_phase1_v1`, `split=pilot`, `exploratory=true`, `max_sequences=2`, `steps=20`, `lr=0.1`, `seed=11`
+- What I'm testing: whether the existing bounded oracle-alpha runner executes cleanly on the primary Gemma-2 spine and produces a first non-claim-bearing loss-improvement artifact over uniform and the preregistered nulls.
+- Expected outcome: the run completes on local MPS, writes a real artifact, and keeps optimized loss no worse than uniform on the bounded pilot slice.
+- Expected duration: ~10-25 minutes depending on first-run model path and cache cost
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/oracle_alpha/20260317-gemma2-development-slice.json`
+- Resume command: rerun the exact command above
+- Main confound to watch: Gemma-specific cache layout or runtime pressure could still break the oracle runner even though reconstruction readiness is green.
+- Implementation verified: YES - `resattn-2s0` already proved that the same cached sublayer decomposition and final-normalization path work exactly on `google/gemma-2-2b`.
+- Status: LAUNCHING
+
+## [2026-03-17T20:23:00-0500] POST-RUN: primary-model Gemma oracle-alpha feasibility slice
+- Command: `.venv/bin/python scripts/run_oracle_alpha_development_slice.py --model-name google/gemma-2-2b --output results/oracle_alpha/20260317-gemma2-development-slice.json --max-sequences 2 --optimization-steps 20 --learning-rate 0.1 --seed 11 --device mps`
+- Outcome: SUCCESS
+- Key metric: `sequence_mean_improvement=2.1634` nats over uniform on `2` pilot prompts
+- Artifacts saved: `results/oracle_alpha/20260317-gemma2-development-slice.json`
+- Latest checkpoint: none
+- Anomalies: none
+- Next step: close the primary-model bounded feasibility issue and scale the same path to the saved pilot stability suite
+
 ## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
 - Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
 - Outcome: SUCCESS

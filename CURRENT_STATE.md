@@ -69,6 +69,15 @@
   - `validation/oracle_alpha_runner.py` implements a final-output development slice that optimizes a per-sequence softmax alpha vector over fixed cached residual sources
   - `scripts/run_oracle_alpha_development_slice.py` consumes the saved prompt and control registries by default and writes a JSON artifact
   - the first `gpt2-xl` pilot smoke on `2` prompts completed on local MPS and improved mean sequence loss over uniform by `1.2141` nats, but this remains a runner smoke rather than a claim-bearing result
+- `known`: `resattn-7cs` now provides the first bounded primary-model oracle-alpha artifact on `google/gemma-2-2b`:
+  - `results/oracle_alpha/20260317-gemma2-development-slice.md` is the first non-claim-bearing primary-spine oracle-alpha run
+  - the existing development-slice runner executed cleanly on Gemma-2 without Gemma-specific code changes
+  - on `2` exploratory pilot prompts, mean sequence improvement over uniform was `+2.1634` nats
+  - the same slice also beat the preregistered nulls on mean loss:
+    - `random_dirichlet = 6.6138`
+    - `magnitude_proportional = 6.5578`
+    - `last_layer_only = 24.7532`
+  - interpretation: the primary-model oracle lane has now advanced from backend readiness to first bounded execution, but the strongest positive oracle result is still development-model-only until a larger primary-model pilot artifact lands
 - `known`: the scaled development-model pilot stability suite now exists:
   - `scripts/run_oracle_alpha_pilot_stability_suite.py` runs restart, saved-paraphrase, and prompt-resample checks against the same saved prompt and control registries
   - the exploratory `gpt2-xl` pilot artifact on `8` prompts improved mean sequence loss over uniform by `1.2432` nats with a bootstrap interval of `[1.1482, 1.3361]`
@@ -375,7 +384,7 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-7cs` to run the first bounded primary-model Gemma oracle-alpha feasibility slice now that `resattn-2s0` has cleared model-backed reconstruction on the primary spine.
+1. Use `resattn-a7j` to scale the primary-model Gemma oracle lane from the `2`-prompt smoke to the saved pilot stability suite.
 2. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy.
 3. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
 4. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
