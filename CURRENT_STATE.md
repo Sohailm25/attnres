@@ -513,15 +513,32 @@
         - `k = 26`: `+1.4664` nats, `128 / 128` prompts positive
       - softmax beat every alternative on all `128` confirm prompts
     - interpretation: the primary model now supports the prereg competition story directly; softmax-constrained routing is stronger than matched unconstrained gating and than every tested sparse top-k regime on the locked confirm surface
+  - `resattn-gad` now lands the generated `registry_v5` prompt surface and its repaired calibration artifact for the next primary-model Gemma oracle scale-up:
+    - `scripts/generate_registry_v5.py` deterministically builds `prompts/registry_v5.yaml` from the saved `registry_v4` base while preserving the non-oracle collections unchanged
+    - the new oracle surface expands to four explicit strata with round-robin split ordering:
+      - factual recall
+      - reasoning and math
+      - code and procedural text
+      - general narrative or expository text
+    - the saved counts are now:
+      - `256` pilot prompts
+      - `1024` confirm prompts
+      - `64` pilot and `256` confirm prompts per stratum
+    - the repaired calibration artifact `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2.md` confirms that the generated surface works end to end on local MPS with the current best primary-model path:
+      - oracle mean improvement over uniform `= +1.4363` nats on `8` confirm prompts
+      - predicted mean improvement over uniform `= +0.5896` nats on the same slice
+      - all four strata were exercised by the small slice through round-robin ordering
+      - rerunning the exact command on the same output directory reused saved oracle and feature artifacts and finished in `16.94` seconds
+    - interpretation: the next primary-model oracle step is no longer registry construction or calibration; it is the first larger `registry_v5` campaign
 
 ## Immediate Next Steps
 
-1. Use `resattn-gad` to generate `registry_v5` for the next larger stratified primary-model Gemma oracle-alpha campaign beyond `registry_v4`.
+1. Launch the first larger primary-model Gemma oracle-alpha campaign on the repaired `registry_v5` surface.
 2. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
-6. Keep the next oracle scale-up method-fixed: change the prompt surface and stratification first, not the target family or feature family.
+6. Keep the next oracle scale-up method-fixed: use the current best primary-model feature source plus `oracle_alpha_logit_vector` rather than reopening feature or target selection inside the first `registry_v5` campaign.
 
 ## Phase 1 Gate
 

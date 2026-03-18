@@ -1,0 +1,37 @@
+{
+  "artifacts": {
+    "feature_checkpoints": "results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/checkpoints/feature_vectors",
+    "oracle_checkpoints": "results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/checkpoints/oracle_runs",
+    "oracle_eval_run": "oracle_eval_run.json",
+    "oracle_train_run": "oracle_train_run.json",
+    "predictiveness_progress": "predictiveness_progress.json",
+    "predictiveness_summary": "predictiveness_summary.json"
+  },
+  "candidate_feature_sources": [
+    "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat"
+  ],
+  "candidate_target_names": [
+    "oracle_alpha_logit_vector"
+  ],
+  "collection_id": "oracle_alpha_phase1_v1",
+  "control_plan_id": "oracle_alpha_phase1_v1",
+  "control_registry_id": "20260316-phase1-controls-v1",
+  "eval_split": "confirm",
+  "learning_rate": 0.1,
+  "model_name": "gemma-2-2b",
+  "num_eval_sequences": 8,
+  "num_train_sequences": 8,
+  "optimization_steps": 20,
+  "output_dir": "results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2",
+  "regularization_grid": [
+    0.0001,
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "seed": 11,
+  "train_split": "pilot"
+}

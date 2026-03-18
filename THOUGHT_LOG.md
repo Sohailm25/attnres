@@ -234,6 +234,20 @@ Suggested entry format:
   - high that the primary-model oracle lane is the right place to invest next
   - medium-high that prompt-surface expansion is a better next lever than another method tweak
 
+## [2026-03-18T07:28:00-0500] The Generator Bug Was Exactly The Kind Worth Catching Early
+- Stage: implementation
+- Feel of the Experiment: This was a good calibration because it did not just say "the code runs." It flushed out a real prompt-bank flaw before the repo burned a much larger run on it.
+- Working Hypotheses:
+  - The first larger `registry_v5` campaign should answer a real scale question now that the surface is repaired.
+- Hunches and Guesses:
+  - The right efficiency move is to stop sweeping feature and target families for the first v5 pass and simply press on the current primary-model winner.
+- Predictions:
+  - The first larger `registry_v5` run will stay positive on routed-loss recovery and will probably surface stratum-conditioned variation before it resolves raw-source block structure.
+- Surprises and Tensions:
+  - The bug was not subtle. Seeing `a lemons` in a saved calibration prompt was enough to know the generator needed one more pass before the scale-up became trustworthy.
+- Confidence:
+  - high that the repaired calibration now justifies the larger v5 campaign
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.

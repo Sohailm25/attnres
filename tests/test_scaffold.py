@@ -188,7 +188,7 @@ class ScaffoldTests(unittest.TestCase):
     def test_experiment_config_points_to_saved_prompt_registry(self) -> None:
         config = (ROOT / "configs/experiment.yaml").read_text()
         required_snippets = [
-            "prompt_registry: prompts/registry_v4.yaml",
+            "prompt_registry: prompts/registry_v5.yaml",
             "oracle_alpha_control_registry: configs/oracle_alpha_controls_v1.yaml",
             "pilot_split: pilot",
             "confirmatory_split: confirm",

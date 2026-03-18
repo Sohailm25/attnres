@@ -1,0 +1,19 @@
+{
+  "artifact_id": "20260318-gemma2-registry-v5-calibration-v2",
+  "model_name": "google/gemma-2-2b",
+  "registry_path": "prompts/registry_v5.yaml",
+  "collection_id": "oracle_alpha_phase1_v1",
+  "pilot_sequences": 8,
+  "confirm_sequences": 8,
+  "feature_source": "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+  "target": "oracle_alpha_logit_vector",
+  "selected_regularization_strength": 100.0,
+  "predicted_mean_improvement_over_uniform": 0.5896,
+  "predicted_positive_prompts": 5,
+  "confirm_mean_js_divergence": 0.1195,
+  "confirm_r_squared": -0.0454,
+  "oracle_mean_improvement_over_uniform": 1.4363,
+  "oracle_positive_prompts": 8,
+  "supersedes": "20260318-gemma2-registry-v5-calibration-v1",
+  "note": "v2 rerun after repairing malformed general-text noun phrases in the generated prompt bank"
+}

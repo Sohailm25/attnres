@@ -1434,3 +1434,43 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
 - Anomalies: none; the remaining confirm mismatch is now the genuinely refusal-like harmful-context prompt rather than another policy-note semantics gap.
 - Next step: close `resattn-1wr` and pivot the next full pass toward `resattn-rh0`.
+
+## [2026-03-18T07:10:40-0500] PRE-RUN: Gemma registry_v5 calibration
+- tmux session: `N/A`
+- Script: `scripts/run_oracle_alpha_predictiveness_campaign.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --collection-id oracle_alpha_phase1_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v1 --max-train-sequences 8 --max-eval-sequences 8 --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat --candidate-target-names oracle_alpha_logit_vector --regularization-grid 0.0001 0.001 0.01 0.1 1 10 100`
+- Config: `model=google/gemma-2-2b`, `registry=prompts/registry_v5.yaml`, `pilot=8`, `confirm=8`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat`, `target=oracle_alpha_logit_vector`
+- What I'm testing: whether the generated stratified `registry_v5` surface works end-to-end with the current best primary-model oracle method and writes reusable oracle checkpoints, feature caches, and a predictiveness summary on a small four-stratum slice.
+- Expected outcome: the calibration covers all strata via round-robin ordering, completes on local MPS, writes checkpoints plus summary artifacts, and can be resumed without recomputing finished prompts.
+- Expected duration: ~10-30 minutes
+- Checkpoint path: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v1/oracle_checkpoints/` and `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v1/feature_checkpoints/`
+- Checkpoint cadence: after each prompt result and each feature vector
+- Log path: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the new stratified prompt surface is malformed, calibration failures may look like runner bugs even though the real problem is bad prompt generation.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry tests.test_scaffold` passed against the generated `registry_v5` before launch.
+- Status: LAUNCHING
+
+## [2026-03-18T07:18:06-0500] PRE-RUN: Gemma registry_v5 calibration rerun after prompt-bank repair
+- tmux session: `N/A`
+- Script: `scripts/run_oracle_alpha_predictiveness_campaign.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --collection-id oracle_alpha_phase1_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2 --max-train-sequences 8 --max-eval-sequences 8 --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat' --candidate-target-names oracle_alpha_logit_vector --regularization-grid 0.0001 0.001 0.01 0.1 1 10 100`
+- Config: `model=google/gemma-2-2b`, `registry=prompts/registry_v5.yaml`, `pilot=8`, `confirm=8`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat`, `target=oracle_alpha_logit_vector`
+- What I'm testing: whether the repaired `registry_v5` prompt bank still works end to end on the same four-stratum calibration slice after fixing article and noun-phrase issues in the general-text prompts.
+- Expected outcome: the v2 calibration keeps the runner behavior from v1 while eliminating obviously malformed general-text prompts from the saved artifact.
+- Expected duration: ~10-30 minutes
+- Checkpoint path: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/checkpoints/oracle_runs/` and `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/checkpoints/feature_vectors/`
+- Checkpoint cadence: after each prompt result and each feature vector
+- Log path: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the repaired prompt bank materially changes the small-slice result, the generator cleanup was not merely cosmetic and the full launch should stay blocked until that shift is understood.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry tests.test_scaffold` passed after regenerating `prompts/registry_v5.yaml`.
+- Status: LAUNCHING
+
+## [2026-03-18T07:28:00-0500] POST-RUN: Gemma registry_v5 calibration rerun after prompt-bank repair
+- Outcome: SUCCESS
+- Key metric: oracle mean improvement over uniform `= +1.4363` nats on `8` confirm prompts; predicted mean improvement over uniform `= +0.5896` nats on the same slice.
+- Artifacts saved: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/predictiveness_summary.json`, `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/oracle_eval_run.json`, `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2.md`
+- Latest checkpoint: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/checkpoints/oracle_runs/confirm/oa5-confirm-general_text-002-b1de39e66a.json`
+- Anomalies: the first calibration attempt exposed malformed general-text noun phrases; this rerun supersedes it after repairing the generator and regenerating `prompts/registry_v5.yaml`.
+- Next step: close `resattn-gad` and launch the first larger `registry_v5` Gemma oracle campaign on the fixed method surface.

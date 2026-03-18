@@ -1,0 +1,35 @@
+{
+  "collection_id": "oracle_alpha_phase1_v1",
+  "completed_candidate_pairs": 1,
+  "completed_candidates": [
+    {
+      "feature_source": "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+      "selected_regularization_strength": 100.0,
+      "target_name": "oracle_alpha_logit_vector",
+      "tuning_primary_metric_value": 0.19037794321775436,
+      "tuning_secondary_metric_value": 0.12236531705817243
+    }
+  ],
+  "completed_regularization_evaluations": 7,
+  "control_plan_id": "oracle_alpha_phase1_v1",
+  "control_registry_id": "20260316-phase1-controls-v1",
+  "current_candidate": null,
+  "last_completed_regularization": {
+    "feature_source": "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+    "regularization_strength": 100.0,
+    "target_name": "oracle_alpha_logit_vector",
+    "tuning_primary_metric": "mean_predicted_improvement_over_uniform",
+    "tuning_primary_metric_value": 0.19037794321775436,
+    "tuning_secondary_metric": "mean_js_divergence",
+    "tuning_secondary_metric_value": 0.12236531705817243
+  },
+  "model_name": "gemma-2-2b",
+  "num_eval_sequences": 8,
+  "num_train_sequences": 8,
+  "selected_feature_source": "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+  "selected_regularization_strength": 100.0,
+  "selected_target_name": "oracle_alpha_logit_vector",
+  "status": "complete",
+  "total_candidate_pairs": 1,
+  "total_regularization_evaluations": 7
+}

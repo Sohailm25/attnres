@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-rh0`
-- Focus: `resattn-rh0` is now the planning freeze for the next larger primary-model Gemma oracle campaign; after it lands, the immediate execution step is `resattn-gad`
-- Experimental status: the repo has enough positive primary-model oracle signal that the next clean leverage point is prompt-surface expansion rather than more method tuning. The frozen plan is a stratified `registry_v5` with four explicit strata, `64` pilot prompts and `256` confirm prompts per stratum, plus a required calibration slice before any full launch.
-- Critical reminder: the next scale-up should change the prompt surface only. Do not reopen target-family or feature-family redesign inside the first `registry_v5` campaign.
+- Branch: `wip/resattn-gad`
+- Focus: `resattn-gad` has now generated the stratified `registry_v5` surface and cleared the repaired calibration slice; the next meaningful move is the first larger `registry_v5` Gemma oracle campaign.
+- Experimental status: the prompt-surface expansion worked. `registry_v5` now provides four explicit oracle strata with `256` pilot prompts and `1024` confirm prompts total, and the repaired small calibration stayed positive on both oracle loss recovery and held-out predictiveness with the current best primary-model method. The next question is no longer “can v5 load and run?” It is how the larger stratified campaign behaves.
+- Critical reminder: keep the first `registry_v5` campaign method-fixed to the current best primary-model feature source plus `oracle_alpha_logit_vector`.

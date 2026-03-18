@@ -5,7 +5,10 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
+
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +29,7 @@ class PromptRegistryTests(unittest.TestCase):
         self.resolve_prompt_entries = resolve_prompt_entries
 
     def test_registry_file_exists(self) -> None:
-        self.assertTrue((ROOT / "prompts" / "registry_v4.yaml").is_file())
+        self.assertTrue((ROOT / "prompts" / "registry_v5.yaml").is_file())
 
     def test_phase1_collection_records_required_metadata(self) -> None:
         registry = self.load_prompt_registry()
@@ -58,13 +61,43 @@ class PromptRegistryTests(unittest.TestCase):
             exploratory=False,
             registry=registry,
         )
-        self.assertEqual(96, len(pilot_entries))
-        self.assertEqual(128, len(confirm_entries))
+        self.assertEqual(256, len(pilot_entries))
+        self.assertEqual(1024, len(confirm_entries))
         self.assertTrue(
             all(entry.split == "pilot" for entry in pilot_entries),
         )
         self.assertTrue(
             all(entry.split == "confirm" for entry in confirm_entries),
+        )
+        pilot_stratum_counts = {}
+        confirm_stratum_counts = {}
+        for entry in pilot_entries:
+            stratum_tag = next(tag for tag in entry.tags if tag.startswith("stratum_"))
+            pilot_stratum_counts[stratum_tag] = (
+                pilot_stratum_counts.get(stratum_tag, 0) + 1
+            )
+        for entry in confirm_entries:
+            stratum_tag = next(tag for tag in entry.tags if tag.startswith("stratum_"))
+            confirm_stratum_counts[stratum_tag] = (
+                confirm_stratum_counts.get(stratum_tag, 0) + 1
+            )
+        self.assertEqual(
+            {
+                "stratum_factual_recall": 64,
+                "stratum_reasoning_math": 64,
+                "stratum_code_procedural": 64,
+                "stratum_general_text": 64,
+            },
+            pilot_stratum_counts,
+        )
+        self.assertEqual(
+            {
+                "stratum_factual_recall": 256,
+                "stratum_reasoning_math": 256,
+                "stratum_code_procedural": 256,
+                "stratum_general_text": 256,
+            },
+            confirm_stratum_counts,
         )
 
     def test_oracle_alpha_pilot_entries_have_saved_paraphrases(self) -> None:
@@ -220,6 +253,48 @@ class PromptRegistryTests(unittest.TestCase):
         self.assertIn(
             "confirmatory prompts are locked",
             confirm_result.stderr,
+        )
+
+    def test_registry_v5_generator_reproduces_committed_registry(self) -> None:
+        script = ROOT / "scripts" / "generate_registry_v5.py"
+        committed_path = ROOT / "prompts" / "registry_v5.yaml"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            generated_path = Path(temp_dir) / "registry_v5.yaml"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(script),
+                    "--output",
+                    str(generated_path),
+                ],
+                capture_output=True,
+                check=False,
+                cwd=ROOT,
+                text=True,
+            )
+            self.assertEqual(0, result.returncode, msg=result.stderr)
+            self.assertTrue(generated_path.is_file())
+            self.assertEqual(
+                yaml.safe_load(committed_path.read_text()),
+                yaml.safe_load(generated_path.read_text()),
+            )
+
+    def test_registry_v5_general_text_prompts_avoid_known_article_regressions(
+        self,
+    ) -> None:
+        registry = self.load_prompt_registry()
+        prompts = registry.collections["oracle_alpha_phase1_v1"].prompt_entries
+        general_text_entries = [
+            entry for entry in prompts if "stratum_general_text" in entry.tags
+        ]
+
+        self.assertTrue(general_text_entries)
+        self.assertTrue(
+            all("a lemons" not in entry.text for entry in general_text_entries)
+        )
+        self.assertTrue(
+            all("a optician" not in entry.text for entry in general_text_entries)
         )
 
 

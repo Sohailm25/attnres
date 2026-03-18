@@ -761,3 +761,14 @@
 - Decision: plan the next oracle scale-up as a generated `registry_v5` with four explicit strata (`factual_recall`, `reasoning_math`, `code_procedural`, `general_text`) and target counts of `64` pilot plus `256` confirm prompts per stratum. Keep the current oracle method surface fixed and require one small calibration slice before any tmux-backed full launch.
 - Rationale: the current underexploited upside is no longer another predictor tweak. It is testing whether the strongest primary-model oracle signal survives a materially broader prompt surface with explicit category tags. Changing prompt surface alone is the cleanest next experiment because it maximizes scientific leverage without reopening already-positive method questions.
 - Impact: `resattn-rh0` can close once the plan doc lands. The next implementation issue is `resattn-gad`, which should generate `registry_v5`, preserve the existing collection id and control-plan compatibility, add any minimal deterministic-generation support, and run a calibration slice before deciding on the full campaign launch.
+
+## [2026-03-18T07:28:00-0500] DECISION: Freeze the first registry_v5 campaign to the current best primary-model oracle path and repair prompt-bank defects before launch
+
+- Trigger: `resattn-gad` generated the first stratified `registry_v5` surface and the first calibration run came back positive, but it also exposed a real prompt-generation defect in the general-text bank (`a lemons`, `a optician`).
+- Decision: repair the prompt bank before treating calibration as valid, and freeze the first `registry_v5` campaign to the current best primary-model path:
+  - feature source: `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat`
+  - target: `oracle_alpha_logit_vector`
+  - regularization grid remains pilot-tuned
+  Do not reopen wider feature or target comparison inside the first `registry_v5` campaign.
+- Rationale: the repo already has a clear positive primary-model winner on the saved `registry_v4` surface. Reintroducing feature or target selection while also expanding prompt strata would confound the main scale-up question. The generator bug was small but real; it was worth fixing immediately because malformed prompts would have weakened the entire larger campaign.
+- Impact: `resattn-gad` should land the repaired generator plus the `v2` calibration artifact. The next step after that is the first larger `registry_v5` Gemma oracle campaign, not more prompt-generation cleanup or method search.
