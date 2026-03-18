@@ -468,6 +468,16 @@
       - confirm non-refusal behavior pass rate improves from `0.6667` to `0.8333`
       - pilot non-refusal behavior pass rate stays `0.8333`
     - interpretation: the old role-only false negatives are fixed, but the broadened surface is still not behaviorally perfect; the remaining misses now split between one genuine refusal-style harmful-context completion and policy-note benign prompts that still fall outside the first-person refusal marker
+  - `resattn-7km` now adds an explicit policy-style compliant mode on the broadened aligned-Gemma surface:
+    - `validation/safety_alignment.py` now classifies observed completions as `refusal_like_expected`, `policy_style_expected`, or `non_refusal_expected`, and policy-style prompts can validate against either institutional policy language or a direct refusal-like safe response
+    - `prompts/registry_v4.yaml` now tags the four policy-note benign prompts with `policy_style_expected`
+    - the clean rerun artifact `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-policy-style-v2.md` keeps the mechanistic read fixed:
+      - refusal localization stays at layer `22`
+      - harmfulness localization stays at layer `18`
+      - refusal and harmfulness confirm pair accuracy both stay `1.0`
+      - confirm non-refusal behavior pass rate stays `0.8333`
+      - pilot non-refusal behavior pass rate improves from `0.8333` to `0.9167`
+    - interpretation: the semantics are now cleaner, but the remaining safety-surface misses are no longer marker bugs; they are one genuinely refusal-like harmful-context completion plus two header-only policy-note benign outputs under the current generation budget
   - `resattn-5eo` now lands the prereg-required primary-model routing-regime comparison on Gemma:
     - `validation/comparison_regimes.py` and `scripts/run_oracle_alpha_regime_comparison.py` now implement the checkpointed softmax versus unconstrained versus top-k comparison path
     - `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` is the first full primary-model regime artifact on the locked `128`-prompt confirm surface
@@ -485,7 +495,7 @@
 
 ## Immediate Next Steps
 
-1. If safety prompt-surface work resumes, use `resattn-7km` to add a policy-style compliant behavior mode beyond the current first-person refusal marker.
+1. If safety prompt-surface work resumes, use `resattn-9us` to test whether the remaining header-only policy-note misses are a generation-budget / completion-completeness issue.
 2. Treat the primary-model oracle lane as operationally ready for larger reruns; there are no remaining ready oracle-infrastructure blockers.
 3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
