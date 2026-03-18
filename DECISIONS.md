@@ -638,3 +638,22 @@
   - `depth_thirds_by_type` oracle best silhouette `= 0.3858` versus random `0.2305`, with resampling oracle-beats-random fraction `0.8750`
   This is stronger coarse source-type structure than the development-model lane, but it is not a raw-source `~8`-cluster result and it does not clear the prereg silhouette gate.
 - Impact: the next core oracle issue becomes `resattn-5eo`, the primary-model softmax versus unconstrained versus top-k comparison. Strong raw block-structure language stays blocked.
+
+## [2026-03-18T01:47:00-0500] DECISION: Repair top-k support search before accepting the primary-model regime comparison
+
+- Trigger: the first `resattn-5eo` top-k run returned an exact `0.0` mean improvement over uniform for `k = 2`, which was too clean to trust and traced back to the optimization path rather than to the science.
+- Decision: keep the prereg forward regime exact (`α = softmax(top_k(z, k))`), but change the top-k optimizer path so masked-out logits still receive support-search gradients from the matched `z = 0` start.
+- Rationale: with hard masking and exact zero initialization, the arbitrary tie-broken initial support got all the gradient and the masked coordinates got none. That made the sparse regime a frozen-support optimization artifact, not a fair matched-initialization comparison. A dense-softmax straight-through gradient path preserves the hard top-k forward object while allowing support search.
+- Impact: rerun the top-k family and discard the first sparse checkpoints as optimization-invalid. The final comparison artifact should only use the repaired run.
+
+## [2026-03-18T02:06:00-0500] DECISION: Treat the primary-model Gemma regime comparison as a clear softmax-separation pass
+
+- Trigger: `resattn-5eo` completed the full softmax, unconstrained, and top-k family comparison on the locked primary-model Gemma confirm split.
+- Decision: close `resattn-5eo` as a decisive regime-comparison success for the primary oracle lane and move repo priority to the Figure 8 strategic decision issue `resattn-1lk`.
+- Rationale: the regime ordering is clean on the locked `128`-prompt confirm surface:
+  - softmax-constrained mean improvement over uniform `= +2.5525` nats with `128 / 128` prompts positive
+  - unconstrained mean improvement `= +2.0637` nats with `128 / 128` prompts positive
+  - top-k improves monotonically with support but stays below softmax all the way to `k = 26` (`+1.4664` nats, `128 / 128` prompts positive)
+  - softmax beat unconstrained and every top-k setting on all `128` confirm prompts
+  This is exactly the kind of separation the prereg asked for before making competition-benefit language.
+- Impact: the primary model now has a real positive regime-comparison story rather than only a positive oracle-existence story. `resattn-1lk` becomes the next overall scientific move, `resattn-mo5` stays the strongest extension candidate after that, and `resattn-b4q` remains a worthwhile but secondary infrastructure follow-up.

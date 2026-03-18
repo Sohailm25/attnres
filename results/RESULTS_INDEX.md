@@ -75,6 +75,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
+| Gemma-2 primary-model routing-regime comparison v1 | comparison_regimes | pass | `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` |
 
 ## Tool Breakage
 

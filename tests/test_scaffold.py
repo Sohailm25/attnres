@@ -63,6 +63,7 @@ class ScaffoldTests(unittest.TestCase):
             "scripts/run_oracle_alpha_heldout_predictiveness_check.py",
             "scripts/run_oracle_alpha_pattern_analysis.py",
             "scripts/run_oracle_alpha_predictiveness_campaign.py",
+            "scripts/run_oracle_alpha_regime_comparison.py",
             "scripts/run_oracle_alpha_pilot_stability_suite.py",
             "scripts/run_tool_breakage_factual_recall_baseline.py",
             "scripts/run_tuned_lens_viability_pilot.py",
