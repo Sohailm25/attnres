@@ -456,6 +456,29 @@
       - all `32` prompt checkpoints kept their original timestamps from the first run
       - the exact-command rerun completed in `9.98` seconds and rewrote only `summary.json`
     - interpretation: the tool-breakage lane now has a strong bounded same-model baseline plus a cleared fixed-alpha objection, but the broader `v3` donor-arm control does not support a stronger prompt-specific escalation on the primary metric. The current claim boundary should freeze here unless a later family-conditioned analysis justifies reopening it
+  - `resattn-mxf` now sharpens that pooled `v3` donor-arm read into an explicit family-conditioned boundary:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v3.md` and `.json` summarize the saved prompt-level donor-arm checkpoints by family rather than only through the pooled aggregate
+    - the broader `v3` mixed result is not one uniform near-tie:
+      - `subcategory_element_symbol` stays positive against all three main controls:
+        - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.1624`
+        - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.7711`
+        - routed minus `pilot_mean_alpha` mean tuned KL `= +1.2521`
+      - `subcategory_author_fact` goes negative against all three main controls:
+        - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.3678`
+        - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.5923`
+        - routed minus `pilot_mean_alpha` mean tuned KL `= -0.0561`
+      - capitals and moons sit near tie on the within-family mean-KL read:
+        - capitals `= -0.0297`
+        - moons `= -0.0720`
+    - the author-family drag is not explained by unusually close within-family donor alphas:
+      - author within-family alpha JS `= 0.3211`
+      - capital within-family alpha JS `= 0.2458`
+      - element within-family alpha JS `= 0.2085`
+    - the strongest visible confound in the saved surface is target format:
+      - author multiword-target fraction `= 1.0`
+      - capital multiword-target fraction `= 0.375`
+      - element and moon multiword-target fractions `= 0.0`
+    - interpretation: the current broader Gemma tool-breakage lane should now be treated as frozen at this family-conditioned boundary. If it reopens later, the next disciplined move is a target-format-aware matched-family redesign rather than another pooled rerun
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -797,8 +820,8 @@
 ## Immediate Next Steps
 
 1. Treat `tool_breakage_factual_recall_v3` as the main matched-family surface for this lane and freeze the stronger same-model tool-breakage claim at the current `v3` donor-arm boundary.
-2. If tool-breakage work resumes later, start with `resattn-mxf`: family-conditioned analysis of the broader donor-arm heterogeneity, especially the author-family drag on the within-family mean-KL aggregate.
-3. Treat the current tool-breakage story as bounded but real: strong routed-versus-original and fixed-alpha gaps survive on the broader surface, but the broader within-family donor-control result stays mixed on the primary metric.
+2. Keep that boundary family-conditioned rather than pooled: elements remain the cleanest positive family, authors are the clearest negative family, and the current author-family drag is entangled with multiword-target / first-token format.
+3. If tool-breakage work resumes later, start with `resattn-4xn`: a target-format-aware matched-family redesign, not another pooled rerun.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

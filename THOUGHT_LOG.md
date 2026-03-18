@@ -1435,3 +1435,26 @@ Suggested entry format:
   - Routed minus `within_family_permuted_alpha` mean tuned KL `= -0.0768`
   - Routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.0560`
   - `subcategory_author_fact` mean routed-minus-within-family KL `= -0.3678`
+## [2026-03-18T12:10:30-0500] The Pooled Tool-Breakage Story Was Too Smooth
+- Stage: analysis
+- Feel of the Experiment: This sharpened the lane more than I expected. The family-conditioned profile did not rescue the broader same-model claim, but it did expose where the real structure is and where the current prompt surface is probably confounded.
+- Working Hypotheses:
+  - The element family is the cleanest surviving prompt-specific same-model signal on the broader matched-family surface.
+  - The author-family reversal is more about answer format and first-token evaluation than about unusually similar within-family routing weights.
+- Hunches and Guesses:
+  - If this lane ever reopens, the right move is a target-format-aware redesign, not another pooled donor-arm rerun.
+  - A single-token or otherwise answer-format-controlled follow-up could materially strengthen the interpretability of the same-model tool-breakage result even if the aggregate effect size shrinks.
+- Predictions:
+  - A target-format-aware follow-up will look more like the element-family story than the current pooled `v3` mix.
+  - If it does not, the prompt-specific same-model claim is probably near its ceiling on this lane.
+- Surprises and Tensions:
+  - The pooled fixed-alpha gap does not survive uniformly at the family level; authors are slightly negative even versus `pilot_mean_alpha`.
+  - Author within-family donor alphas are not especially close, so alpha similarity alone does not explain why that family reverses.
+- Confidence:
+  - high that `mxf` is worth keeping as a real artifact, not a footnote
+  - high that `4xn` is the only sensible preserved follow-up for this lane
+- Interesting facts:
+  - author within-family alpha JS `= 0.3211`
+  - capital within-family alpha JS `= 0.2458`
+  - element within-family alpha JS `= 0.2085`
+  - author multiword-target fraction `= 1.0`

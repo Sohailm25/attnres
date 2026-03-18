@@ -956,3 +956,24 @@
     - but `subcategory_author_fact` drags the within-family mean aggregate negative (`-0.3678`) while `subcategory_element_symbol` still favors routed (`+0.1624`)
   This is enough to freeze the stronger same-model escalation honestly: the lane has a strong baseline and a cleared fixed-alpha objection, but not a broad positive within-family donor-control result on the primary metric.
 - Impact: `resattn-4g2` can close once the artifact lands. Tool-breakage should no longer be the default next engineering lane; if it resumes later, use `resattn-mxf` to analyze family-conditioned heterogeneity rather than launching another larger run by reflex.
+
+## [2026-03-18T12:10:00-0500] DECISION: Freeze the broader Gemma tool-breakage lane at the family-conditioned boundary and reopen only through target-format-aware redesign
+
+- Trigger: `resattn-mxf` profiled the prompt-level donor-arm checkpoints behind the broader `tool_breakage_factual_recall_v3` artifact instead of relying on pooled summaries alone.
+- Decision: close `resattn-mxf` as a boundary-sharpening analysis pass. Keep the current broader Gemma tool-breakage lane frozen at this family-conditioned mixed result, and if the lane reopens later, do it through a target-format-aware matched-family redesign rather than another pooled rerun.
+- Rationale: the family profile shows that the pooled `v3` story is hiding qualitatively different regimes:
+  - `subcategory_element_symbol` stays positive against all three control arms:
+    - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.1624`
+    - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.7711`
+    - routed minus `pilot_mean_alpha` mean tuned KL `= +1.2521`
+  - `subcategory_author_fact` goes negative against all three control arms:
+    - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.3678`
+    - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.5923`
+    - routed minus `pilot_mean_alpha` mean tuned KL `= -0.0561`
+  - the author reversal is not explained by unusually close within-family donor alphas:
+    - author within-family alpha JS `= 0.3211`
+    - capital within-family alpha JS `= 0.2458`
+    - element within-family alpha JS `= 0.2085`
+  - the author family is also the only one with a `1.0` multiword-target fraction, so the most plausible current confound is target format / first-token evaluation rather than simple within-family alpha homogeneity
+  This means another pooled rerun would blur the real issue instead of resolving it.
+- Impact: the repo should now treat the current same-model tool-breakage claim as bounded at the family level. The next preserved follow-up is `resattn-4xn`, which decides the smallest target-format-aware redesign before any later tool-breakage rerun.
