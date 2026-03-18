@@ -11,18 +11,18 @@ import numpy as np
 from scipy.spatial.distance import jensenshannon
 
 
-def _require_single_subcategory(
+def _require_single_tag(
     *,
     prompt_id: str,
     tags: Sequence[str],
-    composition_tag_prefix: str,
+    tag_prefix: str,
 ) -> str:
-    subcategory_tags = [tag for tag in tags if tag.startswith(composition_tag_prefix)]
-    if len(subcategory_tags) != 1:
+    matching_tags = [tag for tag in tags if tag.startswith(tag_prefix)]
+    if len(matching_tags) != 1:
         raise ValueError(
-            f"prompt {prompt_id!r} must define exactly one {composition_tag_prefix} tag"
+            f"prompt {prompt_id!r} must define exactly one {tag_prefix} tag"
         )
-    return subcategory_tags[0]
+    return matching_tags[0]
 
 
 def _validated_source_labels(
@@ -56,7 +56,7 @@ def _prompt_arm_profile(
     baseline_prompt_result: Mapping[str, object],
     arm_result: Mapping[str, object],
     prompt_lookup: Mapping[str, Mapping[str, object]],
-    subcategory_by_prompt_id: Mapping[str, str],
+    tags_by_prompt_id_and_prefix: Mapping[str, Mapping[str, str]],
 ) -> dict[str, object]:
     routed_traces = baseline_prompt_result["layer_traces"]
     arm_traces = arm_result["layer_traces"]
@@ -81,17 +81,19 @@ def _prompt_arm_profile(
     ]
     alpha_source_prompt_id = arm_result["alpha_source_prompt_id"]
     alpha_source_target_text = None
-    alpha_source_subcategory = None
+    alpha_source_tags_by_prefix = None
     if alpha_source_prompt_id is not None:
         alpha_source_prompt = prompt_lookup[str(alpha_source_prompt_id)]
         alpha_source_target_text = str(alpha_source_prompt["target_text"])
-        alpha_source_subcategory = subcategory_by_prompt_id[str(alpha_source_prompt_id)]
+        alpha_source_tags_by_prefix = dict(
+            tags_by_prompt_id_and_prefix[str(alpha_source_prompt_id)]
+        )
 
     return {
         "arm_name": str(arm_result["arm_name"]),
         "alpha_source_prompt_id": alpha_source_prompt_id,
         "alpha_source_target_text": alpha_source_target_text,
-        "alpha_source_subcategory": alpha_source_subcategory,
+        "alpha_source_tags_by_prefix": alpha_source_tags_by_prefix,
         "alpha_js_distance_to_arm": _js_distance(
             baseline_prompt_result["oracle_alpha"],
             arm_result["alpha"],
@@ -126,12 +128,109 @@ def _prompt_arm_profile(
     }
 
 
-def build_tool_breakage_family_profile_summary(
+def _arm_summaries_for_profiles(
+    *,
+    arm_names: Sequence[str],
+    profiles: Sequence[Mapping[str, object]],
+) -> dict[str, dict[str, float]]:
+    arm_summaries = {}
+    for arm_name in arm_names:
+        arm_profiles = [profile["arm_profiles"][arm_name] for profile in profiles]
+        arm_summaries[arm_name] = {
+            "prompt_count": len(arm_profiles),
+            "mean_alpha_js_distance_to_arm": float(
+                mean(
+                    float(profile["alpha_js_distance_to_arm"])
+                    for profile in arm_profiles
+                )
+            ),
+            "mean_tuned_kl_delta_routed_minus_arm": float(
+                mean(
+                    float(profile["mean_tuned_kl_delta_routed_minus_arm"])
+                    for profile in arm_profiles
+                )
+            ),
+            "mean_tuned_final_position_kl_delta_routed_minus_arm": float(
+                mean(
+                    float(
+                        profile["mean_tuned_final_position_kl_delta_routed_minus_arm"]
+                    )
+                    for profile in arm_profiles
+                )
+            ),
+            "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": float(
+                mean(
+                    float(
+                        profile[
+                            "final_layer_tuned_final_position_kl_delta_routed_minus_arm"
+                        ]
+                    )
+                    for profile in arm_profiles
+                )
+            ),
+            "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": float(
+                mean(
+                    1.0
+                    if float(profile["mean_tuned_kl_delta_routed_minus_arm"]) > 0.0
+                    else 0.0
+                    for profile in arm_profiles
+                )
+            ),
+            "fraction_routed_worse_final_target_rank_vs_arm": float(
+                mean(
+                    1.0
+                    if bool(profile["routed_worse_final_target_rank_vs_arm"])
+                    else 0.0
+                    for profile in arm_profiles
+                )
+            ),
+            "fraction_routed_worse_best_target_rank_vs_arm": float(
+                mean(
+                    1.0
+                    if bool(profile["routed_worse_best_target_rank_vs_arm"])
+                    else 0.0
+                    for profile in arm_profiles
+                )
+            ),
+            "fraction_routed_increases_target_rank_range_vs_arm": float(
+                mean(
+                    1.0
+                    if bool(profile["routed_increases_target_rank_range_vs_arm"])
+                    else 0.0
+                    for profile in arm_profiles
+                )
+            ),
+            "mean_final_target_rank_delta_routed_minus_arm": float(
+                mean(
+                    int(profile["final_target_rank_delta_routed_minus_arm"])
+                    for profile in arm_profiles
+                )
+            ),
+            "mean_best_target_rank_delta_routed_minus_arm": float(
+                mean(
+                    int(profile["best_target_rank_delta_routed_minus_arm"])
+                    for profile in arm_profiles
+                )
+            ),
+            "mean_target_rank_range_delta_routed_minus_arm": float(
+                mean(
+                    int(profile["target_rank_range_delta_routed_minus_arm"])
+                    for profile in arm_profiles
+                )
+            ),
+        }
+    return arm_summaries
+
+
+def build_tool_breakage_counterfactual_tag_profile_summary(
     *,
     counterfactual_prompt_results: Sequence[Mapping[str, object]],
     prompt_tags_by_id: Mapping[str, Sequence[str]],
-    composition_tag_prefix: str = "subcategory_",
+    group_tag_prefixes: Sequence[str] = ("subcategory_",),
 ) -> dict[str, object]:
+    if not group_tag_prefixes:
+        raise ValueError("group_tag_prefixes must not be empty")
+
     source_labels = _validated_source_labels(counterfactual_prompt_results)
     prompt_lookup = {
         str(result["baseline_prompt_result"]["prompt_id"]): result[
@@ -139,12 +238,15 @@ def build_tool_breakage_family_profile_summary(
         ]
         for result in counterfactual_prompt_results
     }
-    subcategory_by_prompt_id = {
-        prompt_id: _require_single_subcategory(
-            prompt_id=prompt_id,
-            tags=prompt_tags_by_id[prompt_id],
-            composition_tag_prefix=composition_tag_prefix,
-        )
+    tags_by_prompt_id_and_prefix = {
+        prompt_id: {
+            tag_prefix: _require_single_tag(
+                prompt_id=prompt_id,
+                tags=prompt_tags_by_id[prompt_id],
+                tag_prefix=tag_prefix,
+            )
+            for tag_prefix in group_tag_prefixes
+        }
         for prompt_id in prompt_lookup
     }
 
@@ -176,7 +278,7 @@ def build_tool_breakage_family_profile_summary(
                 baseline_prompt_result=baseline_prompt_result,
                 arm_result=arm_result,
                 prompt_lookup=prompt_lookup,
-                subcategory_by_prompt_id=subcategory_by_prompt_id,
+                tags_by_prompt_id_and_prefix=tags_by_prompt_id_and_prefix,
             )
             for arm_result in result["counterfactual_results"]
         }
@@ -185,7 +287,7 @@ def build_tool_breakage_family_profile_summary(
                 "prompt_id": prompt_id,
                 "prompt": str(baseline_prompt_result["prompt"]),
                 "split": str(baseline_prompt_result["split"]),
-                "subcategory": subcategory_by_prompt_id[prompt_id],
+                "tags_by_prefix": dict(tags_by_prompt_id_and_prefix[prompt_id]),
                 "target_text": target_text,
                 "target_word_count": _target_word_count(target_text),
                 "target_contains_whitespace": (" " in target_text.strip()),
@@ -193,121 +295,90 @@ def build_tool_breakage_family_profile_summary(
             }
         )
 
-    prompt_profiles_by_subcategory: dict[str, list[dict[str, object]]] = defaultdict(
-        list
-    )
-    for prompt_profile in prompt_profiles:
-        prompt_profiles_by_subcategory[str(prompt_profile["subcategory"])].append(
-            prompt_profile
-        )
+    group_summaries = {}
+    for tag_prefix in group_tag_prefixes:
+        prompt_profiles_by_tag: dict[str, list[dict[str, object]]] = defaultdict(list)
+        for prompt_profile in prompt_profiles:
+            prompt_profiles_by_tag[
+                str(prompt_profile["tags_by_prefix"][tag_prefix])
+            ].append(prompt_profile)
 
-    by_subcategory: dict[str, dict[str, object]] = {}
-    for subcategory, profiles in sorted(prompt_profiles_by_subcategory.items()):
-        arm_summaries = {}
-        for arm_name in arm_names:
-            arm_profiles = [profile["arm_profiles"][arm_name] for profile in profiles]
-            arm_summaries[arm_name] = {
-                "prompt_count": len(arm_profiles),
-                "mean_alpha_js_distance_to_arm": float(
-                    mean(
-                        float(profile["alpha_js_distance_to_arm"])
-                        for profile in arm_profiles
-                    )
-                ),
-                "mean_tuned_kl_delta_routed_minus_arm": float(
-                    mean(
-                        float(profile["mean_tuned_kl_delta_routed_minus_arm"])
-                        for profile in arm_profiles
-                    )
-                ),
-                "mean_tuned_final_position_kl_delta_routed_minus_arm": float(
-                    mean(
-                        float(
-                            profile[
-                                "mean_tuned_final_position_kl_delta_routed_minus_arm"
-                            ]
+        group_summaries[tag_prefix] = {
+            "by_tag": {
+                tag_value: {
+                    "prompt_count": len(profiles),
+                    "multiword_target_fraction": float(
+                        mean(
+                            1.0 if int(profile["target_word_count"]) > 1 else 0.0
+                            for profile in profiles
                         )
-                        for profile in arm_profiles
-                    )
-                ),
-                "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": float(
-                    mean(
-                        float(
-                            profile[
-                                "final_layer_tuned_final_position_kl_delta_routed_minus_arm"
-                            ]
-                        )
-                        for profile in arm_profiles
-                    )
-                ),
-                "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": float(
-                    mean(
-                        1.0
-                        if float(profile["mean_tuned_kl_delta_routed_minus_arm"]) > 0.0
-                        else 0.0
-                        for profile in arm_profiles
-                    )
-                ),
-                "fraction_routed_worse_final_target_rank_vs_arm": float(
-                    mean(
-                        1.0
-                        if bool(profile["routed_worse_final_target_rank_vs_arm"])
-                        else 0.0
-                        for profile in arm_profiles
-                    )
-                ),
-                "fraction_routed_worse_best_target_rank_vs_arm": float(
-                    mean(
-                        1.0
-                        if bool(profile["routed_worse_best_target_rank_vs_arm"])
-                        else 0.0
-                        for profile in arm_profiles
-                    )
-                ),
-                "fraction_routed_increases_target_rank_range_vs_arm": float(
-                    mean(
-                        1.0
-                        if bool(profile["routed_increases_target_rank_range_vs_arm"])
-                        else 0.0
-                        for profile in arm_profiles
-                    )
-                ),
-                "mean_final_target_rank_delta_routed_minus_arm": float(
-                    mean(
-                        int(profile["final_target_rank_delta_routed_minus_arm"])
-                        for profile in arm_profiles
-                    )
-                ),
-                "mean_best_target_rank_delta_routed_minus_arm": float(
-                    mean(
-                        int(profile["best_target_rank_delta_routed_minus_arm"])
-                        for profile in arm_profiles
-                    )
-                ),
-                "mean_target_rank_range_delta_routed_minus_arm": float(
-                    mean(
-                        int(profile["target_rank_range_delta_routed_minus_arm"])
-                        for profile in arm_profiles
-                    )
-                ),
+                    ),
+                    "mean_target_word_count": float(
+                        mean(int(profile["target_word_count"]) for profile in profiles)
+                    ),
+                    "arm_summaries": _arm_summaries_for_profiles(
+                        arm_names=arm_names,
+                        profiles=profiles,
+                    ),
+                }
+                for tag_value, profiles in sorted(prompt_profiles_by_tag.items())
             }
-
-        target_word_counts = [int(profile["target_word_count"]) for profile in profiles]
-        by_subcategory[subcategory] = {
-            "prompt_count": len(profiles),
-            "multiword_target_fraction": float(
-                mean(
-                    1.0 if word_count > 1 else 0.0 for word_count in target_word_counts
-                )
-            ),
-            "mean_target_word_count": float(mean(target_word_counts)),
-            "arm_summaries": arm_summaries,
         }
 
     return {
         "num_prompts": len(prompt_profiles),
         "source_labels": source_labels,
         "arm_names": arm_names,
+        "group_tag_prefixes": list(group_tag_prefixes),
         "prompt_profiles": prompt_profiles,
-        "by_subcategory": by_subcategory,
+        "group_summaries": group_summaries,
+    }
+
+
+def build_tool_breakage_family_profile_summary(
+    *,
+    counterfactual_prompt_results: Sequence[Mapping[str, object]],
+    prompt_tags_by_id: Mapping[str, Sequence[str]],
+    composition_tag_prefix: str = "subcategory_",
+) -> dict[str, object]:
+    generic_summary = build_tool_breakage_counterfactual_tag_profile_summary(
+        counterfactual_prompt_results=counterfactual_prompt_results,
+        prompt_tags_by_id=prompt_tags_by_id,
+        group_tag_prefixes=(composition_tag_prefix,),
+    )
+    prompt_profiles = []
+    for profile in generic_summary["prompt_profiles"]:
+        arm_profiles = {}
+        for arm_name, arm_profile in profile["arm_profiles"].items():
+            arm_profile_with_subcategory = dict(arm_profile)
+            alpha_source_tags_by_prefix = arm_profile_with_subcategory.get(
+                "alpha_source_tags_by_prefix"
+            )
+            arm_profile_with_subcategory["alpha_source_subcategory"] = (
+                None
+                if alpha_source_tags_by_prefix is None
+                else alpha_source_tags_by_prefix[composition_tag_prefix]
+            )
+            arm_profiles[arm_name] = arm_profile_with_subcategory
+        prompt_profiles.append(
+            {
+                "prompt_id": profile["prompt_id"],
+                "prompt": profile["prompt"],
+                "split": profile["split"],
+                "subcategory": profile["tags_by_prefix"][composition_tag_prefix],
+                "target_text": profile["target_text"],
+                "target_word_count": profile["target_word_count"],
+                "target_contains_whitespace": profile["target_contains_whitespace"],
+                "arm_profiles": arm_profiles,
+            }
+        )
+
+    return {
+        "num_prompts": generic_summary["num_prompts"],
+        "source_labels": generic_summary["source_labels"],
+        "arm_names": generic_summary["arm_names"],
+        "prompt_profiles": prompt_profiles,
+        "by_subcategory": generic_summary["group_summaries"][composition_tag_prefix][
+            "by_tag"
+        ],
     }

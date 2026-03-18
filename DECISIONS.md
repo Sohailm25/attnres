@@ -1217,3 +1217,27 @@
   - `resattn-138` can close once the confirm artifact lands.
   - `resattn-hth` is now the next bounded tool-breakage issue: rerun the donor-arm counterfactual on the narrowed `v5` confirm surface and keep the write-up stratified by route mode and family.
   - `resattn-a1w` remains a moon-only sidecar.
+
+## [2026-03-18T15:35:00-0500] DECISION: Close `resattn-hth` as a mixed donor-arm result on the narrowed `v5` bridge and move the main focus back to Gemma oracle synthesis
+
+- Trigger: `resattn-hth` ran the donor-arm counterfactual on the narrowed `tool_breakage_factual_recall_v5` confirm surface and profiled the result by family and intended route mode.
+- Decision: close `resattn-hth` as mixed. Keep the strong same-model tool-breakage boundary at: positive routed-versus-original `v5` baseline, positive routed-versus-fixed-alpha counterfactual, and mixed donor-arm controls with route-mode heterogeneity. Do not launch another tool-breakage rerun immediately. The main repo focus should move back to primary-model oracle synthesis, while any future tool-breakage revisit should start with a donor-assignment audit rather than another pooled run.
+- Rationale:
+  - the fixed-alpha objection stays clearly weaker:
+    - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0898`
+    - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.1861`
+  - the pooled donor-arm read remains negative on the primary metric:
+    - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.1021`
+    - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.1502`
+    - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.3728`
+  - the mixture is structured rather than uniformly weak:
+    - authors are the blocker (`within_family = -0.3415`)
+    - capitals are near a tie (`within_family = +0.0004`)
+    - elements remain modestly positive (`within_family = +0.1146`, `prompt_permuted = +0.2829`)
+    - `route_mode_author_cluster_7` is positive on every arm, while `route_mode_author_cluster_12` is negative on every dynamic donor arm
+  - the v5 donor controls are not maximally independent:
+    - `prompt_permuted_alpha` and `within_family_permuted_alpha` are numerically identical on `7 / 10` targeted route modes under the locked confirm ordering
+- Impact:
+  - `resattn-hth` can close once the artifact lands.
+  - `resattn-oi7` preserves the only honest tool-breakage follow-up: audit donor assignment geometry before any further rerun.
+  - `resattn-qxz` is now the main next issue because the strongest results in the repo live on the saved primary-model oracle artifacts.

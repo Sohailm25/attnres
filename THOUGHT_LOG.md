@@ -1722,3 +1722,25 @@ Suggested entry format:
   - overall `v5` confirm mean tuned KL delta `= +2.9065`
   - strongest confirm mode `= route_mode_author_cluster_7` at `+4.9136`
   - weakest confirm mode `= route_mode_author_cluster_12` at `+1.9931`
+## [2026-03-18T15:35:00-0500] The Narrowed Bridge Survives, But The Donor Story Is Still Jagged
+- Stage: tool-breakage donor-arm controls
+- Feel of the Experiment: This is a useful mixed result, not a disappointment. The fixed-alpha objection weakened again, which means the narrowed bridge is not fake. But the donor-arm read still refuses to flatten into a clean overall yes, and the route-mode split explains why.
+- Working Hypotheses:
+  - Tool-breakage should not get another pooled rerun next.
+  - The next real value in this lane is understanding donor geometry, especially why author modes still dominate the negative within-family result.
+- Hunches and Guesses:
+  - The partial collapse between `prompt_permuted_alpha` and `within_family_permuted_alpha` is now a real design limitation of the `v5` confirm ordering, not just a reporting quirk.
+  - Elements are the healthiest family if this lane ever reopens.
+- Predictions:
+  - A donor-assignment audit will say “freeze unless you can make the controls more independent,” not “just rerun bigger.”
+  - The main paper story should gain more from oracle synthesis than from another factual tool-breakage iteration right now.
+- Surprises and Tensions:
+  - Author `cluster 7` is cleanly positive on every arm while author `cluster 12` is negative on every dynamic arm. That is stronger heterogeneity than the family-level split suggests.
+  - Capitals are almost exactly a tie within-family, which is more interesting than either a clean fail or a clean pass.
+- Confidence:
+  - high that `hth` should close as mixed
+  - high that `qxz` is now more important than any immediate tool-breakage rerun
+- Interesting facts:
+  - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0898`
+  - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.1021`
+  - route modes with identical `prompt_permuted_alpha` and `within_family_permuted_alpha` means `= 7 / 10`

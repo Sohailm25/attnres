@@ -1,0 +1,2646 @@
+{
+  "num_prompts": 20,
+  "source_labels": [
+    "embed",
+    "0_attn_out",
+    "0_mlp_out",
+    "1_attn_out",
+    "1_mlp_out",
+    "2_attn_out",
+    "2_mlp_out",
+    "3_attn_out",
+    "3_mlp_out",
+    "4_attn_out",
+    "4_mlp_out",
+    "5_attn_out",
+    "5_mlp_out",
+    "6_attn_out",
+    "6_mlp_out",
+    "7_attn_out",
+    "7_mlp_out",
+    "8_attn_out",
+    "8_mlp_out",
+    "9_attn_out",
+    "9_mlp_out",
+    "10_attn_out",
+    "10_mlp_out",
+    "11_attn_out",
+    "11_mlp_out",
+    "12_attn_out",
+    "12_mlp_out",
+    "13_attn_out",
+    "13_mlp_out",
+    "14_attn_out",
+    "14_mlp_out",
+    "15_attn_out",
+    "15_mlp_out",
+    "16_attn_out",
+    "16_mlp_out",
+    "17_attn_out",
+    "17_mlp_out",
+    "18_attn_out",
+    "18_mlp_out",
+    "19_attn_out",
+    "19_mlp_out",
+    "20_attn_out",
+    "20_mlp_out",
+    "21_attn_out",
+    "21_mlp_out",
+    "22_attn_out",
+    "22_mlp_out",
+    "23_attn_out",
+    "23_mlp_out",
+    "24_attn_out",
+    "24_mlp_out",
+    "25_attn_out",
+    "25_mlp_out"
+  ],
+  "arm_names": [
+    "cross_family_permuted_alpha",
+    "pilot_mean_alpha",
+    "prompt_permuted_alpha",
+    "within_family_permuted_alpha"
+  ],
+  "group_tag_prefixes": [
+    "subcategory_",
+    "route_mode_"
+  ],
+  "prompt_profiles": [
+    {
+      "prompt_id": "tb5-confirm-001",
+      "prompt": "On most maps, the capital of Australia appears as",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_capital_fact",
+        "route_mode_": "route_mode_capital_cluster_2"
+      },
+      "target_text": "Canberra",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-002",
+          "alpha_source_target_text": "Lisbon",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.25961672573125794,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.15176838636398315,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.7132336795330048,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.8740737438201904,
+          "final_target_rank_delta_routed_minus_arm": 9,
+          "best_target_rank_delta_routed_minus_arm": 9,
+          "target_rank_range_delta_routed_minus_arm": -25107,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3301192871063804,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.4878881848775423,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.531454563140869,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.3593869209289551,
+          "final_target_rank_delta_routed_minus_arm": 10,
+          "best_target_rank_delta_routed_minus_arm": 10,
+          "target_rank_range_delta_routed_minus_arm": 8257,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-002",
+          "alpha_source_target_text": "Lisbon",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.25961672573125794,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.15176838636398315,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.7132336795330048,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.8740737438201904,
+          "final_target_rank_delta_routed_minus_arm": 9,
+          "best_target_rank_delta_routed_minus_arm": 9,
+          "target_rank_range_delta_routed_minus_arm": -25107,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-007",
+          "alpha_source_target_text": "Fe",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_1"
+          },
+          "alpha_js_distance_to_arm": 0.4451305483936896,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.04610411937420185,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.9765909176606399,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.8995540142059326,
+          "final_target_rank_delta_routed_minus_arm": -179,
+          "best_target_rank_delta_routed_minus_arm": -26,
+          "target_rank_range_delta_routed_minus_arm": -2696,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-002",
+      "prompt": "On most maps, the capital of Portugal appears as",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_capital_fact",
+        "route_mode_": "route_mode_capital_cluster_2"
+      },
+      "target_text": "Lisbon",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-003",
+          "alpha_source_target_text": "Cairo",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_3"
+          },
+          "alpha_js_distance_to_arm": 0.4035317361768603,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.1788742863214933,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.3307887590848483,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -8.164944887161255,
+          "final_target_rank_delta_routed_minus_arm": -756,
+          "best_target_rank_delta_routed_minus_arm": -756,
+          "target_rank_range_delta_routed_minus_arm": 56635,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3042321457737107,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.211635750073653,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.0750403220836935,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.17894554138183594,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": 114773,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-003",
+          "alpha_source_target_text": "Cairo",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_3"
+          },
+          "alpha_js_distance_to_arm": 0.4035317361768603,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.1788742863214933,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.3307887590848483,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -8.164944887161255,
+          "final_target_rank_delta_routed_minus_arm": -756,
+          "best_target_rank_delta_routed_minus_arm": -756,
+          "target_rank_range_delta_routed_minus_arm": 56635,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-008",
+          "alpha_source_target_text": "Ca",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_1"
+          },
+          "alpha_js_distance_to_arm": 0.37624300662435256,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.037013824169452376,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.070040409381573,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.3733847141265869,
+          "final_target_rank_delta_routed_minus_arm": -328,
+          "best_target_rank_delta_routed_minus_arm": -328,
+          "target_rank_range_delta_routed_minus_arm": 85414,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-003",
+      "prompt": "The capital city of Egypt is",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_capital_fact",
+        "route_mode_": "route_mode_capital_cluster_3"
+      },
+      "target_text": "Cairo",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-004",
+          "alpha_source_target_text": "Seoul",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_3"
+          },
+          "alpha_js_distance_to_arm": 0.23850020479474662,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.8877964203174298,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.952566385269165,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.6645941734313965,
+          "final_target_rank_delta_routed_minus_arm": -97,
+          "best_target_rank_delta_routed_minus_arm": -97,
+          "target_rank_range_delta_routed_minus_arm": 11094,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.2945260071586439,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.3851438210560725,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.0464674945061023,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.811838150024414,
+          "final_target_rank_delta_routed_minus_arm": 13,
+          "best_target_rank_delta_routed_minus_arm": 13,
+          "target_rank_range_delta_routed_minus_arm": 56008,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-004",
+          "alpha_source_target_text": "Seoul",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_3"
+          },
+          "alpha_js_distance_to_arm": 0.23850020479474662,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.8877964203174298,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.952566385269165,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.6645941734313965,
+          "final_target_rank_delta_routed_minus_arm": -97,
+          "best_target_rank_delta_routed_minus_arm": -97,
+          "target_rank_range_delta_routed_minus_arm": 11094,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-009",
+          "alpha_source_target_text": "K",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_5"
+          },
+          "alpha_js_distance_to_arm": 0.3815295455538858,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.950836011996636,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.1981675395598779,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.442883014678955,
+          "final_target_rank_delta_routed_minus_arm": 13,
+          "best_target_rank_delta_routed_minus_arm": 13,
+          "target_rank_range_delta_routed_minus_arm": -22767,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-004",
+      "prompt": "The capital city of South Korea is",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_capital_fact",
+        "route_mode_": "route_mode_capital_cluster_3"
+      },
+      "target_text": "Seoul",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-005",
+          "alpha_source_target_text": "Lima",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_4"
+          },
+          "alpha_js_distance_to_arm": 0.38960310133072223,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.6061839323777419,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.2694895496735206,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.929027795791626,
+          "final_target_rank_delta_routed_minus_arm": -1,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -36010,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.28782738154159976,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.024159355805470392,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.15041255263181832,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.3662447929382324,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": 16253,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-005",
+          "alpha_source_target_text": "Lima",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_4"
+          },
+          "alpha_js_distance_to_arm": 0.38960310133072223,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.6061839323777419,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.2694895496735206,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.929027795791626,
+          "final_target_rank_delta_routed_minus_arm": -1,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -36010,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-010",
+          "alpha_source_target_text": "He",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_5"
+          },
+          "alpha_js_distance_to_arm": 0.4075303297160001,
+          "mean_tuned_kl_delta_routed_minus_arm": -2.6163514118928175,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.7731182896173918,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.2966303825378418,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -30109,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-005",
+      "prompt": "In a geography quiz, the capital of Peru would be",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_capital_fact",
+        "route_mode_": "route_mode_capital_cluster_4"
+      },
+      "target_text": "Lima",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-006",
+          "alpha_source_target_text": "Bangkok",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_4"
+          },
+          "alpha_js_distance_to_arm": 0.13910861220389445,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.12701696157455444,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.4956521987915039,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.3024308681488037,
+          "final_target_rank_delta_routed_minus_arm": -2,
+          "best_target_rank_delta_routed_minus_arm": -2,
+          "target_rank_range_delta_routed_minus_arm": -4665,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3410691309120965,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.0712727560446813,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.7781226153557117,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.7197403907775879,
+          "final_target_rank_delta_routed_minus_arm": -2,
+          "best_target_rank_delta_routed_minus_arm": -2,
+          "target_rank_range_delta_routed_minus_arm": 89753,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-006",
+          "alpha_source_target_text": "Bangkok",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_4"
+          },
+          "alpha_js_distance_to_arm": 0.13910861220389445,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.12701696157455444,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.4956521987915039,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.3024308681488037,
+          "final_target_rank_delta_routed_minus_arm": -2,
+          "best_target_rank_delta_routed_minus_arm": -2,
+          "target_rank_range_delta_routed_minus_arm": -4665,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-011",
+          "alpha_source_target_text": "Hg",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_9"
+          },
+          "alpha_js_distance_to_arm": 0.47978929971564954,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.1537550871188824,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.9573402129686795,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.8105568885803223,
+          "final_target_rank_delta_routed_minus_arm": -16,
+          "best_target_rank_delta_routed_minus_arm": -16,
+          "target_rank_range_delta_routed_minus_arm": 67001,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-006",
+      "prompt": "In a geography quiz, the capital of Thailand would be",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_capital_fact",
+        "route_mode_": "route_mode_capital_cluster_4"
+      },
+      "target_text": "Bangkok",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-007",
+          "alpha_source_target_text": "Fe",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_1"
+          },
+          "alpha_js_distance_to_arm": 0.43408203133199214,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.4768830079298753,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.47733200513399565,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -1.5248191356658936,
+          "final_target_rank_delta_routed_minus_arm": -413,
+          "best_target_rank_delta_routed_minus_arm": -323,
+          "target_rank_range_delta_routed_minus_arm": 55560,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.33314121707781175,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.9306456263248737,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.29856101824687076,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.3434944152832031,
+          "final_target_rank_delta_routed_minus_arm": 3,
+          "best_target_rank_delta_routed_minus_arm": 3,
+          "target_rank_range_delta_routed_minus_arm": 61548,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-001",
+          "alpha_source_target_text": "Canberra",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.43436586041355013,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.37909078139525193,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.950645272548382,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.8130397796630859,
+          "final_target_rank_delta_routed_minus_arm": -270,
+          "best_target_rank_delta_routed_minus_arm": -270,
+          "target_rank_range_delta_routed_minus_arm": 62785,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-012",
+          "alpha_source_target_text": "Ne",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_9"
+          },
+          "alpha_js_distance_to_arm": 0.4607854818228428,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.0037103111927325907,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.0388477857296283,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.6599922180175781,
+          "final_target_rank_delta_routed_minus_arm": -92,
+          "best_target_rank_delta_routed_minus_arm": -92,
+          "target_rank_range_delta_routed_minus_arm": 55990,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-007",
+      "prompt": "The chemical symbol for iron is",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_element_symbol",
+        "route_mode_": "route_mode_element_cluster_1"
+      },
+      "target_text": "Fe",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-008",
+          "alpha_source_target_text": "Ca",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_1"
+          },
+          "alpha_js_distance_to_arm": 0.22168302937098733,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.37354676540081316,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.8241923588972826,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.6229650974273682,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -16367,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3258077546964386,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.5557931203108568,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.15507664130284235,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.22191381454467773,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -25033,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-008",
+          "alpha_source_target_text": "Ca",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_1"
+          },
+          "alpha_js_distance_to_arm": 0.22168302937098733,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.37354676540081316,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.8241923588972826,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.6229650974273682,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -16367,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-013",
+          "alpha_source_target_text": "Tolstoy",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_6"
+          },
+          "alpha_js_distance_to_arm": 0.5100538684902648,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.1667977296389067,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.655304899582496,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.833000659942627,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -60535,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-008",
+      "prompt": "The chemical symbol for calcium is",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_element_symbol",
+        "route_mode_": "route_mode_element_cluster_1"
+      },
+      "target_text": "Ca",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-009",
+          "alpha_source_target_text": "K",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_5"
+          },
+          "alpha_js_distance_to_arm": 0.42241768681153063,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.5039392136610471,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.576591418339656,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.7184815406799316,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -67802,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3096418744941556,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.1596678793430328,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.076301395893097,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.0677528381347656,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": 43243,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-009",
+          "alpha_source_target_text": "K",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_5"
+          },
+          "alpha_js_distance_to_arm": 0.42241768681153063,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.5039392136610471,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.576591418339656,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.7184815406799316,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -67802,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-014",
+          "alpha_source_target_text": "Swift",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_6"
+          },
+          "alpha_js_distance_to_arm": 0.44204334533017436,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.8407857578534347,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.3963122963905334,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.36166512966156,
+          "final_target_rank_delta_routed_minus_arm": -1,
+          "best_target_rank_delta_routed_minus_arm": -1,
+          "target_rank_range_delta_routed_minus_arm": 112261,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-009",
+      "prompt": "In the periodic table, potassium is abbreviated as",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_element_symbol",
+        "route_mode_": "route_mode_element_cluster_5"
+      },
+      "target_text": "K",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-010",
+          "alpha_source_target_text": "He",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_5"
+          },
+          "alpha_js_distance_to_arm": 0.23023890255422397,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.14947335995160616,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.8173285722732544,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -3.1110172271728516,
+          "final_target_rank_delta_routed_minus_arm": -12,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -15097,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.29165941264893985,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.3901638847130995,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.701056372660857,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.334234356880188,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -73093,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-010",
+          "alpha_source_target_text": "He",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_5"
+          },
+          "alpha_js_distance_to_arm": 0.23023890255422397,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.14947335995160616,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.8173285722732544,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -3.1110172271728516,
+          "final_target_rank_delta_routed_minus_arm": -12,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -15097,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-015",
+          "alpha_source_target_text": "Joyce",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_7"
+          },
+          "alpha_js_distance_to_arm": 0.43575759835134015,
+          "mean_tuned_kl_delta_routed_minus_arm": -6.888327914934892,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -28.659469595322243,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -21.54575824737549,
+          "final_target_rank_delta_routed_minus_arm": -160750,
+          "best_target_rank_delta_routed_minus_arm": -117963,
+          "target_rank_range_delta_routed_minus_arm": -116057,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-010",
+      "prompt": "In the periodic table, helium is abbreviated as",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_element_symbol",
+        "route_mode_": "route_mode_element_cluster_5"
+      },
+      "target_text": "He",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-011",
+          "alpha_source_target_text": "Hg",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_9"
+          },
+          "alpha_js_distance_to_arm": 0.43111074962457635,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.7403760048059317,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 9.164332632835094,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.879640460014343,
+          "final_target_rank_delta_routed_minus_arm": 240,
+          "best_target_rank_delta_routed_minus_arm": 35,
+          "target_rank_range_delta_routed_minus_arm": 103793,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.2884903347989528,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.9919163493009715,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 4.470411814176119,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.444443583488464,
+          "final_target_rank_delta_routed_minus_arm": 239,
+          "best_target_rank_delta_routed_minus_arm": 35,
+          "target_rank_range_delta_routed_minus_arm": 19429,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-011",
+          "alpha_source_target_text": "Hg",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_9"
+          },
+          "alpha_js_distance_to_arm": 0.43111074962457635,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.7403760048059317,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 9.164332632835094,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.879640460014343,
+          "final_target_rank_delta_routed_minus_arm": 240,
+          "best_target_rank_delta_routed_minus_arm": 35,
+          "target_rank_range_delta_routed_minus_arm": 103793,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-016",
+          "alpha_source_target_text": "Milton",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_7"
+          },
+          "alpha_js_distance_to_arm": 0.39215078466939624,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.4283864681537335,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.9916229981642504,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.7581033706665039,
+          "final_target_rank_delta_routed_minus_arm": -130,
+          "best_target_rank_delta_routed_minus_arm": 25,
+          "target_rank_range_delta_routed_minus_arm": -77559,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-011",
+      "prompt": "A lab chart would mark mercury with the symbol",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_element_symbol",
+        "route_mode_": "route_mode_element_cluster_9"
+      },
+      "target_text": "Hg",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-012",
+          "alpha_source_target_text": "Ne",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_9"
+          },
+          "alpha_js_distance_to_arm": 0.34200823947789294,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.5132338817302997,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.48738366823930007,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.0651793479919434,
+          "final_target_rank_delta_routed_minus_arm": -5,
+          "best_target_rank_delta_routed_minus_arm": -5,
+          "target_rank_range_delta_routed_minus_arm": 11645,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.32559827785343065,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.3055631541288817,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.370041352051955,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.690070867538452,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": 146450,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-012",
+          "alpha_source_target_text": "Ne",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_9"
+          },
+          "alpha_js_distance_to_arm": 0.34200823947789294,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.5132338817302997,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.48738366823930007,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.0651793479919434,
+          "final_target_rank_delta_routed_minus_arm": -5,
+          "best_target_rank_delta_routed_minus_arm": -5,
+          "target_rank_range_delta_routed_minus_arm": 11645,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-017",
+          "alpha_source_target_text": "Fitzgerald",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_11"
+          },
+          "alpha_js_distance_to_arm": 0.4976820399526197,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.6071904393342825,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.024938757602985088,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.7426440715789795,
+          "final_target_rank_delta_routed_minus_arm": -3,
+          "best_target_rank_delta_routed_minus_arm": -3,
+          "target_rank_range_delta_routed_minus_arm": 485,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-012",
+      "prompt": "Chemistry notes write the symbol for neon as",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_element_symbol",
+        "route_mode_": "route_mode_element_cluster_9"
+      },
+      "target_text": "Ne",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-013",
+          "alpha_source_target_text": "Tolstoy",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_6"
+          },
+          "alpha_js_distance_to_arm": 0.38429094032098987,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.7236539217141958,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.8769915424860442,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 5.068200588226318,
+          "final_target_rank_delta_routed_minus_arm": 97,
+          "best_target_rank_delta_routed_minus_arm": 7,
+          "target_rank_range_delta_routed_minus_arm": -13506,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3372178250061665,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.3784964978694916,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.0677071305421681,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 4.464143753051758,
+          "final_target_rank_delta_routed_minus_arm": 105,
+          "best_target_rank_delta_routed_minus_arm": 15,
+          "target_rank_range_delta_routed_minus_arm": -29560,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-007",
+          "alpha_source_target_text": "Fe",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_element_symbol",
+            "route_mode_": "route_mode_element_cluster_1"
+          },
+          "alpha_js_distance_to_arm": 0.505765661272592,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.28633978275152355,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.06923468296344464,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.9586734771728516,
+          "final_target_rank_delta_routed_minus_arm": 103,
+          "best_target_rank_delta_routed_minus_arm": 14,
+          "target_rank_range_delta_routed_minus_arm": -102381,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-018",
+          "alpha_source_target_text": "Camus",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_11"
+          },
+          "alpha_js_distance_to_arm": 0.47030045648652924,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.4114667223050044,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.5680269278012788,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.4248523712158203,
+          "final_target_rank_delta_routed_minus_arm": -891,
+          "best_target_rank_delta_routed_minus_arm": -981,
+          "target_rank_range_delta_routed_minus_arm": -160133,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-013",
+      "prompt": "Literature students learn that War and Peace was written by",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_6"
+      },
+      "target_text": "Tolstoy",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-014",
+          "alpha_source_target_text": "Swift",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_6"
+          },
+          "alpha_js_distance_to_arm": 0.271635032178143,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.1696643462547889,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.1347076250956607,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.9812358617782593,
+          "final_target_rank_delta_routed_minus_arm": -3,
+          "best_target_rank_delta_routed_minus_arm": -3,
+          "target_rank_range_delta_routed_minus_arm": 10806,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.32843126500757863,
+          "mean_tuned_kl_delta_routed_minus_arm": 1.0720305717908418,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.5123885778280406,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.6062740087509155,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -3665,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-014",
+          "alpha_source_target_text": "Swift",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_6"
+          },
+          "alpha_js_distance_to_arm": 0.271635032178143,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.1696643462547889,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.1347076250956607,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.9812358617782593,
+          "final_target_rank_delta_routed_minus_arm": -3,
+          "best_target_rank_delta_routed_minus_arm": -3,
+          "target_rank_range_delta_routed_minus_arm": 10806,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-001",
+          "alpha_source_target_text": "Canberra",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.4624352902528605,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.5603489233897283,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.5093288559180039,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.5155138969421387,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -62156,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-014",
+      "prompt": "Literature students learn that Gulliver's Travels was written by",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_6"
+      },
+      "target_text": "Swift",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-015",
+          "alpha_source_target_text": "Joyce",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_7"
+          },
+          "alpha_js_distance_to_arm": 0.366455076857384,
+          "mean_tuned_kl_delta_routed_minus_arm": -4.062734214159159,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -9.767178528583967,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -9.84516566991806,
+          "final_target_rank_delta_routed_minus_arm": -707,
+          "best_target_rank_delta_routed_minus_arm": -85,
+          "target_rank_range_delta_routed_minus_arm": -68094,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.2997260941176217,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.3097493350505829,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.3784982103567858,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.4000910520553589,
+          "final_target_rank_delta_routed_minus_arm": 6,
+          "best_target_rank_delta_routed_minus_arm": 7,
+          "target_rank_range_delta_routed_minus_arm": 10519,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-015",
+          "alpha_source_target_text": "Joyce",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_7"
+          },
+          "alpha_js_distance_to_arm": 0.366455076857384,
+          "mean_tuned_kl_delta_routed_minus_arm": -4.062734214159159,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -9.767178528583967,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -9.84516566991806,
+          "final_target_rank_delta_routed_minus_arm": -707,
+          "best_target_rank_delta_routed_minus_arm": -85,
+          "target_rank_range_delta_routed_minus_arm": -68094,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-002",
+          "alpha_source_target_text": "Lisbon",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.40918441417738366,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.4179165088213407,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.2214630773434272,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.7464473843574524,
+          "final_target_rank_delta_routed_minus_arm": -5,
+          "best_target_rank_delta_routed_minus_arm": 1,
+          "target_rank_range_delta_routed_minus_arm": 4758,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-015",
+      "prompt": "Most library catalogs list Ulysses under",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_7"
+      },
+      "target_text": "Joyce",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-016",
+          "alpha_source_target_text": "Milton",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_7"
+          },
+          "alpha_js_distance_to_arm": 0.343243113409746,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.41387679943671596,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 4.249924678068894,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.827077865600586,
+          "final_target_rank_delta_routed_minus_arm": 4195,
+          "best_target_rank_delta_routed_minus_arm": 3123,
+          "target_rank_range_delta_routed_minus_arm": -29902,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.2946656913385214,
+          "mean_tuned_kl_delta_routed_minus_arm": 3.418078450056223,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 7.103956067791352,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 17.63773512840271,
+          "final_target_rank_delta_routed_minus_arm": 12072,
+          "best_target_rank_delta_routed_minus_arm": 4231,
+          "target_rank_range_delta_routed_minus_arm": 103366,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-016",
+          "alpha_source_target_text": "Milton",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_7"
+          },
+          "alpha_js_distance_to_arm": 0.343243113409746,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.41387679943671596,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 4.249924678068894,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.827077865600586,
+          "final_target_rank_delta_routed_minus_arm": 4195,
+          "best_target_rank_delta_routed_minus_arm": 3123,
+          "target_rank_range_delta_routed_minus_arm": -29902,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-003",
+          "alpha_source_target_text": "Cairo",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_3"
+          },
+          "alpha_js_distance_to_arm": 0.3734658202859421,
+          "mean_tuned_kl_delta_routed_minus_arm": 2.574827450972337,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 4.983379364013672,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 10.039584159851074,
+          "final_target_rank_delta_routed_minus_arm": 9259,
+          "best_target_rank_delta_routed_minus_arm": 3736,
+          "target_rank_range_delta_routed_minus_arm": 77818,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-016",
+      "prompt": "Most library catalogs list Paradise Lost under",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_7"
+      },
+      "target_text": "Milton",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-017",
+          "alpha_source_target_text": "Fitzgerald",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_11"
+          },
+          "alpha_js_distance_to_arm": 0.4588159896230268,
+          "mean_tuned_kl_delta_routed_minus_arm": 2.1358338594436646,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.1948345395234914,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.4305152893066406,
+          "final_target_rank_delta_routed_minus_arm": 409,
+          "best_target_rank_delta_routed_minus_arm": 409,
+          "target_rank_range_delta_routed_minus_arm": 105256,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3264148438880712,
+          "mean_tuned_kl_delta_routed_minus_arm": 2.1716401760394755,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.035733346755688,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 7.858381152153015,
+          "final_target_rank_delta_routed_minus_arm": 444,
+          "best_target_rank_delta_routed_minus_arm": 444,
+          "target_rank_range_delta_routed_minus_arm": 104031,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-017",
+          "alpha_source_target_text": "Fitzgerald",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_11"
+          },
+          "alpha_js_distance_to_arm": 0.4588159896230268,
+          "mean_tuned_kl_delta_routed_minus_arm": 2.1358338594436646,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.1948345395234914,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.4305152893066406,
+          "final_target_rank_delta_routed_minus_arm": 409,
+          "best_target_rank_delta_routed_minus_arm": 409,
+          "target_rank_range_delta_routed_minus_arm": 105256,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-004",
+          "alpha_source_target_text": "Seoul",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_3"
+          },
+          "alpha_js_distance_to_arm": 0.3944757432591041,
+          "mean_tuned_kl_delta_routed_minus_arm": 2.436463401867793,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.814702813441937,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.563271999359131,
+          "final_target_rank_delta_routed_minus_arm": -70,
+          "best_target_rank_delta_routed_minus_arm": -11,
+          "target_rank_range_delta_routed_minus_arm": 74270,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-017",
+      "prompt": "The novel The Great Gatsby was written by",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_11"
+      },
+      "target_text": "Fitzgerald",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-018",
+          "alpha_source_target_text": "Camus",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_11"
+          },
+          "alpha_js_distance_to_arm": 0.32644659648674623,
+          "mean_tuned_kl_delta_routed_minus_arm": -1.2106749690496004,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -3.7279992195276113,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.230914831161499,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -83583,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.33803452347195023,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.3419327369103065,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -3.810633326952274,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.1188071370124817,
+          "final_target_rank_delta_routed_minus_arm": -2,
+          "best_target_rank_delta_routed_minus_arm": -2,
+          "target_rank_range_delta_routed_minus_arm": 87339,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-018",
+          "alpha_source_target_text": "Camus",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_11"
+          },
+          "alpha_js_distance_to_arm": 0.32644659648674623,
+          "mean_tuned_kl_delta_routed_minus_arm": -1.2106749690496004,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -3.7279992195276113,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.230914831161499,
+          "final_target_rank_delta_routed_minus_arm": 0,
+          "best_target_rank_delta_routed_minus_arm": 0,
+          "target_rank_range_delta_routed_minus_arm": -83583,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-005",
+          "alpha_source_target_text": "Lima",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_4"
+          },
+          "alpha_js_distance_to_arm": 0.39898358519837585,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.5085295255367572,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.570104745718149,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.067300796508789,
+          "final_target_rank_delta_routed_minus_arm": -1,
+          "best_target_rank_delta_routed_minus_arm": -1,
+          "target_rank_range_delta_routed_minus_arm": 100222,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-018",
+      "prompt": "The novel The Stranger was written by",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_11"
+      },
+      "target_text": "Camus",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-019",
+          "alpha_source_target_text": "Shelley",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_12"
+          },
+          "alpha_js_distance_to_arm": 0.3721882777661212,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.07391032805809608,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.6588798394569984,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.3537960052490234,
+          "final_target_rank_delta_routed_minus_arm": -7,
+          "best_target_rank_delta_routed_minus_arm": -7,
+          "target_rank_range_delta_routed_minus_arm": 30403,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3460318934157346,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.5429737315728114,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.219436214520381,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.6280884742736816,
+          "final_target_rank_delta_routed_minus_arm": -1,
+          "best_target_rank_delta_routed_minus_arm": -1,
+          "target_rank_range_delta_routed_minus_arm": 55026,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-019",
+          "alpha_source_target_text": "Shelley",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_12"
+          },
+          "alpha_js_distance_to_arm": 0.3721882777661212,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.07391032805809608,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.6588798394569984,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.3537960052490234,
+          "final_target_rank_delta_routed_minus_arm": -7,
+          "best_target_rank_delta_routed_minus_arm": -7,
+          "target_rank_range_delta_routed_minus_arm": 30403,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-006",
+          "alpha_source_target_text": "Bangkok",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_4"
+          },
+          "alpha_js_distance_to_arm": 0.4661135069111626,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.18687224388122559,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.2533986201653114,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.11537504196167,
+          "final_target_rank_delta_routed_minus_arm": -51,
+          "best_target_rank_delta_routed_minus_arm": -51,
+          "target_rank_range_delta_routed_minus_arm": -5332,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-019",
+      "prompt": "The author of Frankenstein is",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_12"
+      },
+      "target_text": "Shelley",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-020",
+          "alpha_source_target_text": "Atwood",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_12"
+          },
+          "alpha_js_distance_to_arm": 0.3233877967146522,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.9234285904810979,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.735415715437669,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 8.008934259414673,
+          "final_target_rank_delta_routed_minus_arm": -3351,
+          "best_target_rank_delta_routed_minus_arm": -960,
+          "target_rank_range_delta_routed_minus_arm": -8305,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.301968822514964,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.7878181750957782,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.995059072971344,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 7.864710807800293,
+          "final_target_rank_delta_routed_minus_arm": -56,
+          "best_target_rank_delta_routed_minus_arm": -56,
+          "target_rank_range_delta_routed_minus_arm": 2160,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-020",
+          "alpha_source_target_text": "Atwood",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_12"
+          },
+          "alpha_js_distance_to_arm": 0.3233877967146522,
+          "mean_tuned_kl_delta_routed_minus_arm": 0.9234285904810979,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.735415715437669,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 8.008934259414673,
+          "final_target_rank_delta_routed_minus_arm": -3351,
+          "best_target_rank_delta_routed_minus_arm": -960,
+          "target_rank_range_delta_routed_minus_arm": -8305,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-001",
+          "alpha_source_target_text": "Canberra",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.47881808318589425,
+          "mean_tuned_kl_delta_routed_minus_arm": -0.7680851587882409,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.2710822041218097,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.255482196807861,
+          "final_target_rank_delta_routed_minus_arm": 16,
+          "best_target_rank_delta_routed_minus_arm": 16,
+          "target_rank_range_delta_routed_minus_arm": -1754,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": false
+        }
+      }
+    },
+    {
+      "prompt_id": "tb5-confirm-020",
+      "prompt": "The author of The Handmaid's Tale is",
+      "split": "confirm",
+      "tags_by_prefix": {
+        "subcategory_": "subcategory_author_fact",
+        "route_mode_": "route_mode_author_cluster_12"
+      },
+      "target_text": "Atwood",
+      "target_word_count": 1,
+      "target_contains_whitespace": false,
+      "arm_profiles": {
+        "prompt_permuted_alpha": {
+          "arm_name": "prompt_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-001",
+          "alpha_source_target_text": "Canberra",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.48739690597274843,
+          "mean_tuned_kl_delta_routed_minus_arm": -2.9005654339606943,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -3.4428420754579396,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.4917212724685669,
+          "final_target_rank_delta_routed_minus_arm": -6017,
+          "best_target_rank_delta_routed_minus_arm": -6017,
+          "target_rank_range_delta_routed_minus_arm": -15924,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": false
+        },
+        "pilot_mean_alpha": {
+          "arm_name": "pilot_mean_alpha",
+          "alpha_source_prompt_id": null,
+          "alpha_source_target_text": null,
+          "alpha_source_tags_by_prefix": null,
+          "alpha_js_distance_to_arm": 0.3449714743033322,
+          "mean_tuned_kl_delta_routed_minus_arm": -1.0086291638704448,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.22336791111872747,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.04277217388153076,
+          "final_target_rank_delta_routed_minus_arm": 132,
+          "best_target_rank_delta_routed_minus_arm": 132,
+          "target_rank_range_delta_routed_minus_arm": 43778,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "within_family_permuted_alpha": {
+          "arm_name": "within_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-013",
+          "alpha_source_target_text": "Tolstoy",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_author_fact",
+            "route_mode_": "route_mode_author_cluster_6"
+          },
+          "alpha_js_distance_to_arm": 0.429639880587318,
+          "mean_tuned_kl_delta_routed_minus_arm": -1.0272626395408924,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.2817732645915105,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.1810969114303589,
+          "final_target_rank_delta_routed_minus_arm": 237,
+          "best_target_rank_delta_routed_minus_arm": 237,
+          "target_rank_range_delta_routed_minus_arm": 92158,
+          "routed_worse_final_target_rank_vs_arm": true,
+          "routed_worse_best_target_rank_vs_arm": true,
+          "routed_increases_target_rank_range_vs_arm": true
+        },
+        "cross_family_permuted_alpha": {
+          "arm_name": "cross_family_permuted_alpha",
+          "alpha_source_prompt_id": "tb5-confirm-002",
+          "alpha_source_target_text": "Lisbon",
+          "alpha_source_tags_by_prefix": {
+            "subcategory_": "subcategory_capital_fact",
+            "route_mode_": "route_mode_capital_cluster_2"
+          },
+          "alpha_js_distance_to_arm": 0.4680855316437178,
+          "mean_tuned_kl_delta_routed_minus_arm": -2.3010969184912167,
+          "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.6309704918127794,
+          "final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.2841320037841797,
+          "final_target_rank_delta_routed_minus_arm": -244,
+          "best_target_rank_delta_routed_minus_arm": -244,
+          "target_rank_range_delta_routed_minus_arm": 15159,
+          "routed_worse_final_target_rank_vs_arm": false,
+          "routed_worse_best_target_rank_vs_arm": false,
+          "routed_increases_target_rank_range_vs_arm": true
+        }
+      }
+    }
+  ],
+  "group_summaries": {
+    "subcategory_": {
+      "by_tag": {
+        "subcategory_author_fact": {
+          "prompt_count": 8,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 8,
+              "mean_alpha_js_distance_to_arm": 0.43144524686430513,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.08027325771175896,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.6614321971742007,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.8118651136755943,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.375,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.25,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.375,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.625,
+              "mean_final_target_rank_delta_routed_minus_arm": 1113.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 430.75,
+              "mean_target_rank_range_delta_routed_minus_arm": 25373.125
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 8,
+              "mean_alpha_js_distance_to_arm": 0.32253057600722174,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.8689660673531202,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.001900175299782,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 4.919584728777409,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.75,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.875,
+              "mean_final_target_rank_delta_routed_minus_arm": 1574.375,
+              "mean_best_target_rank_delta_routed_minus_arm": 594.375,
+              "mean_target_rank_range_delta_routed_minus_arm": 50319.25
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 8,
+              "mean_alpha_js_distance_to_arm": 0.368696098626071,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.5756351687014103,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.9102521381126001,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.5407706871628761,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.25,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.25,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.375,
+              "mean_final_target_rank_delta_routed_minus_arm": -685.125,
+              "mean_best_target_rank_delta_routed_minus_arm": -442.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -7417.875
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 8,
+              "mean_alpha_js_distance_to_arm": 0.36147647045289216,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.341472319398935,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.44467522060641884,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.5795987322926521,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.375,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.375,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 96.625,
+              "mean_best_target_rank_delta_routed_minus_arm": 339.25,
+              "mean_target_rank_range_delta_routed_minus_arm": 6092.375
+            }
+          }
+        },
+        "subcategory_capital_fact": {
+          "prompt_count": 6,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.4251680353044034,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.6346284609574538,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.48680708347222745,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.2662058671315511,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -100.33333333333333,
+              "mean_best_target_rank_delta_routed_minus_arm": -74.83333333333333,
+              "mean_target_rank_range_delta_routed_minus_arm": 25472.166666666668
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.31515252826170714,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.010404463761892,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.2632055767835715,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.2369598547617595,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.8333333333333334,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 4.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 4.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 57765.333333333336
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.3107404019282456,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.01589324306219053,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.053158684800832696,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -1.0874165296554565,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -210.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -194.83333333333334,
+              "mean_target_rank_range_delta_routed_minus_arm": 9584.5
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.3107877067751719,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.0004054613602467033,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.0257268597682317,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.9687866369883219,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -186.16666666666666,
+              "mean_best_target_rank_delta_routed_minus_arm": -186.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 10788.666666666666
+            }
+          }
+        },
+        "subcategory_element_symbol": {
+          "prompt_count": 6,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.45799801554672076,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.7150789556594995,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -4.244987895091374,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -3.2985673546791077,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.6666666666666666,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.16666666666666666,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.3333333333333333,
+              "mean_final_target_rank_delta_routed_minus_arm": -26962.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -19820.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -50256.333333333336
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.313069246583014,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.4636001476110556,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.35472144644994,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.037093202273051,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.3333333333333333,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.3333333333333333,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 57.333333333333336,
+              "mean_best_target_rank_delta_routed_minus_arm": 8.333333333333334,
+              "mean_target_rank_range_delta_routed_minus_arm": 13572.666666666666
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.33862492469336686,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.28289966667309785,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.5815018323751595,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.8329199353853862,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.6666666666666666,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.3333333333333333,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.3333333333333333,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.3333333333333333,
+              "mean_final_target_rank_delta_routed_minus_arm": 53.333333333333336,
+              "mean_best_target_rank_delta_routed_minus_arm": 6.166666666666667,
+              "mean_target_rank_range_delta_routed_minus_arm": 444.3333333333333
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 6,
+              "mean_alpha_js_distance_to_arm": 0.35887071151863387,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.11456738259547795,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.2571307948002448,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.4813320835431416,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.3333333333333333,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.3333333333333333,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.3333333333333333,
+              "mean_final_target_rank_delta_routed_minus_arm": 54.333333333333336,
+              "mean_best_target_rank_delta_routed_minus_arm": 7.333333333333333,
+              "mean_target_rank_range_delta_routed_minus_arm": -14368.166666666666
+            }
+          }
+        }
+      }
+    },
+    "route_mode_": {
+      "by_tag": {
+        "route_mode_author_cluster_11": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4325485460547692,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.16082864082776582,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.6583530627764188,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.0913379192352295,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -26.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -26.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 47445.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.34203320844384244,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.10052049733125243,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -2.515034770736327,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.8734478056430817,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": -1.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -1.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 71182.5
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3493174371264337,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.6422926485538483,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -2.693439529492305,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.2923554182052612,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -3.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -3.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -26590.0
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3493174371264337,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.6422926485538483,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -2.693439529492305,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -2.2923554182052612,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -3.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -3.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -26590.0
+            }
+          }
+        },
+        "route_mode_author_cluster_12": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.473451807414806,
+              "mean_tuned_kl_delta_routed_minus_arm": -1.5345910386397288,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.9510263479672946,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.985675096511841,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -114.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -114.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 6702.5
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3234701484091481,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.11040549438733327,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.8858455809263083,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.953741490840912,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 38.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 38.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 22969.0
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.40539235134370033,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.9885684217397982,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.8537131800101353,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.758606493473053,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.0,
+              "mean_final_target_rank_delta_routed_minus_arm": -4684.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -3488.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -12114.5
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3765138386509851,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.051917024529897216,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.0085944900145898,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.913918673992157,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -1557.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -361.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 41926.5
+            }
+          }
+        },
+        "route_mode_author_cluster_6": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4358098522151221,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.4891327161055345,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.35606711071271163,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -1.6309806406497955,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -2.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 0.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -28699.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.31407867956260016,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.6908899534207124,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.5669451837356274,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.10309147834777832,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 3.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 3.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 3427.0
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3190450545177635,
+              "mean_tuned_kl_delta_routed_minus_arm": -1.946534933952185,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -3.816235451744153,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -4.4319649040699005,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -355.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -44.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -28644.0
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3190450545177635,
+              "mean_tuned_kl_delta_routed_minus_arm": -1.946534933952185,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -3.816235451744153,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -4.4319649040699005,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -355.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -44.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -28644.0
+            }
+          }
+        },
+        "route_mode_author_cluster_7": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3839707817725231,
+              "mean_tuned_kl_delta_routed_minus_arm": 2.505645426420065,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.899041088727804,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 6.8014280796051025,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 4594.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 1862.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 76044.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3105402676132963,
+              "mean_tuned_kl_delta_routed_minus_arm": 2.794859313047849,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 5.06984470727352,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 12.748058140277863,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 1.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 1.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 6258.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 2337.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 103698.5
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4010295515163864,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.2748553294401903,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.722379608796193,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 5.128796577453613,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 1.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 1.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 2302.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 1766.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 37677.0
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4010295515163864,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.2748553294401903,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.722379608796193,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 5.128796577453613,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 1.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 1.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 2302.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 1766.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 37677.0
+            }
+          }
+        },
+        "route_mode_capital_cluster_2": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.41068677750902105,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.041558971771827116,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.0233156635211065,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.6364693641662598,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -253.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -177.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 41359.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.31717571644004555,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.3497619674755976,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 2.8032474426122813,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.09022068977355957,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 5.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 5.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 61515.0
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.33157423095405913,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.013552949978755072,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.19122246022407824,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -3.6454355716705322,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -373.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -373.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 15764.0
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.33157423095405913,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.013552949978755072,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.19122246022407824,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -3.6454355716705322,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -373.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -373.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 15764.0
+            }
+          }
+        },
+        "route_mode_capital_cluster_3": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.39452993763494293,
+              "mean_tuned_kl_delta_routed_minus_arm": -1.7835937119447267,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -1.485642914588635,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.5731263160705566,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 6.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 6.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -26438.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.29117669435012183,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.680492232625301,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.448027470937142,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.0890414714813232,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 6.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 6.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 36130.5
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3140516530627344,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.14080624396984392,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.34153841779782224,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.2968109846115112,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -49.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -48.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -12458.0
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3140516530627344,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.14080624396984392,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.34153841779782224,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.2968109846115112,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -49.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -48.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -12458.0
+            }
+          }
+        },
+        "route_mode_capital_cluster_4": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4702873907692462,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.0787326991558075,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.998093999349154,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.7352745532989502,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": -54.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -54.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 61495.5
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3371051739949541,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.0009591911847775,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.5383418168012912,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.5316174030303955,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 1.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 0.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 0.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 75650.5
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.2865953217679433,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.17493302317766043,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.009160096828754127,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.9136250019073486,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -207.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -162.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 25447.5
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.2867372363087223,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.12603690991034874,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.22749653687843907,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -0.5577353239059448,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -136.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -136.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 29060.0
+            }
+          }
+        },
+        "route_mode_element_cluster_1": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.47604860691021955,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.0037917437461708,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.3705036984040186,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.0973328948020935,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -0.5,
+              "mean_best_target_rank_delta_routed_minus_arm": -0.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 25863.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3177248145952971,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.3577304998269448,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.9606123772951273,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.6448333263397217,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 0.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 0.0,
+              "mean_target_rank_range_delta_routed_minus_arm": 9105.0
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.322050358091259,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.06519622413011697,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.37619952972118664,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.04775822162628174,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 0.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 0.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -42084.5
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.322050358091259,
+              "mean_tuned_kl_delta_routed_minus_arm": -0.06519622413011697,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.37619952972118664,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.04775822162628174,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.0,
+              "mean_final_target_rank_delta_routed_minus_arm": 0.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 0.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -42084.5
+            }
+          }
+        },
+        "route_mode_element_cluster_5": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.41395419151036816,
+              "mean_tuned_kl_delta_routed_minus_arm": -3.6583571915443125,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -13.333923298578997,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": -11.151930809020996,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.0,
+              "mean_final_target_rank_delta_routed_minus_arm": -80440.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -58969.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -96808.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.29007487372394636,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.6910401170070355,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.8846777207576308,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 4.389338970184326,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 119.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 17.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -26832.0
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.33067482608940013,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.29545132242716277,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.67350203028092,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.8843116164207458,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 114.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 17.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 44348.0
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.33067482608940013,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.29545132242716277,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 3.67350203028092,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 1.8843116164207458,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 114.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 17.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 44348.0
+            }
+          }
+        },
+        "route_mode_element_cluster_9": {
+          "prompt_count": 2,
+          "multiword_target_fraction": 0.0,
+          "mean_target_word_count": 1.0,
+          "arm_summaries": {
+            "cross_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4839912482195745,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.5093285808196435,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.7715440850991468,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 0.1588958501815796,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.0,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.0,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": -447.0,
+              "mean_best_target_rank_delta_routed_minus_arm": -492.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -79824.0
+            },
+            "pilot_mean_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.33140805142979857,
+              "mean_tuned_kl_delta_routed_minus_arm": 1.3420298259991865,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 1.2188742412970615,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 4.077107310295105,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 52.5,
+              "mean_best_target_rank_delta_routed_minus_arm": 7.5,
+              "mean_target_rank_range_delta_routed_minus_arm": 58445.0
+            },
+            "prompt_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.3631495898994414,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.6184439017222478,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": 0.6948039371233721,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 3.566689968109131,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 1.0,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 46.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 1.0,
+              "mean_target_rank_range_delta_routed_minus_arm": -930.5
+            },
+            "within_family_permuted_alpha": {
+              "prompt_count": 2,
+              "mean_alpha_js_distance_to_arm": 0.4238869503752425,
+              "mean_tuned_kl_delta_routed_minus_arm": 0.11344704948938808,
+              "mean_tuned_final_position_kl_delta_routed_minus_arm": -0.27830917560137236,
+              "mean_final_layer_tuned_final_position_kl_delta_routed_minus_arm": 2.5119264125823975,
+              "positive_prompt_fraction_tuned_kl_delta_routed_minus_arm": 0.5,
+              "fraction_routed_worse_final_target_rank_vs_arm": 0.5,
+              "fraction_routed_worse_best_target_rank_vs_arm": 0.5,
+              "fraction_routed_increases_target_rank_range_vs_arm": 0.5,
+              "mean_final_target_rank_delta_routed_minus_arm": 49.0,
+              "mean_best_target_rank_delta_routed_minus_arm": 4.5,
+              "mean_target_rank_range_delta_routed_minus_arm": -45368.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v5",
+  "split": "confirm",
+  "baseline_summary_path": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json",
+  "fixed_alpha_summary_path": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json",
+  "counterfactual_summary_path": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/summary.json",
+  "prompt_checkpoint_dir": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/checkpoints/prompt_results"
+}

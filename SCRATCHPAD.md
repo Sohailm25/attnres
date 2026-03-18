@@ -219,6 +219,31 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
 - Outcome: FAILURE
 
+## [2026-03-18T15:13:39-0500] PRE-RUN: route-mode-aware donor-arm counterfactual v5
+- tmux session: `tb-v5-donor`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5 > results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v5`, `split=confirm`, `device=mps`, `controls=prompt_permuted_alpha/within_family_permuted_alpha/cross_family_permuted_alpha/pilot_mean_alpha`
+- What I'm testing: whether the narrowed route-mode `v5` tool-breakage surface keeps a positive donor-arm read when routed traces are compared against fixed-alpha and donor-arm controls on the locked confirm prompts.
+- Expected outcome: the fixed-alpha objection remains clearly weaker than routed, and the route-mode/family stratification clarifies whether the narrowed bridge also preserves a positive within-family donor-arm signal.
+- Expected duration: ~15-30 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/checkpoints/prompt_results`
+- Checkpoint cadence: every prompt
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/run.log`
+- Resume command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5 > results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/run.log 2>&1`
+- Main confound to watch: pooled donor-arm averages could hide route-mode heterogeneity even if the narrowed surface stays positive overall.
+- Implementation verified: YES - `tests.test_tool_breakage_family_profile` passes and the new counterfactual-profile runner smoke completed on the saved `v4` artifact before launch.
+- Status: LAUNCHING
+
+## [2026-03-18T15:35:00-0500] POST-RUN: route-mode-aware donor-arm counterfactual v5
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5 && .venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5 > results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/run.log 2>&1`
+- Outcome: SUCCESS
+- Key metric: routed minus `pilot_mean_alpha` mean tuned KL `= +1.0898`, but routed minus `within_family_permuted_alpha` mean tuned KL `= -0.1021`
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/summary.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/profile.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/checkpoints/prompt_results`
+- Anomalies: `prompt_permuted_alpha` and `within_family_permuted_alpha` collapse to the same route-mode summary on `7 / 10` targeted modes under the locked confirm ordering
+- Next step: move the main focus back to `resattn-qxz`, and treat `resattn-oi7` as the only honest tool-breakage follow-up before any further rerun
+
 ## [2026-03-17T16:25:00-0500] PRE-RUN: compact-subword capacity-first Figure 8 proxy follow-up
 - tmux session: `attnres-111-capacity`
 - Script: `scripts/run_attnres_proxy_viability.py`

@@ -377,6 +377,30 @@
       - the exact-command rerun reused the checkpoint set in `9.99` seconds with an unchanged timestamp hash
       - rerunning the saved-artifact profile command reproduced the same JSON hash in `3.38` seconds
     - interpretation: the narrowed `v5` bridge now has a real confirm pass. The next tool-breakage question is no longer whether `v5` has signs of life; it is whether donor-arm controls stay supportive on this narrowed surface
+  - `resattn-hth` now lands that donor-arm counterfactual on the narrowed `v5` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5.md` is the pooled donor-arm artifact on `tool_breakage_factual_recall_v5`
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/profile.json` is the saved route-mode and family split from the prompt checkpoints
+    - the fixed-alpha objection stays clearly weaker:
+      - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0898`
+      - routed minus `pilot_mean_alpha` final-position tuned KL `= +1.1861`
+    - the donor-arm result stays mixed on the pooled aggregate:
+      - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.1021`
+      - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.1502`
+      - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.3728`
+    - the family split is more informative than the pooled average:
+      - authors remain the blocker (`within_family = -0.3415`, `prompt_permuted = -0.5756`)
+      - capitals are near a tie (`within_family = +0.0004`, `prompt_permuted = -0.0159`)
+      - elements remain modestly supportive (`within_family = +0.1146`, `prompt_permuted = +0.2829`)
+    - the route-mode split is genuinely structured:
+      - `route_mode_author_cluster_7` stays positive against every arm
+      - `route_mode_capital_cluster_3`, `route_mode_element_cluster_5`, and `route_mode_element_cluster_9` stay positive against both `within_family_permuted_alpha` and `prompt_permuted_alpha`
+      - `route_mode_author_cluster_12` is negative against every dynamic donor arm
+    - the donor-arm controls are not fully independent on this surface:
+      - `prompt_permuted_alpha` and `within_family_permuted_alpha` are numerically identical on `7 / 10` targeted route modes under the locked confirm ordering
+    - resume durability is verified:
+      - the exact-command rerun finished in `10.03` seconds with unchanged checkpoint timestamp hash `1a96dfd82bf39c9ada70be672bedd935a8bb4af5`
+      - rerunning the saved-artifact profile command reproduced hash `839a157261e22e1b8415a06b07ae50230817e07a`
+    - interpretation: the narrowed `v5` bridge clears the fixed-alpha objection again, but it still does not reopen a broad prompt-specific donor-arm claim. The truthful boundary is route-mode-aware and mixed rather than broadly positive
   - `resattn-dat` now bridges that factual-recall structure back into the bounded Gemma tool-breakage lane without another model run:
     - `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json` and `.md` compare the saved factual-recall raw-source cluster families against the existing Gemma factual-recall tool-breakage prompts using the saved prompt-level `oracle_alpha` vectors from the pilot and confirm baseline artifacts
     - the bridge result is clean for the overlapping families:
@@ -998,26 +1022,24 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-hth` as the next bounded tool-breakage execution issue: rerun the donor-arm counterfactual on the narrowed `tool_breakage_factual_recall_v5` surface and keep the write-up stratified by intended route mode as well as by family.
-2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
+1. Take `resattn-qxz` as the next main-lane synthesis issue: use the saved primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts to center the thesis on what is actually strongest on Gemma.
+2. Center that oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
-3. Treat the next extension bridge as factual-family-conditioned and mode-aware:
-   - capitals, elements, and authors are still the strongest bridge families, and `v5` now targets their robust route modes explicitly
-   - reasoning/math remains a real secondary structure lane, but it is not yet the best next bridge target
-   - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
-4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
+3. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
-5. Keep tool-breakage as a bounded extension lane:
+4. Keep tool-breakage as a bounded extension lane:
    - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
-   - if tool-breakage resumes beyond `resattn-hth`, do not return to pooled reruns first
-6. Keep safety as the next extension lane after the mode-aware factual bridge pass:
+   - the fixed-alpha objection is now clearly weaker on `v5`, but donor-arm results remain mixed
+   - if tool-breakage resumes, take `resattn-oi7` first and audit the donor-assignment geometry before any further rerun
+   - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
+5. Keep safety as the next extension lane after the oracle synthesis pass:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
-7. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
+6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
 
 ## Phase 1 Gate
 

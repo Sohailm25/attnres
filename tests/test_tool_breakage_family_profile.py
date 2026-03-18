@@ -10,15 +10,20 @@ class ToolBreakageFamilyProfileTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from validation.tool_breakage_family_profile import (
+            build_tool_breakage_counterfactual_tag_profile_summary,
             build_tool_breakage_family_profile_summary,
         )
 
+        cls.build_tool_breakage_counterfactual_tag_profile_summary = staticmethod(
+            build_tool_breakage_counterfactual_tag_profile_summary
+        )
         cls.build_tool_breakage_family_profile_summary = staticmethod(
             build_tool_breakage_family_profile_summary
         )
 
-    def test_family_profile_summary_tracks_prompt_level_donor_assignments(self) -> None:
-        counterfactual_prompt_results = (
+    @staticmethod
+    def _sample_counterfactual_prompt_results() -> tuple[dict[str, object], ...]:
+        return (
             {
                 "baseline_prompt_result": {
                     "prompt_id": "tb-confirm-001",
@@ -252,11 +257,33 @@ class ToolBreakageFamilyProfileTests(unittest.TestCase):
                 ),
             },
         )
+
+    @staticmethod
+    def _sample_prompt_tags_by_id() -> dict[str, tuple[str, ...]]:
+        return {
+            "tb-confirm-001": (
+                "subcategory_author_fact",
+                "route_mode_author_cluster_6",
+            ),
+            "tb-confirm-002": (
+                "subcategory_author_fact",
+                "route_mode_author_cluster_6",
+            ),
+            "tb-confirm-003": (
+                "subcategory_capital_fact",
+                "route_mode_capital_cluster_2",
+            ),
+            "tb-confirm-004": (
+                "subcategory_capital_fact",
+                "route_mode_capital_cluster_2",
+            ),
+        }
+
+    def test_family_profile_summary_tracks_prompt_level_donor_assignments(self) -> None:
+        counterfactual_prompt_results = self._sample_counterfactual_prompt_results()
         prompt_tags_by_id = {
-            "tb-confirm-001": ("subcategory_author_fact",),
-            "tb-confirm-002": ("subcategory_author_fact",),
-            "tb-confirm-003": ("subcategory_capital_fact",),
-            "tb-confirm-004": ("subcategory_capital_fact",),
+            prompt_id: (tags[0],)
+            for prompt_id, tags in self._sample_prompt_tags_by_id().items()
         }
 
         summary = self.build_tool_breakage_family_profile_summary(
@@ -319,6 +346,33 @@ class ToolBreakageFamilyProfileTests(unittest.TestCase):
             summary["prompt_profiles"][0]["arm_profiles"][
                 "within_family_permuted_alpha"
             ]["alpha_source_subcategory"],
+        )
+
+    def test_counterfactual_tag_profile_summary_groups_by_route_mode(self) -> None:
+        summary = self.build_tool_breakage_counterfactual_tag_profile_summary(
+            counterfactual_prompt_results=self._sample_counterfactual_prompt_results(),
+            prompt_tags_by_id=self._sample_prompt_tags_by_id(),
+            group_tag_prefixes=("subcategory_", "route_mode_"),
+        )
+
+        self.assertEqual(["subcategory_", "route_mode_"], summary["group_tag_prefixes"])
+        self.assertEqual(
+            "route_mode_author_cluster_6",
+            summary["prompt_profiles"][0]["tags_by_prefix"]["route_mode_"],
+        )
+        self.assertEqual(
+            2,
+            summary["group_summaries"]["route_mode_"]["by_tag"][
+                "route_mode_author_cluster_6"
+            ]["prompt_count"],
+        )
+        self.assertAlmostEqual(
+            0.225,
+            summary["group_summaries"]["route_mode_"]["by_tag"][
+                "route_mode_author_cluster_6"
+            ]["arm_summaries"]["within_family_permuted_alpha"][
+                "mean_tuned_kl_delta_routed_minus_arm"
+            ],
         )
 
     def test_family_profile_summary_requires_single_subcategory_tag(self) -> None:
