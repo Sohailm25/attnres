@@ -887,3 +887,24 @@ Suggested entry format:
 - Interesting facts:
   - The prompt-permuted dynamic control was not just similar to routed; it was more damaging on tuned mean KL by `0.3082`.
   - The routed-versus-prompt-permuted tuned rank-range increase was only `2 / 8`.
+
+## [2026-03-17T20:05:00-0500] The Honest Figure 8 Decision Was To Refuse The Tempting Objective Hack
+- Stage: planning
+- Feel of the Experiment: This is exactly the kind of decision that feels unsatisfying and is probably right. The local proxy gave us enough rope to invent a clever loss, but not enough justification to trust one.
+- Working Hypotheses:
+  - A custom objective on the current tiny proxy would weaken the scientific object more than it would strengthen the result.
+  - If the Figure 8 strong-claim lane comes back, it should come back through a more faithful proxy, not a more helpful loss.
+- Hunches and Guesses:
+  - The easiest bad move from here would be to regularize or reward the very patterns we want and then call the resulting proxy “aligned.”
+  - The current negative result is more valuable than that kind of win.
+- Predictions:
+  - `resattn-9fo` should close without a new objective run.
+  - `resattn-1lk` should become the real strategic Figure 8 question.
+- Surprises and Tensions:
+  - The repo now has a fully operational local proxy and still cannot justify the obvious next experiment. That is uncomfortable, but it is also the right signal that the object itself may be the problem.
+- Confidence:
+  - high that `resattn-9fo` should close as a refusal to add a custom objective
+  - medium-high that the next honest Figure 8 move has to change the proxy, not the loss
+- Interesting facts:
+  - The full faithful sweep path ended with the best regularized loss delta still negative at `+0.0368`.
+  - The strongest persistence improvement came from dropout, which still did not make the entropy story credible.

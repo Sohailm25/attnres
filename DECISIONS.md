@@ -553,3 +553,17 @@
   - the rank-based confirm diagnostics versus the prompt-permuted control are also weak (`4 / 8` final-rank worsening, `2 / 8` rank-range increase)
   That is enough to block the strong prompt-matched-routing claim. A narrower donor-matching control on the same `8`-prompt confirm surface would currently read more like post-hoc rescue than like a missing prerequisite.
 - Impact: `resattn-5d9` can close once the memo and state docs land. The Gemma lane should stay frozen at the current mixed claim boundary unless a later methodological defect or larger confirm surface justifies reopening the control design.
+
+## [2026-03-17T20:05:00-0500] DECISION: Do not add a custom objective to the current tiny Figure 8 proxy
+
+- Trigger: `resattn-9fo` asked for the smallest honest objective-level redesign after the negative regularization sweep on the widened compact-subword `wikitext-103` proxy.
+- Decision: decline any objective-level redesign on the current local Block AttnRes proxy and freeze the strong Figure 8 / trained-routing lane at the current descriptive boundary.
+- Rationale: the repo has already exhausted the faithful small-proxy adjustments:
+  - tokenization
+  - width
+  - horizon
+  - corpus
+  - best-checkpoint export
+  - matched regularization
+  The obvious next objective changes would be custom proxy-shaping losses, not paper-faithful training choices. That would make a positive result harder to interpret than the current negative one.
+- Impact: `resattn-9fo` can close once the memo and state docs land. The next Figure 8 strategic issue is `resattn-1lk`, which decides whether to keep the strong lane frozen or revisit it through a more faithful proxy path rather than through a custom loss on the current tiny model.

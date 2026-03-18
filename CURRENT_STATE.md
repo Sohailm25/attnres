@@ -256,7 +256,11 @@
     - control entropy gap `= -0.0549`
     - best sweep entropy gap `= -0.0533`
   - dropout did improve deep embedding persistence (`0.1855` and `0.1836`), but not the actual blocker
-  - interpretation: matched regularization is now exhausted as the faithful rescue path for the widened `wikitext-103` proxy; the next honest Figure 8 question is objective-level redesign
+  - interpretation: matched regularization is now exhausted as the faithful rescue path for the widened `wikitext-103` proxy; the next honest Figure 8 question became whether any objective change is still defensible
+- `known`: `resattn-9fo` now declines objective-level redesign on the current tiny local Figure 8 proxy:
+  - the repo does not currently bless any custom objective change on the local Block AttnRes proxy
+  - rationale: the obvious next objectives would be proxy-shaping interventions rather than paper-faithful training choices, so a positive result would be harder to trust than the current negative one
+  - interpretation: the local trained-routing proxy remains valid for descriptive comparison against the published Figure 8 surface, but strong trained-routing alignment claims stay frozen until the repo either adopts a more faithful proxy or acquires stronger external justification for a specific objective change
 - `known`: `resattn-5k9` now has a real original-model viability artifact on the primary Gemma lane:
   - `results/tool_breakage/20260317-gemma2-tuned-lens-viability-pilot-v1.md` is the first full-surface custom tuned-lens pilot on `google/gemma-2-2b`
   - the pilot trained a low-rank affine residual translator on `96` oracle-alpha pilot prompts and evaluated on the `8` factual-recall pilot prompts from `tool_breakage_factual_recall_v1`
@@ -365,7 +369,7 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-9fo` to choose the smallest honest objective-level Figure 8 redesign now that `resattn-bux` has exhausted the matched regularization path.
+1. Use `resattn-1lk` to decide whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy now that `resattn-9fo` has declined a custom objective on the current tiny proxy.
 2. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
 3. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 4. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
