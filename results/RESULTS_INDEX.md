@@ -45,6 +45,8 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 primary-model oracle-alpha development slice | oracle_alpha | partial | `results/oracle_alpha/20260317-gemma2-development-slice.md` |
 | Gemma-2 primary-model pilot stability suite | oracle_alpha | partial | `results/oracle_alpha/20260317-gemma2-pilot-stability-suite.md` |
 | Gemma-2 primary-model held-out predictiveness check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.md` |
+| Gemma-2 registry_v5 calibration v2 | oracle_alpha | positive | `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2.md` |
+| Gemma-2 registry_v5 stratified campaign v1 | oracle_alpha | pass | `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1.md` |
 
 ## Pattern Analysis
 
@@ -113,7 +115,6 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 IT broadened refusal-surface validation v2 policy-style v2 | safety_alignment | mixed | `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-policy-style-v2.md` |
 | Gemma-2 IT broadened refusal-surface policy budget check v1 | safety_alignment | mixed | `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-check-v1.md` |
 | Gemma-2 IT broadened refusal-surface prohibition-style v1 | safety_alignment | mixed | `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1.md` |
-| Gemma-2 registry_v5 calibration v2 | oracle_alpha | positive | `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2.md` |
 | Gemma-2 IT broadened mediator-conditioned routing v2 | safety_alignment | fail | `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2.md` |
 
 ## Figures

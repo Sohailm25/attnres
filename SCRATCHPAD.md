@@ -1474,3 +1474,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2/checkpoints/oracle_runs/confirm/oa5-confirm-general_text-002-b1de39e66a.json`
 - Anomalies: the first calibration attempt exposed malformed general-text noun phrases; this rerun supersedes it after repairing the generator and regenerating `prompts/registry_v5.yaml`.
 - Next step: close `resattn-gad` and launch the first larger `registry_v5` Gemma oracle campaign on the fixed method surface.
+
+## [2026-03-18T07:29:30-0500] PRE-RUN: Gemma registry_v5 full stratified campaign
+- tmux session: `oa-v5-gemma-full`
+- Script: `scripts/run_oracle_alpha_predictiveness_campaign.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_predictiveness_campaign.py --collection-id oracle_alpha_phase1_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --optimization-steps 20 --learning-rate 0.1 --seed 11 --candidate-feature-sources 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat' --candidate-target-names oracle_alpha_logit_vector --regularization-grid 0.0001 0.001 0.01 0.1 1 10 100`
+- Config: `model=google/gemma-2-2b`, `registry=prompts/registry_v5.yaml`, `pilot=256`, `confirm=1024`, `feature_source=position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat`, `target=oracle_alpha_logit_vector`
+- What I'm testing: whether the strongest current primary-model oracle method stays positive and useful on the first larger stratified `registry_v5` prompt surface.
+- Expected outcome: the full run completes on local MPS with resumable checkpoints, stays clearly positive on oracle loss recovery, and produces a larger held-out predictiveness read across all four strata.
+- Expected duration: ~30-120 minutes
+- Checkpoint path: `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/checkpoints/oracle_runs/` and `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/checkpoints/feature_vectors/`
+- Checkpoint cadence: after each prompt result and each feature vector
+- Log path: `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the larger stratified surface breaks the previously positive routed-loss story, I need to separate a true stratum-sensitive failure from simple prompt-family quality or runtime instability.
+- Implementation verified: YES - the repaired `registry_v5` generator is deterministic, the calibration slice stayed positive, and the exact-command rerun reused saved artifacts on the calibration output.
+- Status: LAUNCHING
+
+## [2026-03-18T08:26:00-0500] POST-RUN: Gemma registry_v5 full stratified campaign
+- Outcome: SUCCESS
+- Key metric: oracle mean improvement over uniform `= +1.6299` nats on `1024` confirm prompts; predicted mean improvement over uniform `= +0.8292` nats with `958 / 1024` prompts positive.
+- Artifacts saved: `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/summary.json`, `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1.md`
+- Latest checkpoint: `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/checkpoints/oracle_runs/confirm/oa5-confirm-general_text-256-*.json`
+- Anomalies: the first exact-command rerun was interrupted by a context handoff, so resume reuse was verified again cleanly on the finished output directory; the cached rerun finished in `319.63` seconds versus `2544.10` seconds for the original launch.
+- Next step: close `resattn-w39` and move to stratified primary-model pattern analysis on the saved `registry_v5` artifact before spending another large Gemma run.

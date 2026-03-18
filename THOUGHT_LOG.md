@@ -248,6 +248,26 @@ Suggested entry format:
 - Confidence:
   - high that the repaired calibration now justifies the larger v5 campaign
 
+## [2026-03-18T08:26:00-0500] The Big Stratified Gemma Run Finally Feels Like A Paper Spine, Not Just A Promising Lane
+- Stage: analysis
+- Feel of the Experiment: This is the first primary-model oracle artifact that feels both broad and hard to dismiss. The main emotional shift is that I no longer feel pressure to prove the lane exists; the more interesting pressure is understanding what structure the lane is actually carrying.
+- Working Hypotheses:
+  - The underexplored upside is now grouped and stratum-conditioned structure, not another larger oracle rerun.
+- Hunches and Guesses:
+  - Factual recall is likely to look the most coherent under grouped-source views and may become the cleanest bridge between the primary-model oracle lane and the bounded Gemma tool-breakage story.
+  - General text probably carries the messiest alpha geometry because the prompts are more stylistically varied than semantically tight.
+- Predictions:
+  - A stratum-aware pattern analysis on `registry_v5` will strengthen the coarse grouped-routing story before it strengthens the raw-source block-structure story.
+- Surprises and Tensions:
+  - The improvement was stronger than I expected on both axes at once: broader confirm coverage and materially better alpha-shape recovery.
+  - The selected ridge penalty staying at `100.0` is less worrying now that `R^2` finally turned positive on the larger surface.
+- Confidence:
+  - high that the next oracle move should be analysis on the saved `registry_v5` artifact rather than another immediate rerun
+  - medium-high that factual recall is the most underexploited promising stratum right now
+- Interesting facts:
+  - The full run improved over uniform by `+1.6299` nats on `1024` confirm prompts, and the held-out predictor still recovered `+0.8292` nats.
+  - Exact-command reuse on the completed output directory finished in `319.63` seconds versus `2544.10` seconds for the original launch, which means the operational side of this lane is finally behaving like durable local infrastructure.
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.

@@ -772,3 +772,19 @@
   Do not reopen wider feature or target comparison inside the first `registry_v5` campaign.
 - Rationale: the repo already has a clear positive primary-model winner on the saved `registry_v4` surface. Reintroducing feature or target selection while also expanding prompt strata would confound the main scale-up question. The generator bug was small but real; it was worth fixing immediately because malformed prompts would have weakened the entire larger campaign.
 - Impact: `resattn-gad` should land the repaired generator plus the `v2` calibration artifact. The next step after that is the first larger `registry_v5` Gemma oracle campaign, not more prompt-generation cleanup or method search.
+
+## [2026-03-18T08:26:00-0500] DECISION: Treat the first full registry_v5 Gemma campaign as a scale-up pass and pivot next to saved-artifact structure analysis
+
+- Trigger: `resattn-w39` completed the first full stratified `registry_v5` Gemma oracle-alpha campaign on the fixed primary-model method surface.
+- Decision: close the scale-up issue as a real success on both the oracle and held-out predictiveness metrics, and do not spend the next cycle on another larger Gemma oracle rerun. Move next to pattern and structure analysis on the saved `registry_v5` artifact.
+- Rationale: the scale question was answered cleanly:
+  - oracle mean improvement over uniform rose to `+1.6299` nats on `1024` confirm prompts with `1024 / 1024` prompts positive and bootstrap interval `[1.5865, 1.6758]`
+  - held-out predicted mean improvement over uniform rose to `+0.8292` nats with `958 / 1024` prompts positive and bootstrap interval `[0.7805, 0.8758]`
+  - alpha-shape recovery improved materially relative to the earlier primary-model prereg-scale artifact (`R^2 = 0.2392`, mean JS `= 0.0985`)
+  - the exact-command rerun against the completed output directory reused saved artifacts and finished in `319.63` seconds versus `2544.10` seconds for the original launch
+  - the stratum breakdown is informative enough that analysis now dominates more scale:
+    - factual recall is strongest (`oracle = +2.2488`, predicted `= +1.6297`, mean JS `= 0.0580`)
+    - reasoning and math is weakest on oracle gain but still predictively stable (`oracle = +0.8613`, predicted `= +0.4848`, mean JS `= 0.0803`)
+    - general text is the loosest on alpha shape (`mean JS = 0.1374`)
+  Another large rerun right now would mostly duplicate evidence we already have. The underexplored upside is understanding whether the larger primary-model positive result carries clearer grouped or stratum-specific routing structure.
+- Impact: `resattn-w39` can close once the artifact and docs land. The next issue should analyze the saved `registry_v5` oracle outputs for grouped and stratum-conditioned structure before any further large-scale oracle launch.

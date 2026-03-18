@@ -1,6 +1,6 @@
 # Current State
 
-**Last updated:** 2026-03-17
+**Last updated:** 2026-03-18
 **Updated by:** codex-gpt5
 **Status:** in_progress
 **Current phase:** Phase 3 - Tool-breakage and safety routing analysis
@@ -530,15 +530,61 @@
       - all four strata were exercised by the small slice through round-robin ordering
       - rerunning the exact command on the same output directory reused saved oracle and feature artifacts and finished in `16.94` seconds
     - interpretation: the next primary-model oracle step is no longer registry construction or calibration; it is the first larger `registry_v5` campaign
+  - `resattn-w39` now lands the first full stratified `registry_v5` Gemma oracle-alpha campaign on the fixed primary-model method surface:
+    - `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1.md` is the first `256 / 1024` primary-model oracle artifact with explicit strata
+    - the full oracle confirm result is stronger than the earlier `registry_v4` primary-model artifact:
+      - mean oracle improvement over uniform `= +1.6299` nats with bootstrap interval `[1.5865, 1.6758]`
+      - positive prompts `= 1024 / 1024`
+      - mean train improvement over uniform `= +1.6080` nats
+      - confirm mean losses:
+        - `uniform = 4.7341`
+        - `random_dirichlet = 9.4581`
+        - `magnitude_proportional = 6.9846`
+        - `last_layer_only = 20.9150`
+        - `optimized = 3.1042`
+    - held-out predictiveness also strengthens materially on the broader primary-model surface:
+      - selected feature source:
+        `position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat`
+      - selected target: `oracle_alpha_logit_vector`
+      - selected ridge penalty: `100.0`
+      - predicted mean improvement over uniform `= +0.8292` nats with bootstrap interval `[0.7805, 0.8758]`
+      - predicted positive prompts `= 958 / 1024`
+      - confirm `R^2 = 0.2392`
+      - mean JS divergence to oracle alpha `= 0.0985`
+    - the new stratum breakdown is informative rather than cosmetic:
+      - factual recall is the strongest and cleanest stratum:
+        - oracle mean improvement `= +2.2488`
+        - predicted mean improvement `= +1.6297`
+        - predicted positives `= 239 / 256`
+        - mean JS `= 0.0580`
+      - reasoning and math has the weakest oracle gain but still positive and comparatively stable predictiveness:
+        - oracle mean improvement `= +0.8613`
+        - predicted mean improvement `= +0.4848`
+        - predicted positives `= 247 / 256`
+        - mean JS `= 0.0803`
+      - code and procedural text is intermediate:
+        - oracle mean improvement `= +1.4595`
+        - predicted mean improvement `= +0.5376`
+        - predicted positives `= 238 / 256`
+        - mean JS `= 0.1181`
+      - general text remains positive but has the weakest alpha-shape fit:
+        - oracle mean improvement `= +1.9501`
+        - predicted mean improvement `= +0.6645`
+        - predicted positives `= 234 / 256`
+        - mean JS `= 0.1374`
+    - the campaign path also clears the operational durability check at the larger scale:
+      - original runtime `= 2544.10` seconds
+      - exact-command rerun against the completed output directory reused caches and finished in `319.63` seconds
+    - interpretation: the larger primary-model oracle result is now clearly real, broader than the earlier saved surface, and stronger on both routed-loss recovery and alpha-shape recovery; the highest-value next move is to analyze structure on this saved artifact rather than launching another expensive oracle rerun immediately
 
 ## Immediate Next Steps
 
-1. Launch the first larger primary-model Gemma oracle-alpha campaign on the repaired `registry_v5` surface.
-2. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
-3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
-4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
-5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
-6. Keep the next oracle scale-up method-fixed: use the current best primary-model feature source plus `oracle_alpha_logit_vector` rather than reopening feature or target selection inside the first `registry_v5` campaign.
+1. Run stratified primary-model pattern analysis on the saved `registry_v5` Gemma oracle artifact, including grouped-source and per-stratum robustness views, before any further large oracle launch.
+2. Use the saved `registry_v5` artifact to decide whether the next high-value oracle follow-up is factual-recall-focused, stratum-conditioned, or broad enough already to move attention elsewhere.
+3. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
+4. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
+5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
+6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 
 ## Phase 1 Gate
 
