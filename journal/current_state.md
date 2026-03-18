@@ -6,6 +6,6 @@
 - Date: 2026-03-18
 - Repo: standalone and initialized
 - Branch: `wip/resattn-scaffold`
-- Focus: `resattn-lnu` is now the main next issue. The next scientific pass should map the strongest factual-recall raw-source clusters from the saved primary-model oracle artifact onto the narrowed `v5` tool-breakage route modes.
-- Experimental status: the center of gravity stays on the primary Gemma oracle lane. The main truthful result is now: strong held-out effective depth mixture on Gemma, broad grouped structure, strongest raw-source structure in factual recall, and a clean softmax competition result. Tool-breakage stays bounded and mixed at the donor-arm stage.
-- Critical reminder: do not drift back to pooled reruns, moon-led redesigns, or frozen Figure 8 rescue work. If tool-breakage resumes beyond the factual bridge analysis, start with `resattn-oi7`. `resattn-a1w` stays a moon-specific sidecar, and Figure 8 stays frozen.
+- Focus: there is no new broad rerun to launch right now. The main story is already in the saved Gemma oracle synthesis artifact, and the remaining bounded tool-breakage follow-up is `resattn-oi7`.
+- Experimental status: the center of gravity stays on the primary Gemma oracle lane. The narrowed `v5` factual bridge now covers all targeted capital and element modes and every non-outlier author mode, so bridge coverage is no longer the main bottleneck.
+- Critical reminder: do not drift back to pooled reruns, moon-led redesigns, or frozen Figure 8 rescue work. If tool-breakage resumes, start with `resattn-oi7`. `resattn-a1w` stays a moon-specific sidecar, and Figure 8 stays frozen.

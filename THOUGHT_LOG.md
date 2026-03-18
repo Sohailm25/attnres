@@ -1766,3 +1766,25 @@ Suggested entry format:
   - full-surface raw-source silhouette `= 0.1664`
   - factual-recall raw-source silhouette `= 0.4709`
   - softmax beats every tested alternative on `128 / 128` confirm prompts
+## [2026-03-18T16:05:00-0500] The Bridge Coverage Problem Is Basically Solved
+- Stage: factual bridge analysis
+- Feel of the Experiment: This is cleaner than I expected. The narrowed `v5` bridge is not just directionally better. It already covers all targeted capital and element modes and every non-outlier author mode. That means the remaining tool-breakage mess is about donor geometry, not about missing the strongest factual oracle modes.
+- Working Hypotheses:
+  - We should stop treating bridge redesign as the main factual tool-breakage lever.
+  - If tool-breakage continues, donor-assignment geometry is the right next microscope.
+- Hunches and Guesses:
+  - The moon sidecar is now even less relevant to the main bridge story.
+  - The singleton author outlier is not worth promoting into the main surface unless another lane independently makes it important.
+- Predictions:
+  - `oi7` will say the remaining mixed donor-arm result is mostly about prompt pairing and control independence, not bridge undercoverage.
+  - Another factual bridge redesign before that audit would be wasted motion.
+- Surprises and Tensions:
+  - The bridge is now structurally aligned even though the donor-arm result is still mixed. That is a useful narrowing result.
+  - Author `cluster 7` stays both well covered and very breakage-heavy, which makes it a better diagnostic mode than I initially expected.
+- Confidence:
+  - high that `lnu` should close positive
+  - high that `oi7` is now the only meaningful next tool-breakage follow-up
+- Interesting facts:
+  - matching-family mode coverage rose from `5 / 13` on `v4` to `10 / 13` on `v5`
+  - `v5` covers all capital and element modes
+  - the only uncovered author mode is singleton `cluster 10`

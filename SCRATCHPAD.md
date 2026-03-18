@@ -244,6 +244,25 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: `prompt_permuted_alpha` and `within_family_permuted_alpha` collapse to the same route-mode summary on `7 / 10` targeted modes under the locked confirm ordering
 - Next step: move the main focus back to `resattn-qxz`, and treat `resattn-oi7` as the only honest tool-breakage follow-up before any further rerun
 
+## [2026-03-18T15:30:21-0500] PRE-RUN: factual raw-cluster to v5 route-mode bridge
+- Command: `.venv/bin/python scripts/run_tool_breakage_route_mode_bridge.py --tool-breakage-collection-id tool_breakage_factual_recall_v5 --tool-breakage-pilot-summary-path results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json --tool-breakage-confirm-summary-path results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json --output results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.json`
+- Device: `cpu`
+- Model: `google/gemma-2-2b` saved-artifact analysis only
+- Data slice: factual-recall confirm raw-source route modes vs `tool_breakage_factual_recall_v5` pilot+confirm prompts
+- Output path: `results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.json`
+- What I'm testing: whether the narrowed `v5` bridge actually covers the strongest factual raw-source route modes exposed by the saved primary-model oracle artifact.
+- Expected outcome: `v5` should cover more of the strongest capital/element/author modes than `v4`, but likely still not every factual mode in the saved route-mode map.
+- Implementation verified: YES - existing saved-artifact bridge code and tests already cover the family-level and route-mode coverage path.
+- Status: LAUNCHING
+
+## [2026-03-18T16:05:00-0500] POST-RUN: factual raw-cluster to v5 route-mode bridge
+- Command: `.venv/bin/python scripts/run_tool_breakage_route_mode_bridge.py --tool-breakage-collection-id tool_breakage_factual_recall_v5 --tool-breakage-pilot-summary-path results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json --tool-breakage-confirm-summary-path results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json --output results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.json`
+- Outcome: SUCCESS
+- Key metric: matching-family factual route-mode coverage `= 10 / 13`, with capitals `= 3 / 3`, elements `= 3 / 3`, authors `= 4 / 5`
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.md`
+- Anomalies: none
+- Next step: keep the bridge fixed and treat `resattn-oi7` as the next honest tool-breakage follow-up if this lane resumes
+
 ## [2026-03-17T16:25:00-0500] PRE-RUN: compact-subword capacity-first Figure 8 proxy follow-up
 - tmux session: `attnres-111-capacity`
 - Script: `scripts/run_attnres_proxy_viability.py`

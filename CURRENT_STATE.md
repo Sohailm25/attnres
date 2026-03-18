@@ -415,6 +415,20 @@
         - non-overlap confirm mean tuned final target-rank delta `= +71.4`
       - the largest current confirm breakage outliers are non-overlap prompts such as anatomy, biology-process, and animal facts, not the matched `capital` / `element` / `author` families
     - interpretation: the bridge is real, but it cuts against the lazy story. The current bounded tool-breakage surface underexplores the strongest primary-model factual routing families. The right next move is to expand the factual tool-breakage prompt surface around the matched families, not to reopen aggregate clustering or dynamic controls
+  - `resattn-lnu` now reruns that bridge at the route-mode level on the narrowed `v5` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.md` is the new route-mode bridge artifact
+    - the narrowed bridge now covers the strongest factual modes for the core families:
+      - matching-family mode coverage `= 10 / 13`
+      - capitals `= 3 / 3`
+      - elements `= 3 / 3`
+      - authors `= 4 / 5`
+      - the only uncovered author mode is the singleton outlier `cluster 10`
+    - every `v5` prompt now assigns to a nearest factual mode in the matching family:
+      - overlap prompt fraction `= 1.0`
+      - matching subcategory fraction `= 1.0`
+    - this is a real improvement over `v4`:
+      - matching-family mode coverage rises from `5 / 13` to `10 / 13`
+    - interpretation: bridge coverage is no longer the main factual tool-breakage bottleneck for capitals, elements, and authors. If the lane stays mixed from here, the honest next explanation is donor-arm geometry and route-mode heterogeneity rather than missing core factual modes
   - `resattn-qcn` now lands that matched-family prompt-surface expansion and its first pilot run:
     - `tool_breakage_factual_recall_v2` is now saved in `prompts/registry_v4.yaml` and propagated into `prompts/registry_v5.yaml`
     - the new surface is balanced around the strongest factual routing families:
@@ -1035,24 +1049,26 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-lnu` as the next main bridge-analysis issue: map the strongest factual-recall raw-source clusters to the narrowed `v5` tool-breakage route modes and quantify how much of the strongest primary-model structure the current bridge actually covers.
-2. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
+1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
+2. If tool-breakage resumes, take `resattn-oi7` next: donor geometry is now the main remaining bottleneck on the narrowed `v5` bridge, not bridge-mode coverage.
+3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
-3. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
+4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
-4. Keep tool-breakage as a bounded extension lane:
+5. Keep tool-breakage as a bounded extension lane:
    - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
-   - the fixed-alpha objection is now clearly weaker on `v5`, but donor-arm results remain mixed
-   - if tool-breakage resumes, take `resattn-oi7` first and audit the donor-assignment geometry before any further rerun
+   - the fixed-alpha objection is now clearly weaker on `v5`
+   - bridge coverage is now clean for capitals, elements, and non-outlier authors
+   - the remaining mixed result is donor-arm geometry, not missing core factual mode coverage
    - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
-5. Keep safety as the next extension lane after the factual bridge analysis:
+6. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
-6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
+7. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
 
 ## Phase 1 Gate
 

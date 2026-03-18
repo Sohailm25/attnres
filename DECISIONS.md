@@ -1266,3 +1266,24 @@
   - `resattn-qxz` can close once the synthesis artifact lands.
   - `resattn-lnu` is now the main next bridge-analysis issue because it connects the strongest factual raw-source structure directly to the narrowed `v5` tool-breakage route modes.
   - extension lanes should stay bounded until they strengthen the new primary-model oracle-centered story rather than distract from it.
+
+## [2026-03-18T16:05:00-0500] DECISION: Close `resattn-lnu` as a strong bridge-coverage pass and move the remaining tool-breakage question to donor geometry
+
+- Trigger: `resattn-lnu` reran the saved factual route-mode bridge on the narrowed `tool_breakage_factual_recall_v5` surface.
+- Decision: close `resattn-lnu` as a positive bridge-analysis result. Treat the narrowed `v5` bridge as structurally aligned for the core factual families. Do not spend more time redesigning factual bridge coverage before donor geometry is audited.
+- Rationale:
+  - `v5` now covers the core factual modes almost completely:
+    - matching-family mode coverage `= 10 / 13`
+    - capitals `= 3 / 3`
+    - elements `= 3 / 3`
+    - authors `= 4 / 5`
+  - the only uncovered author mode is the singleton outlier `cluster 10`, which the repo already excluded intentionally from the main bridge
+  - every `v5` prompt assigns to a nearest factual mode in the matching family:
+    - overlap prompt fraction `= 1.0`
+    - matching subcategory fraction `= 1.0`
+  - this is a real step up from `v4`:
+    - matching-family mode coverage rose from `5 / 13` to `10 / 13`
+- Impact:
+  - `resattn-lnu` can close once the artifact lands.
+  - `resattn-oi7` is now the remaining honest tool-breakage follow-up because donor-arm geometry, not factual mode coverage, is the active bottleneck.
+  - `resattn-a1w` stays bounded as the moon-specific sidecar rather than reopening the main factual bridge.
