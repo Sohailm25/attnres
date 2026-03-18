@@ -348,6 +348,26 @@ Suggested entry format:
   - The rerun durability check was clean: prompt checkpoints stayed at their original timestamps and only `summary.json` moved.
   - Authors are the weakest matched family on this pilot even though they were among the cleanest in the oracle-family bridge.
 
+## [2026-03-18T09:45:06-0500] The Aligned Confirm Surface Is Good Enough To Replace V1
+- Stage: confirm
+- Feel of the Experiment: This is the first time the tool-breakage lane feels like it has a baseline surface that actually matches the main oracle story instead of merely coexisting with it.
+- Working Hypotheses:
+  - The dynamic counterfactual on `v2` is now the right bottleneck. Baseline reshuffling is done.
+- Hunches and Guesses:
+  - Capitals and moons may end up being the most persuasive families in the counterfactual step.
+  - Elements will stay mechanistically odd because their KL degradation and rank-range story point in different directions.
+- Predictions:
+  - The `v2` dynamic counterfactual should show routed traces beating the fixed-alpha control more clearly than the old mixed surface did.
+- Surprises and Tensions:
+  - The aligned surface did not just survive confirm; it beat `v1` on the KL-primary metrics while using twice as many prompts.
+  - Author facts recovered a lot from the pilot weakness and are no longer the obvious soft spot.
+- Confidence:
+  - high that `v2` should replace `v1` as the main bounded baseline
+  - medium that the dynamic counterfactual will now be cleaner than it was on the mixed surface
+- Interesting facts:
+  - `v2` confirm final-position tuned KL delta (`+3.4477`) is meaningfully above `v1` (`+2.9096`).
+  - Both confirm relative rank metrics now clear `11 / 16`, which is a cleaner prompt-count base than the old `8`-prompt surface.
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.

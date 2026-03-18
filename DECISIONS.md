@@ -856,3 +856,19 @@
   - capitals and moons are especially strong on pilot KL deltas (`+3.9622` and `+3.2368`)
   The effect is therefore still real on the aligned surface, even though the family pattern is heterogeneous and authors are weaker on this pilot (`+0.8424`).
 - Impact: `resattn-qcn` can close once the prompt-surface and pilot artifact land. The next direct tool-breakage issue is the locked confirm baseline on `tool_breakage_factual_recall_v2`.
+
+## [2026-03-18T09:45:06-0500] DECISION: Promote the matched-family confirm surface to the main bounded tool-breakage baseline
+
+- Trigger: `resattn-4ny` completed the locked confirm baseline on `tool_breakage_factual_recall_v2`.
+- Decision: treat `tool_breakage_factual_recall_v2` as the main bounded same-model baseline surface for the Gemma tool-breakage lane. Do not keep centering the old mixed factual `v1` surface now that the aligned `v2` confirm artifact is stronger on the KL-primary read and comparably strong on the rank metrics.
+- Rationale: the confirm comparison favors `v2` on the primary quantities that matter:
+  - old `v1` mean tuned KL delta `= +2.5227` on `8` prompts
+  - new `v2` mean tuned KL delta `= +2.7644` on `16` prompts
+  - old `v1` final-position tuned KL delta `= +2.9096`
+  - new `v2` final-position tuned KL delta `= +3.4477`
+  - old `v1` tuned final-target-rank worsening `= 0.625`
+  - new `v2` tuned final-target-rank worsening `= 0.6875`
+  - old `v1` tuned target-rank-range increase `= 0.875`
+  - new `v2` tuned target-rank-range increase `= 0.6875`
+  So `v2` gives a better-aligned surface, a larger confirm prompt count, and a stronger KL-primary read without collapsing the relative instability metrics.
+- Impact: `resattn-4ny` can close once the confirm artifact lands. The next direct strong-claim step is the dynamic-routing counterfactual on `tool_breakage_factual_recall_v2`.

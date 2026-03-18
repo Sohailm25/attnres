@@ -1610,3 +1610,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v2/checkpoints/prompt_results/tb2-pilot-008-c30e9fbef6.json`
 - Anomalies: the first tmux launch failed before Python started because shell redirection targeted a missing directory; the relaunch fixed that with `mkdir -p`. Exact-command rerun against the finished output reused the saved prompt checkpoints and completed in `10.17` seconds, rewriting only `summary.json`.
 - Next step: close `resattn-qcn` and run the locked confirm baseline on `tool_breakage_factual_recall_v2`.
+
+## [2026-03-18T09:42:01-0500] PRE-RUN: Gemma matched-family tool-breakage confirm
+- tmux session: `tb-v2-confirm`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v2 --split confirm --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v2`, `split=confirm`, `prompts=16`, `matched_families=capital/element/author/moon`
+- What I'm testing: whether the better-aligned matched-family surface preserves the pilot's same-model tuned-lens degradation and rank-instability signal on the locked confirm split.
+- Expected outcome: the confirm run stays positive on tuned KL and keeps at least one informative relative rank metric above the `50%` threshold without relying on the old mixed factual prompt set.
+- Expected duration: ~15-45 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the surface is now family-aligned, a heterogeneous confirm read across capitals/elements/authors/moons would be scientifically useful rather than a failure by itself.
+- Implementation verified: YES - the matched-family prompt surface is registry-tested, the pilot stayed strongly positive, and exact-command rerun on the pilot output reused the saved checkpoints.
+- Status: LAUNCHING
+
+## [2026-03-18T09:45:06-0500] POST-RUN: Gemma matched-family tool-breakage confirm
+- Outcome: SUCCESS
+- Key metric: the aligned confirm surface stayed strongly positive on tuned-lens KL (`mean tuned KL delta = +2.7644`, final-position tuned KL delta `= +3.4477`) with both tuned final-target-rank worsening and tuned target-rank-range increase at `11 / 16`.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/metrics.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2/checkpoints/prompt_results/tb2-confirm-016-6ca2e00125.json`
+- Anomalies: none; exact-command rerun against the finished output reused the saved prompt checkpoints and completed in `10.11` seconds, rewriting only `summary.json`.
+- Next step: close `resattn-4ny` and run the controlled dynamic-routing counterfactual on the matched-family `v2` surface.

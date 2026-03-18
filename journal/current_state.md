@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-qcn`
-- Focus: `resattn-qcn` has now landed the matched-family tool-breakage surface and pilot artifact; the next meaningful move is the locked confirm baseline on `tool_breakage_factual_recall_v2`.
-- Experimental status: the repo now has a better-aligned tool-breakage surface centered on `capital`, `element`, `author`, and `moon` families. The pilot shows the aligned surface still carries a strong same-model tuned-lens degradation signal, so the bridge result was not just a descriptive cleanup.
-- Critical reminder: the aligned pilot is still pilot-only. Use the confirm run to decide whether the matched-family surface deserves to replace the old mixed factual surface as the main bounded baseline.
+- Branch: `wip/resattn-4ny`
+- Focus: `resattn-4ny` has now confirmed the matched-family tool-breakage surface; the next meaningful move is the dynamic-routing counterfactual on `tool_breakage_factual_recall_v2`.
+- Experimental status: the repo now has a better-aligned bounded baseline for the Gemma tool-breakage lane. `tool_breakage_factual_recall_v2` beats the old mixed `v1` surface on the KL-primary confirm read while keeping the rank metrics alive on a larger confirm set.
+- Critical reminder: the stronger same-model claim is still blocked on the explicit dynamic-routing counterfactual, not on another baseline refresh.

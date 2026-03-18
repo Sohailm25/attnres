@@ -326,6 +326,31 @@
       - all `8` prompt checkpoints stayed at their original timestamps from the first run
       - the exact-command rerun completed in `10.17` seconds and rewrote only `summary.json`
     - interpretation: the matched-family surface is operationally viable and preserves the core same-model breakage signal. The next direct step is the locked confirm run on this new surface, not another metadata-only pass
+  - `resattn-4ny` now lands that locked confirm read on the matched-family surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v2.md` is the first confirm artifact on `tool_breakage_factual_recall_v2`
+    - the aligned surface stays strongly positive on the same-model tuned-lens baseline:
+      - mean tuned KL to the final distribution rises from `3.1966` to `5.9610` (`+2.7644`)
+      - final-position tuned KL rises from `5.7886` to `9.2363` (`+3.4477`)
+      - tuned final-target-rank worsens on `11 / 16` prompts (`0.6875`)
+      - tuned target-rank range increases on `11 / 16` prompts (`0.6875`)
+    - the matched-family confirm surface is now at least as useful as the old mixed factual baseline and better aligned to the oracle-family story:
+      - old `v1` confirm mean tuned KL delta `= +2.5227` on `8` prompts
+      - new `v2` confirm mean tuned KL delta `= +2.7644` on `16` prompts
+      - old `v1` final-position tuned KL delta `= +2.9096`
+      - new `v2` final-position tuned KL delta `= +3.4477`
+      - old `v1` tuned final-target-rank worsening `= 0.625`
+      - new `v2` tuned final-target-rank worsening `= 0.6875`
+      - old `v1` tuned target-rank-range increase `= 0.875`
+      - new `v2` tuned target-rank-range increase `= 0.6875`
+    - family-level heterogeneity is still present rather than hidden:
+      - capitals carry the strongest mean final-position tuned KL delta (`+4.7066`)
+      - moons are next (`+4.0721`)
+      - elements remain positive on KL (`+3.5016`) while often compressing target-rank range
+      - authors stay positive but smaller (`+2.8658`)
+    - resume durability is verified on the finished confirm output directory:
+      - all `16` prompt checkpoints kept their original timestamps from the first run
+      - the exact-command rerun completed in `10.11` seconds and rewrote only `summary.json`
+    - interpretation: `tool_breakage_factual_recall_v2` should now be treated as the main bounded same-model baseline surface for this lane. The next direct strong-claim step is the controlled dynamic-routing counterfactual on `v2`, not another baseline reshuffle
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -666,8 +691,8 @@
 
 ## Immediate Next Steps
 
-1. Run the locked confirm baseline on `tool_breakage_factual_recall_v2`, because the matched-family pilot stayed strongly positive on the KL-primary surface and now deserves a confirmatory read.
-2. Treat the old mixed factual tool-breakage surface as contextual evidence rather than the highest-value next baseline; the better-aligned matched-family surface is now the priority.
+1. Run the controlled dynamic-routing counterfactual on `tool_breakage_factual_recall_v2`, because the matched-family confirm baseline is now strong enough that the remaining blocker for the stronger same-model claim is the explicit control, not baseline quality.
+2. Treat `tool_breakage_factual_recall_v2` as the main bounded baseline surface for this lane; the old mixed factual baseline stays as contextual evidence only.
 3. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 4. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 5. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
