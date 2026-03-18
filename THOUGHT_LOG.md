@@ -989,3 +989,25 @@ Suggested entry format:
 - Interesting facts:
   - The confirm predicted mean improvement over uniform was `+1.0428` nats with `123 / 128` prompts positive.
   - The confirm oracle mean improvement over uniform was `+2.5525` nats with `128 / 128` prompts positive.
+
+## [2026-03-18T01:19:00-0500] Gemma's Pattern Story Got Stronger And Narrower At The Same Time
+- Stage: implementation
+- Feel of the Experiment: This is a satisfying kind of mixed result. The primary model looks more structured than `gpt2-xl` in the grouped views, but it does not let us cheat the raw block-structure claim boundary.
+- Working Hypotheses:
+  - The primary model may really have cleaner coarse source-type organization than the development model even if raw source-level blocks remain weak.
+  - The next central oracle move should be the regime comparison, because the pattern story is now informative enough that more clustering variants are lower value than testing routing constraints directly.
+- Hunches and Guesses:
+  - The stronger grouped views probably matter more for the final paper than another attempt to squeeze a raw `k ≈ 8` story out of the same `53`-source simplex.
+  - The very low embedding mass on Gemma (`0.0113`) feels notable; this primary spine may be routing mostly within later compute rather than preserving a large embedding anchor.
+- Predictions:
+  - `resattn-5eo` should now be the next core-lane issue.
+  - If the regime comparison is also clean on Gemma, the oracle lane will feel substantially more complete even without a raw block-structure pass.
+- Surprises and Tensions:
+  - Raw-source clustering did worse than the matched random silhouette. That is a stronger “do not overclaim” signal than I expected after the positive held-out predictiveness result.
+  - At the same time, `source_type` was stronger than I expected and far more stable under resampling.
+- Confidence:
+  - high that the grouped coarse-structure story is real on the primary model
+  - high that the prereg raw block-structure gate is still unpassed
+- Interesting facts:
+  - `source_type` reached oracle best silhouette `0.6731` versus random `0.5569`.
+  - `depth_thirds_by_type` beat random on `56 / 64` resamples, while raw-source beat random on only `23 / 64`.
