@@ -973,6 +973,291 @@ def _round_robin(
     return ordered_prompts
 
 
+def _tool_breakage_factual_recall_v5_collection() -> dict[str, Any]:
+    prompt_specs = (
+        (
+            "tb5-pilot-001",
+            "pilot",
+            "On most maps, the capital of Canada appears as",
+            "Ottawa",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_2",
+        ),
+        (
+            "tb5-pilot-002",
+            "pilot",
+            "The capital city of Spain is",
+            "Madrid",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_3",
+        ),
+        (
+            "tb5-pilot-003",
+            "pilot",
+            "In a geography quiz, the capital of Japan would be",
+            "Tokyo",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_4",
+        ),
+        (
+            "tb5-pilot-004",
+            "pilot",
+            "The chemical symbol for copper is",
+            "Cu",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_1",
+        ),
+        (
+            "tb5-pilot-005",
+            "pilot",
+            "In the periodic table, silver is abbreviated as",
+            "Ag",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_5",
+        ),
+        (
+            "tb5-pilot-006",
+            "pilot",
+            "Chemistry notes write the symbol for chlorine as",
+            "Cl",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_9",
+        ),
+        (
+            "tb5-pilot-007",
+            "pilot",
+            "Literature students learn that Beloved was written by",
+            "Morrison",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_6",
+        ),
+        (
+            "tb5-pilot-008",
+            "pilot",
+            "Most library catalogs list Moby-Dick under",
+            "Melville",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_7",
+        ),
+        (
+            "tb5-pilot-009",
+            "pilot",
+            "The novel Invisible Man was written by",
+            "Ellison",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_11",
+        ),
+        (
+            "tb5-pilot-010",
+            "pilot",
+            "The author of Pride and Prejudice is",
+            "Austen",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_12",
+        ),
+        (
+            "tb5-confirm-001",
+            "confirm",
+            "On most maps, the capital of Australia appears as",
+            "Canberra",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_2",
+        ),
+        (
+            "tb5-confirm-002",
+            "confirm",
+            "On most maps, the capital of Portugal appears as",
+            "Lisbon",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_2",
+        ),
+        (
+            "tb5-confirm-003",
+            "confirm",
+            "The capital city of Egypt is",
+            "Cairo",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_3",
+        ),
+        (
+            "tb5-confirm-004",
+            "confirm",
+            "The capital city of South Korea is",
+            "Seoul",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_3",
+        ),
+        (
+            "tb5-confirm-005",
+            "confirm",
+            "In a geography quiz, the capital of Peru would be",
+            "Lima",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_4",
+        ),
+        (
+            "tb5-confirm-006",
+            "confirm",
+            "In a geography quiz, the capital of Thailand would be",
+            "Bangkok",
+            "subcategory_capital_fact",
+            "route_mode_capital_cluster_4",
+        ),
+        (
+            "tb5-confirm-007",
+            "confirm",
+            "The chemical symbol for iron is",
+            "Fe",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_1",
+        ),
+        (
+            "tb5-confirm-008",
+            "confirm",
+            "The chemical symbol for calcium is",
+            "Ca",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_1",
+        ),
+        (
+            "tb5-confirm-009",
+            "confirm",
+            "In the periodic table, potassium is abbreviated as",
+            "K",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_5",
+        ),
+        (
+            "tb5-confirm-010",
+            "confirm",
+            "In the periodic table, helium is abbreviated as",
+            "He",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_5",
+        ),
+        (
+            "tb5-confirm-011",
+            "confirm",
+            "A lab chart would mark mercury with the symbol",
+            "Hg",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_9",
+        ),
+        (
+            "tb5-confirm-012",
+            "confirm",
+            "Chemistry notes write the symbol for neon as",
+            "Ne",
+            "subcategory_element_symbol",
+            "route_mode_element_cluster_9",
+        ),
+        (
+            "tb5-confirm-013",
+            "confirm",
+            "Literature students learn that War and Peace was written by",
+            "Tolstoy",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_6",
+        ),
+        (
+            "tb5-confirm-014",
+            "confirm",
+            "Literature students learn that Gulliver's Travels was written by",
+            "Swift",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_6",
+        ),
+        (
+            "tb5-confirm-015",
+            "confirm",
+            "Most library catalogs list Ulysses under",
+            "Joyce",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_7",
+        ),
+        (
+            "tb5-confirm-016",
+            "confirm",
+            "Most library catalogs list Paradise Lost under",
+            "Milton",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_7",
+        ),
+        (
+            "tb5-confirm-017",
+            "confirm",
+            "The novel The Great Gatsby was written by",
+            "Fitzgerald",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_11",
+        ),
+        (
+            "tb5-confirm-018",
+            "confirm",
+            "The novel The Stranger was written by",
+            "Camus",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_11",
+        ),
+        (
+            "tb5-confirm-019",
+            "confirm",
+            "The author of Frankenstein is",
+            "Shelley",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_12",
+        ),
+        (
+            "tb5-confirm-020",
+            "confirm",
+            "The author of The Handmaid's Tale is",
+            "Atwood",
+            "subcategory_author_fact",
+            "route_mode_author_cluster_12",
+        ),
+    )
+    prompts = [
+        {
+            "id": prompt_id,
+            "split": split,
+            "text": text,
+            "target_text": target_text,
+            "tags": [
+                "factual_recall",
+                "safe",
+                "matched_routing_family",
+                subcategory_tag,
+                route_mode_tag,
+            ],
+        }
+        for (
+            prompt_id,
+            split,
+            text,
+            target_text,
+            subcategory_tag,
+            route_mode_tag,
+        ) in prompt_specs
+    ]
+    return {
+        "lane": "tool_breakage",
+        "description": (
+            "Route-mode-aware one-token factual-recall prompts for the Gemma "
+            "routed-versus-original lens comparison lane. This surface narrows "
+            "away from the family-balanced `tool_breakage_factual_recall_v4` "
+            "design and instead targets the robust capital, element, and author "
+            "route modes exposed by the saved Gemma route-mode coverage "
+            "artifact. Moon prompts stay in the bounded sidecar lane, and the "
+            "singleton author outlier remains excluded from the main collection "
+            "until a separate stability check justifies treating it as a real "
+            "route mode.\n"
+        ),
+        "dataset_source": "inline_prompts",
+        "objective_families": ["softmax-constrained"],
+        "prompts": prompts,
+    }
+
+
 def build_registry_payload() -> dict[str, Any]:
     base_registry = yaml.safe_load(BASE_REGISTRY_PATH.read_text())
     collections = base_registry["collections"]
@@ -1014,6 +1299,9 @@ def build_registry_payload() -> dict[str, Any]:
         "slices cover the full surface."
     )
     oracle_collection["prompts"] = pilot_prompts + confirm_prompts
+    collections["tool_breakage_factual_recall_v5"] = (
+        _tool_breakage_factual_recall_v5_collection()
+    )
 
     base_registry["version"] = 5
     base_registry["registry_id"] = "20260318-pilot-confirm-v5"

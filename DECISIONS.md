@@ -1142,3 +1142,29 @@
     - moons cover `1 / 2` moon modes, but that is not the main reason to redesign the surface
   - this means the right next question is no longer “is moon style the only blocker?” It is “how do we redesign the factual one-token surface so it actually covers the saved capital, element, and author modes?”
 - Impact: `resattn-unp` can close once the artifact lands. `resattn-q38` is now the next main bridge issue, `resattn-a1w` remains bounded, and future tool-breakage work should be judged against mode coverage rather than only family labels.
+
+## [2026-03-18T16:08:00-0500] DECISION: Close `resattn-q38` with a route-mode-aware `v5` surface that excludes moons and the singleton author outlier from the main collection
+
+- Trigger: `resattn-q38` redesigned the one-token factual extension surface after the saved `v4` coverage artifact showed broad route-mode undercoverage inside capitals, elements, and authors.
+- Decision: close `resattn-q38` by adding `tool_breakage_factual_recall_v5` to `prompts/registry_v5.yaml`. Make the new main surface route-mode-aware rather than family-balanced. Keep moon prompts out of the main collection, and keep the singleton author outlier (`cluster 10`) excluded from the main collection until a separate stability check justifies treating it as a real mode.
+- Rationale:
+  - the saved `v4` coverage failure was not moon-only:
+    - capitals covered `1 / 3` capital modes
+    - elements covered `1 / 3` element modes
+    - authors covered `2 / 5` author modes
+  - the robust missing modes are clear enough to target directly:
+    - capitals: `clusters 2 / 4`
+    - elements: `clusters 5 / 9`
+    - authors: `clusters 6 / 11`
+  - the covered anchor modes are also worth preserving so future reruns can compare stable versus newly added modes on the same surface:
+    - capitals: `cluster 3`
+    - elements: `cluster 1`
+    - authors: `clusters 7 / 12`
+  - the singleton author outlier is a bad main-surface driver:
+    - it is one prompt in the saved route-mode artifact
+    - folding it into the main collection now would overfit the redesign to an unstable edge case
+  - keeping moons in the main collection would blur the exact bridge correction that `q38` was supposed to make
+- Impact:
+  - `resattn-q38` can close once the route-mode surface memo lands.
+  - `resattn-xfg` is now the next bounded tool-breakage execution issue: run the first pilot on `tool_breakage_factual_recall_v5` and report results by intended route mode as well as by family.
+  - `resattn-a1w` remains the moon sidecar, and future tool-breakage reruns should not fall back to pooled `v4` analysis first.

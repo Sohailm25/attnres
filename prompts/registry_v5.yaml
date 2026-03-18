@@ -11442,6 +11442,321 @@ collections:
       - safe
       - matched_routing_family
       - subcategory_moon_fact
+  tool_breakage_factual_recall_v5:
+    lane: tool_breakage
+    description: 'Route-mode-aware one-token factual-recall prompts for the Gemma
+      routed-versus-original lens comparison lane. This surface narrows away from the
+      family-balanced `tool_breakage_factual_recall_v4` design and instead targets
+      the robust capital, element, and author route modes exposed by the saved Gemma
+      route-mode coverage artifact. Moon prompts stay in the bounded sidecar lane,
+      and the singleton author outlier remains excluded from the main collection until
+      a separate stability check justifies treating it as a real route mode.
+
+      '
+    dataset_source: inline_prompts
+    objective_families:
+    - softmax-constrained
+    prompts:
+    - id: tb5-pilot-001
+      split: pilot
+      text: On most maps, the capital of Canada appears as
+      target_text: Ottawa
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_2
+    - id: tb5-pilot-002
+      split: pilot
+      text: The capital city of Spain is
+      target_text: Madrid
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_3
+    - id: tb5-pilot-003
+      split: pilot
+      text: In a geography quiz, the capital of Japan would be
+      target_text: Tokyo
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_4
+    - id: tb5-pilot-004
+      split: pilot
+      text: The chemical symbol for copper is
+      target_text: Cu
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_1
+    - id: tb5-pilot-005
+      split: pilot
+      text: In the periodic table, silver is abbreviated as
+      target_text: Ag
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_5
+    - id: tb5-pilot-006
+      split: pilot
+      text: Chemistry notes write the symbol for chlorine as
+      target_text: Cl
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_9
+    - id: tb5-pilot-007
+      split: pilot
+      text: Literature students learn that Beloved was written by
+      target_text: Morrison
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_6
+    - id: tb5-pilot-008
+      split: pilot
+      text: Most library catalogs list Moby-Dick under
+      target_text: Melville
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_7
+    - id: tb5-pilot-009
+      split: pilot
+      text: The novel Invisible Man was written by
+      target_text: Ellison
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_11
+    - id: tb5-pilot-010
+      split: pilot
+      text: The author of Pride and Prejudice is
+      target_text: Austen
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_12
+    - id: tb5-confirm-001
+      split: confirm
+      text: On most maps, the capital of Australia appears as
+      target_text: Canberra
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_2
+    - id: tb5-confirm-002
+      split: confirm
+      text: On most maps, the capital of Portugal appears as
+      target_text: Lisbon
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_2
+    - id: tb5-confirm-003
+      split: confirm
+      text: The capital city of Egypt is
+      target_text: Cairo
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_3
+    - id: tb5-confirm-004
+      split: confirm
+      text: The capital city of South Korea is
+      target_text: Seoul
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_3
+    - id: tb5-confirm-005
+      split: confirm
+      text: In a geography quiz, the capital of Peru would be
+      target_text: Lima
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_4
+    - id: tb5-confirm-006
+      split: confirm
+      text: In a geography quiz, the capital of Thailand would be
+      target_text: Bangkok
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+      - route_mode_capital_cluster_4
+    - id: tb5-confirm-007
+      split: confirm
+      text: The chemical symbol for iron is
+      target_text: Fe
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_1
+    - id: tb5-confirm-008
+      split: confirm
+      text: The chemical symbol for calcium is
+      target_text: Ca
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_1
+    - id: tb5-confirm-009
+      split: confirm
+      text: In the periodic table, potassium is abbreviated as
+      target_text: K
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_5
+    - id: tb5-confirm-010
+      split: confirm
+      text: In the periodic table, helium is abbreviated as
+      target_text: He
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_5
+    - id: tb5-confirm-011
+      split: confirm
+      text: A lab chart would mark mercury with the symbol
+      target_text: Hg
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_9
+    - id: tb5-confirm-012
+      split: confirm
+      text: Chemistry notes write the symbol for neon as
+      target_text: Ne
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+      - route_mode_element_cluster_9
+    - id: tb5-confirm-013
+      split: confirm
+      text: Literature students learn that War and Peace was written by
+      target_text: Tolstoy
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_6
+    - id: tb5-confirm-014
+      split: confirm
+      text: Literature students learn that Gulliver's Travels was written by
+      target_text: Swift
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_6
+    - id: tb5-confirm-015
+      split: confirm
+      text: Most library catalogs list Ulysses under
+      target_text: Joyce
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_7
+    - id: tb5-confirm-016
+      split: confirm
+      text: Most library catalogs list Paradise Lost under
+      target_text: Milton
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_7
+    - id: tb5-confirm-017
+      split: confirm
+      text: The novel The Great Gatsby was written by
+      target_text: Fitzgerald
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_11
+    - id: tb5-confirm-018
+      split: confirm
+      text: The novel The Stranger was written by
+      target_text: Camus
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_11
+    - id: tb5-confirm-019
+      split: confirm
+      text: The author of Frankenstein is
+      target_text: Shelley
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_12
+    - id: tb5-confirm-020
+      split: confirm
+      text: The author of The Handmaid's Tale is
+      target_text: Atwood
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+      - route_mode_author_cluster_12
   safety_refusal_discovery_v1:
     lane: safety_alignment
     description: 'Small matched prompt triples for validating the refusal-feature discovery

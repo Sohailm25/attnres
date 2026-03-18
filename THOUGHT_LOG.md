@@ -1656,3 +1656,25 @@ Suggested entry format:
   - matching-family mode coverage `= 5 / 13`
   - all `12` capital prompts nearest-match capital mode `cluster 3`
   - all `12` element prompts nearest-match element mode `cluster 1`
+## [2026-03-18T16:08:00-0500] The Honest Redesign Is Narrower, Not Broader
+- Stage: bridge design
+- Feel of the Experiment: The saved evidence finally made the design choice crisp. A truthful next surface is not “v4 plus a few more prompts.” It is a route-mode-aware collection that narrows to the robust capital, element, and author modes and refuses to pretend that moons or the singleton author outlier are already understood.
+- Working Hypotheses:
+  - The next informative tool-breakage run should be on a route-mode-aware surface, not on another pooled `v4` rerun.
+  - Keeping moons out of the main collection will sharpen the next result rather than weaken it.
+- Hunches and Guesses:
+  - The capital and element missing modes are clean enough that the next pilot should show a more informative family-conditioned picture quickly.
+  - The author story will still be the trickiest because the mode split is real but the phrasing families are partly overlapping.
+- Predictions:
+  - `tool_breakage_factual_recall_v5` will be a better discriminator than `v4` even before any larger confirm run.
+  - If `xfg` still looks mixed, the next bottleneck will be author-mode heterogeneity rather than “we forgot moons.”
+- Surprises and Tensions:
+  - The singleton author outlier is scientifically real enough to preserve in the notes, but not reliable enough to drive the main collection.
+  - Narrowing the main surface actually feels more ambitious here because it forces the next run to answer the route-mode question directly.
+- Confidence:
+  - high that closing `q38` with a route-mode-aware `v5` surface is the right move
+  - medium-high that `xfg` should come before `a1w`
+- Interesting facts:
+  - `v5` main collection prompt counts `= 10` pilot / `20` confirm
+  - robust targeted modes `= 10`
+  - moon modes in main collection `= 0`

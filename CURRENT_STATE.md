@@ -317,6 +317,24 @@
       - authors cover `2 / 5` author modes, while `7` author prompts nearest-match the dominant capital mode
       - moons cover `1 / 2` moon modes, and most moon prompts still nearest-match author or element modes
     - interpretation: the next extension should stay on capitals, elements, and authors, but it should not stay on the current `v4` surface unchanged. The honest next move is a route-mode-aware surface redesign, while `resattn-a1w` stays a bounded moon-specific sidecar
+  - `resattn-q38` now lands that route-mode-aware redesign in the prompt registry:
+    - `tool_breakage_factual_recall_v5` is now saved in `prompts/registry_v5.yaml`
+    - the new surface is explicitly mode-aware rather than family-balanced:
+      - pilot `= 10` prompts
+      - confirm `= 20` prompts
+      - targeted robust modes:
+        - capitals `clusters 2 / 3 / 4`
+        - elements `clusters 1 / 5 / 9`
+        - authors `clusters 6 / 7 / 11 / 12`
+    - the redesign now encodes intended route modes directly in tags such as:
+      - `route_mode_capital_cluster_2`
+      - `route_mode_element_cluster_9`
+      - `route_mode_author_cluster_11`
+    - the main collection is intentionally narrower than `v4`:
+      - moon prompts stay out of the main collection until `resattn-a1w` resolves the moon sidecar
+      - the singleton author outlier (`cluster 10`) stays excluded until a later stability check justifies treating it as a real mode
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-surface-v5.md` is the design artifact for this new surface
+    - interpretation: if the tool-breakage lane resumes, the next honest execution step is to run `tool_breakage_factual_recall_v5` directly rather than squeezing more pooled analysis out of `v4`
   - `resattn-dat` now bridges that factual-recall structure back into the bounded Gemma tool-breakage lane without another model run:
     - `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json` and `.md` compare the saved factual-recall raw-source cluster families against the existing Gemma factual-recall tool-breakage prompts using the saved prompt-level `oracle_alpha` vectors from the pilot and confirm baseline artifacts
     - the bridge result is clean for the overlapping families:
@@ -938,22 +956,22 @@
 
 ## Immediate Next Steps
 
-1. Take `resattn-q38` as the next main bridge issue: redesign the one-token factual surface around the missing capital, element, and author route modes exposed by `resattn-unp`.
+1. Take `resattn-xfg` as the next bounded tool-breakage execution issue: run the first Gemma pilot on `tool_breakage_factual_recall_v5` and report results by intended route-mode tags as well as by family.
 2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
 3. Treat the next extension bridge as factual-family-conditioned and mode-aware:
-   - capitals, elements, and authors are still the strongest bridge families, but the saved `v4` surface covers too few of their route modes
+   - capitals, elements, and authors are still the strongest bridge families, and `v5` now targets their robust route modes explicitly
    - reasoning/math remains a real secondary structure lane, but it is not yet the best next bridge target
    - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
 4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
 5. Keep tool-breakage as a bounded extension lane:
-   - the one-token `v4` surface improved the family story, but the authoritative boundary is still family-conditioned mixed and now visibly mode-undercovered
-   - if tool-breakage resumes beyond `resattn-q38`, do not return to pooled reruns first
+   - the one-token `v4` surface improved the family story, but the authoritative boundary is still family-conditioned mixed and was visibly mode-undercovered
+   - if tool-breakage resumes beyond `resattn-xfg`, do not return to pooled reruns first
 6. Keep safety as the next extension lane after the mode-aware factual bridge pass:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse

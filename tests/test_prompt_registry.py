@@ -303,6 +303,98 @@ class PromptRegistryTests(unittest.TestCase):
             )
             self.assertEqual(1, len(token_ids), entry.prompt_id)
 
+    def test_tool_breakage_v5_entries_target_route_modes_without_moons(self) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v5",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+        confirm_entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v5",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        self.assertEqual(10, len(pilot_entries))
+        self.assertEqual(20, len(confirm_entries))
+
+        expected_mode_counts = {
+            "route_mode_capital_cluster_2": {"pilot": 1, "confirm": 2},
+            "route_mode_capital_cluster_3": {"pilot": 1, "confirm": 2},
+            "route_mode_capital_cluster_4": {"pilot": 1, "confirm": 2},
+            "route_mode_element_cluster_1": {"pilot": 1, "confirm": 2},
+            "route_mode_element_cluster_5": {"pilot": 1, "confirm": 2},
+            "route_mode_element_cluster_9": {"pilot": 1, "confirm": 2},
+            "route_mode_author_cluster_6": {"pilot": 1, "confirm": 2},
+            "route_mode_author_cluster_7": {"pilot": 1, "confirm": 2},
+            "route_mode_author_cluster_11": {"pilot": 1, "confirm": 2},
+            "route_mode_author_cluster_12": {"pilot": 1, "confirm": 2},
+        }
+        for split_name, entries in (
+            ("pilot", pilot_entries),
+            ("confirm", confirm_entries),
+        ):
+            mode_counts = {mode_tag: 0 for mode_tag in expected_mode_counts}
+            family_counts = {
+                "subcategory_capital_fact": 0,
+                "subcategory_element_symbol": 0,
+                "subcategory_author_fact": 0,
+            }
+            for entry in entries:
+                self.assertIn("matched_routing_family", entry.tags)
+                self.assertNotIn("subcategory_moon_fact", entry.tags)
+                subcategory_tags = [
+                    tag for tag in entry.tags if tag.startswith("subcategory_")
+                ]
+                self.assertEqual(1, len(subcategory_tags), entry.prompt_id)
+                family_counts[subcategory_tags[0]] += 1
+                mode_tags = [tag for tag in entry.tags if tag.startswith("route_mode_")]
+                self.assertEqual(1, len(mode_tags), entry.prompt_id)
+                mode_counts[mode_tags[0]] += 1
+            self.assertEqual(
+                {
+                    mode_tag: expected_counts[split_name]
+                    for mode_tag, expected_counts in expected_mode_counts.items()
+                },
+                mode_counts,
+            )
+            self.assertEqual(
+                {
+                    "subcategory_capital_fact": 3 if split_name == "pilot" else 6,
+                    "subcategory_element_symbol": 3 if split_name == "pilot" else 6,
+                    "subcategory_author_fact": 4 if split_name == "pilot" else 8,
+                },
+                family_counts,
+            )
+
+    def test_tool_breakage_v5_targets_are_single_gemma_tokens(self) -> None:
+        registry = self.load_prompt_registry()
+        entries = tuple(
+            self.resolve_prompt_entries(
+                collection_id="tool_breakage_factual_recall_v5",
+                split="pilot",
+                exploratory=True,
+                registry=registry,
+            )
+        ) + tuple(
+            self.resolve_prompt_entries(
+                collection_id="tool_breakage_factual_recall_v5",
+                split="confirm",
+                exploratory=False,
+                registry=registry,
+            )
+        )
+
+        for entry in entries:
+            token_ids = self.gemma_tokenizer.encode(
+                f" {entry.target_text}",
+                add_special_tokens=False,
+            )
+            self.assertEqual(1, len(token_ids), entry.prompt_id)
+
     def test_safety_alignment_entries_form_matched_refusal_workflow_groups(
         self,
     ) -> None:
