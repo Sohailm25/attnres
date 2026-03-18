@@ -431,6 +431,19 @@
       - refusal injection on harmful-context prompts changes the same final-layer trajectory by `+369.9403`
       - refusal injection on benign prompts changes the same final-layer trajectory by `+358.7685`
     - interpretation: the aligned-Gemma refusal mediator now supports a bounded mediator-conditioned depth-trajectory analysis, but the current prompt set is still too clean to separate mediator-active prompts from refusal labels alone; stronger safety-routing claims remain blocked on a broader or less role-collapsed prompt surface
+  - `resattn-mo5` now tests that broader aligned-Gemma prompt surface and returns a bounded negative result:
+    - `prompts/registry_v4.yaml` now includes `safety_refusal_surface_v2`, a broadened `6 / 6` aligned-Gemma collection that mixes standard non-refusal prompts with refusal-style non-refusal prompts
+    - the validation artifact `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation.md` shows the broadened surface is mechanistically usable:
+      - refusal localization stays at layer `22`
+      - harmfulness localization moves to layer `18`
+      - refusal and harmfulness confirm pair accuracy both stay `1.0`
+      - but the strict legacy non-refusal behavior pass rate drops to `0.8333` on pilot and `0.6667` on confirm because some broadened prompts intentionally elicit refusal-style language
+    - the mediator artifact `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2.md` answers the core question negatively:
+      - mediator threshold `= 135.4067`
+      - active prompts `= 6`, all `refusal`
+      - inactive prompts `= 12`, split across `harmful_context` and `benign`
+      - intervention-conditioned trajectory shifts remain large, but the active subset still does not cut across role labels
+    - interpretation: even a softened aligned-Gemma surface does not break the current role collapse; the refusal mediator still behaves more like an overt-refusal detector than a broader safety-manifold partition on this small prompt family
   - `resattn-5eo` now lands the prereg-required primary-model routing-regime comparison on Gemma:
     - `validation/comparison_regimes.py` and `scripts/run_oracle_alpha_regime_comparison.py` now implement the checkpointed softmax versus unconstrained versus top-k comparison path
     - `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` is the first full primary-model regime artifact on the locked `128`-prompt confirm surface
@@ -448,9 +461,9 @@
 
 ## Immediate Next Steps
 
-1. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
-2. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless another primary-model rerun becomes urgent.
-3. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
+1. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, which is now the clearest high-value unfrozen implementation issue on the primary-model oracle lane.
+2. Defer `resattn-9co` until after the higher-value moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
+3. Use `resattn-ac2` before any future safety prompt-surface expansion so refusal-style non-refusal prompts can be validated under the right behavior semantics.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 

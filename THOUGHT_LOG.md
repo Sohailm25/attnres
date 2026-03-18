@@ -1054,3 +1054,24 @@ Suggested entry format:
 - Interesting facts:
   - The repo already had the reopen conditions written down in `resattn-9fo`; `1lk` mostly had to admit that none of them is concrete yet.
   - The current local proxy remains useful descriptively even though it is now frozen for strong-claim purposes.
+
+## [2026-03-18T02:31:00-0500] The Broadened Safety Surface Was Useful Precisely Because It Still Failed
+- Stage: implementation
+- Feel of the Experiment: This is the good kind of negative result. The surface was broader enough to matter, and it still did not break the role collapse.
+- Working Hypotheses:
+  - The current aligned-Gemma refusal mediator is closer to an overt-refusal detector than to a broader safety-manifold partition on small prompt sets.
+  - Future safety-surface work will need better behavior semantics, not just more clever prompts.
+- Hunches and Guesses:
+  - The non-refusal prompts that explicitly asked for refusal-style language were enough to stress the old validator, but not enough to move the mediator threshold into a genuinely mixed subset.
+  - That makes `resattn-ac2` feel more valuable than another immediate prompt rewrite.
+- Predictions:
+  - If we make the validator tag-aware later, the broadened-surface result will still read as negative on the core partition question.
+- Surprises and Tensions:
+  - I expected at least one or two non-refusal prompts to cross the mediator threshold. None did.
+  - The intervention-conditioned trajectory story stayed strong even while the partition story stayed collapsed.
+- Confidence:
+  - high that `mo5` answered its core question cleanly
+  - medium-high that the best next step is back on the oracle/infrastructure lane
+- Interesting facts:
+  - The broadened mediator threshold was `135.4067`, and all `6` active confirm prompts were still outright refusals.
+  - Refusal injection still moved the final-layer refusal trajectory by `+284.3705` on harmful-context prompts and `+315.3803` on benign prompts.

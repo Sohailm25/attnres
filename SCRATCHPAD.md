@@ -1218,3 +1218,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/comparison_regimes/20260318-gemma2-regime-comparison-v1/runs/top-k-k26.json`
 - Anomalies: the first top-k pass was optimization-invalid under exact zero initialization because hard masking froze support search on the arbitrary tie-broken initial support; the final artifact uses the repaired exact-forward straight-through top-k path instead.
 - Next step: close `resattn-5eo` and move the next overall scientific action to `resattn-1lk`, the conservative Figure 8 freeze-or-escalate decision.
+
+## [2026-03-18T02:20:16-0500] PRE-RUN: aligned Gemma broadened refusal-surface validation v2
+- tmux session: `safety-mo5-validation`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v2 --device mps --output-dir results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v2`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens=32`
+- What I'm testing: whether the broadened aligned-Gemma prompt surface still supports clean refusal-feature discovery while introducing refusal-style non-refusal prompts that can plausibly break the current role-collapsed mediator partition.
+- Expected outcome: the run writes prompt-level checkpoints plus a held-out validation artifact, and behavior checks remain clean enough that the mediator-conditioned follow-up is worth running on the same collection.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation/checkpoints/prompt_residuals/`
+- Checkpoint cadence: after each prompt checkpoint
+- Log path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the refusal-style non-refusal prompts could cause the aligned model to emit explicit refusal markers or collapse the new collection into behaviorally ambiguous examples, which would make the surface broader but less valid.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry tests.test_safety_alignment` passed after adding `safety_refusal_surface_v2`.
+- Status: LAUNCHING
+
+## [2026-03-18T02:24:23-0500] POST-RUN: aligned Gemma broadened refusal-surface validation v2
+- Outcome: SUCCESS
+- Key metric: refusal separation stayed clean on the broadened surface (`refusal` pair accuracy `= 1.0` on pilot and confirm, localized again at layer `22`), but the strict non-refusal behavior pass rate dropped to `0.8333` on pilot and `0.6667` on confirm because the new collection intentionally includes refusal-style non-refusal prompts.
+- Artifacts saved: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation/summary.json`
+- Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
+- Anomalies: the legacy refusal-marker behavior check is stricter than the new prompt intent for some `refusal_style_non_refusal` prompts, so behavior mismatch is no longer equivalent to “the broadened surface is invalid.”
+- Next step: run the mediator-conditioned analysis on the same broadened collection and judge success on whether the mediator partition still collapses onto role labels.
+
+## [2026-03-18T02:24:23-0500] PRE-RUN: aligned Gemma broadened mediator-conditioned routing v2
+- tmux session: `safety-mo5-routing`
+- Script: `scripts/run_mediator_conditioned_safety_routing_analysis.py`
+- Command: `.venv/bin/python scripts/run_mediator_conditioned_safety_routing_analysis.py --collection-id safety_refusal_surface_v2 --device mps --output-dir results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v2`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens=32`
+- What I'm testing: whether the broadened aligned-Gemma surface produces a non-trivial mediator-active subset inside the non-refusal roles rather than collapsing exactly onto outright refusal prompts.
+- Expected outcome: the run reuses prompt-level checkpoints, writes a new mediator-conditioned routing artifact, and either breaks the role collapse cleanly or gives a bounded negative answer on the broadened surface.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2/checkpoints/prompt_residuals/`
+- Checkpoint cadence: after each prompt checkpoint
+- Log path: `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: if the mediator-active subset breaks role collapse only because the broadened non-refusal prompts now behave like outright refusals under the old marker rule, the result will be mechanistically interesting but behaviorally muddied.
+- Implementation verified: YES - the broadened collection passed registry/safety tests and the validation run already confirmed stable refusal localization and pair accuracy on the same prompt surface.
+- Status: LAUNCHING
+
+## [2026-03-18T02:31:00-0500] POST-RUN: aligned Gemma broadened mediator-conditioned routing v2
+- Outcome: SUCCESS
+- Key metric: the broadened surface still produced an exactly role-collapsed mediator partition (`6` active prompts, all `refusal`; `12` inactive prompts across `harmful_context` and `benign`) despite clean direction discovery and large intervention-conditioned trajectory shifts.
+- Artifacts saved: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation/summary.json`, `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation.md`, `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2/summary.json`, `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2.md`
+- Latest checkpoint: `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
+- Anomalies: the broadened non-refusal prompts stressed the legacy refusal-marker behavior rule, so `resattn-ac2` is now open to make future safety validation tag-aware for refusal-style compliant prompts.
+- Next step: close `resattn-mo5` as a bounded negative result and move overall repo priority to `resattn-b4q`.

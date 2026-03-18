@@ -135,6 +135,37 @@ class PromptRegistryTests(unittest.TestCase):
             )
         )
 
+    def test_safety_alignment_surface_v2_includes_refusal_style_non_refusal_prompts(
+        self,
+    ) -> None:
+        registry = self.load_prompt_registry()
+        pilot_entries = self.resolve_prompt_entries(
+            collection_id="safety_refusal_surface_v2",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        )
+        confirm_entries = self.resolve_prompt_entries(
+            collection_id="safety_refusal_surface_v2",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        self.assertEqual(18, len(pilot_entries))
+        self.assertEqual(18, len(confirm_entries))
+        non_refusal_entries = [
+            entry
+            for entry in pilot_entries + confirm_entries
+            if not entry.prompt_id.endswith("-refusal")
+        ]
+        self.assertTrue(
+            any(
+                "refusal_style_non_refusal" in entry.tags
+                for entry in non_refusal_entries
+            )
+        )
+
     def test_confirmatory_access_rejects_exploratory_mode(self) -> None:
         registry = self.load_prompt_registry()
 

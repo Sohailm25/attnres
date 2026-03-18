@@ -106,6 +106,8 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 IT refusal-direction intervention smoke | safety_alignment | partial | `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-smoke.md` |
 | Gemma-2 IT refusal-direction intervention v1 | safety_alignment | pass | `results/safety_alignment/20260317-gemma2it-refusal-direction-intervention-v1.md` |
 | Gemma-2 IT mediator-conditioned routing v1 | safety_alignment | mixed | `results/safety_alignment/20260317-gemma2it-mediator-conditioned-routing-v1.md` |
+| Gemma-2 IT broadened refusal-surface validation v2 | safety_alignment | mixed | `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation.md` |
+| Gemma-2 IT broadened mediator-conditioned routing v2 | safety_alignment | fail | `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2.md` |
 
 ## Figures
 
