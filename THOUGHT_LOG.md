@@ -1501,3 +1501,26 @@ Suggested entry format:
 - Interesting facts:
   - author pilot mean tuned KL delta under routing `= +2.2556`
   - every family is `4 / 4` positive on mean tuned KL under routing
+## [2026-03-18T13:19:30-0500] The One-Token Surface Held Up On Confirm
+- Stage: experiment
+- Feel of the Experiment: This is the cleanest tool-breakage result in a while. The redesign did not just rescue pilot optics; it stayed positive everywhere on the locked split.
+- Working Hypotheses:
+  - The one-token redesign genuinely removed an important source of distortion from the old matched-family baseline.
+  - The donor-arm rerun on `v4` is now the real reopening test for the stronger same-model claim.
+- Hunches and Guesses:
+  - The `v4` donor-arm read should be materially healthier than `v3`, especially on authors.
+  - If authors still fail on donor-arm controls after this confirm baseline, the remaining blocker is more likely to be true prompt-specific control weakness than answer format.
+- Predictions:
+  - `apy` should narrow or eliminate the old author-family reversal against the within-family donor arm.
+  - The redesigned surface may still leave moons slightly noisier because the prompt style is less uniform than capitals/elements.
+- Surprises and Tensions:
+  - All four families stayed `8 / 8` positive on mean tuned KL under routing; that is cleaner than I expected on a first confirm pass.
+  - Authors are still the smallest positive family, so the redesign helped without making the family completely ordinary.
+- Confidence:
+  - high that `czd` should close as a confirmatory pass
+  - medium-high that `apy` is now the right next move
+- Interesting facts:
+  - author confirm mean tuned KL delta under routing `= +2.0532`
+  - capital confirm mean tuned KL delta under routing `= +2.9547`
+  - element confirm mean tuned KL delta under routing `= +2.9847`
+  - moon confirm mean tuned KL delta under routing `= +2.8556`

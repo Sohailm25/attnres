@@ -1778,3 +1778,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-pilot-v4/checkpoints/prompt_results/tb4-pilot-016-58c787031b.json`
 - Anomalies: none; the exact-command rerun reused the full prompt checkpoint set in `10.57` seconds and the checkpoint timestamp hash stayed unchanged. The full local `summary.json` is intentionally left untracked because it is large and the smaller `metrics.json` captures the artifact-level read.
 - Next step: close `resattn-t0p`, then use `resattn-czd` as the next confirmatory follow-up on the one-token surface before reopening donor-arm controls.
+
+## [2026-03-18T13:04:00-0500] PRE-RUN: Gemma one-token matched-family v4 confirm baseline
+- tmux session: `tb-v4-confirm`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v4 --split confirm --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4 > results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v4`, `split=confirm`, `prompts=32`, `matched_families=capital/element/author/moon`, `target_constraint=one Gemma token`
+- What I'm testing: whether the one-token matched-family surface stays positive on the locked confirm split strongly enough that later donor-arm controls are worth rerunning on this redesigned surface.
+- Expected outcome: the confirm run stays clearly positive overall and keeps authors out of the unique negative-family role seen on the saved `v3` donor-arm profile.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: some of the moon prompts are more stylized than the old `v3` surface, so a weaker moon-family confirm result would not necessarily mean the one-token redesign failed overall.
+- Implementation verified: YES - the `v4` surface already passed family-balance and one-token registry tests, and the pilot run plus exact-command rerun already validated the baseline runner on this new collection.
+- Status: LAUNCHING
+
+## [2026-03-18T13:19:00-0500] POST-RUN: Gemma one-token matched-family v4 confirm baseline
+- Outcome: SUCCESS
+- Key metric: the locked `v4` confirm surface stayed strongly positive overall (`mean tuned KL delta = +2.7121`, final-position tuned KL delta `= +3.0329`) and every family remained positive on mean tuned KL under routing.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/metrics.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4/checkpoints/prompt_results/tb4-confirm-032-6b7f637f29.json`
+- Anomalies: none; the exact-command rerun reused the full prompt checkpoint set in `9.98` seconds and the checkpoint timestamp hash stayed unchanged. The full local `summary.json` is intentionally left untracked because it is large and the smaller `metrics.json` captures the artifact-level read.
+- Next step: close `resattn-czd`, then use `resattn-apy` as the donor-arm follow-up on the one-token surface.

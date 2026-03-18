@@ -1012,3 +1012,20 @@
   - that is a materially healthier family read than the saved `v3` family profile, where authors were the unique family that went negative against the within-family, cross-family, and fixed-alpha controls
   - but this is still only a routed-versus-original pilot baseline, not a confirm artifact and not a donor-arm rerun
 - Impact: `resattn-t0p` can close once the artifact lands. The next disciplined tool-breakage issue is `resattn-czd`: the locked `v4` confirm baseline.
+
+## [2026-03-18T13:19:00-0500] DECISION: Treat the one-token v4 confirm baseline as strong enough to justify a donor-arm rerun
+
+- Trigger: `resattn-czd` ran the locked confirm baseline on `tool_breakage_factual_recall_v4`.
+- Decision: close `resattn-czd` as a confirmatory pass for the redesigned one-token surface. The next disciplined step is now the donor-arm counterfactual on `v4`, not another baseline expansion.
+- Rationale:
+  - the confirm surface stays strongly positive overall:
+    - mean tuned KL delta under routing `= +2.7121`
+    - mean final-position tuned KL delta under routing `= +3.0329`
+  - all four families remain positive on mean tuned KL under routing:
+    - capitals `= +2.9547`
+    - elements `= +2.9847`
+    - authors `= +2.0532`
+    - moons `= +2.8556`
+  - every family is `8 / 8` positive on mean tuned KL under routing on the locked split
+  - this is now a materially stronger baseline position than the saved `v3` family boundary, so the donor-arm rerun is no longer premature
+- Impact: `resattn-czd` can close once the artifact lands. The next tool-breakage issue is `resattn-apy`: the donor-arm counterfactual on `tool_breakage_factual_recall_v4`.

@@ -515,6 +515,23 @@
       - all `16` prompt checkpoints kept the same timestamp hash under the exact-command rerun
       - the exact-command rerun completed in `10.57` seconds
     - interpretation: the one-token redesign looks promising enough to justify confirmatory follow-up. It does not yet reopen the stronger prompt-specific same-model claim because donor-arm controls have not been rerun, but it removes the author family as a baseline-stage negative outlier
+  - `resattn-czd` now lands the locked confirm baseline on that one-token `v4` surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-confirm-v4.md` is the confirm artifact on `tool_breakage_factual_recall_v4`
+    - the locked confirm surface stays strongly positive overall:
+      - mean tuned KL delta under routing `= +2.7121`
+      - mean final-position tuned KL delta under routing `= +3.0329`
+      - tuned final-target-rank worsening fraction `= 0.5`
+      - tuned target-rank-range increase fraction `= 0.6875`
+    - the family-conditioned confirm read remains clean:
+      - capitals `= +2.9547`
+      - elements `= +2.9847`
+      - authors `= +2.0532`
+      - moons `= +2.8556`
+      - every family is `8 / 8` positive on mean tuned KL under routing
+    - resume durability is verified on the finished confirm output directory:
+      - all `32` prompt checkpoints kept the same timestamp hash under the exact-command rerun
+      - the exact-command rerun completed in `9.98` seconds
+    - interpretation: the one-token matched-family surface is now strong enough to justify returning to donor-arm controls. The stronger prompt-specific same-model claim is still not reopened yet, but the donor-arm rerun is no longer premature on this redesigned surface
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -857,7 +874,7 @@
 
 1. Treat `tool_breakage_factual_recall_v3` as the main matched-family surface for this lane and freeze the stronger same-model tool-breakage claim at the current `v3` donor-arm boundary.
 2. Keep that boundary family-conditioned rather than pooled: elements remain the cleanest positive family, authors are the clearest negative family, and the current author-family drag is entangled with multiword-target / first-token format.
-3. If tool-breakage work resumes later, start with `resattn-czd`: run the locked `v4` confirm baseline before reopening donor-arm controls on the one-token surface.
+3. If tool-breakage work resumes later, start with `resattn-apy`: rerun donor-arm controls on the one-token `v4` surface, which now has a clean positive confirm baseline across all four families.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

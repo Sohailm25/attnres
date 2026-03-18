@@ -1,0 +1,308 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v4",
+  "split": "confirm",
+  "num_prompts": 32,
+  "mean_tuned_kl_increase_under_routing": 2.712054855383765,
+  "final_position_mean_tuned_kl_increase_under_routing": 3.032854326970454,
+  "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.59375,
+  "fraction_tuned_routing_increases_target_rank_range_prompts": 0.75,
+  "by_subcategory": {
+    "subcategory_author_fact": {
+      "prompt_count": 8,
+      "mean_tuned_kl_delta_under_routing": 2.0532469418356483,
+      "mean_tuned_final_position_kl_delta_under_routing": 2.6807932063831967,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 3.360182600939879,
+      "mean_final_target_rank_delta_under_routing": 32.125,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-confirm-017",
+          "target_text": "Shelley",
+          "mean_tuned_kl_delta_under_routing": 1.320247342125535,
+          "mean_tuned_final_position_kl_delta_under_routing": 1.9846405412446564,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 6.585877902107313,
+          "final_target_rank_delta_under_routing": 1
+        },
+        {
+          "prompt_id": "tb4-confirm-018",
+          "target_text": "Tolstoy",
+          "mean_tuned_kl_delta_under_routing": 2.3564100834247745,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.623882111735069,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.3630268946290016,
+          "final_target_rank_delta_under_routing": 1
+        },
+        {
+          "prompt_id": "tb4-confirm-019",
+          "target_text": "Kafka",
+          "mean_tuned_kl_delta_under_routing": 1.9828799830586201,
+          "mean_tuned_final_position_kl_delta_under_routing": 1.964212511787012,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.0054481675615534,
+          "final_target_rank_delta_under_routing": 206
+        },
+        {
+          "prompt_id": "tb4-confirm-020",
+          "target_text": "Atwood",
+          "mean_tuned_kl_delta_under_routing": 2.5751419221218943,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.2773934632557657,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 0.8800532401073724,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-021",
+          "target_text": "Joyce",
+          "mean_tuned_kl_delta_under_routing": 2.1375580019412155,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.934875993720757,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 7.31760677555576,
+          "final_target_rank_delta_under_routing": 43
+        },
+        {
+          "prompt_id": "tb4-confirm-022",
+          "target_text": "Huxley",
+          "mean_tuned_kl_delta_under_routing": 1.1274318380601471,
+          "mean_tuned_final_position_kl_delta_under_routing": 0.8456305097967672,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 0.5963026103563607,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-023",
+          "target_text": "Swift",
+          "mean_tuned_kl_delta_under_routing": 2.7576389809054,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.538817376122237,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.3709814606700093,
+          "final_target_rank_delta_under_routing": 2
+        },
+        {
+          "prompt_id": "tb4-confirm-024",
+          "target_text": "Milton",
+          "mean_tuned_kl_delta_under_routing": 2.1686673830476,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.276893143403308,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 5.762163756531663,
+          "final_target_rank_delta_under_routing": 4
+        }
+      ]
+    },
+    "subcategory_capital_fact": {
+      "prompt_count": 8,
+      "mean_tuned_kl_delta_under_routing": 2.954669315483583,
+      "mean_tuned_final_position_kl_delta_under_routing": 2.948854175193376,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 4.913516674503626,
+      "mean_final_target_rank_delta_under_routing": 1,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-confirm-001",
+          "target_text": "Canberra",
+          "mean_tuned_kl_delta_under_routing": 3.9322860276549294,
+          "mean_tuned_final_position_kl_delta_under_routing": 4.3583848648167285,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.7878705258481205,
+          "final_target_rank_delta_under_routing": 13
+        },
+        {
+          "prompt_id": "tb4-confirm-002",
+          "target_text": "Cairo",
+          "mean_tuned_kl_delta_under_routing": 2.9488109846967676,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.0604451765807776,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 5.007158808410168,
+          "final_target_rank_delta_under_routing": -2
+        },
+        {
+          "prompt_id": "tb4-confirm-003",
+          "target_text": "Bangkok",
+          "mean_tuned_kl_delta_under_routing": 2.6063079942804714,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.537175093399128,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 6.37679146922892,
+          "final_target_rank_delta_under_routing": -1
+        },
+        {
+          "prompt_id": "tb4-confirm-004",
+          "target_text": "Nairobi",
+          "mean_tuned_kl_delta_under_routing": 2.8117082913852824,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.846072071247573,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.941039035504218,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-005",
+          "target_text": "Lima",
+          "mean_tuned_kl_delta_under_routing": 2.888853562953815,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.1279141914027813,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 6.014245360158384,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-006",
+          "target_text": "Seoul",
+          "mean_tuned_kl_delta_under_routing": 2.960193499892529,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.2818553458827617,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.566334812901914,
+          "final_target_rank_delta_under_routing": -1
+        },
+        {
+          "prompt_id": "tb4-confirm-007",
+          "target_text": "Jakarta",
+          "mean_tuned_kl_delta_under_routing": 3.071739349576931,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.045837970683351,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 4.249203021172434,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-008",
+          "target_text": "Lisbon",
+          "mean_tuned_kl_delta_under_routing": 2.4174548134279368,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.333148687533909,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 6.365490362804849,
+          "final_target_rank_delta_under_routing": -1
+        }
+      ]
+    },
+    "subcategory_element_symbol": {
+      "prompt_count": 8,
+      "mean_tuned_kl_delta_under_routing": 2.9846676375493817,
+      "mean_tuned_final_position_kl_delta_under_routing": 4.241297756233018,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 2.8653561338069267,
+      "mean_final_target_rank_delta_under_routing": 1.875,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-confirm-009",
+          "target_text": "Fe",
+          "mean_tuned_kl_delta_under_routing": 3.303401867318406,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.060122829145537,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.135790256783366,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-010",
+          "target_text": "K",
+          "mean_tuned_kl_delta_under_routing": 2.562066399416765,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.753792845487344,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.07717416214291,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-011",
+          "target_text": "Hg",
+          "mean_tuned_kl_delta_under_routing": 3.0697793877530226,
+          "mean_tuned_final_position_kl_delta_under_routing": 4.535750357805787,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.8077239006524906,
+          "final_target_rank_delta_under_routing": 2
+        },
+        {
+          "prompt_id": "tb4-confirm-012",
+          "target_text": "Ne",
+          "mean_tuned_kl_delta_under_routing": 3.015251793438018,
+          "mean_tuned_final_position_kl_delta_under_routing": 4.31695076091609,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 6.965290713822469,
+          "final_target_rank_delta_under_routing": 6
+        },
+        {
+          "prompt_id": "tb4-confirm-013",
+          "target_text": "Zn",
+          "mean_tuned_kl_delta_under_routing": 3.3557823300465177,
+          "mean_tuned_final_position_kl_delta_under_routing": 4.393630945302832,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.4955415865406394,
+          "final_target_rank_delta_under_routing": 3
+        },
+        {
+          "prompt_id": "tb4-confirm-014",
+          "target_text": "He",
+          "mean_tuned_kl_delta_under_routing": 2.3287050819669206,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.7205579410611582,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.6541596597526222,
+          "final_target_rank_delta_under_routing": 1
+        },
+        {
+          "prompt_id": "tb4-confirm-015",
+          "target_text": "Ca",
+          "mean_tuned_kl_delta_under_routing": 2.928020976033552,
+          "mean_tuned_final_position_kl_delta_under_routing": 5.8098878455706515,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.33068366907537,
+          "final_target_rank_delta_under_routing": 0
+        },
+        {
+          "prompt_id": "tb4-confirm-016",
+          "target_text": "Pb",
+          "mean_tuned_kl_delta_under_routing": 3.314333264421853,
+          "mean_tuned_final_position_kl_delta_under_routing": 6.33968852457474,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 3.456485121685546,
+          "final_target_rank_delta_under_routing": 3
+        }
+      ]
+    },
+    "subcategory_moon_fact": {
+      "prompt_count": 8,
+      "mean_tuned_kl_delta_under_routing": 2.855635526666447,
+      "mean_tuned_final_position_kl_delta_under_routing": 2.260472170072227,
+      "mean_final_layer_tuned_final_position_kl_delta_under_routing": 1.4710797517182073,
+      "mean_final_target_rank_delta_under_routing": 12582.875,
+      "positive_prompt_fraction_tuned_kl_delta_under_routing": 1.0,
+      "prompt_rows": [
+        {
+          "prompt_id": "tb4-confirm-025",
+          "target_text": "Europa",
+          "mean_tuned_kl_delta_under_routing": 3.5677515983474084,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.437626248975553,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.72344040957978,
+          "final_target_rank_delta_under_routing": 7352
+        },
+        {
+          "prompt_id": "tb4-confirm-026",
+          "target_text": "Rhea",
+          "mean_tuned_kl_delta_under_routing": 3.88068403789993,
+          "mean_tuned_final_position_kl_delta_under_routing": 3.3051368251684696,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 2.316930059227161,
+          "final_target_rank_delta_under_routing": 8676
+        },
+        {
+          "prompt_id": "tb4-confirm-027",
+          "target_text": "Hyperion",
+          "mean_tuned_kl_delta_under_routing": 2.486302062676539,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.1449301410914186,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.6125717957038432,
+          "final_target_rank_delta_under_routing": 61564
+        },
+        {
+          "prompt_id": "tb4-confirm-028",
+          "target_text": "Miranda",
+          "mean_tuned_kl_delta_under_routing": 2.464415701562897,
+          "mean_tuned_final_position_kl_delta_under_routing": 0.8492485064422138,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.5055539242457598,
+          "final_target_rank_delta_under_routing": 826
+        },
+        {
+          "prompt_id": "tb4-confirm-029",
+          "target_text": "Ariel",
+          "mean_tuned_kl_delta_under_routing": 2.3300306322993354,
+          "mean_tuned_final_position_kl_delta_under_routing": 0.9012392597864024,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.3050229225773364,
+          "final_target_rank_delta_under_routing": 661
+        },
+        {
+          "prompt_id": "tb4-confirm-030",
+          "target_text": "Janus",
+          "mean_tuned_kl_delta_under_routing": 2.611697235723393,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.402151805066611,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 0.8632899617077783,
+          "final_target_rank_delta_under_routing": -688
+        },
+        {
+          "prompt_id": "tb4-confirm-031",
+          "target_text": "Pan",
+          "mean_tuned_kl_delta_under_routing": 2.919756271850649,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.514247761486331,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.2034332794719376,
+          "final_target_rank_delta_under_routing": 12993
+        },
+        {
+          "prompt_id": "tb4-confirm-032",
+          "target_text": "Atlas",
+          "mean_tuned_kl_delta_under_routing": 2.5844466729714233,
+          "mean_tuned_final_position_kl_delta_under_routing": 2.5291968125608175,
+          "final_layer_tuned_final_position_kl_delta_under_routing": 1.2383956612320617,
+          "final_target_rank_delta_under_routing": 9279
+        }
+      ]
+    }
+  }
+}
