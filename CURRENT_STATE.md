@@ -398,6 +398,26 @@
       - all `16` prompt checkpoints kept their original timestamps from the first run
       - the exact-command rerun completed in `9.83` seconds and rewrote only `summary.json`
     - interpretation: the current same-model tool-breakage lane is no longer blocked by an obviously wrong dynamic control, but the donor-arm advantage is too small and too concentrated to overstate. The next efficient move is a larger balanced matched-family surface, not another control redesign
+  - `resattn-0mu` now lands that larger balanced matched-family surface and its first baseline artifact:
+    - `tool_breakage_factual_recall_v3` is now saved in `prompts/registry_v4.yaml` and propagated into `prompts/registry_v5.yaml`
+    - the new surface keeps the same four matched routing families while doubling the prompt counts:
+      - pilot `= 16` prompts (`4` each for `capital`, `element`, `author`, `moon`)
+      - confirm `= 32` prompts (`8` each for the same families)
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3.md` is the first baseline artifact on that larger surface
+    - the larger pilot keeps the tuned-lens breakage signal strongly positive:
+      - mean tuned KL to the final distribution rises from `3.1583` to `5.7602` (`+2.6019`)
+      - final-position tuned KL rises from `5.6496` to `8.6820` (`+3.0324`)
+      - tuned final-target-rank worsens on `8 / 16` prompts (`0.5`)
+      - tuned target-rank range increases on `11 / 16` prompts (`0.6875`)
+    - the `v3` pilot compares favorably to the old `v2` pilot despite broader coverage:
+      - old `v2` mean tuned KL delta `= +2.5849`
+      - new `v3` mean tuned KL delta `= +2.6019`
+      - old `v2` final-position tuned KL delta `= +2.9118`
+      - new `v3` final-position tuned KL delta `= +3.0324`
+    - resume durability is verified on the finished pilot output directory:
+      - all `16` prompt checkpoints kept their original timestamps from the first run
+      - the exact-command rerun completed in `10.01` seconds and rewrote only the local untracked `summary.json`
+    - interpretation: the aligned same-model breakage signal survives a materially larger balanced prompt surface. The next direct step is the locked `v3` confirm baseline, not another prompt-design pass
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -738,9 +758,9 @@
 
 ## Immediate Next Steps
 
-1. Run `resattn-0mu`, which expands the matched-family Gemma factual-recall surface before rerunning the donor-arm counterfactual on a larger confirm set.
-2. Treat `tool_breakage_factual_recall_v2` as the main bounded baseline surface for the current tool-breakage story, but stop leaning too hard on its `16`-prompt donor-arm result now that the next uncertainty is breadth rather than control design.
-3. Treat the stronger same-model Gemma tool-breakage claim as narrow rather than blocked-by-geometry: routed now slightly exceeds both explicit donor arms on tuned mean KL, but the margins are tiny and family-concentrated.
+1. Run `resattn-cky`, the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`.
+2. Treat `tool_breakage_factual_recall_v3` as the new expansion surface for this lane; use `v2` as the bounded bridge artifact that motivated the scale-up.
+3. Treat the stronger same-model Gemma tool-breakage claim as promising but still narrow: routed now slightly exceeds both explicit donor arms on tuned mean KL, and the larger `v3` pilot held up, but the claim still needs a broader confirm read.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

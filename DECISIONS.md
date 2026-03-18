@@ -909,3 +909,17 @@
   - capitals are slightly negative on mean KL versus the within-family donor arm, and authors are nearly flat
   That makes the next underexplored uncertainty prompt-surface breadth rather than another control redesign.
 - Impact: `resattn-o3n` can close once the artifact lands. `resattn-0mu` is now the right next tool-breakage follow-up, and the current strong same-model claim should stay narrow until the donor-arm advantage survives a larger balanced matched-family surface.
+
+## [2026-03-18T10:14:53-0500] DECISION: Close `resattn-0mu` on a positive larger pilot and continue directly to the v3 confirm baseline
+
+- Trigger: `resattn-0mu` expanded the matched-family factual surface to `tool_breakage_factual_recall_v3`, regenerated `registry_v5`, and ran the first larger pilot baseline on the new surface.
+- Decision: close the issue on a positive answer. The larger balanced pilot keeps the aligned same-model breakage signal alive strongly enough that the next run should be the locked `v3` confirm baseline rather than another prompt-design pass.
+- Rationale: the scale-up answered the immediate doubt cleanly:
+  - `v3` pilot mean tuned KL delta `= +2.6019`
+  - old `v2` pilot mean tuned KL delta `= +2.5849`
+  - `v3` pilot final-position tuned KL delta `= +3.0324`
+  - old `v2` pilot final-position tuned KL delta `= +2.9118`
+  - tuned final-target-rank worsening stays alive at `0.5`
+  - tuned target-rank-range increase improves slightly to `0.6875`
+  So the broader surface did not dilute the lane. That is enough to justify spending the next run on a larger confirm read.
+- Impact: `resattn-0mu` can close once the expanded surface and pilot artifact land. The next tool-breakage issue is `resattn-cky`: the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`.

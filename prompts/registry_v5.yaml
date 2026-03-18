@@ -10553,6 +10553,450 @@ collections:
       - safe
       - matched_routing_family
       - subcategory_moon_fact
+  tool_breakage_factual_recall_v3:
+    lane: tool_breakage
+    description: 'Expanded matched-family factual-recall prompts for the routed-versus-original
+      lens comparison lane. This surface keeps the same four matched routing families as `tool_breakage_factual_recall_v2`
+      but doubles the pilot and confirm counts so the donor-arm counterfactual can be judged
+      on a broader balanced factual surface before stronger same-model language is used.
+
+      '
+    dataset_source: inline_prompts
+    objective_families:
+    - softmax-constrained
+    prompts:
+    - id: tb3-pilot-001
+      split: pilot
+      text: The capital of Spain is
+      target_text: Madrid
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-pilot-002
+      split: pilot
+      text: The capital of Canada is
+      target_text: Ottawa
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-pilot-003
+      split: pilot
+      text: The capital of Italy is
+      target_text: Rome
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-pilot-004
+      split: pilot
+      text: The capital of Japan is
+      target_text: Tokyo
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-pilot-005
+      split: pilot
+      text: The chemical symbol for copper is
+      target_text: Cu
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-pilot-006
+      split: pilot
+      text: The chemical symbol for sodium is
+      target_text: Na
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-pilot-007
+      split: pilot
+      text: The chemical symbol for silver is
+      target_text: Ag
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-pilot-008
+      split: pilot
+      text: The chemical symbol for chlorine is
+      target_text: Cl
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-pilot-009
+      split: pilot
+      text: The author of The Great Gatsby was
+      target_text: F. Scott Fitzgerald
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-pilot-010
+      split: pilot
+      text: The author of Moby-Dick was
+      target_text: Herman Melville
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-pilot-011
+      split: pilot
+      text: The author of Pride and Prejudice was
+      target_text: Jane Austen
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-pilot-012
+      split: pilot
+      text: The author of The Odyssey was
+      target_text: Homer
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-pilot-013
+      split: pilot
+      text: The largest moon of Saturn is
+      target_text: Titan
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-pilot-014
+      split: pilot
+      text: The largest moon of Neptune is
+      target_text: Triton
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-pilot-015
+      split: pilot
+      text: The largest moon of Earth is
+      target_text: Moon
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-pilot-016
+      split: pilot
+      text: The largest moon of Jupiter is
+      target_text: Ganymede
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-001
+      split: confirm
+      text: The capital of Brazil is
+      target_text: Brasilia
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-002
+      split: confirm
+      text: The capital of Australia is
+      target_text: Canberra
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-003
+      split: confirm
+      text: The capital of Egypt is
+      target_text: Cairo
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-004
+      split: confirm
+      text: The capital of Thailand is
+      target_text: Bangkok
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-005
+      split: confirm
+      text: The capital of India is
+      target_text: New Delhi
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-006
+      split: confirm
+      text: The capital of Mexico is
+      target_text: Mexico City
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-007
+      split: confirm
+      text: The capital of Kenya is
+      target_text: Nairobi
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-008
+      split: confirm
+      text: The capital of Argentina is
+      target_text: Buenos Aires
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_capital_fact
+    - id: tb3-confirm-009
+      split: confirm
+      text: The chemical symbol for iron is
+      target_text: Fe
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-010
+      split: confirm
+      text: The chemical symbol for potassium is
+      target_text: K
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-011
+      split: confirm
+      text: The chemical symbol for mercury is
+      target_text: Hg
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-012
+      split: confirm
+      text: The chemical symbol for neon is
+      target_text: Ne
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-013
+      split: confirm
+      text: The chemical symbol for zinc is
+      target_text: Zn
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-014
+      split: confirm
+      text: The chemical symbol for helium is
+      target_text: He
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-015
+      split: confirm
+      text: The chemical symbol for calcium is
+      target_text: Ca
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-016
+      split: confirm
+      text: The chemical symbol for lead is
+      target_text: Pb
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_element_symbol
+    - id: tb3-confirm-017
+      split: confirm
+      text: The author of To Kill a Mockingbird was
+      target_text: Harper Lee
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-018
+      split: confirm
+      text: The author of One Hundred Years of Solitude was
+      target_text: Gabriel Garcia Marquez
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-019
+      split: confirm
+      text: The author of Beloved was
+      target_text: Toni Morrison
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-020
+      split: confirm
+      text: The author of Frankenstein was
+      target_text: Mary Shelley
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-021
+      split: confirm
+      text: The author of War and Peace was
+      target_text: Leo Tolstoy
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-022
+      split: confirm
+      text: The author of The Trial was
+      target_text: Franz Kafka
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-023
+      split: confirm
+      text: The author of The Handmaid's Tale was
+      target_text: Margaret Atwood
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-024
+      split: confirm
+      text: The author of Jane Eyre was
+      target_text: Charlotte Bronte
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_author_fact
+    - id: tb3-confirm-025
+      split: confirm
+      text: The largest moon of Jupiter is
+      target_text: Ganymede
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-026
+      split: confirm
+      text: The largest moon of Uranus is
+      target_text: Titania
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-027
+      split: confirm
+      text: The largest moon of Pluto is
+      target_text: Charon
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-028
+      split: confirm
+      text: The largest moon of Mars is
+      target_text: Phobos
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-029
+      split: confirm
+      text: The largest moon of Earth is
+      target_text: Moon
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-030
+      split: confirm
+      text: Jupiter's largest moon is
+      target_text: Ganymede
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-031
+      split: confirm
+      text: Saturn's largest moon is
+      target_text: Titan
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
+    - id: tb3-confirm-032
+      split: confirm
+      text: Neptune's largest moon is
+      target_text: Triton
+      tags:
+      - factual_recall
+      - safe
+      - matched_routing_family
+      - subcategory_moon_fact
   safety_refusal_discovery_v1:
     lane: safety_alignment
     description: 'Small matched prompt triples for validating the refusal-feature discovery

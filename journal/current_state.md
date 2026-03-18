@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-o3n`
-- Focus: `resattn-o3n` has now decomposed the matched-family donor controls; the next meaningful move is `resattn-0mu`, which expands the matched-family surface before rerunning the donor-arm counterfactual on more prompts.
-- Experimental status: the repo now has a sharper but still bounded dynamic-control read. On `tool_breakage_factual_recall_v2`, routed is slightly worse than both explicit within-family and cross-family donor controls on mean tuned KL, but the margins are tiny and the within-family aggregate is carried mainly by the element family.
-- Critical reminder: the same-model tool-breakage lane is no longer blocked by baseline quality or by an obviously wrong dynamic control. The remaining question is breadth: whether the narrow donor-arm advantage survives a larger balanced matched-family surface.
+- Branch: `wip/resattn-0mu`
+- Focus: `resattn-0mu` has now landed the expanded balanced `tool_breakage_factual_recall_v3` surface and its first pilot baseline; the next meaningful move is `resattn-cky`, the locked `32`-prompt confirm baseline on that larger surface.
+- Experimental status: the larger matched-family pilot did not wash out the aligned same-model breakage signal. The tuned KL delta stayed at `+2.6019` versus `+2.5849` on `v2`, and final-position tuned KL improved to `+3.0324`.
+- Critical reminder: the next uncertainty is still breadth, not geometry. The donor-arm result is promising but narrow, so the right next check is the larger `v3` confirm baseline rather than another control redesign.

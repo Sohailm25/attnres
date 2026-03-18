@@ -1373,3 +1373,24 @@ Suggested entry format:
 - Interesting facts:
   - Within-family donor arm: routed is worse on mean tuned KL on `10 / 16` prompts.
   - The within-family aggregate is carried mainly by the element family; capitals are slightly negative on mean KL and authors are nearly flat.
+## [2026-03-18T10:15:00-0500] The Larger Matched-Family Pilot Held Up
+- Stage: experiment
+- Feel of the Experiment: This was the right kind of scale-up. The broader surface did not collapse the effect, which means the donor-arm result is worth stress-testing rather than shelving.
+- Working Hypotheses:
+  - The aligned same-model breakage signal survives a larger balanced prompt surface.
+  - The next real question is whether the `v3` confirm baseline stays this positive before the larger donor-arm rerun.
+- Hunches and Guesses:
+  - If the `32`-prompt confirm baseline stays near the `v3` pilot magnitude, the larger donor-arm rerun is worth spending the final run on.
+  - If the confirm baseline softens sharply, the `v2` donor-arm margin was probably too prompt-surface-specific to chase further.
+- Predictions:
+  - The fixed-alpha objection should stay clearly weaker on the larger surface.
+  - The larger confirm read should be at least as informative as the old `v2` confirm even if the average delta comes down slightly.
+- Surprises and Tensions:
+  - The mean tuned KL delta barely moved at all when I doubled the pilot surface.
+  - The final-position tuned KL delta actually improved slightly, which makes the next confirm step feel justified rather than speculative.
+- Confidence:
+  - high that `0mu` should close cleanly on the pilot result
+  - medium-high that `cky` is the right next follow-up
+- Interesting facts:
+  - `v3` pilot mean tuned KL delta `= +2.6019` versus `v2` pilot `+2.5849`
+  - `v3` pilot final-position tuned KL delta `= +3.0324` versus `v2` pilot `+2.9118`

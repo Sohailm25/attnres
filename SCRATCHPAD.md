@@ -1682,3 +1682,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1/checkpoints/prompt_results/tb2-confirm-016-6ca2e00125.json`
 - Anomalies: none; exact-command rerun reused the full four-arm checkpoints and finished in `9.83` seconds while leaving all prompt checkpoint timestamps at their original values.
 - Next step: close `resattn-o3n` as mixed and move to `resattn-0mu`, which expands the matched-family surface before rerunning donor-arm controls on a larger confirm set.
+
+## [2026-03-18T10:14:00-0500] PRE-RUN: Gemma matched-family v3 pilot baseline
+- tmux session: `tb-v3-pilot`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v3 --split pilot --exploratory --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v3`, `split=pilot`, `prompts=16`, `matched_families=capital/element/author/moon`, `tuned_lens=20260317-gemma2-tuned-lens-viability-pilot-v1/checkpoint.pt`
+- What I'm testing: whether the larger balanced `v3` surface preserves the same-model tuned-lens degradation signal strongly enough that it is worth spending the next runs on the larger confirm and donor-arm counterfactual.
+- Expected outcome: the pilot completes with prompt-level checkpoints and keeps tuned KL degradation clearly positive on the expanded surface, even if the average effect size softens slightly relative to the smaller `v2` pilot.
+- Expected duration: ~15-45 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the moon family now uses more repeated fact templates than the other families, so a milder average could reflect broader prompt coverage rather than a real collapse.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry.PromptRegistryTests.test_tool_breakage_v3_entries_balance_matched_factual_families tests.test_prompt_registry.PromptRegistryTests.test_registry_v5_generator_reproduces_committed_registry` passed after regenerating `prompts/registry_v5.yaml`.
+- Status: LAUNCHING
+
+## [2026-03-18T10:14:53-0500] POST-RUN: Gemma matched-family v3 pilot baseline
+- Outcome: SUCCESS
+- Key metric: the larger balanced `v3` pilot kept the tuned-lens breakage signal essentially intact (`mean tuned KL delta = +2.6019`, final-position tuned KL delta `= +3.0324`) while matching or slightly improving the `v2` pilot range read.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/metrics.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/checkpoints/prompt_results/tb3-pilot-016-8fed5cb25f.json`
+- Anomalies: none; the full local `summary.json` is intentionally left untracked because it exceeds the pre-commit added-file limit, and the exact-command rerun reused the prompt checkpoints in `10.01` seconds while leaving their timestamps unchanged.
+- Next step: close `resattn-0mu`, then run `resattn-cky` for the locked `32`-prompt confirm baseline on the expanded matched-family surface.
