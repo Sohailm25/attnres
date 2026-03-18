@@ -165,6 +165,9 @@ class PromptRegistryTests(unittest.TestCase):
                 for entry in non_refusal_entries
             )
         )
+        self.assertTrue(
+            any("policy_style_expected" in entry.tags for entry in non_refusal_entries)
+        )
 
     def test_confirmatory_access_rejects_exploratory_mode(self) -> None:
         registry = self.load_prompt_registry()

@@ -1124,3 +1124,22 @@ Suggested entry format:
   - high that `ac2` closes cleanly
 - Interesting facts:
   - The new tag-aware artifact moved confirm non-refusal pass rate to `0.8333` with no change to the layer-localization or direction-separation story.
+
+## [2026-03-18T03:36:00-0500] Policy-Style Semantics Were Worth Adding, But They Exposed A Different Residual Problem
+- Stage: implementation
+- Feel of the Experiment: This was another good cleanup pass. The behavior classifier is less wrong now, and the leftover failures are more informative than before.
+- Working Hypotheses:
+  - The remaining policy-note misses are about completion completeness under the current token budget, not about missing another behavior label.
+- Hunches and Guesses:
+  - The two header-only policy notes should probably stay failures unless a later budget check shows they were truncated rather than intrinsically weak prompts.
+- Predictions:
+  - If `resattn-9us` runs later with a modestly larger generation budget, the confirm metric might move a bit, but the core mediator-collapse story will still stay negative.
+- Surprises and Tensions:
+  - The first rerun on the same output directory silently reused stale checkpoints, which was a good reminder that semantics changes need fresh output dirs rather than wishful reruns.
+  - The real fixed case was not an institutional policy note at all; it was a direct refusal-like safe answer on a policy-style prompt.
+- Confidence:
+  - high that `7km` closes honestly as a semantics improvement
+  - medium-high that the next safety follow-up, if any, is about prompt completeness rather than classification
+- Interesting facts:
+  - The clean rerun improved pilot non-refusal pass rate to `0.9167` while keeping confirm at `0.8333`.
+  - The two remaining benign policy-note misses were literally skeletal headers with no substantive body.
