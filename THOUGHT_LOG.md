@@ -1075,3 +1075,20 @@ Suggested entry format:
 - Interesting facts:
   - The broadened mediator threshold was `135.4067`, and all `6` active confirm prompts were still outright refusals.
   - Refusal injection still moved the final-layer refusal trajectory by `+284.3705` on harmful-context prompts and `+315.3803` on benign prompts.
+
+## [2026-03-18T03:07:00-0500] The Ridge Bottleneck Was More Mechanical Than I Hoped
+- Stage: implementation
+- Feel of the Experiment: This one felt gratifyingly boring. The slow path really was just the wrong linear algebra for the shape of the data.
+- Working Hypotheses:
+  - The next annoyance on the primary-model oracle lane is going to be summary-stage visibility, not the ridge solve itself.
+- Hunches and Guesses:
+  - Once the summary stage is instrumented, prereg-scale reruns on the primary model should feel operationally normal instead of slightly fragile.
+- Predictions:
+  - `resattn-9co` will matter more for user trust during long runs than for the final paper.
+- Surprises and Tensions:
+  - The speedup was larger than I expected even on the full fit, not just on the leave-one-out-shaped fold.
+- Confidence:
+  - high that `b4q` is a real implementation win rather than a scientific fork
+- Interesting facts:
+  - The new helper stayed within `2.5e-12` of the legacy primal predictions on the Gemma-shaped synthetic benchmark.
+  - The leave-one-out-shaped case sped up by `92.10x`, which is enough to stop thinking about the primal solve as the right default here.

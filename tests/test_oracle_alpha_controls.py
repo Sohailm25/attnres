@@ -13,6 +13,7 @@ class OracleAlphaControlTests(unittest.TestCase):
     def setUp(self) -> None:
         from validation.oracle_alpha_controls import (
             MIBPlan,
+            _ridge_regression_solver_mode,
             alpha_target_matrix,
             alpha_target_predictions_to_distributions,
             bootstrap_mean_confidence_interval,
@@ -23,9 +24,11 @@ class OracleAlphaControlTests(unittest.TestCase):
             mean_top1_source_agreement,
             mean_topk_jaccard_similarity,
             ridge_alpha_predictiveness_summary,
+            ridge_regression_predictions,
         )
 
         self.MIBPlan = MIBPlan
+        self._ridge_regression_solver_mode = _ridge_regression_solver_mode
         self.alpha_target_matrix = alpha_target_matrix
         self.alpha_target_predictions_to_distributions = (
             alpha_target_predictions_to_distributions
@@ -38,6 +41,7 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.mean_top1_source_agreement = mean_top1_source_agreement
         self.mean_topk_jaccard_similarity = mean_topk_jaccard_similarity
         self.ridge_alpha_predictiveness_summary = ridge_alpha_predictiveness_summary
+        self.ridge_regression_predictions = ridge_regression_predictions
 
     def test_control_plan_file_exists(self) -> None:
         self.assertTrue((ROOT / "configs" / "oracle_alpha_controls_v1.yaml").is_file())
@@ -282,6 +286,80 @@ class OracleAlphaControlTests(unittest.TestCase):
         self.assertLess(summary.mean_js_divergence, 0.05)
         self.assertEqual(4, summary.num_train_examples)
         self.assertEqual(2, summary.num_eval_examples)
+
+    def test_ridge_regression_solver_mode_prefers_dual_in_narrow_train_regime(
+        self,
+    ) -> None:
+        self.assertEqual(
+            "dual",
+            self._ridge_regression_solver_mode(
+                num_examples=4,
+                num_features=8,
+            ),
+        )
+        self.assertEqual(
+            "primal",
+            self._ridge_regression_solver_mode(
+                num_examples=8,
+                num_features=4,
+            ),
+        )
+
+    def test_ridge_regression_predictions_match_legacy_primal_in_narrow_train_regime(
+        self,
+    ) -> None:
+        train_features = [
+            [0.0, 1.0, 2.0, 3.0, 0.5, 1.5],
+            [1.0, 0.0, 3.0, 2.0, 1.5, 0.5],
+            [2.0, 1.0, 0.0, 1.0, 2.5, 1.0],
+            [3.0, 2.0, 1.0, 0.0, 3.5, 1.5],
+        ]
+        train_targets = [
+            [0.2, -0.1, 0.4],
+            [0.1, 0.3, 0.2],
+            [-0.2, 0.5, 0.1],
+            [0.4, -0.2, 0.0],
+        ]
+        eval_features = [
+            [1.5, 0.5, 2.5, 1.5, 2.0, 0.75],
+            [2.5, 1.5, 0.5, 0.5, 3.0, 1.25],
+        ]
+        regularization_strength = 0.3
+
+        predictions = self.ridge_regression_predictions(
+            train_features=train_features,
+            train_targets=train_targets,
+            eval_features=eval_features,
+            regularization_strength=regularization_strength,
+        )
+
+        import numpy as np
+
+        train_x = np.asarray(train_features, dtype=float)
+        train_y = np.asarray(train_targets, dtype=float)
+        eval_x = np.asarray(eval_features, dtype=float)
+        feature_mean = train_x.mean(axis=0, keepdims=True)
+        feature_scale = train_x.std(axis=0, keepdims=True)
+        feature_scale[feature_scale == 0.0] = 1.0
+        train_standardized = (train_x - feature_mean) / feature_scale
+        eval_standardized = (eval_x - feature_mean) / feature_scale
+        train_design = np.concatenate(
+            [np.ones((train_standardized.shape[0], 1)), train_standardized],
+            axis=1,
+        )
+        eval_design = np.concatenate(
+            [np.ones((eval_standardized.shape[0], 1)), eval_standardized],
+            axis=1,
+        )
+        regularizer = np.eye(train_design.shape[1], dtype=float)
+        regularizer[0, 0] = 0.0
+        legacy_coefficients = np.linalg.solve(
+            train_design.T @ train_design + (regularization_strength * regularizer),
+            train_design.T @ train_y,
+        )
+        legacy_predictions = eval_design @ legacy_coefficients
+
+        np.testing.assert_allclose(predictions, legacy_predictions)
 
     def test_loader_rejects_omitted_mib_plan_without_rationale(self) -> None:
         bad_config = """

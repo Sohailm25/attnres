@@ -683,3 +683,14 @@
   - but the mediator-active confirm subset still collapsed exactly to the `6` outright refusal prompts, with no active `harmful_context` or `benign` prompts
   The intervention-conditioned trajectories remained real, so this is not a broken-run artifact. It is a substantive negative result for the “softened prompt surface reveals a non-trivial mediator-active subset” hypothesis.
 - Impact: stronger safety-routing language stays blocked. The next safety follow-up is now `resattn-ac2`, which makes the behavior validator tag-aware for refusal-style non-refusal prompts before any future safety-surface broadening. Overall repo priority moves to `resattn-b4q`.
+
+## [2026-03-18T03:07:00-0500] DECISION: Close `resattn-b4q` by switching ridge solves to the dual formulation in the `n << d` regime
+
+- Trigger: `resattn-b4q` targeted the hour-long primary-model held-out predictiveness sweep, where each leave-one-out fold was still solving the full high-dimensional primal ridge system despite having far fewer examples than features.
+- Decision: keep the current standardized ridge objective and unregularized intercept, but solve the centered ridge system in the dual when `num_examples < num_features`, falling back to the primal only when the train split is not narrow.
+- Rationale: this is the smallest mathematically faithful fix to the actual bottleneck. The new helper preserves the old predictions to floating-point tolerance while removing the pointless `d x d` solve on the saved Gemma surface:
+  - leave-one-out-shaped benchmark (`95 x 9216 -> 1 x 53`) speedup `= 92.10x`
+  - pilot-to-confirm fit (`96 x 9216 -> 128 x 53`) speedup `= 35.82x`
+  - max absolute prediction drift stayed below `2.5e-12`
+  That is enough to treat the old wall-clock as an implementation defect that is now fixed rather than as a lingering practical limitation of the method.
+- Impact: `resattn-b4q` can close. The next infrastructure follow-up on the primary-model oracle lane is now `resattn-9co`, which should make the long summary stage observable while the faster ridge path runs.

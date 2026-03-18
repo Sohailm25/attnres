@@ -112,6 +112,14 @@
     - `last_layer_only = 20.4461`
     - `optimized = 3.8391`
   - interpretation: the primary-model oracle lane now clears held-out routed-loss recovery at prereg-scale prompt counts, which materially reduces the earlier development-model-only thesis risk; the honest remaining oracle question is now what structure the primary-model alphas exhibit rather than whether the primary-model loss signal exists at all
+- `known`: `resattn-b4q` now removes the primary-model predictiveness ridge bottleneck without changing artifact semantics:
+  - `validation/oracle_alpha_controls.py` now keeps the same standardized ridge objective and unregularized intercept but switches to a dual solve when the train split is narrower than the feature dimension
+  - the regression tests pin the new helper to the old primal predictions in the `n << d` regime
+  - the infrastructure artifact `results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q.md` benchmarks the linear-algebra subproblem on the saved Gemma `registry_v4` shape:
+    - leave-one-out-shaped solve (`95 x 9216 -> 1 x 53`) speedup `= 92.10x`
+    - pilot-to-confirm fit (`96 x 9216 -> 128 x 53`) speedup `= 35.82x`
+    - max absolute prediction drift stayed below `2.5e-12`
+  - interpretation: the current held-out predictiveness path is no longer bottlenecked by the wrong ridge formulation on the primary-model oracle lane; future runtime complaints should now focus on other parts of the sweep, such as progress visibility, rather than the primal solve itself
 - `known`: the first held-out predictiveness artifact now exists, and it is a real blocker rather than a positive result:
   - `scripts/run_oracle_alpha_heldout_predictiveness_check.py` runs the pilot-to-confirm predictiveness check using mean-pooled `h_1[t]` features and a pilot-tuned ridge regressor
   - on `gpt2-xl`, the confirm-split result was weak for the current feature spec: `R^2 = -0.2456`, mean JS to oracle alpha `= 0.2434`, and predicted alpha vectors were slightly worse than uniform on average (`-0.0348` nats)
@@ -461,9 +469,9 @@
 
 ## Immediate Next Steps
 
-1. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, which is now the clearest high-value unfrozen implementation issue on the primary-model oracle lane.
-2. Defer `resattn-9co` until after the higher-value moves above; it is useful infrastructure cleanup, not the top paper-shaping question.
-3. Use `resattn-ac2` before any future safety prompt-surface expansion so refusal-style non-refusal prompts can be validated under the right behavior semantics.
+1. Take `resattn-9co`, which is now the clearest remaining efficiency/observability issue on the primary-model oracle lane after the ridge bottleneck fix.
+2. Use `resattn-ac2` before any future safety prompt-surface expansion so refusal-style non-refusal prompts can be validated under the right behavior semantics.
+3. Treat the primary-model oracle lane as operationally ready for larger reruns once summary-stage progress artifacts exist.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
 

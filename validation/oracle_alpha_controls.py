@@ -595,6 +595,14 @@ def linear_alpha_predictiveness_summary(
     )
 
 
+def _ridge_regression_solver_mode(*, num_examples: int, num_features: int) -> str:
+    if num_examples < 1:
+        raise ValueError("num_examples must be positive")
+    if num_features < 1:
+        raise ValueError("num_features must be positive")
+    return "dual" if num_examples < num_features else "primal"
+
+
 def ridge_regression_predictions(
     *,
     train_features: Sequence[Sequence[float]],
@@ -624,21 +632,33 @@ def ridge_regression_predictions(
 
     train_standardized = (train_x - feature_mean) / feature_scale
     eval_standardized = (eval_x - feature_mean) / feature_scale
-    train_design = np.concatenate(
-        [np.ones((train_standardized.shape[0], 1)), train_standardized],
-        axis=1,
+    target_mean = train_y.mean(axis=0, keepdims=True)
+    centered_train_y = train_y - target_mean
+
+    solver_mode = _ridge_regression_solver_mode(
+        num_examples=train_standardized.shape[0],
+        num_features=train_standardized.shape[1],
     )
-    eval_design = np.concatenate(
-        [np.ones((eval_standardized.shape[0], 1)), eval_standardized],
-        axis=1,
+    if solver_mode == "dual":
+        gram_matrix = train_standardized @ train_standardized.T
+        dual_coefficients = np.linalg.solve(
+            gram_matrix
+            + (
+                regularization_strength
+                * np.eye(train_standardized.shape[0], dtype=float)
+            ),
+            centered_train_y,
+        )
+        return target_mean + (
+            eval_standardized @ train_standardized.T @ dual_coefficients
+        )
+
+    feature_coefficients = np.linalg.solve(
+        train_standardized.T @ train_standardized
+        + (regularization_strength * np.eye(train_standardized.shape[1], dtype=float)),
+        train_standardized.T @ centered_train_y,
     )
-    regularizer = np.eye(train_design.shape[1], dtype=float)
-    regularizer[0, 0] = 0.0
-    coefficients = np.linalg.solve(
-        train_design.T @ train_design + (regularization_strength * regularizer),
-        train_design.T @ train_y,
-    )
-    return eval_design @ coefficients
+    return target_mean + (eval_standardized @ feature_coefficients)
 
 
 def ridge_alpha_predictiveness_summary(

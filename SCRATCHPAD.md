@@ -1266,3 +1266,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
 - Anomalies: the broadened non-refusal prompts stressed the legacy refusal-marker behavior rule, so `resattn-ac2` is now open to make future safety validation tag-aware for refusal-style compliant prompts.
 - Next step: close `resattn-mo5` as a bounded negative result and move overall repo priority to `resattn-b4q`.
+
+## [2026-03-18T03:05:00-0500] PRE-RUN: n<<d ridge runtime benchmark
+- tmux session: `N/A`
+- Script: `scripts/run_ridge_runtime_benchmark.py`
+- Command: `.venv/bin/python scripts/run_ridge_runtime_benchmark.py --output results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q/summary.json`
+- Config: `pilot_count=96`, `confirm_count=128`, `feature_dim=9216`, `target_dim=53`, `regularization_strength=100.0`, `seed=11`
+- What I'm testing: whether the new adaptive ridge helper removes the high-dimensional primal solve bottleneck on a synthetic benchmark matched to the saved Gemma primary-model predictiveness surface.
+- Expected outcome: adaptive runtime is materially faster than the legacy primal solve while staying numerically identical within floating-point tolerance.
+- Expected duration: ~1-5 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q/summary.json`
+- Resume command: rerun the exact command above
+- Main confound to watch: the benchmark is synthetic and isolates the solve step only, so it should be interpreted as a linear-algebra runtime artifact rather than an end-to-end runner wall-clock claim.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_oracle_alpha_controls tests.test_oracle_alpha_runner tests.test_oracle_alpha_campaign` passed after the helper change.
+- Status: LAUNCHING
+
+## [2026-03-18T03:07:00-0500] POST-RUN: n<<d ridge runtime benchmark
+- Outcome: SUCCESS
+- Key metric: the adaptive helper was `92.10x` faster on the leave-one-out-shaped solve and `35.82x` faster on the full pilot-to-confirm fit, with max absolute prediction drift below `2.5e-12`.
+- Artifacts saved: `results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q/summary.json`, `results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none
+- Next step: close `resattn-b4q` and shift the remaining oracle-lane infrastructure priority to `resattn-9co`.

@@ -23,6 +23,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Oracle-alpha Phase 1 control suite | infrastructure | pass | `results/infrastructure/20260316-oracle-alpha-control-suite.md` |
 | Held-out predictiveness review alignment | infrastructure | pass | `results/infrastructure/20260316-heldout-predictiveness-review-alignment.md` |
 | Prereg-scale oracle-alpha campaign build-out | infrastructure | pass | `results/infrastructure/20260317-prereg-scale-campaign-buildout.md` |
+| Gemma-shaped `n << d` ridge runtime benchmark | infrastructure | pass | `results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q.md` |
 
 ## Oracle Alpha
 

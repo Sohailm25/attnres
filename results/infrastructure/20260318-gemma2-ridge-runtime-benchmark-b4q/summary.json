@@ -1,0 +1,36 @@
+{
+  "surface_name": "gemma2_registry_v4_predictiveness_shape",
+  "pilot_count": 96,
+  "confirm_count": 128,
+  "feature_source": "position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_plus_mean_pooled_token_embedding_concat",
+  "target_name": "oracle_alpha_logit_vector",
+  "feature_dim": 9216,
+  "target_dim": 53,
+  "regularization_strength": 100.0,
+  "cases": [
+    {
+      "case_name": "pilot_leave_one_out_fold",
+      "train_examples": 95,
+      "eval_examples": 1,
+      "feature_dim": 9216,
+      "target_dim": 53,
+      "regularization_strength": 100.0,
+      "primal_seconds": 2.3811264170799404,
+      "adaptive_seconds": 0.025855042040348053,
+      "speedup_ratio": 92.09524445421812,
+      "max_abs_prediction_difference": 1.1475265182525618e-12
+    },
+    {
+      "case_name": "pilot_to_confirm_fit",
+      "train_examples": 96,
+      "eval_examples": 128,
+      "feature_dim": 9216,
+      "target_dim": 53,
+      "regularization_strength": 100.0,
+      "primal_seconds": 2.224633499979973,
+      "adaptive_seconds": 0.06210512504912913,
+      "speedup_ratio": 35.8204495719177,
+      "max_abs_prediction_difference": 2.4353852268177434e-12
+    }
+  ]
+}
