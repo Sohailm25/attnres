@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-0mu`
-- Focus: `resattn-0mu` has now landed the expanded balanced `tool_breakage_factual_recall_v3` surface and its first pilot baseline; the next meaningful move is `resattn-cky`, the locked `32`-prompt confirm baseline on that larger surface.
-- Experimental status: the larger matched-family pilot did not wash out the aligned same-model breakage signal. The tuned KL delta stayed at `+2.6019` versus `+2.5849` on `v2`, and final-position tuned KL improved to `+3.0324`.
-- Critical reminder: the next uncertainty is still breadth, not geometry. The donor-arm result is promising but narrow, so the right next check is the larger `v3` confirm baseline rather than another control redesign.
+- Branch: `wip/resattn-cky`
+- Focus: `resattn-cky` has now landed the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`; the next meaningful move is `resattn-4g2`, the larger donor-arm counterfactual on that same surface.
+- Experimental status: the larger balanced confirm read slightly strengthened the aligned same-model breakage story rather than washing it out. The tuned KL delta rose to `+2.9127`, while the relative rank metrics stayed alive on the 32-prompt surface.
+- Critical reminder: the next uncertainty is now the donor-arm control on the broader confirm set, not whether the larger matched-family surface itself is viable.

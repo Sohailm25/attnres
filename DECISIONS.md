@@ -923,3 +923,17 @@
   - tuned target-rank-range increase improves slightly to `0.6875`
   So the broader surface did not dilute the lane. That is enough to justify spending the next run on a larger confirm read.
 - Impact: `resattn-0mu` can close once the expanded surface and pilot artifact land. The next tool-breakage issue is `resattn-cky`: the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`.
+
+## [2026-03-18T10:19:28-0500] DECISION: Close `resattn-cky` on a positive larger confirm and spend the final run on the v3 donor-arm counterfactual
+
+- Trigger: `resattn-cky` ran the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`.
+- Decision: close the issue on a positive answer. The larger balanced confirm surface strengthens the aligned same-model breakage story enough that the last worthwhile run in this batch is the larger donor-arm counterfactual on the same surface.
+- Rationale: the confirm comparison is encouraging rather than ambiguous:
+  - `v3` confirm mean tuned KL delta `= +2.9127`
+  - old `v2` confirm mean tuned KL delta `= +2.7644`
+  - `v3` confirm final-position tuned KL delta `= +3.4304`
+  - old `v2` confirm final-position tuned KL delta `= +3.4477`
+  - tuned final-target-rank worsening stays at `0.6875`
+  - tuned best-target-rank worsening rises to `0.65625`
+  This is enough to say the expanded surface is not diluting the lane. The remaining question is now the larger donor-arm control, not whether the broader matched-family baseline was a bad idea.
+- Impact: `resattn-cky` can close once the confirm artifact lands. The next tool-breakage issue is `resattn-4g2`: the donor-arm counterfactual on `tool_breakage_factual_recall_v3`.

@@ -1394,3 +1394,23 @@ Suggested entry format:
 - Interesting facts:
   - `v3` pilot mean tuned KL delta `= +2.6019` versus `v2` pilot `+2.5849`
   - `v3` pilot final-position tuned KL delta `= +3.0324` versus `v2` pilot `+2.9118`
+## [2026-03-18T10:19:30-0500] The Larger Confirm Baseline Also Held Up
+- Stage: experiment
+- Feel of the Experiment: This was the confirmation I wanted before spending the last run. The broader locked surface did not dilute the story at all.
+- Working Hypotheses:
+  - The larger donor-arm counterfactual is now worth the final run in this batch.
+  - If the donor-arm advantage survives on `v3`, the same-model tool-breakage lane will look materially stronger than it did on `v2`.
+- Hunches and Guesses:
+  - The tuned primary metric should stay the clearest read on `v3`; the range metric will probably remain supportive but somewhat noisy by family.
+- Predictions:
+  - The fixed-alpha control should stay clearly weaker than routed on `v3`.
+  - The harder question is whether the explicit within-family donor arm still comes out slightly weaker than routed once the confirm surface doubles.
+- Surprises and Tensions:
+  - The mean tuned KL delta improved slightly on the larger confirm surface instead of shrinking.
+  - Final-position tuned KL stayed almost unchanged relative to `v2`, which is a good sign that the pilot was not flattering us.
+- Confidence:
+  - high that `cky` should close cleanly
+  - medium-high that `4g2` is the right last run in this batch
+- Interesting facts:
+  - `v3` confirm mean tuned KL delta `= +2.9127` versus `v2` confirm `+2.7644`
+  - `v3` confirm tuned best-target-rank worsening `= 0.65625`

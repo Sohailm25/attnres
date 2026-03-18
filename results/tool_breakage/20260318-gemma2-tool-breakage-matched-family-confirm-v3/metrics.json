@@ -1,0 +1,16 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "tool_breakage_factual_recall_v3",
+  "split": "confirm",
+  "exploratory": false,
+  "num_prompts": 32,
+  "mean_tuned_original_kl_to_final": 3.2837051301105737,
+  "mean_tuned_routed_kl_to_final": 6.196430258524533,
+  "mean_tuned_kl_increase_under_routing": 2.9127251284139586,
+  "final_position_mean_tuned_original_kl_to_final": 5.5944059333153815,
+  "final_position_mean_tuned_routed_kl_to_final": 9.02482475612599,
+  "final_position_mean_tuned_kl_increase_under_routing": 3.4304188228106094,
+  "fraction_tuned_routing_worsens_final_target_rank_prompts": 0.6875,
+  "fraction_tuned_routing_worsens_best_target_rank_prompts": 0.65625,
+  "fraction_tuned_routing_increases_target_rank_range_prompts": 0.6875
+}

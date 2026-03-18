@@ -1706,3 +1706,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3/checkpoints/prompt_results/tb3-pilot-016-8fed5cb25f.json`
 - Anomalies: none; the full local `summary.json` is intentionally left untracked because it exceeds the pre-commit added-file limit, and the exact-command rerun reused the prompt checkpoints in `10.01` seconds while leaving their timestamps unchanged.
 - Next step: close `resattn-0mu`, then run `resattn-cky` for the locked `32`-prompt confirm baseline on the expanded matched-family surface.
+
+## [2026-03-18T10:24:00-0500] PRE-RUN: Gemma matched-family v3 confirm baseline
+- tmux session: `tb-v3-confirm`
+- Script: `scripts/run_tool_breakage_factual_recall_baseline.py`
+- Command: `mkdir -p results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3 && .venv/bin/python scripts/run_tool_breakage_factual_recall_baseline.py --collection-id tool_breakage_factual_recall_v3 --split confirm --output-dir results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3 > results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v3`, `split=confirm`, `prompts=32`, `matched_families=capital/element/author/moon`
+- What I'm testing: whether the larger balanced matched-family surface preserves the aligned same-model tuned-lens degradation on the locked confirm split strongly enough to justify the larger donor-arm counterfactual.
+- Expected outcome: the confirm run stays clearly positive on tuned KL and keeps at least one informative relative rank metric alive on the 32-prompt surface.
+- Expected duration: ~20-60 minutes
+- Checkpoint path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/checkpoints/prompt_results/`
+- Checkpoint cadence: after each prompt result
+- Log path: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the expanded moon family contains more repeated fact templates than the other families, so a heterogeneous confirm read by family will matter more than a single pooled average.
+- Implementation verified: YES - the expanded `v3` surface is registry-tested, the larger pilot stayed strongly positive, and the exact-command rerun on the pilot output reused the saved checkpoints.
+- Status: LAUNCHING
+
+## [2026-03-18T10:19:28-0500] POST-RUN: Gemma matched-family v3 confirm baseline
+- Outcome: SUCCESS
+- Key metric: the larger locked `v3` confirm surface stayed strongly positive on tuned KL (`mean tuned KL delta = +2.9127`, final-position tuned KL delta `= +3.4304`) and slightly strengthened the old `v2` confirm baseline rather than washing it out.
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/metrics.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3.md`
+- Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3/checkpoints/prompt_results/tb3-confirm-032-f4645fc040.json`
+- Anomalies: none; the full local `summary.json` is intentionally left untracked because it exceeds the pre-commit added-file limit, and the exact-command rerun reused the prompt checkpoints in `10.01` seconds while leaving their timestamps unchanged.
+- Next step: close `resattn-cky`, then run `resattn-4g2` for the larger donor-arm counterfactual on the same `v3` surface.

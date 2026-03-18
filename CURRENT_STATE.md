@@ -418,6 +418,23 @@
       - all `16` prompt checkpoints kept their original timestamps from the first run
       - the exact-command rerun completed in `10.01` seconds and rewrote only the local untracked `summary.json`
     - interpretation: the aligned same-model breakage signal survives a materially larger balanced prompt surface. The next direct step is the locked `v3` confirm baseline, not another prompt-design pass
+  - `resattn-cky` now lands that locked `32`-prompt confirm read on the expanded matched-family surface:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3.md` is the first confirm artifact on `tool_breakage_factual_recall_v3`
+    - the larger confirm surface stays strongly positive on the same-model tuned-lens baseline:
+      - mean tuned KL to the final distribution rises from `3.2837` to `6.1964` (`+2.9127`)
+      - final-position tuned KL rises from `5.5944` to `9.0248` (`+3.4304`)
+      - tuned final-target-rank worsens on `22 / 32` prompts (`0.6875`)
+      - tuned best-target-rank worsens on `21 / 32` prompts (`0.65625`)
+      - tuned target-rank range increases on `22 / 32` prompts (`0.6875`)
+    - the broader confirm surface slightly strengthens the old `v2` baseline rather than washing it out:
+      - old `v2` confirm mean tuned KL delta `= +2.7644`
+      - new `v3` confirm mean tuned KL delta `= +2.9127`
+      - old `v2` final-position tuned KL delta `= +3.4477`
+      - new `v3` final-position tuned KL delta `= +3.4304`
+    - resume durability is verified on the finished confirm output directory:
+      - all `32` prompt checkpoints kept their original timestamps from the first run
+      - the exact-command rerun completed in `10.01` seconds and rewrote only the local untracked `summary.json`
+    - interpretation: the expanded matched-family surface is now a real confirmatory baseline, not just a pilot idea. The next efficient move is the donor-arm counterfactual on this larger surface
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -758,9 +775,9 @@
 
 ## Immediate Next Steps
 
-1. Run `resattn-cky`, the locked `32`-prompt confirm baseline on `tool_breakage_factual_recall_v3`.
-2. Treat `tool_breakage_factual_recall_v3` as the new expansion surface for this lane; use `v2` as the bounded bridge artifact that motivated the scale-up.
-3. Treat the stronger same-model Gemma tool-breakage claim as promising but still narrow: routed now slightly exceeds both explicit donor arms on tuned mean KL, and the larger `v3` pilot held up, but the claim still needs a broader confirm read.
+1. Run `resattn-4g2`, the donor-arm counterfactual on the locked `tool_breakage_factual_recall_v3` confirm surface.
+2. Treat `tool_breakage_factual_recall_v3` as the new main matched-family surface for this lane; use `v2` as the bridge artifact that motivated the larger confirm read.
+3. Treat the stronger same-model Gemma tool-breakage claim as one run away from a broader control read: the larger confirm baseline is now strong enough that the only remaining high-value question in this batch is whether the donor-arm advantage survives on `v3`.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

@@ -98,6 +98,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 matched-family dynamic-routing counterfactual v2 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-counterfactual-v2.md` |
 | Gemma-2 matched-family donor-arm decomposition v1 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-donor-arms-v1.md` |
 | Gemma-2 matched-family tool-breakage pilot v3 | tool_breakage | pass | `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-pilot-v3.md` |
+| Gemma-2 matched-family tool-breakage confirm v3 | tool_breakage | pass | `results/tool_breakage/20260318-gemma2-tool-breakage-matched-family-confirm-v3.md` |
 
 ## Training Dynamics
 
