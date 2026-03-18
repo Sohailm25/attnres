@@ -451,6 +451,20 @@
       - `route_mode_author_cluster_11` also stays negative with identical donors (`-0.6423`)
       - `route_mode_author_cluster_12` matters more as the family-endpoint ordering artifact carrier than as the main within-family blocker
     - interpretation: donor-remap is not the honest default next move. The truthful boundary is to freeze the current donor-arm claim rather than rerun immediately, because the ordering artifact is real but does not erase the author-family donor-pairing limitation
+  - `resattn-a1w` now audits the old `v4` moon-family miss directly:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-moon-style-audit-v4.md` is the new saved-artifact moon audit
+    - the moon-family miss is not a clean same-model null:
+      - the moon pilot is `4 / 4` direct descriptor prompts
+      - the moon confirm split drifts to `6 / 8` `named after` prompts
+    - the negative `prompt_permuted_alpha` moon read is almost entirely one donor mismatch:
+      - only `tb4-confirm-032` differs between `prompt_permuted_alpha` and `within_family_permuted_alpha`
+      - that one prompt creates the full moon-family gap between the two arms
+    - the negative cross-family moon read is also donor geometry:
+      - all `8 / 8` cross-family moon donors are capitals
+    - the residual real weakness is prompt-style drift:
+      - descriptor confirm moon prompts keep a positive within-family mean (`+0.2831`)
+      - confirm-only `named after` moon prompts are slightly negative even on the within-family arm (`-0.0549`)
+    - interpretation: leave the one-token moon sidecar frozen rather than treating it as a genuine null or launching a donor-remap rerun. If moons ever reopen, the honest first move is a moon-only prompt rewrite, not another pooled rerun
   - `resattn-qcn` now lands that matched-family prompt-surface expansion and its first pilot run:
     - `tool_breakage_factual_recall_v2` is now saved in `prompts/registry_v4.yaml` and propagated into `prompts/registry_v5.yaml`
     - the new surface is balanced around the strongest factual routing families:
@@ -1088,7 +1102,9 @@
    - donor geometry has now been audited and should stay frozen at the current boundary:
      - most of the `prompt_permuted` / `within_family` collapse is an ordering artifact
      - the residual real limitation is author-family donor pairing, especially modes `6` and `11`
-   - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
+   - the old moon-family sidecar is also now audited and frozen:
+      - its miss is mostly prompt-style drift plus donor mismatch, not a clean family null
+      - if moons ever reopen, prefer a moon-only prompt rewrite before donor remap
 6. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse

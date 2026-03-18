@@ -1,0 +1,62 @@
+{
+  "source_profile_path": "results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.json",
+  "source_registry_collection": "tool_breakage_factual_recall_v4",
+  "moon_style_counts": {
+    "pilot": {
+      "descriptor": 4,
+      "named_after": 0
+    },
+    "confirm": {
+      "descriptor": 2,
+      "named_after": 6
+    }
+  },
+  "moon_style_summaries": {
+    "descriptor": {
+      "prompt_ids": [
+        "tb4-confirm-025",
+        "tb4-confirm-026"
+      ],
+      "count": 2,
+      "mean_within_family_tuned_kl_delta_routed_minus_arm": 0.2830848808471973,
+      "mean_prompt_permuted_tuned_kl_delta_routed_minus_arm": 0.2830848808471973,
+      "mean_pilot_mean_tuned_kl_delta_routed_minus_arm": -0.8186031602896177,
+      "mean_cross_family_tuned_kl_delta_routed_minus_arm": -2.1309379499692183
+    },
+    "named_after": {
+      "prompt_ids": [
+        "tb4-confirm-027",
+        "tb4-confirm-028",
+        "tb4-confirm-029",
+        "tb4-confirm-030",
+        "tb4-confirm-031",
+        "tb4-confirm-032"
+      ],
+      "count": 6,
+      "mean_within_family_tuned_kl_delta_routed_minus_arm": -0.05488612483709287,
+      "mean_prompt_permuted_tuned_kl_delta_routed_minus_arm": -0.4503592596604274,
+      "mean_pilot_mean_tuned_kl_delta_routed_minus_arm": -1.269120326408973,
+      "mean_cross_family_tuned_kl_delta_routed_minus_arm": -2.293366802808566
+    }
+  },
+  "prompt_permuted_vs_within_mismatch_rows": [
+    {
+      "prompt_id": "tb4-confirm-032",
+      "prompt": "Saturn's moon named after the Titan who held up the sky is",
+      "target_text": "Atlas",
+      "prompt_permuted_source_prompt_id": "tb4-confirm-001",
+      "within_family_source_prompt_id": "tb4-confirm-025",
+      "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -2.5526107228719273,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.17977191393192,
+      "gap_prompt_minus_within": -2.372838808940007
+    }
+  ],
+  "cross_family_donor_subcategories_for_moon_prompts": {
+    "subcategory_capital_fact": 8
+  },
+  "recommendation": {
+    "status": "freeze",
+    "if_reopened": "small_moon_prompt_rewrite_before_donor_remap",
+    "reason": "The moon-family miss is not a clean prompt-specific null. Prompt-permuted failure is almost entirely one boundary donor mismatch, cross-family failure is capital-donor mismatch on every moon prompt, and the remaining weakness is concentrated in the confirm-only named-after prompt style that is absent from the moon pilot."
+  }
+}

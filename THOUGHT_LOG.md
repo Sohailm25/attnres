@@ -1811,3 +1811,25 @@ Suggested entry format:
   - identical route-mode mean tuned-KL delta on `7 / 10` modes
   - author family contribution sum `= -2.7318`
   - `route_mode_author_cluster_6 = -1.9465`, `route_mode_author_cluster_11 = -0.6423`
+## [2026-03-18T17:20:00-0500] The Moon Miss Was Mostly Bad Surface Design
+- Stage: moon-family audit
+- Feel of the Experiment: This one got cleaner the deeper I looked. The moon family was not failing because “moons just don’t work.” It was failing because the sidecar quietly changed styles between pilot and confirm, and the worst donor-arm read was hanging on a single boundary wrap into a capital prompt.
+- Working Hypotheses:
+  - The moon sidecar is underdesigned rather than intrinsically null.
+  - If it ever matters again, prompt rewrite is the right first move.
+- Hunches and Guesses:
+  - The mythological `named after` style is just a worse surface for this family than the direct descriptor prompts.
+  - A donor-remap rerun on the existing `v4` moon prompts would mostly produce cleaner-looking numbers without answering the real design flaw.
+- Predictions:
+  - A moon-only rewrite that keeps pilot and confirm on the same descriptor style would look materially healthier than the saved `v4` moon family.
+  - Cross-family moon donors would still need separate thought, because the all-capital donor map is too blunt.
+- Surprises and Tensions:
+  - The whole family-level `prompt_permuted` gap came from one prompt, `tb4-confirm-032`.
+  - The within-family moon read is not dead; it is just too dependent on a messy confirm surface to support a stronger claim.
+- Confidence:
+  - high that `a1w` should close with a freeze recommendation
+  - medium-high that a rewrite would help if the sidecar ever mattered again
+- Interesting facts:
+  - moon pilot descriptor prompts `= 4 / 4`
+  - moon confirm `named after` prompts `= 6 / 8`
+  - all `8 / 8` moon cross-family donors are capitals

@@ -1312,3 +1312,25 @@
   - `resattn-oi7` can close once the audit artifact lands.
   - the main tool-breakage donor-arm lane should stay frozen at its current truthful boundary.
   - `resattn-a1w` remains the only bounded tool-breakage sidecar worth keeping visible without reopening pooled reruns or donor-remap work.
+
+## [2026-03-18T17:20:00-0500] DECISION: Close `resattn-a1w` by freezing the moon sidecar and preferring prompt rewrite over donor remap if it ever reopens
+
+- Trigger: `resattn-a1w` audited the saved moon-family miss on `tool_breakage_factual_recall_v4`.
+- Decision: close `resattn-a1w` with a freeze recommendation. Do not treat the moon family as a clean null, and do not launch a moon donor-remap rerun by default. If the moon sidecar ever becomes strategically necessary again, start with a small moon-only prompt rewrite before testing donor remaps.
+- Rationale:
+  - the moon prompt surface drifted between pilot and confirm:
+    - pilot moons are `4 / 4` direct descriptor prompts
+    - confirm moons are `6 / 8` `named after` prompts
+  - the negative `prompt_permuted_alpha` moon read is almost entirely one boundary donor mismatch:
+    - only `tb4-confirm-032` differs between `prompt_permuted_alpha` and `within_family_permuted_alpha`
+    - that one prompt produces the full family-level gap between those two arms
+  - the negative `cross_family_permuted_alpha` moon read is also donor geometry:
+    - all `8 / 8` cross-family moon donors are capitals
+  - the residual real weakness is the confirm-only `named after` style:
+    - descriptor confirm moon prompts keep a positive within-family mean tuned-KL delta (`+0.2831`)
+    - `named after` confirm moon prompts are already slightly negative on the within-family arm (`-0.0549`)
+    - both moon styles remain negative on the pilot-mean arm, so the family-balanced `v4` moon slice is not ready for a stronger prompt-specific same-model claim
+- Impact:
+  - `resattn-a1w` can close once the audit artifact lands.
+  - the old `v4` moon sidecar should stay frozen rather than motivating another pooled tool-breakage rerun.
+  - there are no remaining ready tool-breakage issues after this audit.
