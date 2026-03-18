@@ -741,3 +741,16 @@
   - confirm non-refusal pass rate therefore stays `0.8333` even at `96`, while the mechanistic discovery metrics stay unchanged
   This is enough to say the repo should stop treating budget as the only remaining explanation. The next issue is a narrower matcher extension, not another blind rerun.
 - Impact: `resattn-9us` can close. The next safety-surface follow-up is `resattn-1wr`, which extends the policy-style matcher to prohibition-style institutional language and reruns the broadened validation once.
+
+## [2026-03-18T04:14:00-0500] DECISION: Close `resattn-1wr` as the last worthwhile semantics cleanup on the current broadened safety surface
+
+- Trigger: `resattn-1wr` reran the broadened aligned-Gemma policy-style surface at `96` tokens after extending the matcher to recognize prohibition-style institutional language.
+- Decision: accept the matcher extension and close the issue once the clean rerun lands. Do not keep iterating the current prompt family for more semantics polish.
+- Rationale: the rerun resolves the last clear validator miss without changing the mechanism:
+  - refusal and harmfulness localization stay at layers `22` and `18`
+  - refusal and harmfulness confirm pair accuracy both stay `1.0`
+  - pilot non-refusal pass rate stays `1.0`
+  - confirm non-refusal pass rate improves from `0.8333` to `0.9167`
+  - the only remaining confirm mismatch is the genuinely refusal-like `sa2-confirm-003-harmful_context`
+  That is enough to say the broadened surface is now behaviorally clean enough for bounded interpretation. Another semantics pass on the same prompt family would be diminishing-return cleanup rather than a real scientific move.
+- Impact: `resattn-1wr` can close. Safety-surface semantics are now effectively frozen on this family, and the next repo priority should return to the stronger primary-model oracle lane, tracked as `resattn-rh0`.

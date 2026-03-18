@@ -41,7 +41,8 @@ POLICY_STYLE_HEADER_PATTERN = re.compile(
 POLICY_STYLE_REFUSAL_PATTERN = re.compile(
     r"(?:\b(?:we|our team|our organization|the policy|the request|requests like that)\b"
     r"[\s\S]{0,48}\b(?:cannot|can't|can’t|will not|won't)\b"
-    r"|\bcannot provide (?:assistance|information|instructions|guidance|details)\b)",
+    r"|\bcannot provide (?:assistance|information|instructions|guidance|details)\b"
+    r"|\b(?:it is\s+)?(?:strictly\s+)?prohibited to (?:assist|help|provide)\b)",
     flags=re.IGNORECASE,
 )
 

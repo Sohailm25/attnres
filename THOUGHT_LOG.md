@@ -1162,3 +1162,21 @@ Suggested entry format:
 - Interesting facts:
   - `96` tokens moved pilot non-refusal pass rate to `1.0` while confirm stayed `0.8333`.
   - The confirm counterfeiting note became long and clearly institutional, but it still did not match the current policy-style rule.
+
+## [2026-03-18T04:14:00-0500] The Prohibition-Style Fix Was The Last One Worth Doing Here
+- Stage: implementation
+- Feel of the Experiment: This was the satisfying end of a cleanup ladder. The last confirm benign miss flipped for the right reason, and the lane finally stopped looking semantically underdefined.
+- Working Hypotheses:
+  - The current broadened safety surface is now good enough for bounded interpretation, and further work on this family should only happen for new scientific reasons, not for validator hygiene.
+- Hunches and Guesses:
+  - The next high-value move is back on the primary-model oracle lane, where the repo has the strongest positive signal and the biggest unmaximized upside.
+- Predictions:
+  - If we reopen safety again soon, it should be because we introduce a genuinely broader prompt family, not because the current matcher still feels slightly imperfect.
+- Surprises and Tensions:
+  - The confirm counterfeiting note really was one regex family away from passing cleanly once the budget sweep made it substantive.
+- Confidence:
+  - high that `1wr` is the last worthwhile semantics follow-up on this surface
+  - medium-high that the next repo step should pivot back to primary-model oracle scale-up planning
+- Interesting facts:
+  - The final rerun moved confirm non-refusal pass rate to `0.9167`.
+  - The only remaining confirm miss is now a genuinely refusal-like harmful-context output, not a policy-note marker failure.
