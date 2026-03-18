@@ -1125,3 +1125,20 @@
     - moons are structurally real but still extension-risky because the one-token tool-breakage lane remains mixed there
   - that means the next honest bridge question is no longer “factual versus reasoning/math.” It is “which factual route modes are actually covered by the one-token tool-breakage surface?”
 - Impact: `resattn-2mx` can close once the artifact lands. `resattn-unp` is now the next main bridge issue, `resattn-a1w` stays a bounded moon-family sidecar, and the main oracle story should keep centering grouped structure plus factual route modes rather than another mixed-surface rerun.
+
+## [2026-03-18T13:05:56-0500] DECISION: Close `resattn-unp` and redesign the factual extension surface around missing modes
+
+- Trigger: `resattn-unp` mapped the one-token `tool_breakage_factual_recall_v4` prompts onto the saved factual route modes from `resattn-2mx`.
+- Decision: close `resattn-unp` as a real bridge diagnosis. Stay on the factual families, but do not keep the current `v4` surface fixed. The next main issue is now `resattn-q38`: redesign the one-token factual surface around the missing capital, element, and author modes. Keep `resattn-a1w` as a moon-specific sidecar only.
+- Rationale:
+  - the current `v4` surface undercovers the saved route-mode map:
+    - family-conditioned factual modes `= 13`
+    - modes with any `v4` prompt assignment `= 8 / 13`
+    - modes with matching-family `v4` prompt assignment `= 5 / 13`
+  - the undercoverage is broad rather than moon-only:
+    - capitals cover `1 / 3` capital modes and all `12` capital prompts collapse onto mode `cluster 3`
+    - elements cover `1 / 3` element modes and all `12` element prompts collapse onto mode `cluster 1`
+    - authors cover `2 / 5` author modes, while `7` author prompts nearest-match the dominant capital mode
+    - moons cover `1 / 2` moon modes, but that is not the main reason to redesign the surface
+  - this means the right next question is no longer “is moon style the only blocker?” It is “how do we redesign the factual one-token surface so it actually covers the saved capital, element, and author modes?”
+- Impact: `resattn-unp` can close once the artifact lands. `resattn-q38` is now the next main bridge issue, `resattn-a1w` remains bounded, and future tool-breakage work should be judged against mode coverage rather than only family labels.

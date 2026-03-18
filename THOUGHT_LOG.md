@@ -1634,3 +1634,25 @@ Suggested entry format:
   - author mode count `= 5`
   - capital mode count `= 3`
   - element mean within-family centroid JS `= 0.2096`
+## [2026-03-18T13:05:56-0500] The One-Token Surface Is Family-Aligned But Mode-Underspecified
+- Stage: bridge analysis
+- Feel of the Experiment: This was a good reality check. The current `v4` lane is not wrong, but it is much thinner than the family labels made it look.
+- Working Hypotheses:
+  - The next bridge should stay on capitals, elements, and authors.
+  - The current `v4` surface needs a route-mode-aware redesign before another strong interpretive step is worth taking.
+- Hunches and Guesses:
+  - A redesigned surface that deliberately targets the uncovered capital and element modes will matter more than any additional moon-specific cleanup.
+  - Authors may need prompt rewrites that stop collapsing into the dominant capital mode.
+- Predictions:
+  - `resattn-q38` will produce a more useful surface than just extending `v4` by a few more prompts within the same templates.
+  - `a1w` may still improve the moon sidecar, but it should not drive the main bridge after this result.
+- Surprises and Tensions:
+  - Capitals and elements looked like clean bridge families at the family level, yet both currently cover only one of their three saved modes.
+  - The route-mode count is `13`, not `12`, because the saved factual artifact faithfully preserves one author outlier inside a moon-dominant cluster.
+- Confidence:
+  - high that `resattn-q38` is the right next issue
+  - high that `resattn-a1w` should stay bounded
+- Interesting facts:
+  - matching-family mode coverage `= 5 / 13`
+  - all `12` capital prompts nearest-match capital mode `cluster 3`
+  - all `12` element prompts nearest-match element mode `cluster 1`

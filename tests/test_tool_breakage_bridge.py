@@ -11,10 +11,14 @@ class ToolBreakageBridgeTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         from validation.tool_breakage_bridge import (
             build_tool_breakage_factual_bridge_summary,
+            build_tool_breakage_route_mode_coverage_summary,
         )
 
         cls.build_tool_breakage_factual_bridge_summary = staticmethod(
             build_tool_breakage_factual_bridge_summary
+        )
+        cls.build_tool_breakage_route_mode_coverage_summary = staticmethod(
+            build_tool_breakage_route_mode_coverage_summary
         )
 
     def test_bridge_summary_assigns_prompts_to_nearest_factual_clusters(self) -> None:
@@ -145,3 +149,98 @@ class ToolBreakageBridgeTests(unittest.TestCase):
                 "prompt_count"
             ],
         )
+
+    def test_route_mode_coverage_summary_tracks_covered_and_uncovered_modes(
+        self,
+    ) -> None:
+        bridge_summary = {
+            "num_factual_clusters": 3,
+            "prompt_assignments": (
+                {
+                    "prompt_id": "tb-001",
+                    "tool_subcategory": "subcategory_capital_fact",
+                    "nearest_cluster_label": 2,
+                    "nearest_cluster_dominant_subcategory": (
+                        "subcategory_capital_fact"
+                    ),
+                    "nearest_cluster_js_distance": 0.12,
+                    "tuned_final_position_kl_delta_under_routing": 1.0,
+                },
+                {
+                    "prompt_id": "tb-002",
+                    "tool_subcategory": "subcategory_author_fact",
+                    "nearest_cluster_label": 2,
+                    "nearest_cluster_dominant_subcategory": (
+                        "subcategory_capital_fact"
+                    ),
+                    "nearest_cluster_js_distance": 0.31,
+                    "tuned_final_position_kl_delta_under_routing": 3.0,
+                },
+                {
+                    "prompt_id": "tb-003",
+                    "tool_subcategory": "subcategory_author_fact",
+                    "nearest_cluster_label": 5,
+                    "nearest_cluster_dominant_subcategory": "subcategory_author_fact",
+                    "nearest_cluster_js_distance": 0.22,
+                    "tuned_final_position_kl_delta_under_routing": 2.0,
+                },
+            ),
+        }
+        route_mode_summary = {
+            "cluster_count": 3,
+            "family_summaries": (
+                {
+                    "family_tag": "subcategory_capital_fact",
+                    "modes": (
+                        {"cluster_label": 2, "size": 2},
+                        {"cluster_label": 3, "size": 2},
+                    ),
+                },
+                {
+                    "family_tag": "subcategory_author_fact",
+                    "modes": ({"cluster_label": 5, "size": 2},),
+                },
+            ),
+        }
+
+        summary = self.build_tool_breakage_route_mode_coverage_summary(
+            bridge_summary=bridge_summary,
+            factual_route_mode_summary=route_mode_summary,
+        )
+
+        self.assertEqual(3, summary["num_factual_modes"])
+        self.assertEqual(2, summary["modes_with_any_assignment"])
+        self.assertEqual(2, summary["modes_with_matching_family_assignment"])
+
+        family_summaries = {
+            item["family_tag"]: item for item in summary["family_coverage"]
+        }
+        self.assertEqual(
+            [3],
+            family_summaries["subcategory_capital_fact"][
+                "uncovered_mode_cluster_labels"
+            ],
+        )
+        self.assertEqual(
+            1,
+            family_summaries["subcategory_capital_fact"][
+                "modes_with_matching_family_assignment"
+            ],
+        )
+        self.assertEqual(
+            1,
+            family_summaries["subcategory_author_fact"][
+                "modes_with_matching_family_assignment"
+            ],
+        )
+
+        mode_summaries = {
+            item["cluster_label"]: item for item in summary["mode_coverage"]
+        }
+        self.assertEqual(2, mode_summaries[2]["assigned_tool_prompt_count"])
+        self.assertEqual(1, mode_summaries[2]["matching_family_tool_prompt_count"])
+        self.assertEqual(
+            {"subcategory_capital_fact": 1, "subcategory_author_fact": 1},
+            mode_summaries[2]["assigned_tool_subcategory_counts"],
+        )
+        self.assertFalse(mode_summaries[3]["covered_by_any_tool_prompt"])

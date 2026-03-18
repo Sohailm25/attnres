@@ -306,3 +306,114 @@ def build_tool_breakage_factual_bridge_summary(
         "by_tool_subcategory": by_tool_subcategory,
         "by_nearest_cluster_subcategory": by_nearest_cluster_subcategory,
     }
+
+
+def build_tool_breakage_route_mode_coverage_summary(
+    *,
+    bridge_summary: Mapping[str, object],
+    factual_route_mode_summary: Mapping[str, object],
+) -> dict[str, object]:
+    prompt_assignments = tuple(bridge_summary["prompt_assignments"])
+    cluster_count = int(factual_route_mode_summary["cluster_count"])
+    if int(bridge_summary["num_factual_clusters"]) != cluster_count:
+        raise ValueError(
+            "bridge summary and route-mode summary must agree on cluster count"
+        )
+
+    assignments_by_cluster: dict[int, list[Mapping[str, object]]] = {}
+    for prompt_assignment in prompt_assignments:
+        cluster_label = int(prompt_assignment["nearest_cluster_label"])
+        assignments_by_cluster.setdefault(cluster_label, []).append(prompt_assignment)
+
+    family_coverage = []
+    mode_coverage = []
+    modes_with_any_assignment = 0
+    modes_with_matching_family_assignment = 0
+
+    for family_summary in factual_route_mode_summary["family_summaries"]:
+        family_tag = str(family_summary["family_tag"])
+        family_modes = []
+        for mode_summary in family_summary["modes"]:
+            cluster_label = int(mode_summary["cluster_label"])
+            assigned_prompts = assignments_by_cluster.get(cluster_label, [])
+            matching_family_prompts = [
+                prompt
+                for prompt in assigned_prompts
+                if str(prompt["tool_subcategory"]) == family_tag
+            ]
+            if assigned_prompts:
+                modes_with_any_assignment += 1
+            if matching_family_prompts:
+                modes_with_matching_family_assignment += 1
+            coverage_summary = {
+                "mode_key": f"{family_tag}::cluster_{cluster_label}",
+                "cluster_label": cluster_label,
+                "family_tag": family_tag,
+                "factual_mode_size": int(mode_summary["size"]),
+                "assigned_tool_prompt_count": len(assigned_prompts),
+                "matching_family_tool_prompt_count": len(matching_family_prompts),
+                "covered_by_any_tool_prompt": bool(assigned_prompts),
+                "covered_by_matching_family_prompt": bool(matching_family_prompts),
+                "assigned_tool_subcategory_counts": dict(
+                    sorted(
+                        Counter(
+                            str(prompt["tool_subcategory"])
+                            for prompt in assigned_prompts
+                        ).items()
+                    )
+                ),
+                "matching_family_tool_prompt_ids": [
+                    str(prompt["prompt_id"]) for prompt in matching_family_prompts
+                ],
+                "mean_js_distance_to_mode": _mean_or_none(
+                    [
+                        float(prompt["nearest_cluster_js_distance"])
+                        for prompt in assigned_prompts
+                    ]
+                ),
+                "mean_tuned_final_position_kl_delta_under_routing": _mean_or_none(
+                    [
+                        float(prompt["tuned_final_position_kl_delta_under_routing"])
+                        for prompt in assigned_prompts
+                    ]
+                ),
+            }
+            family_modes.append(coverage_summary)
+            mode_coverage.append(coverage_summary)
+
+        family_coverage.append(
+            {
+                "family_tag": family_tag,
+                "total_mode_count": len(family_modes),
+                "tool_prompt_count": sum(
+                    1
+                    for prompt in prompt_assignments
+                    if str(prompt["tool_subcategory"]) == family_tag
+                ),
+                "modes_with_any_assignment": sum(
+                    1 for mode in family_modes if mode["covered_by_any_tool_prompt"]
+                ),
+                "modes_with_matching_family_assignment": sum(
+                    1
+                    for mode in family_modes
+                    if mode["covered_by_matching_family_prompt"]
+                ),
+                "uncovered_mode_cluster_labels": [
+                    int(mode["cluster_label"])
+                    for mode in family_modes
+                    if not mode["covered_by_matching_family_prompt"]
+                ],
+            }
+        )
+
+    return {
+        "num_factual_modes": len(mode_coverage),
+        "num_tool_prompts": len(prompt_assignments),
+        "modes_with_any_assignment": modes_with_any_assignment,
+        "modes_with_matching_family_assignment": modes_with_matching_family_assignment,
+        "family_coverage": sorted(family_coverage, key=lambda item: item["family_tag"]),
+        "mode_coverage": sorted(
+            mode_coverage,
+            key=lambda item: (item["family_tag"], item["cluster_label"]),
+        ),
+    }
