@@ -1386,3 +1386,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-policy-style-v2/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
 - Anomalies: two benign policy-note prompts still produced header-only scaffolds, so the remaining misses now look like completion-completeness problems rather than behavior-classification failures.
 - Next step: close `resattn-7km` and track any later prompt-completeness check as `resattn-9us`.
+
+## [2026-03-18T03:45:00-0500] PRE-RUN: policy-note completion-budget sweep
+- tmux session: `N/A`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v2 --device mps --max-new-tokens 64 --output-dir results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max64-v1`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v2`, `pilot_groups=6`, `confirm_groups=6`, `max_new_tokens in {64, 96}`
+- What I'm testing: whether the remaining header-only benign policy-note mismatches are caused by the generation cap rather than by prompt-surface semantics.
+- Expected outcome: at least one of the two header-only policy-note prompts produces a substantive body at a larger token budget, while refusal/harmfulness localization stays unchanged.
+- Expected duration: ~10-25 minutes across both runs
+- Checkpoint path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max64-v1/checkpoints/prompt_residuals/` and `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max96-v1/checkpoints/prompt_residuals/`
+- Checkpoint cadence: after each prompt checkpoint
+- Log path: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max64-v1/run.log` and `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max96-v1/run.log`
+- Resume command: rerun the exact commands for the affected output directory with `--max-new-tokens 64` or `--max-new-tokens 96`
+- Main confound to watch: if completions stay skeletal even at `96` tokens, the issue is prompt framing rather than generation budget.
+- Implementation verified: YES - `scripts/run_refusal_feature_discovery_validation.py` already exposes `--max-new-tokens`, and the saved `32`-token artifact isolates the exact prompts to compare against.
+- Status: LAUNCHING
+
+## [2026-03-18T04:02:00-0500] POST-RUN: policy-note completion-budget sweep
+- Outcome: SUCCESS
+- Key metric: increasing the budget to `96` moved pilot non-refusal pass rate from `0.9167` to `1.0`, but confirm non-refusal pass rate stayed `0.8333`, so budget alone does not fully clean the broadened policy-note surface.
+- Artifacts saved: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max64-v1/summary.json`, `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max96-v1/summary.json`, `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-check-v1.md`
+- Latest checkpoint: `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-max96-v1/checkpoints/prompt_residuals/sa2-confirm-006-refusal.pt`
+- Anomalies: the confirm counterfeiting policy note became substantive at larger budgets but still used prohibition-style institutional language (`It is strictly prohibited to assist...`) that the current matcher does not recognize.
+- Next step: close `resattn-9us` and track the narrower matcher follow-up as `resattn-1wr`.

@@ -1143,3 +1143,22 @@ Suggested entry format:
 - Interesting facts:
   - The clean rerun improved pilot non-refusal pass rate to `0.9167` while keeping confirm at `0.8333`.
   - The two remaining benign policy-note misses were literally skeletal headers with no substantive body.
+
+## [2026-03-18T04:02:00-0500] The Budget Sweep Helped, But It Did Not Let Me Blame Everything On Truncation
+- Stage: experiment
+- Feel of the Experiment: This was a useful falsification pass. The easy story was “just give the policy notes more room,” and the sweep only half agreed.
+- Working Hypotheses:
+  - One residual miss was genuinely truncation-sensitive.
+  - The remaining confirm miss is now a matcher-definition problem around prohibition-style institutional language.
+- Hunches and Guesses:
+  - If `1wr` lands, the confirm surface should probably move to `0.9167`, but the mediator-collapse story will still stay negative.
+- Predictions:
+  - More token budget beyond `96` is unlikely to be the right default next move.
+- Surprises and Tensions:
+  - The `64`-token rerun already made the notes substantive, yet one still failed because the language was “strictly prohibited” rather than “cannot.”
+- Confidence:
+  - high that `9us` closes as a mixed but decisive run
+  - medium-high that the next safety follow-up should be matcher wording, not more budget
+- Interesting facts:
+  - `96` tokens moved pilot non-refusal pass rate to `1.0` while confirm stayed `0.8333`.
+  - The confirm counterfeiting note became long and clearly institutional, but it still did not match the current policy-style rule.
