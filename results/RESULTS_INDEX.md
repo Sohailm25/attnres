@@ -113,6 +113,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 route-mode-aware one-token confirm v5 | tool_breakage | pass | `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5.md` |
 | Gemma-2 route-mode-aware donor-arm decomposition v5 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5.md` |
 | Gemma-2 factual route-mode bridge v5 | tool_breakage | pass | `results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.md` |
+| Gemma-2 donor geometry audit v5 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` |
 
 ## Training Dynamics
 

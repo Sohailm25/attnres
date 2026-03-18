@@ -1788,3 +1788,26 @@ Suggested entry format:
   - matching-family mode coverage rose from `5 / 13` on `v4` to `10 / 13` on `v5`
   - `v5` covers all capital and element modes
   - the only uncovered author mode is singleton `cluster 10`
+## [2026-03-18T16:45:00-0500] The Donor Collapse Was Mostly Structural, But The Author Problem Survived It
+- Stage: donor-geometry audit
+- Feel of the Experiment: This was the right audit to do because it killed the lazy explanation cleanly. Most of the `prompt_permuted` versus `within_family` collapse really is just the family-grouped confirm ordering. But once that is isolated, author modes `6` and `11` are still negative with identical donors, so we do not get to explain the whole mixed result away.
+- Working Hypotheses:
+  - The pooled negative within-family read is mostly driven by three family-endpoint prompts.
+  - The residual real limitation is author-family donor pairing, not general bridge misalignment.
+- Hunches and Guesses:
+  - A donor-remap rerun would mostly just move the pooled number closer to zero and tempt over-interpretation.
+  - Freezing the lane is more truthful than trying to engineer one more same-model donor win.
+- Predictions:
+  - If we ever revisit donor remapping, the main movement would come from `tb5-confirm-020` and the other family-endpoint prompts rather than from a broad shift across modes.
+  - Author modes `6` and `11` would still be the honest blockers even after a cleaner remap.
+- Surprises and Tensions:
+  - The differing prompts explain `82.9%` of the total negative within-family sum, which is larger than I expected.
+  - Even so, author `cluster 12` is not the main within-family blocker. `6` and `11` are.
+- Confidence:
+  - high that `oi7` should close with a freeze recommendation
+  - high that donor-remap is not the right default next move
+- Interesting facts:
+  - identical donor source prompt on `17 / 20` prompts
+  - identical route-mode mean tuned-KL delta on `7 / 10` modes
+  - author family contribution sum `= -2.7318`
+  - `route_mode_author_cluster_6 = -1.9465`, `route_mode_author_cluster_11 = -0.6423`

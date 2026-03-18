@@ -1,0 +1,147 @@
+{
+  "source_profile_path": "results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5/profile.json",
+  "prompt_level_collapse": {
+    "num_prompts": 20,
+    "identical_source_prompt_count": 17,
+    "identical_source_prompt_fraction": 0.85,
+    "different_source_prompt_count": 3,
+    "different_source_prompt_fraction": 0.15,
+    "identical_source_prompt_ids": [
+      "tb5-confirm-001",
+      "tb5-confirm-002",
+      "tb5-confirm-003",
+      "tb5-confirm-004",
+      "tb5-confirm-005",
+      "tb5-confirm-007",
+      "tb5-confirm-008",
+      "tb5-confirm-009",
+      "tb5-confirm-010",
+      "tb5-confirm-011",
+      "tb5-confirm-013",
+      "tb5-confirm-014",
+      "tb5-confirm-015",
+      "tb5-confirm-016",
+      "tb5-confirm-017",
+      "tb5-confirm-018",
+      "tb5-confirm-019"
+    ],
+    "different_source_prompt_rows": [
+      {
+        "prompt_id": "tb5-confirm-006",
+        "subcategory": "subcategory_capital_fact",
+        "route_mode": "route_mode_capital_cluster_4",
+        "prompt_permuted_source_prompt_id": "tb5-confirm-007",
+        "within_family_source_prompt_id": "tb5-confirm-001",
+        "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -0.4768830079298753,
+        "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.37909078139525193
+      },
+      {
+        "prompt_id": "tb5-confirm-012",
+        "subcategory": "subcategory_element_symbol",
+        "route_mode": "route_mode_element_cluster_9",
+        "prompt_permuted_source_prompt_id": "tb5-confirm-013",
+        "within_family_source_prompt_id": "tb5-confirm-007",
+        "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": 0.7236539217141958,
+        "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.28633978275152355
+      },
+      {
+        "prompt_id": "tb5-confirm-020",
+        "subcategory": "subcategory_author_fact",
+        "route_mode": "route_mode_author_cluster_12",
+        "prompt_permuted_source_prompt_id": "tb5-confirm-001",
+        "within_family_source_prompt_id": "tb5-confirm-013",
+        "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -2.9005654339606943,
+        "within_family_mean_tuned_kl_delta_routed_minus_arm": -1.0272626395408924
+      }
+    ],
+    "within_family_mean_tuned_kl_delta_on_identical_prompts": -0.020544016927615552,
+    "within_family_mean_tuned_kl_delta_on_different_prompts": -0.5642310678958893
+  },
+  "route_mode_level_collapse": {
+    "num_route_modes": 10,
+    "identical_mode_count": 7,
+    "identical_mode_fraction": 0.7,
+    "different_mode_count": 3,
+    "different_mode_fraction": 0.3,
+    "identical_mode_labels": [
+      "route_mode_author_cluster_11",
+      "route_mode_author_cluster_6",
+      "route_mode_author_cluster_7",
+      "route_mode_capital_cluster_2",
+      "route_mode_capital_cluster_3",
+      "route_mode_element_cluster_1",
+      "route_mode_element_cluster_5"
+    ],
+    "different_mode_rows": [
+      {
+        "route_mode": "route_mode_author_cluster_12",
+        "prompt_count": 2,
+        "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -0.9885684217397982,
+        "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.051917024529897216
+      },
+      {
+        "route_mode": "route_mode_capital_cluster_4",
+        "prompt_count": 2,
+        "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -0.17493302317766043,
+        "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.12603690991034874
+      },
+      {
+        "route_mode": "route_mode_element_cluster_9",
+        "prompt_count": 2,
+        "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": 0.6184439017222478,
+        "within_family_mean_tuned_kl_delta_routed_minus_arm": 0.11344704948938808
+      }
+    ]
+  },
+  "family_contributions": {
+    "subcategory_author_fact": {
+      "prompt_count": 8,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.341472319398935,
+      "within_family_contribution_sum": -2.73177855519148
+    },
+    "subcategory_capital_fact": {
+      "prompt_count": 6,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": 0.0004054613602467033,
+      "within_family_contribution_sum": 0.00243276816148022
+    },
+    "subcategory_element_symbol": {
+      "prompt_count": 6,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": 0.11456738259547795,
+      "within_family_contribution_sum": 0.6874042955728678
+    }
+  },
+  "overall_within_family_sum": -2.041941491457132,
+  "overall_within_family_mean": -0.10209707457285659,
+  "author_mode_contributions": {
+    "route_mode_author_cluster_11": {
+      "prompt_count": 2,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.6422926485538483,
+      "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -0.6422926485538483,
+      "within_family_contribution_sum": -1.2845852971076965
+    },
+    "route_mode_author_cluster_12": {
+      "prompt_count": 2,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": -0.051917024529897216,
+      "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -0.9885684217397982,
+      "within_family_contribution_sum": -0.10383404905979443
+    },
+    "route_mode_author_cluster_6": {
+      "prompt_count": 2,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": -1.946534933952185,
+      "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": -1.946534933952185,
+      "within_family_contribution_sum": -3.89306986790437
+    },
+    "route_mode_author_cluster_7": {
+      "prompt_count": 2,
+      "within_family_mean_tuned_kl_delta_routed_minus_arm": 1.2748553294401903,
+      "prompt_permuted_mean_tuned_kl_delta_routed_minus_arm": 1.2748553294401903,
+      "within_family_contribution_sum": 2.5497106588803806
+    }
+  },
+  "author_6_11_12_within_family_contribution_sum": -5.281489214071861,
+  "author_6_11_12_share_of_total_negative_magnitude": 2.5865036957072576,
+  "recommendation": {
+    "status": "freeze",
+    "reason": "The partial prompt_permuted versus within_family collapse is mostly a confirm-order artifact at three family-block endpoints, but identical-donor author modes 6 and 11 remain negative. Donor remapping could change the pooled aggregate, yet it would not resolve the real author-family pairing limitation cleanly enough to justify another rerun now."
+  }
+}

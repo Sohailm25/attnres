@@ -1287,3 +1287,28 @@
   - `resattn-lnu` can close once the artifact lands.
   - `resattn-oi7` is now the remaining honest tool-breakage follow-up because donor-arm geometry, not factual mode coverage, is the active bottleneck.
   - `resattn-a1w` stays bounded as the moon-specific sidecar rather than reopening the main factual bridge.
+
+## [2026-03-18T16:45:00-0500] DECISION: Close `resattn-oi7` by freezing the donor-arm boundary rather than remapping donors
+
+- Trigger: `resattn-oi7` audited the saved `v5` donor-arm artifact at the prompt and route-mode levels.
+- Decision: close `resattn-oi7` with a freeze recommendation. Do not launch a donor-remap rerun by default. Treat the partial `prompt_permuted_alpha` versus `within_family_permuted_alpha` collapse as mostly an ordering artifact, but keep the tool-breakage donor-arm claim boundary frozen because a real author-family donor-pairing limitation remains.
+- Rationale:
+  - the structural collapse is real and mostly explained by confirm ordering:
+    - identical donor source prompt on `17 / 20` prompts
+    - identical route-mode mean tuned-KL delta on `7 / 10` targeted modes
+    - the only differing prompts are the three family-block endpoints: `tb5-confirm-006`, `tb5-confirm-012`, and `tb5-confirm-020`
+  - those three differing prompts explain most of the pooled negative within-family read:
+    - differing prompts contribute `82.9%` of the total negative within-family sum
+    - identical-donor prompts contribute only `17.1%`
+    - mean within-family tuned-KL delta is `-0.5642` on differing prompts versus `-0.0205` on identical-donor prompts
+  - the residual limitation is still real and author-specific:
+    - author family contribution sum `= -2.7318`
+    - capitals `= +0.0024`
+    - elements `= +0.6874`
+    - `route_mode_author_cluster_6` remains strongly negative with identical donors (`-1.9465`)
+    - `route_mode_author_cluster_11` also remains negative with identical donors (`-0.6423`)
+    - `route_mode_author_cluster_12` is only mildly negative on the within-family arm (`-0.0519`) and matters more as the family-endpoint ordering artifact carrier than as the main blocker
+- Impact:
+  - `resattn-oi7` can close once the audit artifact lands.
+  - the main tool-breakage donor-arm lane should stay frozen at its current truthful boundary.
+  - `resattn-a1w` remains the only bounded tool-breakage sidecar worth keeping visible without reopening pooled reruns or donor-remap work.

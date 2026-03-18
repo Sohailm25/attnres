@@ -429,6 +429,28 @@
     - this is a real improvement over `v4`:
       - matching-family mode coverage rises from `5 / 13` to `10 / 13`
     - interpretation: bridge coverage is no longer the main factual tool-breakage bottleneck for capitals, elements, and authors. If the lane stays mixed from here, the honest next explanation is donor-arm geometry and route-mode heterogeneity rather than missing core factual modes
+  - `resattn-oi7` now audits that remaining donor-geometry question directly on the saved `v5` donor-arm artifact:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` is the new saved-artifact audit
+    - the partial collapse between `prompt_permuted_alpha` and `within_family_permuted_alpha` is mostly structural:
+      - identical donor source prompt on `17 / 20` prompts
+      - identical route-mode mean tuned-KL delta on `7 / 10` targeted modes
+      - the only differing prompts are the family-block endpoints:
+        - `tb5-confirm-006`
+        - `tb5-confirm-012`
+        - `tb5-confirm-020`
+    - that ordering artifact explains most, but not all, of the pooled negative within-family read:
+      - the `3` differing prompts contribute `82.9%` of the total negative within-family sum
+      - the remaining `17` identical-donor prompts contribute only `17.1%`
+      - mean within-family delta on differing prompts `= -0.5642`
+      - mean within-family delta on identical-donor prompts `= -0.0205`
+    - the real residual donor limitation is concentrated in author modes:
+      - author family contribution sum `= -2.7318`
+      - capitals `= +0.0024`
+      - elements `= +0.6874`
+      - `route_mode_author_cluster_6` stays strongly negative even with identical donors (`-1.9465`)
+      - `route_mode_author_cluster_11` also stays negative with identical donors (`-0.6423`)
+      - `route_mode_author_cluster_12` matters more as the family-endpoint ordering artifact carrier than as the main within-family blocker
+    - interpretation: donor-remap is not the honest default next move. The truthful boundary is to freeze the current donor-arm claim rather than rerun immediately, because the ordering artifact is real but does not erase the author-family donor-pairing limitation
   - `resattn-qcn` now lands that matched-family prompt-surface expansion and its first pilot run:
     - `tool_breakage_factual_recall_v2` is now saved in `prompts/registry_v4.yaml` and propagated into `prompts/registry_v5.yaml`
     - the new surface is balanced around the strongest factual routing families:
@@ -1050,7 +1072,7 @@
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
-2. If tool-breakage resumes, take `resattn-oi7` next: donor geometry is now the main remaining bottleneck on the narrowed `v5` bridge, not bridge-mode coverage.
+2. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
@@ -1063,7 +1085,9 @@
    - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
    - the fixed-alpha objection is now clearly weaker on `v5`
    - bridge coverage is now clean for capitals, elements, and non-outlier authors
-   - the remaining mixed result is donor-arm geometry, not missing core factual mode coverage
+   - donor geometry has now been audited and should stay frozen at the current boundary:
+     - most of the `prompt_permuted` / `within_family` collapse is an ordering artifact
+     - the residual real limitation is author-family donor pairing, especially modes `6` and `11`
    - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
 6. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
