@@ -544,14 +544,35 @@
       - `pilot_mean_alpha = +0.8221`
       - `within_family_permuted_alpha = +0.2960`
       - `cross_family_permuted_alpha = -0.2900`
-    - the family-conditioned read shows the old author-format problem is smaller, but not the only blocker:
-      - authors remain slightly negative against the within-family donor arm (`-0.0985`) and clearly negative against the cross-family donor arm (`-0.5753`)
-      - capitals and elements are positive against both donor arms
-      - moons are now the main cross-family spoiler (`routed minus cross-family mean tuned KL = -2.9112`)
     - resume durability is verified on the finished donor-arm output directory:
       - all `32` prompt checkpoints kept the same timestamp hash under the exact-command rerun
       - the exact-command rerun completed in `10.07` seconds
-    - interpretation: the one-token redesign is a real partial reopening of the donor-arm story, not a full clear. The stronger prompt-specific same-model claim is healthier than on `v3`, but it is still mixed because the cross-family donor arm remains stronger on aggregate. The next disciplined move is family-conditioned `v4` profiling, not another pooled rerun
+    - interpretation: the one-token redesign is a real partial reopening of the donor-arm story, not a full clear. The stronger prompt-specific same-model claim is healthier than on `v3`, but it is still mixed because the cross-family donor arm remains stronger on aggregate. The authoritative family-conditioned interpretation is now in `resattn-8h7`
+  - `resattn-8h7` now profiles the one-token `v4` donor-arm heterogeneity directly from the saved prompt checkpoints:
+    - `results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.md` and `.json` are the family-conditioned artifact on `tool_breakage_factual_recall_v4`
+    - the family profile shows that the one-token redesign improved the lane unevenly rather than broadly:
+      - `subcategory_element_symbol` is now the cleanest positive family against every control arm:
+        - `within_family_permuted_alpha = +0.1624`
+        - `prompt_permuted_alpha = +0.3549`
+        - `cross_family_permuted_alpha = +0.8831`
+        - `pilot_mean_alpha = +1.0578`
+      - `subcategory_author_fact` and `subcategory_capital_fact` are near-tie families:
+        - authors `within_family_permuted_alpha = -0.0310`, `prompt_permuted_alpha = -0.1172`, `cross_family_permuted_alpha = +0.2805`
+        - capitals `within_family_permuted_alpha = -0.0950`, `prompt_permuted_alpha = -0.0262`, `cross_family_permuted_alpha = +0.1704`
+      - `subcategory_moon_fact` is the real blocker:
+        - `within_family_permuted_alpha = +0.0296`
+        - `prompt_permuted_alpha = -0.2670`
+        - `cross_family_permuted_alpha = -2.2528`
+        - `pilot_mean_alpha = -1.1565`
+    - the worst moon cross-family outliers all map to capital donors under the saved donor pairing:
+      - `Ariel -> Lima = -3.6003`
+      - `Europa -> Canberra = -3.0117`
+      - `Miranda -> Nairobi = -2.6972`
+      - `Hyperion -> Bangkok = -2.3595`
+    - rerun determinism is verified on the saved analysis command:
+      - rerunning the exact profile command reproduced the same JSON hash
+      - the exact-command rerun completed in `3.36` seconds
+    - interpretation: the one-token surface should now be treated as a family-conditioned mixed boundary, not a broadly reopened same-model claim. The next honest follow-up is a moon-family prompt-style audit rather than another pooled rerun
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control

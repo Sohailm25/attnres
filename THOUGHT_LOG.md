@@ -1537,12 +1537,34 @@ Suggested entry format:
   - `8h7` will probably recommend either remapping the cross-family donor pairing for moons or freezing the claim at a new mixed boundary rather than doing another pooled rerun.
   - If a future moon-specific cleanup works, the one-token surface could still support a noticeably stronger same-model story than `v3`.
 - Surprises and Tensions:
-  - Authors improved, but they did not fully normalize; they are still slightly negative against the within-family donor arm.
-  - The cross-family arm got worse rather than better, almost entirely because moons collapsed.
+  - My first family scan was too strong because it used final-layer prompt deltas instead of the primary mean-over-layers KL metric.
+  - Under the correct metric, elements are the only clean all-arm positive family, while capitals and authors are near ties and moons are the actual blocker.
 - Confidence:
   - high that `apy` should close as mixed improvement rather than pass/fail
   - high that `8h7` is the next honest follow-up if this lane continues
 - Interesting facts:
   - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.0165`
   - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0139`
-  - moon routed minus `cross_family_permuted_alpha` mean tuned KL `= -2.9112`
+  - moon routed minus `cross_family_permuted_alpha` mean tuned KL `= -2.2528`
+## [2026-03-18T13:49:30-0500] The One-Token Family Profile Says Freeze The Pooled Claim
+- Stage: analysis
+- Feel of the Experiment: This is the kind of clarification worth doing. It did not magically rescue the whole lane, but it turned a mushy pooled mixed result into a concrete family-conditioned boundary.
+- Working Hypotheses:
+  - The one-token redesign genuinely fixed most of the old author-format problem.
+  - The moon family is the only part of the one-token surface that still clearly resists the stronger same-model story.
+- Hunches and Guesses:
+  - The next honest follow-up is a moon-specific prompt-style audit, not another pooled rerun.
+  - If that audit fails to find a concrete prompt-style explanation, the family-conditioned boundary is probably the right final tool-breakage wording on this surface.
+- Predictions:
+  - A moon-family audit will either point to a small rewrite/remap or confirm that moons are just a null family for this claim.
+  - Elements will remain the cleanest prompt-specific same-model family on any nearby surface.
+- Surprises and Tensions:
+  - Authors are not the main blocker anymore; they are slightly negative on some arms but positive on others.
+  - Moons are slightly positive within-family yet negative versus prompt-permuted, cross-family, and even pilot-mean controls, which is a much stranger pattern than the old author-format story.
+- Confidence:
+  - high that `8h7` should close as a freeze-at-boundary decision
+  - medium-high that `a1w` is the only follow-up worth preserving immediately
+- Interesting facts:
+  - element routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.8831`
+  - author routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.2805`
+  - moon routed minus `pilot_mean_alpha` mean tuned KL `= -1.1565`

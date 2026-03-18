@@ -6,6 +6,6 @@
 - Date: 2026-03-18
 - Repo: standalone and initialized
 - Branch: `wip/resattn-scaffold`
-- Focus: `resattn-apy` has now landed the one-token `v4` donor-arm rerun; the next direct tool-breakage follow-up is `resattn-8h7`, the family-conditioned profile on that saved artifact.
-- Experimental status: the one-token surface is now a real mixed improvement over `v3`. The within-family donor arm is no longer aggregate-negative, but the broader prompt-specific same-model claim is still blocked because the cross-family donor arm remains stronger on aggregate.
-- Critical reminder: do not reopen the broader same-model claim from the pooled `v4` donor-arm artifact alone. Use `resattn-8h7` to diagnose the family-conditioned `v4` heterogeneity, especially the moon-family cross-family failure, before any further prompt-surface redesign.
+- Focus: `resattn-8h7` has now landed the authoritative one-token `v4` family profile; the only preserved tool-breakage follow-up is `resattn-a1w`, the moon-family prompt-style audit.
+- Experimental status: the one-token surface is now frozen at a family-conditioned mixed boundary. Elements are cleanly positive, authors and capitals are near ties, and moons remain the blocker on the stronger prompt-specific same-model claim.
+- Critical reminder: do not reopen the pooled one-token tool-breakage claim with another aggregate rerun. If this lane continues, start with `resattn-a1w` and justify any redesign from the moon-family failure directly.

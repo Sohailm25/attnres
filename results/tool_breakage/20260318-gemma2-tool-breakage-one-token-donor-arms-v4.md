@@ -107,22 +107,9 @@ Relative to `v3`, the pooled improvement is real:
 - routed minus `cross_family_permuted_alpha` regressed from `+0.0560` to
   `-0.2297`
 
-The family-conditioned read explains that tradeoff:
-
-- authors improved but remain slightly negative versus the within-family donor
-  arm:
-  - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.0985`
-  - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.5753`
-- capitals are positive versus both donor arms:
-  - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.0454`
-  - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.3592`
-- elements are also positive versus both donor arms:
-  - routed minus `within_family_permuted_alpha` mean tuned KL `= +0.0115`
-  - routed minus `cross_family_permuted_alpha` mean tuned KL `= +0.3781`
-- moons are now the main spoiler on the cross-family arm:
-  - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.4219`
-  - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.0446`
-  - routed minus `cross_family_permuted_alpha` mean tuned KL `= -2.9112`
+The later saved family-conditioned profile in
+`results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.md`
+should govern any family-level interpretation of this pooled artifact.
 
 ## Interpretation
 
@@ -139,8 +126,8 @@ The family-conditioned read explains that tradeoff:
 ## Limitations
 
 - This artifact still relies on a pooled aggregate as the primary claim surface;
-  the family-conditioned read is interpretive rather than a separate saved
-  profile artifact.
+  the saved family-conditioned follow-up lives in
+  `results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.md`.
 - The moon prompts are somewhat more stylized than capitals and elements, so the
   cross-family pairing may still be conflating donor mismatch with prompt style.
 - The positive within-family margin is real but small (`+0.0165`), so it should

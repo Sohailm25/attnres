@@ -1042,9 +1042,27 @@
   - but the stronger pooled reopening is still blocked:
     - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.2297`
     - routed minus `cross_family_permuted_alpha` final-position tuned KL `= -0.2900`
-  - the family read shows the redesign changed the bottleneck rather than simply making everything pass:
-    - authors are still slightly negative versus the within-family donor arm (`-0.0985`), but much less damaging than on `v3`
-    - capitals and elements are positive versus both donor arms
-    - moons are now the largest cross-family spoiler (`-2.9112`)
+  - the later family profile shows the redesign changed the bottleneck rather than simply making everything pass:
+    - elements are cleanly positive versus every control arm
+    - authors and capitals are near-tie families on the within-family and prompt-permuted arms
+    - moons are the dominant residual blocker, especially versus the cross-family donor arm and even versus `pilot_mean_alpha`
   - this means the right next move is diagnosis, not another pooled rerun
 - Impact: `resattn-apy` can close once the artifact lands. The next preserved tool-breakage follow-up is `resattn-8h7`, which profiles the family-conditioned `v4` donor-arm heterogeneity and decides whether the next honest move is moon-prompt redesign, donor-pair remapping, or a new mixed boundary freeze.
+
+## [2026-03-18T13:49:00-0500] DECISION: Freeze the one-token v4 tool-breakage lane at a family-conditioned mixed boundary
+
+- Trigger: `resattn-8h7` built the family-conditioned profile from the saved `tool_breakage_factual_recall_v4` donor-arm checkpoints.
+- Decision: close `resattn-8h7` as the authoritative family-level read on the one-token surface. Do not launch another pooled rerun from `v4`. Treat the current same-model tool-breakage story as a family-conditioned mixed boundary: elements are a clean positive signal, authors and capitals are near-tie families, and moons remain the main blocker.
+- Rationale:
+  - the saved `v4` improvement is real, but uneven:
+    - elements are positive against every arm (`within = +0.1624`, `prompt_permuted = +0.3549`, `cross = +0.8831`, `pilot_mean = +1.0578`)
+    - authors are no longer the dominant failure family (`within = -0.0310`, `cross = +0.2805`, `pilot_mean = +0.0892`)
+    - capitals are similarly near-neutral rather than collapsed (`within = -0.0950`, `cross = +0.1704`, `pilot_mean = +1.0661`)
+  - moons are the residual blocker, and not only on one control:
+    - `within_family_permuted_alpha = +0.0296`
+    - `prompt_permuted_alpha = -0.2670`
+    - `cross_family_permuted_alpha = -2.2528`
+    - `pilot_mean_alpha = -1.1565`
+  - the worst moon cross-family outliers all pair moon prompts with capital donors, so the remaining ambiguity is narrow and concrete rather than pooled and vague
+  - because the pooled `v4` donor-arm artifact is already mixed, another pooled rerun would blur the actual decision instead of sharpening it
+- Impact: `resattn-8h7` can close once the artifact lands. The next preserved tool-breakage follow-up is `resattn-a1w`: audit the one-token moon-family prompt style before any further prompt-surface redesign or donor-pair remap.

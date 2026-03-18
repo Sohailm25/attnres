@@ -1826,3 +1826,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/checkpoints/prompt_results/tb4-confirm-032-c2257a8f17.json`
 - Anomalies: none; the exact-command rerun reused the full checkpoint set in `10.07` seconds and the checkpoint timestamp hash stayed unchanged.
 - Next step: close `resattn-apy` as a mixed improvement, then use `resattn-8h7` to profile the family-conditioned `v4` donor-arm heterogeneity before any further prompt-surface redesign.
+
+## [2026-03-18T13:48:00-0500] PRE-RUN: Gemma one-token matched-family v4 family-conditioned donor-arm profile
+- tmux session: `N/A`
+- Script: `scripts/run_tool_breakage_family_profile.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_family_profile.py --collection-id tool_breakage_factual_recall_v4 --counterfactual-summary-path results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/summary.json --prompt-checkpoint-dir results/tool_breakage/20260318-gemma2-tool-breakage-one-token-donor-arms-v4/checkpoints/prompt_results --output results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.json`
+- Config: `model=google/gemma-2-2b`, `collection=tool_breakage_factual_recall_v4`, `split=confirm`, `analysis=reuse saved donor-arm checkpoints`, `families=capital/element/author/moon`
+- What I'm testing: whether the pooled `v4` donor-arm improvement hides a sharper family-conditioned boundary, especially around the moon-family cross-family failure.
+- Expected outcome: a reusable profile artifact that shows whether the next honest move is moon-prompt redesign, donor-pair remapping, or freezing the stronger same-model claim at a new mixed boundary.
+- Expected duration: ~1-5 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `N/A`
+- Resume command: rerun the exact command above
+- Main confound to watch: the existing family-profile helper was first written for `v3`, so I need to verify it reads the one-token `v4` tags and arm set without silently assuming the older surface.
+- Implementation verified: YES - the profile script already produced the saved `v3` artifact, and the `v4` donor-arm summary plus prompt-level checkpoints are present locally.
+- Status: LAUNCHING
+
+## [2026-03-18T13:49:00-0500] POST-RUN: Gemma one-token matched-family v4 family-conditioned donor-arm profile
+- Outcome: SUCCESS
+- Key metric: the one-token `v4` donor-arm improvement is genuinely family-conditioned rather than pooled: elements are positive against every arm (`within = +0.1624`, `prompt_permuted = +0.3549`, `cross = +0.8831`), authors and capitals are near ties, and moons are the residual blocker (`within = +0.0296`, `prompt_permuted = -0.2670`, `cross = -2.2528`, `pilot_mean = -1.1565`).
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.json`, `results/tool_breakage/20260318-gemma2-tool-breakage-family-profile-v4.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; rerunning the exact profile command reproduced the same JSON hash and completed in `3.36` seconds.
+- Next step: close `resattn-8h7`, freeze the one-token pooled claim at a family-conditioned mixed boundary, and preserve only `resattn-a1w` as the next tool-breakage follow-up.
