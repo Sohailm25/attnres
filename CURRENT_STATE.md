@@ -83,6 +83,15 @@
   - the exploratory `gpt2-xl` pilot artifact on `8` prompts improved mean sequence loss over uniform by `1.2432` nats with a bootstrap interval of `[1.1482, 1.3361]`
   - restart variation in the aggregate `final_alpha` distributions was tiny but non-zero (`mean JS = 2.87e-07`, top-1 agreement `0.60`), while saved paraphrases and prompt resampling moved the aggregate alpha distributions more strongly (`JS = 0.0305` and `0.0191`)
   - this is still a development-model stability hardening result, not confirm-split predictiveness or a claim-bearing feasibility pass
+- `known`: `resattn-a7j` now lands the first primary-model Gemma oracle-alpha pilot stability artifact:
+  - `results/oracle_alpha/20260317-gemma2-pilot-stability-suite.md` scales the primary-model lane to the full saved `8`-prompt pilot split
+  - base pilot mean improvement over uniform is `+1.7613` nats with bootstrap interval `[1.4843, 2.0403]`
+  - restart stability is effectively exact at both aggregate and prompt-matched levels (`aggregate JS = 7.63e-08`, prompt-matched JS = 4.77e-07`)
+  - saved paraphrases and prompt resampling move the alpha summaries materially rather than collapsing the lane:
+    - aggregate paraphrase JS `= 0.0200`
+    - prompt-matched paraphrase JS `= 0.1434`
+    - aggregate resample JS `= 0.0151`
+  - interpretation: the primary-model oracle lane is now beyond bounded feasibility and into the same methodological stage the development model reached before held-out predictiveness
 - `known`: the first held-out predictiveness artifact now exists, and it is a real blocker rather than a positive result:
   - `scripts/run_oracle_alpha_heldout_predictiveness_check.py` runs the pilot-to-confirm predictiveness check using mean-pooled `h_1[t]` features and a pilot-tuned ridge regressor
   - on `gpt2-xl`, the confirm-split result was weak for the current feature spec: `R^2 = -0.2456`, mean JS to oracle alpha `= 0.2434`, and predicted alpha vectors were slightly worse than uniform on average (`-0.0348` nats)
@@ -384,7 +393,7 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-a7j` to scale the primary-model Gemma oracle lane from the `2`-prompt smoke to the saved pilot stability suite.
+1. Run the first primary-model Gemma held-out oracle-alpha predictiveness check on the saved confirm split now that `resattn-a7j` has cleared the pilot stability suite.
 2. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy.
 3. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
 4. Defer `resattn-9co` until after the higher-value scientific moves above; it is useful infrastructure cleanup, not the top paper-shaping question.

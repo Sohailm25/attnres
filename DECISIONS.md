@@ -596,3 +596,14 @@
   - mean null losses stayed above the optimized slice (`random_dirichlet = 6.6138`, `magnitude_proportional = 6.5578`, `last_layer_only = 24.7532`)
   That is enough to show that the existing oracle runner is not development-model-only in its basic execution path.
 - Impact: `resattn-7cs` can close once the artifact and state docs land. The next oracle-alpha issue becomes `resattn-a7j`, which scales the primary-model lane to the full saved pilot stability suite.
+
+## [2026-03-17T20:39:00-0500] DECISION: Treat the first Gemma pilot stability suite as a real primary-model lane advance
+
+- Trigger: `resattn-a7j` completed the full saved `8`-prompt pilot stability suite on `google/gemma-2-2b`.
+- Decision: close the primary-model pilot stability issue as a success and move the lane to its first held-out structure test.
+- Rationale: the primary-model pilot suite stayed strongly positive while behaving methodologically like a real lane rather than a fragile smoke:
+  - mean improvement over uniform `= +1.7613` nats
+  - restart stability is effectively exact (`aggregate JS = 7.63e-08`, prompt-matched JS = `4.77e-07`)
+  - paraphrase and resample perturbations move the alpha summaries materially rather than trivially
+  This is enough to say the primary model is now at the same qualitative stage the development model reached before held-out predictiveness.
+- Impact: `resattn-a7j` can close once the artifact and state docs land. The next oracle-alpha issue should be the first primary-model held-out predictiveness check on the saved confirm split.
