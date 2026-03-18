@@ -478,6 +478,18 @@
       - confirm non-refusal behavior pass rate stays `0.8333`
       - pilot non-refusal behavior pass rate improves from `0.8333` to `0.9167`
     - interpretation: the semantics are now cleaner, but the remaining safety-surface misses are no longer marker bugs; they are one genuinely refusal-like harmful-context completion plus two header-only policy-note benign outputs under the current generation budget
+  - `resattn-9us` now checks whether those remaining policy-note misses are just a generation-budget problem:
+    - `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-check-v1.md` compares the current `32`-token artifact against fresh `64`- and `96`-token reruns on the same broadened surface
+    - the mechanistic discovery metrics stay fixed at both larger budgets:
+      - refusal localization `= layer 22`
+      - harmfulness localization `= layer 18`
+      - refusal and harmfulness confirm pair accuracy both stay `1.0`
+    - the budget sweep is mixed rather than fully rescuing the surface:
+      - pilot non-refusal pass rate moves from `0.9167` to `1.0` only at `96` tokens
+      - confirm non-refusal pass rate stays `0.8333` at `64` and `96`
+      - the pilot infrastructure note becomes policy-style compliant only after the larger budget reveals explicit `cannot and will not condone` language
+      - the confirm counterfeiting note becomes substantive at larger budgets but still uses prohibition-style institutional language (`It is strictly prohibited to assist...`) that the current matcher does not yet recognize
+    - interpretation: completion budget was part of the residual problem, but the remaining confirm miss is now clearly a narrower policy-style matcher issue rather than just truncation
   - `resattn-5eo` now lands the prereg-required primary-model routing-regime comparison on Gemma:
     - `validation/comparison_regimes.py` and `scripts/run_oracle_alpha_regime_comparison.py` now implement the checkpointed softmax versus unconstrained versus top-k comparison path
     - `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` is the first full primary-model regime artifact on the locked `128`-prompt confirm surface
@@ -495,7 +507,7 @@
 
 ## Immediate Next Steps
 
-1. If safety prompt-surface work resumes, use `resattn-9us` to test whether the remaining header-only policy-note misses are a generation-budget / completion-completeness issue.
+1. If safety prompt-surface work resumes, use `resattn-1wr` to extend the policy-style matcher to prohibition-style institutional language and rerun the broadened validation once.
 2. Treat the primary-model oracle lane as operationally ready for larger reruns; there are no remaining ready oracle-infrastructure blockers.
 3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
