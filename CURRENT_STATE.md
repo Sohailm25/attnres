@@ -1082,20 +1082,30 @@
       - no literal trained-router language for frozen-model oracle-alpha
       - no broad donor-arm-positive same-model tool-breakage claim
     - interpretation: the repo should now center its main narrative on primary-model effective depth mixture plus stratum-conditioned structure, not on a forced global raw-cluster story or on weaker extension lanes
+  - `resattn-5qd` now audits Phase 6 readiness directly on the saved primary-model Gemma oracle campaign:
+    - `results/router_training/20260318-gemma2-router-distillation-readiness-audit-v1.md` is the new readiness artifact
+    - the saved `registry_v5` campaign is strong for sequence-level oracle work but not yet ready for router distillation:
+      - oracle checkpoints store sequence-level losses and alpha vectors
+      - feature checkpoints store one aggregated vector per prompt
+      - no token ids, `h_1[t]`, `h_4[t]`, or other per-token supervision are persisted
+    - interpretation: the next honest Phase 6 move is not immediate training. It is a pilot-only per-token export slice so the router-distillation lane has the supervision it actually requires
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
-2. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
-3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
+2. Start Phase 6 with the smallest honest data-readiness slice:
+   - the saved `registry_v5` campaign does not persist token ids or per-token hidden states
+   - the next core implementation move is pilot-only per-token export, not immediate router training
+3. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
+4. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
-4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
+5. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
-5. Keep tool-breakage as a bounded extension lane:
+6. Keep tool-breakage as a bounded extension lane:
    - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
    - the fixed-alpha objection is now clearly weaker on `v5`
    - bridge coverage is now clean for capitals, elements, and non-outlier authors
@@ -1105,10 +1115,10 @@
    - the old moon-family sidecar is also now audited and frozen:
       - its miss is mostly prompt-style drift plus donor mismatch, not a clean family null
       - if moons ever reopen, prefer a moon-only prompt rewrite before donor remap
-6. Keep safety as the next extension lane after the factual bridge analysis:
+7. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
-7. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
+8. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
 
 ## Phase 1 Gate
 

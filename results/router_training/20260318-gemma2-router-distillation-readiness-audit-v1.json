@@ -1,0 +1,42 @@
+{
+  "campaign_root": "results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1",
+  "oracle_checkpoint_fields": [
+    "prompt_id",
+    "prompt",
+    "split",
+    "num_sources",
+    "source_labels",
+    "uniform_loss",
+    "optimized_loss",
+    "null_losses",
+    "best_alpha",
+    "final_alpha"
+  ],
+  "feature_checkpoint_fields": [
+    "prompt_id",
+    "split",
+    "values"
+  ],
+  "phase6_required_token_level_fields_missing": [
+    "token_ids",
+    "h_1[t]",
+    "h_4[t]",
+    "token_level_supervision"
+  ],
+  "readiness": {
+    "sequence_level_predictiveness_ready": true,
+    "phase6_router_distillation_ready": false,
+    "reason": "current campaign persists only sequence-level oracle targets and aggregated feature vectors"
+  },
+  "next_honest_slice": {
+    "name": "pilot_only_per_token_export",
+    "persist": [
+      "token_ids",
+      "h_1[t]",
+      "h_4[t]",
+      "sequence_level_final_alpha",
+      "prompt_metadata"
+    ],
+    "why": "this is the smallest implementation that makes the prereg router pilot testable without another broad oracle rerun"
+  }
+}

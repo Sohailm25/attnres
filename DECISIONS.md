@@ -1334,3 +1334,25 @@
   - `resattn-a1w` can close once the audit artifact lands.
   - the old `v4` moon sidecar should stay frozen rather than motivating another pooled tool-breakage rerun.
   - there are no remaining ready tool-breakage issues after this audit.
+
+## [2026-03-18T18:05:00-0500] DECISION: Close `resattn-5qd` by making per-token export the next honest Phase 6 slice
+
+- Trigger: `resattn-5qd` audited the saved `20260318-gemma2-registry-v5-campaign-v1` artifacts against the prereg Phase 6 requirements.
+- Decision: close `resattn-5qd` on a readiness conclusion. The saved Gemma oracle campaign is scientifically ready for Phase 6, but not data-ready. Do not start router training yet. Start with a pilot-only per-token export slice instead.
+- Rationale:
+  - the current campaign persists only sequence-level supervision:
+    - prompt-level oracle checkpoints store losses, source labels, and sequence-level alpha vectors
+    - feature checkpoints store one aggregated vector per prompt
+  - the Phase 6 prereg lane requires per-token router inputs:
+    - router input is `h_1[t]`, with a pilot comparison against an early contextual state such as `h_4[t]`
+    - learned router query vectors must later be analyzed as a `w_l` analog
+  - the current saved campaign does not persist the data needed for that lane:
+    - no token ids
+    - no per-token `h_1[t]`
+    - no per-token `h_4[t]`
+    - no saved token-level supervision object
+  - the runner computes token-level states internally, but discards them after building sequence-level summaries
+- Impact:
+  - `resattn-5qd` can close once the readiness artifact lands.
+  - the next core implementation issue should be pilot-only per-token export for Phase 6.
+  - the repo should keep centering the paper story on the saved Gemma oracle artifacts while Phase 6 data readiness catches up.

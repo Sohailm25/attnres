@@ -1833,3 +1833,25 @@ Suggested entry format:
   - moon pilot descriptor prompts `= 4 / 4`
   - moon confirm `named after` prompts `= 6 / 8`
   - all `8 / 8` moon cross-family donors are capitals
+## [2026-03-18T18:05:00-0500] Phase 6 Is Scientifically Ready But Operationally Under-Cached
+- Stage: router-distillation readiness
+- Feel of the Experiment: This is exactly the kind of blocker I want to find before writing training code. The saved Gemma campaign is strong enough that Phase 6 is worth doing now, but the current checkpoint format is still built for sequence-level predictiveness, not token-level distillation.
+- Working Hypotheses:
+  - The next real bottleneck is data export, not model design.
+  - A pilot-only per-token export slice is enough to unblock the prereg router lane without another broad oracle rerun.
+- Hunches and Guesses:
+  - Once the per-token export exists, the first router pilot will move quickly because the oracle lane already has strong signal.
+  - The aggregation choice from per-token router outputs back to sequence-level alpha will be the next real design fork, not checkpointing itself.
+- Predictions:
+  - The smallest honest next implementation will be adding token ids plus `h_1[t]` and `h_4[t]` to pilot checkpoints, not touching training yet.
+  - The lack of saved per-token supervision would otherwise create a fake “training problem” that is really just a data problem.
+- Surprises and Tensions:
+  - The runner already computes the token-level states we need, but the campaign throws them away.
+  - The repo is closer to Phase 6 scientifically than operationally.
+- Confidence:
+  - high that `5qd` should close as a readiness audit
+  - high that per-token export is the next honest slice
+- Interesting facts:
+  - oracle checkpoints already persist sequence-level `final_alpha`
+  - feature checkpoints persist only one aggregated vector per prompt
+  - no token ids or per-token hidden states are saved in the current campaign
