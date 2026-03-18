@@ -1108,3 +1108,19 @@ Suggested entry format:
   - high that `9co` is enough for the current campaign UX problem
 - Interesting facts:
   - The smoke run produced exactly the artifact surface we needed: manifest, progress, final summary, and two progress log lines during tuning.
+
+## [2026-03-18T04:15:00-0500] The Safety Semantics Fix Worked, But It Did Not Magically Make The Surface Clean
+- Stage: implementation
+- Feel of the Experiment: This was the right kind of cleanup too. The validator stopped blaming the wrong thing, and the remaining mess is now much more informative.
+- Working Hypotheses:
+  - The next safety-surface semantics issue is narrower: policy-style compliant responses are not captured well by a first-person refusal marker.
+- Hunches and Guesses:
+  - That residual problem is worth tracking, but not worth pretending `ac2` failed.
+- Predictions:
+  - If safety-surface work resumes, `resattn-7km` will improve readability more than it will change the mechanistic conclusion.
+- Surprises and Tensions:
+  - The confirm rate improved exactly where the old broadened artifact looked most artificially harsh, which is a good sign that the semantics fix hit the intended target.
+- Confidence:
+  - high that `ac2` closes cleanly
+- Interesting facts:
+  - The new tag-aware artifact moved confirm non-refusal pass rate to `0.8333` with no change to the layer-localization or direction-separation story.

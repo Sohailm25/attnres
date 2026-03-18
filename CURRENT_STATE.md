@@ -460,6 +460,14 @@
       - inactive prompts `= 12`, split across `harmful_context` and `benign`
       - intervention-conditioned trajectory shifts remain large, but the active subset still does not cut across role labels
     - interpretation: even a softened aligned-Gemma surface does not break the current role collapse; the refusal mediator still behaves more like an overt-refusal detector than a broader safety-manifold partition on this small prompt family
+  - `resattn-ac2` now makes the broadened-surface behavior validator tag-aware instead of role-only:
+    - `validation/safety_alignment.py` now derives expected behavior from prompt tags first, so `refusal_style_non_refusal` prompts can validate against refusal-like completions without changing the core role grouping
+    - the updated artifact `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-validation-tag-aware-v1.md` reruns the broadened validation on the same collection:
+      - refusal and harmfulness localization stay unchanged at layers `22` and `18`
+      - refusal and harmfulness confirm pair accuracy both stay `1.0`
+      - confirm non-refusal behavior pass rate improves from `0.6667` to `0.8333`
+      - pilot non-refusal behavior pass rate stays `0.8333`
+    - interpretation: the old role-only false negatives are fixed, but the broadened surface is still not behaviorally perfect; the remaining misses now split between one genuine refusal-style harmful-context completion and policy-note benign prompts that still fall outside the first-person refusal marker
   - `resattn-5eo` now lands the prereg-required primary-model routing-regime comparison on Gemma:
     - `validation/comparison_regimes.py` and `scripts/run_oracle_alpha_regime_comparison.py` now implement the checkpointed softmax versus unconstrained versus top-k comparison path
     - `results/comparison_regimes/20260318-gemma2-regime-comparison-v1.md` is the first full primary-model regime artifact on the locked `128`-prompt confirm surface
@@ -477,8 +485,8 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-ac2` before any future safety prompt-surface expansion so refusal-style non-refusal prompts can be validated under the right behavior semantics.
-2. Treat the primary-model oracle lane as operationally ready for larger reruns; the main remaining ready work is no longer on oracle infrastructure.
+1. If safety prompt-surface work resumes, use `resattn-7km` to add a policy-style compliant behavior mode beyond the current first-person refusal marker.
+2. Treat the primary-model oracle lane as operationally ready for larger reruns; there are no remaining ready oracle-infrastructure blockers.
 3. Keep future infrastructure work focused on concrete new bottlenecks rather than reopening already-fixed campaign plumbing.
 4. Treat the current Gemma tool-breakage claim boundary as frozen unless a later methodological defect justifies reopening the dynamic-control question.
 5. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.
