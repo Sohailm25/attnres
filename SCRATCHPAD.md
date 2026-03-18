@@ -358,6 +358,30 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Anomalies: the bounded run took about an hour because the current ridge helper solves the high-dimensional primal system in the `n << d` regime and emits no intermediate progress artifact during the numerical sweep; the saved JSON also needed a post-run wording fix after the MIB rationale string incorrectly referenced a development-model runner stage
 - Next step: close `resattn-js8`, move the next oracle question to primary-model pattern analysis in `resattn-2sb`, and track the runtime bottleneck separately in `resattn-b4q`
 
+## [2026-03-18T01:13:00-0500] PRE-RUN: primary-model Gemma prereg-scale pattern analysis
+- tmux session: N/A
+- Script: `scripts/run_oracle_alpha_pattern_analysis.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_pattern_analysis.py --run-path results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check-eval-run.json --output results/pattern_analysis/20260318-gemma2-prereg-scale-pattern-analysis-v1.json --random-seed 11 --max-clusters 12 --num-resamples 64`
+- Config: `model=google/gemma-2-2b`, `split=confirm`, `num_sequences=128`, `source_view=raw + grouped`, `max_clusters=12`, `resamples=64`
+- What I'm testing: whether the primary-model Gemma oracle distributions on the saved confirm split show stronger raw-source or grouped coarse structure than the current development-model pattern-analysis lane.
+- Expected outcome: the existing runner consumes a compact saved Gemma eval-run artifact without code changes and writes a primary-model pattern-analysis summary under `results/pattern_analysis/`.
+- Expected duration: ~1-5 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/pattern_analysis/20260318-gemma2-prereg-scale-pattern-analysis-v1.json`
+- Resume command: rerun the exact command above
+- Main confound to watch: a stronger grouped-view signal could still coexist with weak raw-source structure, so the interpretation has to distinguish coarse source-type structure from a true block-structure pass.
+- Implementation verified: YES - `tests.test_pattern_analysis` already covers the compact raw-run contract the script expects, and the saved `resattn-js8` raw backup is small enough to materialize a committed compact eval-run artifact under the hook size limit.
+- Status: LAUNCHING
+
+## [2026-03-18T01:16:00-0500] POST-RUN: primary-model Gemma prereg-scale pattern analysis
+- Outcome: SUCCESS
+- Key metric: raw-source oracle best silhouette stayed weak at `0.1084` versus random `0.1598`, while grouped views were clearly above random (`source_type` `0.6731` versus `0.5569`; `depth_thirds_by_type` `0.3858` versus `0.2305`)
+- Artifacts saved: `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check-eval-run.json`, `results/pattern_analysis/20260318-gemma2-prereg-scale-pattern-analysis-v1.json`, `results/pattern_analysis/20260318-gemma2-prereg-scale-pattern-analysis-v1.md`
+- Latest checkpoint: none
+- Anomalies: the first compact Gemma eval-run artifact was still too large for the large-file hook until it was reduced to the exact fields the pattern-analysis runner actually reads
+- Next step: close `resattn-2sb`, keep the raw block-structure gate unpassed on the primary model, and move the next core oracle issue to `resattn-5eo`
+
 ## [2026-03-17T16:38:00-0500] POST-RUN: compact-subword capacity-first Figure 8 proxy follow-up relaunch
 - Command: `.venv/bin/python scripts/run_attnres_proxy_viability.py --dataset-name wikitext --dataset-config wikitext-2-raw-v1 --train-split train --eval-split validation --text-field text --max-train-texts 2048 --max-eval-texts 256 --tokenizer-mode compact_subword --tokenizer-name gpt2 --separator-text '\n\n' --vocab-size 20000 --d-model 160 --n-heads 4 --n-layers 8 --d-ff 640 --max-seq-len 64 --batch-size 16 --num-steps 1500 --checkpoint-every-steps 50 --learning-rate 3e-4 --weight-decay 0.01 --seed 11 --device mps --output-dir results/figure8_validation/20260317-attnres-proxy-compact-subword-capacity-v1`
 - Outcome: SUCCESS

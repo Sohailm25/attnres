@@ -206,6 +206,23 @@
     - `source_type` view (`embedding / attention / mlp`) reaches oracle best silhouette `0.6652` versus random `0.5569`, with a more balanced `87 / 41` `k = 2` split and oracle beating random on `125 / 128` resamples
     - `depth_thirds_by_type` reaches oracle best silhouette `0.3451` versus random `0.2305`, but still collapses mostly to `k = 2` (`117 / 11` full sample, `121 / 128` resamples)
   - interpretation: there is robust coarse source-type routing structure on the development-model confirm split, but the prereg raw block-structure hypothesis remains unpassed; the result supports coarse routing-regime variation more than a clean `~8`-cluster decomposition
+- `known`: `resattn-2sb` now runs the first prereg-scale primary-model pattern analysis on the saved Gemma held-out oracle artifact:
+  - `results/pattern_analysis/20260318-gemma2-prereg-scale-pattern-analysis-v1.json` and `.md` analyze the saved `128`-prompt confirm-split Gemma `final_alpha` distributions from `resattn-js8`
+  - the descriptive source-mass read is still attention-heavy, but it is more concentrated than the development-model artifact:
+    - mean embedding mass `= 0.0113`
+    - mean attention mass `= 0.5502`
+    - mean MLP mass `= 0.4384`
+    - mean entropy `= 3.5003`
+    - mean effective sources `= 33.2125`
+  - raw-source structure remains weak and does not beat the matched random control:
+    - oracle best silhouette `= 0.1084` at `k = 2`
+    - random-control best silhouette `= 0.1598` at `k = 2`
+    - oracle best cluster sizes `= 118 / 10`
+    - raw-source resampling oracle-beats-random fraction `= 0.3594`
+  - grouped views strengthen the coarse-structure story:
+    - `source_type` silhouette `= 0.6731` versus random `0.5569`, with oracle best cluster sizes `66 / 56 / 6` and resampling oracle-beats-random fraction `1.0000`
+    - `depth_thirds_by_type` silhouette `= 0.3858` versus random `0.2305`, with oracle best cluster sizes `121 / 7` and resampling oracle-beats-random fraction `0.8750`
+  - interpretation: the primary spine strengthens the grouped coarse-routing story relative to `gpt2-xl`, but the prereg raw block-structure gate remains unpassed and the raw-source `~8`-cluster hypothesis is not supported
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -413,7 +430,7 @@
 
 ## Immediate Next Steps
 
-1. Run `resattn-2sb`, the primary-model Gemma prereg-scale pattern analysis on the saved `resattn-js8` oracle artifact, so the next oracle question becomes structure on the primary spine rather than more existence checks.
+1. Run `resattn-5eo`, the prereg-required softmax versus unconstrained versus top-k comparison on the primary-model Gemma oracle surface.
 2. Use `resattn-1lk` to decide conservatively whether the strong Figure 8 lane should stay frozen or be revisited through a more faithful proxy.
 3. Keep stronger safety-routing language blocked until `resattn-mo5` can test a broader prompt surface that breaks the current role-collapsed mediator partition.
 4. Track the new `n << d` predictiveness runtime bottleneck in `resattn-b4q`, but treat it as secondary to the scientific moves above unless a rerun becomes urgent.

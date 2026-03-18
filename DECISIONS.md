@@ -627,3 +627,14 @@
 - Decision: record the runtime bottleneck as follow-up issue `resattn-b4q` and do not reinterpret the long wall-clock as evidence against the scientific result itself.
 - Rationale: sampling the live process showed the run was doing real numerical work in `np.linalg.solve`, not hanging in model I/O or an implementation deadlock. The wall-clock problem is the current ridge formulation and the lack of progress artifacts during the numerical sweep, not the validity of the finished metrics.
 - Impact: future primary-model reruns should move to an `n << d`-appropriate ridge path or comparable fix, but the next scientific action remains `resattn-2sb` rather than another immediate predictiveness rerun.
+
+## [2026-03-18T01:18:00-0500] DECISION: Treat the first primary-model Gemma pattern analysis as a grouped coarse-structure advance, not a raw block-structure pass
+
+- Trigger: `resattn-2sb` completed the first prereg-scale primary-model pattern-analysis artifact on the saved Gemma confirm-split oracle outputs.
+- Decision: close `resattn-2sb` as a mixed primary-model pattern result that strengthens the grouped coarse-structure story while leaving the prereg raw block-structure gate unpassed.
+- Rationale: the primary-model result splits cleanly by view:
+  - raw-source oracle best silhouette `= 0.1084` versus random `0.1598`, with a highly imbalanced `118 / 10` `k = 2` split and resampling oracle-beats-random fraction `0.3594`
+  - `source_type` oracle best silhouette `= 0.6731` versus random `0.5569`, with oracle best cluster sizes `66 / 56 / 6` and resampling oracle-beats-random fraction `1.0000`
+  - `depth_thirds_by_type` oracle best silhouette `= 0.3858` versus random `0.2305`, with resampling oracle-beats-random fraction `0.8750`
+  This is stronger coarse source-type structure than the development-model lane, but it is not a raw-source `~8`-cluster result and it does not clear the prereg silhouette gate.
+- Impact: the next core oracle issue becomes `resattn-5eo`, the primary-model softmax versus unconstrained versus top-k comparison. Strong raw block-structure language stays blocked.
