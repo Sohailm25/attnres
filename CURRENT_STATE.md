@@ -914,21 +914,22 @@
 ## Immediate Next Steps
 
 1. Take `resattn-pjd` as the main lane: synthesize the saved primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts into the next truthful Gemma-centered claim about an effective depth mixture.
-2. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
+2. Take `resattn-2mx` as the next main oracle analysis: characterize factual-recall routing modes on the saved `registry_v5` artifact more mechanistically than simple subcategory purity.
+3. Center the next oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
-3. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
+4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
-4. Keep tool-breakage as a bounded extension lane:
+5. Keep tool-breakage as a bounded extension lane:
    - the one-token `v4` surface improved the family story, but the authoritative boundary is still family-conditioned mixed
    - if tool-breakage resumes, start with `resattn-a1w`, the moon-family prompt-style audit, not another pooled rerun
-5. Keep safety as the next extension lane after the oracle synthesis pass:
+6. Keep safety as the next extension lane after the factual-recall oracle pass:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
-6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
+7. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.
 
 ## Phase 1 Gate
 

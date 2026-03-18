@@ -1086,3 +1086,21 @@
     - `v4` improved the family story, but the authoritative boundary is still family-conditioned mixed
   - the Figure 8 lane is operationally informative but strategically frozen; more rescue work there would be less truthful than deepening the stronger Gemma oracle story
 - Impact: the next main issue is `resattn-pjd`, which synthesizes the primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts into the next truthful claim about effective depth mixture on Gemma. The next preserved tool-breakage issue remains `resattn-a1w`, but it is no longer the main project spine.
+
+## [2026-03-18T13:02:00-0500] DECISION: Close `resattn-pjd` as synthesis and narrow the next oracle step to factual-recall route modes
+
+- Trigger: `resattn-pjd` synthesized the strongest saved Gemma `registry_v5` oracle, pattern-analysis, block-structure, bridge, and regime artifacts.
+- Decision: close `resattn-pjd` as a synthesis and narrowing pass rather than letting it sprawl into another broad rerun. The next main oracle issue is now `resattn-2mx`: characterize factual-recall routing modes on the saved `registry_v5` artifact.
+- Rationale:
+  - the strongest truthful claim is now explicit:
+    - primary-model effective-depth-mixture recovery is real on Gemma
+    - grouped coarse structure is strong
+    - raw-source structure is strongest inside semantic strata rather than globally
+  - the most informative raw-source stratum is factual recall:
+    - best silhouette `= 0.4709`
+    - best `k = 12`
+    - semantically pure clusters with multiple within-family modes
+  - that makes the next honest oracle move an understanding step, not another scale-up:
+    - characterize the factual route modes more mechanistically
+    - then decide the next bridge into extension lanes from that saved structure
+- Impact: `resattn-pjd` can close once the synthesis memo lands. `resattn-2mx` is now the main oracle issue, `resattn-a1w` remains the bounded tool-breakage sidecar, and the Figure 8 lane stays frozen.

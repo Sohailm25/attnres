@@ -1590,3 +1590,25 @@ Suggested entry format:
   - Gemma `registry_v5` oracle mean improvement `= +1.6299`
   - Gemma `registry_v5` predicted mean improvement `= +0.8292`
   - Gemma `registry_v5` confirm `R^2 = 0.2392`
+## [2026-03-18T13:03:00-0500] The Next Oracle Move Should Explain Factual Modes, Not Chase More Breadth
+- Stage: synthesis
+- Feel of the Experiment: The repo does not need another broad Gemma oracle rerun right now. It needs to understand the best structure result it already has.
+- Working Hypotheses:
+  - Factual recall is the highest-value raw-source discovery surface on the primary model.
+  - The right next gain will come from characterizing its within-family routing modes, not from adding another larger mixed pool.
+- Hunches and Guesses:
+  - Capitals, elements, and authors are still the cleanest bridge families into the extension lanes, even though factual recall as a whole includes moon facts.
+  - Reasoning/math is a real secondary structure lane, but it is not the best next discriminator.
+- Predictions:
+  - A route-mode characterization pass will tighten the main paper story more than another scaling run.
+  - It will also make any later bridge into tool-breakage or safety less arbitrary.
+- Surprises and Tensions:
+  - The repo already had enough evidence to make this pivot without another experiment; the missing piece was synthesis discipline.
+  - The strongest raw-source result peaks at `k = 12`, which is useful and meaningful, but cuts directly against any temptation to force the old `~8` narrative.
+- Confidence:
+  - high that `2mx` is the right main next issue
+  - medium-high that `a1w` should remain sidecar only
+- Interesting facts:
+  - factual-recall raw-source silhouette `= 0.4709`
+  - factual-recall best `k = 12`
+  - reasoning/math raw-source silhouette `= 0.2456`
