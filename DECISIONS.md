@@ -657,3 +657,17 @@
   - softmax beat unconstrained and every top-k setting on all `128` confirm prompts
   This is exactly the kind of separation the prereg asked for before making competition-benefit language.
 - Impact: the primary model now has a real positive regime-comparison story rather than only a positive oracle-existence story. `resattn-1lk` becomes the next overall scientific move, `resattn-mo5` stays the strongest extension candidate after that, and `resattn-b4q` remains a worthwhile but secondary infrastructure follow-up.
+
+## [2026-03-18T02:24:00-0500] DECISION: Freeze the strong Figure 8 lane on the current proxy rather than reopening it speculatively
+
+- Trigger: `resattn-1lk` asked whether the repo should revisit strong Figure 8 / trained-routing claims through a more faithful proxy now that the primary-model oracle lane is materially stronger.
+- Decision: close `resattn-1lk` by keeping the strong Figure 8 lane frozen at the current descriptive boundary and by declining to start another Figure 8 implementation issue right now.
+- Rationale: the repo has already exhausted the faithful rescue path on the current local proxy family:
+  - tokenization
+  - width
+  - horizon
+  - corpus
+  - best-checkpoint export
+  - matched regularization
+  The only honest reopen conditions were already recorded in `resattn-9fo`, and none of them is currently a concrete executable path in the repo. Reopening now would therefore be a speculative new build rather than a disciplined continuation.
+- Impact: the current Figure 8 artifacts remain descriptive-only for strong-claim purposes. Repo priority moves to `resattn-mo5`, with `resattn-b4q` and `resattn-9co` still secondary. The Figure 8 lane should stay frozen until a materially more faithful proxy path is concrete enough to execute immediately.
