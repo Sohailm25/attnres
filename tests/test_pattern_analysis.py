@@ -14,12 +14,20 @@ class PatternAnalysisTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from validation.pattern_analysis import (
+            build_grouped_view_pattern_summary,
+            build_prompt_resampling_stability_summary,
             build_sequence_level_pattern_summary,
             scan_average_linkage_clusters,
             summarize_source_type_mass,
             write_pattern_analysis_summary,
         )
 
+        cls.build_grouped_view_pattern_summary = staticmethod(
+            build_grouped_view_pattern_summary
+        )
+        cls.build_prompt_resampling_stability_summary = staticmethod(
+            build_prompt_resampling_stability_summary
+        )
         cls.build_sequence_level_pattern_summary = staticmethod(
             build_sequence_level_pattern_summary
         )
@@ -66,6 +74,128 @@ class PatternAnalysisTests(unittest.TestCase):
         self.assertEqual(2, result.best_k)
         self.assertGreater(result.best_silhouette, 0.5)
         self.assertEqual({2, 3, 4}, set(result.silhouette_by_k))
+        self.assertEqual((2, 2), tuple(result.cluster_sizes_by_k[2]))
+        self.assertAlmostEqual(0.5, result.largest_cluster_fraction_by_k[2])
+
+    def test_build_grouped_view_pattern_summary_aggregates_depth_and_type(self) -> None:
+        source_labels = (
+            "embed",
+            "pos_embed",
+            "0_attn_out",
+            "0_mlp_out",
+            "1_attn_out",
+            "1_mlp_out",
+            "2_attn_out",
+            "2_mlp_out",
+        )
+        sequence_results = (
+            {
+                "prompt_id": "p1",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.10, 0.10, 0.25, 0.15, 0.20, 0.10, 0.05, 0.05),
+            },
+            {
+                "prompt_id": "p2",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.08, 0.12, 0.22, 0.18, 0.18, 0.12, 0.05, 0.05),
+            },
+        )
+
+        grouped = self.build_grouped_view_pattern_summary(
+            sequence_results,
+            view_name="depth_thirds_by_type",
+            random_seed=11,
+            max_clusters=2,
+        )
+
+        self.assertEqual("depth_thirds_by_type", grouped.view_name)
+        self.assertEqual(
+            (
+                "embedding",
+                "early_attention",
+                "early_mlp",
+                "middle_attention",
+                "middle_mlp",
+                "late_attention",
+                "late_mlp",
+            ),
+            grouped.grouped_source_labels,
+        )
+        self.assertEqual(7, grouped.summary.num_sources)
+        self.assertAlmostEqual(
+            0.20, grouped.summary.source_type_mass.mean_embedding_mass
+        )
+        self.assertAlmostEqual(
+            0.475, grouped.summary.source_type_mass.mean_attention_mass
+        )
+        self.assertAlmostEqual(0.325, grouped.summary.source_type_mass.mean_mlp_mass)
+
+    def test_build_prompt_resampling_stability_summary_reports_view_metrics(
+        self,
+    ) -> None:
+        source_labels = (
+            "embed",
+            "pos_embed",
+            "0_attn_out",
+            "0_mlp_out",
+        )
+        sequence_results = (
+            {
+                "prompt_id": "p1",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.62, 0.18, 0.15, 0.05),
+            },
+            {
+                "prompt_id": "p2",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.58, 0.22, 0.14, 0.06),
+            },
+            {
+                "prompt_id": "p3",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.05, 0.08, 0.17, 0.70),
+            },
+            {
+                "prompt_id": "p4",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.06, 0.09, 0.18, 0.67),
+            },
+            {
+                "prompt_id": "p5",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.60, 0.20, 0.14, 0.06),
+            },
+            {
+                "prompt_id": "p6",
+                "split": "confirm",
+                "source_labels": source_labels,
+                "final_alpha": (0.04, 0.10, 0.19, 0.67),
+            },
+        )
+
+        stability = self.build_prompt_resampling_stability_summary(
+            sequence_results,
+            view_name="raw_source",
+            random_seed=11,
+            max_clusters=4,
+            num_resamples=5,
+            sample_size=4,
+        )
+
+        self.assertEqual("raw_source", stability.view_name)
+        self.assertEqual(5, stability.num_resamples)
+        self.assertEqual(4, stability.sample_size)
+        self.assertGreaterEqual(stability.oracle_beats_random_fraction, 0.0)
+        self.assertLessEqual(stability.oracle_beats_random_fraction, 1.0)
+        self.assertIn(2, stability.oracle_best_k_counts)
+        self.assertIn(2, stability.oracle_largest_cluster_fraction_mean_by_k)
 
     def test_build_sequence_level_pattern_summary_reports_random_control(self) -> None:
         source_labels = (
@@ -114,6 +244,8 @@ class PatternAnalysisTests(unittest.TestCase):
         self.assertEqual("average", summary.random_control_cluster_scan.linkage_method)
         self.assertGreater(summary.oracle_cluster_scan.best_silhouette, 0.0)
         self.assertGreaterEqual(len(summary.top1_source_counts), 1)
+        self.assertIn(2, summary.oracle_cluster_scan.cluster_sizes_by_k)
+        self.assertIn(2, summary.oracle_cluster_scan.largest_cluster_fraction_by_k)
 
     def test_write_pattern_analysis_summary_writes_compact_json(self) -> None:
         source_labels = (
@@ -178,6 +310,8 @@ class PatternAnalysisTests(unittest.TestCase):
             self.assertEqual(2, payload["num_sequences"])
             self.assertIn("oracle_cluster_scan", payload)
             self.assertIn("random_control_cluster_scan", payload)
+            self.assertIn("cluster_views", payload)
+            self.assertIn("resampling_stability", payload)
 
 
 if __name__ == "__main__":

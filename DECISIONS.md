@@ -493,3 +493,17 @@
   - the entropy gap improved only slightly from `-0.0574` to `-0.0549`, leaving the ordering inverted
   That is enough to say the earlier runner was understating the regime by evaluating the final checkpoint alone, but not enough to say optimization-shape fixes the Figure 8 problem. The baseline still wins and the paper-facing layer-type-specialization signature still points the wrong way.
 - Impact: `resattn-fby` can close once the artifact and state docs land. The next Figure 8 follow-up should be framed as a bounded optimization or objective redesign question rather than another blind rerun of the same widened compact-subword `wikitext-103` setup; that follow-up is now tracked as `resattn-8xu`.
+
+## [2026-03-17T19:00:00-0500] DECISION: Treat grouped-source pattern structure as coarse-regime evidence, not as a prereg block-structure pass
+
+- Trigger: `resattn-ojq` extended the prereg-scale `gpt2-xl` pattern-analysis artifact with grouped-source views and `128` prompt-resampling checks over `96`-prompt subsamples.
+- Decision: close the robustness follow-up as a useful mixed result, keep the raw-source block-structure gate unpassed, and treat the grouped-source gains as evidence for coarse source-type routing variation rather than for a clean `~8`-cluster decomposition.
+- Rationale: the control extensions sharpened the interpretation instead of flipping it:
+  - raw-source clustering survives resampling, but only weakly (`0.1428` versus random `0.1093`) and with extreme dominance (`126 / 2` full sample, best `k = 2` on `128 / 128` resamples)
+  - grouped views raise the above-random signal:
+    - `source_type`: `0.6652` versus `0.5569`, `87 / 41` at `k = 2`
+    - `depth_thirds_by_type`: `0.3451` versus `0.2305`, but still `117 / 11` at `k = 2`
+  - the stronger grouped view is only `3` dimensions and therefore too coarse to support the prereg `~8`-cluster block hypothesis
+  - the more expressive `7`-group depth-banded view still collapses mostly to `k = 2`
+  This is enough to defend a coarse routing-regime story at grouped source type, but not enough to claim broad block structure in the raw routing object.
+- Impact: `resattn-ojq` can close once the artifact and state docs land. The next overall repo step should move to another major lane rather than spending more time polishing the current raw block-structure story.

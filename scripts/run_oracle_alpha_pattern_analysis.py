@@ -25,6 +25,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", required=True)
     parser.add_argument("--random-seed", type=int, default=11)
     parser.add_argument("--max-clusters", type=int, default=12)
+    parser.add_argument("--num-resamples", type=int, default=64)
+    parser.add_argument("--sample-size", type=int)
     return parser.parse_args()
 
 
@@ -37,6 +39,8 @@ def main() -> int:
         output_path=Path(args.output),
         random_seed=args.random_seed,
         max_clusters=args.max_clusters,
+        num_resamples=args.num_resamples,
+        sample_size=args.sample_size,
     )
     return 0
 

@@ -152,6 +152,16 @@
   - the best oracle clustering result is weakly above the matched random control but still below the prereg block-structure gate: best silhouette `= 0.1428` at `k = 2` versus random-control `0.1093`
   - the apparent structure is outlier-driven rather than broad block structure: cluster sizes are `126 / 2` at `k = 2`, `119 / 5 / 2 / 2` at `k = 4`, and `114 / 4 / 3 / 2 / 2 / 1 / 1 / 1` at `k = 8`
   - interpretation: this is a valid Phase 2 entry artifact showing weak above-random routing structure on the development model, but it does not clear the prereg `silhouette > 0.2` gate and does not support a clean `~8`-cluster claim
+- `known`: `resattn-ojq` now stress-tests that prereg-scale routing structure with grouped-source views and prompt resampling:
+  - `results/pattern_analysis/20260317-gpt2xl-prereg-scale-pattern-analysis-ojq-v1.json` and `.md` now extend the raw-source artifact with grouped-source cluster scans plus `128` resamples of `96` confirm prompts per view
+  - the raw-source view survives resampling but stays weak and outlier-driven:
+    - full-sample silhouette delta over random `= +0.0335`
+    - best `k = 2` on `128 / 128` resamples
+    - mean largest-cluster fraction stays extremely high (`0.9793` at `k = 2`, `0.8546` at `k = 8`)
+  - grouped-source views reveal stronger coarse structure:
+    - `source_type` view (`embedding / attention / mlp`) reaches oracle best silhouette `0.6652` versus random `0.5569`, with a more balanced `87 / 41` `k = 2` split and oracle beating random on `125 / 128` resamples
+    - `depth_thirds_by_type` reaches oracle best silhouette `0.3451` versus random `0.2305`, but still collapses mostly to `k = 2` (`117 / 11` full sample, `121 / 128` resamples)
+  - interpretation: there is robust coarse source-type routing structure on the development-model confirm split, but the prereg raw block-structure hypothesis remains unpassed; the result supports coarse routing-regime variation more than a clean `~8`-cluster decomposition
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -328,9 +338,9 @@
 
 ## Immediate Next Steps
 
-1. Use `resattn-ojq` to test whether grouped-source and prompt-resampled clustering views produce a more robust pattern story than the current outlier-driven raw-source result.
-2. Use `resattn-h1p` for mediator-conditioned safety routing analysis on aligned Gemma now that the bounded causal mediator check is in place.
-3. Use `resattn-8xu` to choose the next bounded Figure 8 redesign now that `resattn-fby` shows best-checkpoint selection helps but does not fix the widened `wikitext-103` regime.
+1. Use `resattn-h1p` for mediator-conditioned safety routing analysis on aligned Gemma now that the bounded causal mediator check is in place.
+2. Use `resattn-8xu` to choose the next bounded Figure 8 redesign now that `resattn-fby` shows best-checkpoint selection helps but does not fix the widened `wikitext-103` regime.
+3. Treat the grouped-view pattern result as a coarse-structure finding, not a block-structure pass, unless a later follow-up can move beyond the current raw-source `k = 2` dominance.
 4. Treat `resattn-5d9` as the later Gemma follow-up if we decide a finer dynamic-control study is worth doing without moving the current claim boundary.
 5. Port the model-backed reconstruction smoke from the development model to the primary Gemma-2 lane when the Gemma-specific backend path is ready.
 
