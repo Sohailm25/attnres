@@ -1458,3 +1458,25 @@ Suggested entry format:
   - capital within-family alpha JS `= 0.2458`
   - element within-family alpha JS `= 0.2085`
   - author multiword-target fraction `= 1.0`
+## [2026-03-18T12:28:30-0500] The Next Tool-Breakage Reopening Should Be Surface-First
+- Stage: design
+- Feel of the Experiment: This was a relieving fork to settle. The cleanest next discriminator is simpler than I feared: fix the target format and keep everything else fixed.
+- Working Hypotheses:
+  - A one-token matched-family surface is the smallest honest way to test whether the author-family reversal is mostly answer-format confounding.
+  - If authors stay negative even there, the family-conditioned mixed boundary is probably real.
+- Hunches and Guesses:
+  - A one-token author-surname surface will be much more informative than inventing a new continuation metric on the current mixed prompt set.
+  - The element-family signal will probably survive almost unchanged on the one-token surface.
+- Predictions:
+  - `t0p` will either materially reduce the author-family gap or confirm that the stronger prompt-specific same-model claim is near its ceiling.
+  - If it reduces the gap, the lane becomes worth reopening; if it does not, the current freeze will look prescient rather than conservative.
+- Surprises and Tensions:
+  - Gemma tokenization makes this cleaner than expected: enough one-token capitals, surnames, and moon names exist that we do not need a contrived workaround.
+  - That makes a metric-first redesign look even less justified.
+- Confidence:
+  - high that `4xn` should close on a prompt-surface decision
+  - medium-high that `t0p` is the right next experimental slice if this lane resumes
+- Interesting facts:
+  - `Canberra`, `Cairo`, `Bangkok`, `Rome`, and `Madrid` are single Gemma tokens
+  - `Lee`, `Morrison`, `Shelley`, `Tolstoy`, `Kafka`, and `Austen` are single Gemma tokens
+  - `Moon`, `Titan`, `Triton`, `Europa`, `Io`, `Rhea`, `Hyperion`, `Miranda`, and `Ariel` are single Gemma tokens

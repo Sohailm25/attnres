@@ -479,6 +479,23 @@
       - capital multiword-target fraction `= 0.375`
       - element and moon multiword-target fractions `= 0.0`
     - interpretation: the current broader Gemma tool-breakage lane should now be treated as frozen at this family-conditioned boundary. If it reopens later, the next disciplined move is a target-format-aware matched-family redesign rather than another pooled rerun
+  - `resattn-4xn` now freezes that redesign path concretely:
+    - `history/20260318-4xn-target-format-aware-tool-breakage-redesign.md` records the follow-up decision
+    - the smallest honest reopening is prompt-surface-side, not metric-side:
+      - keep `google/gemma-2-2b`
+      - keep the tuned-lens baseline and donor-arm controls
+      - keep tuned mean KL as the primary metric
+      - change only the prompt surface first
+    - the next preserved follow-up is a one-token matched-family surface:
+      - `tool_breakage_factual_recall_v4`
+      - all targets must be one next token under the Gemma tokenizer
+      - families stay matched around `capital`, `element`, `author`, and `moon`
+      - author prompts should move to one-token surname or equivalent one-token author-answer prompts rather than full-name continuations
+    - a local Gemma tokenizer feasibility probe already shows this surface is viable:
+      - capitals such as `Canberra`, `Cairo`, `Bangkok`, `Rome`, `Madrid`
+      - author surnames such as `Lee`, `Morrison`, `Shelley`, `Tolstoy`, `Kafka`, `Austen`
+      - moon names such as `Moon`, `Titan`, `Triton`, `Europa`, `Io`, `Rhea`, `Hyperion`, `Miranda`, `Ariel`
+    - interpretation: if the tool-breakage lane resumes later, the next valid run is `resattn-t0p`, which builds `v4` and reruns only the pilot baseline. A metric redesign on the current `v3` surface would mix the answer-format confound with a new objective and is therefore the wrong first move
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -821,7 +838,7 @@
 
 1. Treat `tool_breakage_factual_recall_v3` as the main matched-family surface for this lane and freeze the stronger same-model tool-breakage claim at the current `v3` donor-arm boundary.
 2. Keep that boundary family-conditioned rather than pooled: elements remain the cleanest positive family, authors are the clearest negative family, and the current author-family drag is entangled with multiword-target / first-token format.
-3. If tool-breakage work resumes later, start with `resattn-4xn`: a target-format-aware matched-family redesign, not another pooled rerun.
+3. If tool-breakage work resumes later, start with `resattn-t0p`: build a one-token matched-family `v4` surface and rerun only the pilot baseline, keeping the current model, controls, and KL-primary metric fixed.
 4. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 5. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path becomes concrete enough to execute immediately.

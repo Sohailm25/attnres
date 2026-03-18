@@ -977,3 +977,21 @@
   - the author family is also the only one with a `1.0` multiword-target fraction, so the most plausible current confound is target format / first-token evaluation rather than simple within-family alpha homogeneity
   This means another pooled rerun would blur the real issue instead of resolving it.
 - Impact: the repo should now treat the current same-model tool-breakage claim as bounded at the family level. The next preserved follow-up is `resattn-4xn`, which decides the smallest target-format-aware redesign before any later tool-breakage rerun.
+
+## [2026-03-18T12:28:00-0500] DECISION: Reopen Gemma tool-breakage only through a one-token matched-family v4 surface
+
+- Trigger: `resattn-4xn` evaluated the family-profile artifact plus a Gemma tokenizer feasibility probe to decide whether the smallest honest follow-up should be prompt-surface-side or metric-side.
+- Decision: if the tool-breakage lane resumes later, do it through a one-token matched-family prompt surface (`tool_breakage_factual_recall_v4`), not through a metric redesign on the current `v3` surface.
+- Rationale:
+  - the current author-family reversal persists on the existing KL-primary metric, so a metric-first redesign would blur the confound instead of isolating it
+  - the most plausible current confound is answer format rather than alpha similarity:
+    - author within-family alpha JS `= 0.3211`
+    - capital within-family alpha JS `= 0.2458`
+    - element within-family alpha JS `= 0.2085`
+    - author multiword-target fraction `= 1.0`
+  - a quick Gemma tokenizer probe shows the one-token surface is feasible across the matched families:
+    - capitals such as `Canberra`, `Cairo`, `Bangkok`, `Rome`, `Madrid`
+    - author surnames such as `Lee`, `Morrison`, `Shelley`, `Tolstoy`, `Kafka`, `Austen`
+    - moon names such as `Moon`, `Titan`, `Triton`, `Europa`, `Io`, `Rhea`, `Hyperion`, `Miranda`, `Ariel`
+  - this lets the repo hold the model, tuned-lens baseline, donor-arm controls, and KL-primary metric fixed while testing the specific answer-format confound directly
+- Impact: `resattn-4xn` can close once the decision memo lands. The next preserved follow-up is `resattn-t0p`: add `tool_breakage_factual_recall_v4` with one-token targets and run the pilot baseline only.
