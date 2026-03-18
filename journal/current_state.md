@@ -5,7 +5,7 @@
 
 - Date: 2026-03-18
 - Repo: standalone and initialized
-- Branch: `wip/resattn-8y4`
-- Focus: `resattn-8y4` has now profiled the factual-recall raw-source clusters directly; the next meaningful move is to bridge those routing families into the bounded Gemma tool-breakage lane.
-- Experimental status: the repo now has a real block-structure-style lead on the primary model, but it is narrow rather than aggregate. Full-surface grouped structure is broad, while the strongest raw-source organization is concentrated in factual recall. Those factual clusters are nearly pure by saved subcategory and split into distinct routing modes inside capitals, elements, authors, and moon facts.
-- Critical reminder: keep the full mixed-surface prereg raw block-structure gate unpassed. The positive block-structure-style result is factual-recall-conditioned, not global.
+- Branch: `wip/resattn-dat`
+- Focus: `resattn-dat` has now completed the factual-routing bridge into the bounded Gemma tool-breakage lane; the next meaningful move is to expand the tool-breakage prompt surface around the matched `capital` / `element` / `author` families.
+- Experimental status: the repo now knows two things at once. The primary-model factual block-structure lead is real and semantically organized, and the existing bounded tool-breakage set only partially overlaps it. The overlapping prompts align perfectly with their factual routing families, but the largest current confirm breakage effects sit mostly on out-of-family prompts.
+- Critical reminder: do not overread the bridge as a stronger tool-breakage claim. It is a prompt-surface diagnosis, not a causal upgrade.

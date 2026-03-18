@@ -292,6 +292,20 @@
       - moon facts split into an MLP-heavier cluster (`mean MLP mass = 0.5307`) and an attention-heavier cluster (`mean attention mass = 0.5638`)
       - author facts fragment into several routing modes with both MLP-heavy and more mixed source-type balances
     - interpretation: the first strong raw-source cluster story on the primary model is semantic-family-conditioned factual recall, not one broad mixed-surface block structure pass. This makes the block-structure lane meaningfully live on the primary model while keeping the full-surface prereg gate unpassed
+  - `resattn-dat` now bridges that factual-recall structure back into the bounded Gemma tool-breakage lane without another model run:
+    - `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json` and `.md` compare the saved factual-recall raw-source cluster families against the existing Gemma factual-recall tool-breakage prompts using the saved prompt-level `oracle_alpha` vectors from the pilot and confirm baseline artifacts
+    - the bridge result is clean for the overlapping families:
+      - only `6 / 16` tool-breakage prompts overlap the strongest factual families already exposed in `registry_v5` (`capital`, `element`, `author`)
+      - all `6 / 6` overlapping prompts assign to the matching factual cluster family
+      - overlap prompts are much closer to their nearest factual cluster than non-overlap prompts (`mean JS = 0.2273` versus `0.3498`)
+    - the current tool-breakage surface is therefore only a partial fit to the strongest oracle structure:
+      - on the locked confirm split, the overlapping prompts have milder instability on average than the non-overlap prompts:
+        - overlap confirm mean tuned final-position KL delta `= +2.5920`
+        - non-overlap confirm mean tuned final-position KL delta `= +4.9363`
+        - overlap confirm mean tuned final target-rank delta `= +3.67`
+        - non-overlap confirm mean tuned final target-rank delta `= +71.4`
+      - the largest current confirm breakage outliers are non-overlap prompts such as anatomy, biology-process, and animal facts, not the matched `capital` / `element` / `author` families
+    - interpretation: the bridge is real, but it cuts against the lazy story. The current bounded tool-breakage surface underexplores the strongest primary-model factual routing families. The right next move is to expand the factual tool-breakage prompt surface around the matched families, not to reopen aggregate clustering or dynamic controls
 - `known`: `resattn-qm4` is now resolved at the decision level:
   - tool-breakage stays on the primary `google/gemma-2-2b` lane and will use a custom Gemma-2 tuned lens trained locally rather than satisfying the tuned-lens requirement on a secondary model
   - a secondary-model tuned-lens comparison is allowed only as supplementary context, not as the primary confirmatory control
@@ -632,7 +646,7 @@
 
 ## Immediate Next Steps
 
-1. Bridge the factual-recall raw-source clusters back into the bounded Gemma tool-breakage lane, because the strongest new primary-model structure result now lives in the same conceptual neighborhood as the factual-recall breakage prompts.
+1. Expand the Gemma factual-recall tool-breakage surface around the matched `capital` / `element` / `author` routing families, because the new bridge artifact shows that the current tool-breakage prompt set only partially overlaps the strongest primary-model factual structure.
 2. Treat the mixed `registry_v5` full-surface raw block-structure gate as still unpassed, even though grouped coarse structure is strong and factual-recall/raw-source structure is clearly above random.
 3. Keep future oracle reruns narrower and question-driven; the next broad aggregate campaign should wait until a specific underexplored hypothesis cannot be answered from the saved artifacts.
 4. Treat the current broadened safety-surface semantics cleanup as complete unless a genuinely new prompt family is introduced.

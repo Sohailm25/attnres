@@ -828,3 +828,18 @@
     - author facts fragment into several routing modes rather than one monolithic family
   This is enough to say the raw-source signal is semantically organized and not just a formatting artifact.
 - Impact: `resattn-8y4` can close once the artifact lands. The next high-value oracle follow-up is no longer broad clustering; it is an explicit bridge between these factual-recall routing families and the bounded Gemma tool-breakage story.
+
+## [2026-03-18T09:19:38-0500] DECISION: Treat the factual-routing bridge as a prompt-surface mismatch, not a weak-family result
+
+- Trigger: `resattn-dat` compared the saved factual-recall raw-source cluster families from the `registry_v5` Gemma oracle artifact against the saved pilot and confirm Gemma tool-breakage prompts using their saved prompt-level `oracle_alpha` vectors.
+- Decision: treat the bridge result as evidence that the current bounded tool-breakage surface underexplores the strongest primary-model factual routing families. Do not read the milder overlap-family breakage as a reason to abandon the bridge or reopen the dynamic-control story.
+- Rationale: the descriptive alignment is too clean to dismiss:
+  - only `6 / 16` tool-breakage prompts overlap the strongest factual families already exposed in `registry_v5`
+  - all `6 / 6` overlapping prompts (`capital`, `element`, `author`) assign to the matching factual cluster family
+  - overlap prompts are much closer to their nearest factual cluster than non-overlap prompts (`mean JS = 0.2273` versus `0.3498`)
+  But the current confirm breakage strength lives mostly elsewhere:
+  - overlap confirm prompts have mean tuned final-position KL delta `= +2.5920` and mean tuned final target-rank delta `= +3.67`
+  - non-overlap confirm prompts have mean tuned final-position KL delta `= +4.9363` and mean tuned final target-rank delta `= +71.4`
+  - the largest current confirm outliers are anatomy, biology-process, and animal facts, not the matched `capital` / `element` / `author` families
+  So the right interpretation is not “the structured factual families are unimportant.” It is “the current tool-breakage prompt surface is only a partial overlap with the strongest structured factual families.”
+- Impact: `resattn-dat` can close once the artifact lands. The next tool-breakage issue should expand the prompt surface around the matched factual families before the repo spends another cycle polishing the old eight-prompt confirm set.

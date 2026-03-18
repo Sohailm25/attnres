@@ -92,6 +92,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 routed-versus-original factual-recall baseline confirm v1 | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-baseline-confirm-v1.md` |
 | Gemma-2 controlled dynamic-routing counterfactual smoke | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-smoke.md` |
 | Gemma-2 controlled dynamic-routing counterfactual confirm v1 | tool_breakage | mixed | `results/tool_breakage/20260317-gemma2-tool-breakage-counterfactual-confirm-v1.md` |
+| Gemma-2 factual-routing tool-breakage bridge v1 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.md` |
 
 ## Training Dynamics
 

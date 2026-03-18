@@ -139,6 +139,26 @@ class PromptRegistryTests(unittest.TestCase):
         self.assertTrue(all(entry.target_text for entry in pilot_entries))
         self.assertTrue(all(entry.target_text for entry in confirm_entries))
 
+    def test_tool_breakage_entries_have_saved_subcategory_tags(self) -> None:
+        registry = self.load_prompt_registry()
+        entries = self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v1",
+            split="pilot",
+            exploratory=True,
+            registry=registry,
+        ) + self.resolve_prompt_entries(
+            collection_id="tool_breakage_factual_recall_v1",
+            split="confirm",
+            exploratory=False,
+            registry=registry,
+        )
+
+        for entry in entries:
+            subcategory_tags = [
+                tag for tag in entry.tags if tag.startswith("subcategory_")
+            ]
+            self.assertEqual(1, len(subcategory_tags), entry.prompt_id)
+
     def test_safety_alignment_entries_form_matched_refusal_workflow_groups(
         self,
     ) -> None:

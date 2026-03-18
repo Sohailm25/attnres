@@ -10203,6 +10203,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_capital_fact
     - id: tb-pilot-002
       split: pilot
       text: The largest planet in the Solar System is
@@ -10210,6 +10211,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_planet_fact
     - id: tb-pilot-003
       split: pilot
       text: The chemical symbol for gold is
@@ -10217,6 +10219,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_element_symbol
     - id: tb-pilot-004
       split: pilot
       text: The author of Hamlet was
@@ -10224,6 +10227,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_author_fact
     - id: tb-pilot-005
       split: pilot
       text: Water freezes at zero degrees on the
@@ -10231,6 +10235,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_temperature_scale
     - id: tb-pilot-006
       split: pilot
       text: The currency used in Japan is the
@@ -10238,6 +10243,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_currency_fact
     - id: tb-pilot-007
       split: pilot
       text: The tallest land animal is the
@@ -10245,6 +10251,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_animal_fact
     - id: tb-pilot-008
       split: pilot
       text: A baby dog is called a
@@ -10252,6 +10259,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_juvenile_animal
     - id: tb-confirm-001
       split: confirm
       text: The capital of Italy is
@@ -10259,6 +10267,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_capital_fact
     - id: tb-confirm-002
       split: confirm
       text: The smallest prime number is
@@ -10266,6 +10275,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_prime_number
     - id: tb-confirm-003
       split: confirm
       text: The chemical symbol for silver is
@@ -10273,6 +10283,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_element_symbol
     - id: tb-confirm-004
       split: confirm
       text: The author of Pride and Prejudice was
@@ -10280,6 +10291,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_author_fact
     - id: tb-confirm-005
       split: confirm
       text: The currency used in the United Kingdom is the
@@ -10287,6 +10299,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_currency_fact
     - id: tb-confirm-006
       split: confirm
       text: The process plants use to make sugar from sunlight is
@@ -10294,6 +10307,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_biology_process
     - id: tb-confirm-007
       split: confirm
       text: The organ that pumps blood through the body is the
@@ -10301,6 +10315,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_anatomy_fact
     - id: tb-confirm-008
       split: confirm
       text: The fastest land animal is the
@@ -10308,6 +10323,7 @@ collections:
       tags:
       - factual_recall
       - safe
+      - subcategory_animal_fact
   safety_refusal_discovery_v1:
     lane: safety_alignment
     description: 'Small matched prompt triples for validating the refusal-feature discovery

@@ -1546,3 +1546,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; the profile run finished in `4.90` seconds on the saved artifact.
 - Next step: close `resattn-8y4` and decide whether the next oracle follow-up should explicitly bridge these factual-recall routing families into the bounded Gemma tool-breakage lane.
+
+## [2026-03-18T09:17:38-0500] PRE-RUN: Gemma factual-routing tool-breakage bridge
+- tmux session: `N/A`
+- Script: `scripts/run_tool_breakage_factual_cluster_bridge.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_factual_cluster_bridge.py --output results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json`
+- Config: `factual_run=registry_v5 confirm`, `factual_group=stratum_factual_recall`, `cluster_count=12 from saved 8y4 profile`, `tool_breakage=pilot+confirm baseline summaries`
+- What I'm testing: whether the strongest factual-recall raw-source families from the saved Gemma oracle artifact line up with the existing factual-recall tool-breakage prompts and whether the overlap families show cleaner or stronger rank-instability patterns.
+- Expected outcome: the overlapping tool-breakage prompts (`capital`, `element`, `author`) should assign to matching factual cluster families rather than arbitrary nearest clusters, while the non-overlap prompts should either map more diffusely or expose the current surface mismatch directly.
+- Expected duration: ~1-5 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: this is a descriptive bridge over saved artifacts, not a causal intervention, so even a clean family match would not upgrade the frozen tool-breakage claim boundary by itself.
+- Implementation verified: YES - `.venv/bin/python -m unittest tests.test_prompt_registry.PromptRegistryTests.test_tool_breakage_entries_have_saved_subcategory_tags tests.test_tool_breakage_bridge tests.test_tool_breakage` passed after adding the bridge helper and saved tool-breakage subcategory tags.
+- Status: LAUNCHING
+
+## [2026-03-18T09:19:38-0500] POST-RUN: Gemma factual-routing tool-breakage bridge
+- Outcome: SUCCESS
+- Key metric: all `6 / 6` overlapping `capital` / `element` / `author` tool-breakage prompts assigned to the matching factual cluster family, but the non-overlap confirm prompts were much less aligned and showed larger mean tuned breakage (`KL delta = +4.9363` versus `+2.5920`).
+- Artifacts saved: `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.json`, `results/tool_breakage/20260318-gemma2-factual-routing-tool-breakage-bridge-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; the bridge ran entirely from saved artifacts and the output log stayed empty.
+- Next step: close `resattn-dat` and pivot the next tool-breakage pass toward an expanded matched-family factual prompt surface rather than another rerun of the current eight-prompt confirm set.

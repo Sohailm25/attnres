@@ -308,6 +308,26 @@ Suggested entry format:
   - Capital, element, and moon facts each split into a small number of pure routing clusters, while author facts fragment more.
   - One moon-fact cluster is MLP-heavier and another is more attention-heavy, which suggests the split is not just lexical or answer-format noise.
 
+## [2026-03-18T09:19:38-0500] The Bridge Worked, But It Exposed The Wrong Tool-Breakage Surface
+- Stage: analysis
+- Feel of the Experiment: This result is satisfying in a stern way. The bridge did not collapse; it got cleaner. But it also refused to flatter the current tool-breakage prompt set.
+- Working Hypotheses:
+  - The current bounded Gemma tool-breakage surface is only a partial overlap with the strongest factual routing families, so it is not maximizing the new primary-model oracle lead.
+- Hunches and Guesses:
+  - A matched-family expansion around `capital`, `element`, and `author` prompts is more likely to produce a cleaner cross-lane story than another pass on the existing mixed factual set.
+  - The non-overlap outliers may still matter, but they probably belong to a different factual-instability story than the one the new block-structure result surfaced.
+- Predictions:
+  - If the next tool-breakage surface is rebuilt around the matched families, it will show much cleaner same-family routing assignments even if the raw degradation effect is smaller than the current mixed confirm set.
+- Surprises and Tensions:
+  - The overlap prompts matched perfectly (`6 / 6`), which is cleaner than I expected.
+  - The biggest confirm breakage is mostly on out-of-family prompts, which means the current confirm result is not aligned with the strongest new oracle structure.
+- Confidence:
+  - high that the next tool-breakage move should be prompt-surface expansion, not dynamic-control polishing
+  - medium that matched-family breakage will end up cleaner but not necessarily larger in raw effect size
+- Interesting facts:
+  - Overlap prompts are much closer to their nearest factual family (`mean JS = 0.2273`) than non-overlap prompts (`0.3498`).
+  - The current worst confirm outlier is anatomy, not one of the structured oracle factual families.
+
 ## [2026-03-17T09:29:48-0500] Build The Big Run So It Does Not Become Two Big Runs
 - Stage: planning
 - Feel of the Experiment: The main emotional shift is that the repo finally feels ready to treat the next oracle-alpha scale-up like real local research infrastructure rather than a larger notebook-ish rerun. That feels less flashy, but it is probably what keeps the next week from dissolving into repeated near-duplicate runs.
