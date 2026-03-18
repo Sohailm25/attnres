@@ -1019,11 +1019,24 @@
       - original runtime `= 2544.10` seconds
       - exact-command rerun against the completed output directory reused caches and finished in `319.63` seconds
     - interpretation: the larger primary-model oracle result is now clearly real, broader than the earlier saved surface, and stronger on both routed-loss recovery and alpha-shape recovery; the highest-value next move is to analyze structure on this saved artifact rather than launching another expensive oracle rerun immediately
+  - `resattn-qxz` now lands the first cross-artifact synthesis pass over the saved primary-model `registry_v5` results:
+    - `results/oracle_alpha/20260318-gemma2-registry-v5-synthesis-v1.md` is the new synthesis artifact
+    - the truthful core story is now explicit:
+      - strong held-out effective depth mixture on the primary Gemma spine
+      - broad grouped/coarse routing structure across the mixed surface
+      - strongest raw-source structure concentrated inside tighter semantic strata, especially factual recall and secondarily reasoning/math
+      - softmax-constrained competition as a core primary-model result rather than a side note
+    - the synthesis also states the main blocked claims explicitly:
+      - no global raw `~8`-cluster pass
+      - no strong Figure 8 / trained-routing alignment claim
+      - no literal trained-router language for frozen-model oracle-alpha
+      - no broad donor-arm-positive same-model tool-breakage claim
+    - interpretation: the repo should now center its main narrative on primary-model effective depth mixture plus stratum-conditioned structure, not on a forced global raw-cluster story or on weaker extension lanes
 
 ## Immediate Next Steps
 
-1. Take `resattn-qxz` as the next main-lane synthesis issue: use the saved primary-model `registry_v5` oracle, pattern-analysis, and regime-comparison artifacts to center the thesis on what is actually strongest on Gemma.
-2. Center that oracle interpretation on what is actually strongest in the saved artifacts:
+1. Take `resattn-lnu` as the next main bridge-analysis issue: map the strongest factual-recall raw-source clusters to the narrowed `v5` tool-breakage route modes and quantify how much of the strongest primary-model structure the current bridge actually covers.
+2. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
@@ -1036,7 +1049,7 @@
    - the fixed-alpha objection is now clearly weaker on `v5`, but donor-arm results remain mixed
    - if tool-breakage resumes, take `resattn-oi7` first and audit the donor-assignment geometry before any further rerun
    - keep `resattn-a1w` as the bounded moon-family sidecar rather than letting it drive the main next step
-5. Keep safety as the next extension lane after the oracle synthesis pass:
+5. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
 6. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.

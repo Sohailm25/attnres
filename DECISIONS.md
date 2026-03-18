@@ -1241,3 +1241,28 @@
   - `resattn-hth` can close once the artifact lands.
   - `resattn-oi7` preserves the only honest tool-breakage follow-up: audit donor assignment geometry before any further rerun.
   - `resattn-qxz` is now the main next issue because the strongest results in the repo live on the saved primary-model oracle artifacts.
+
+## [2026-03-18T15:55:00-0500] DECISION: Close `resattn-qxz` by re-centering the repo on the primary-model Gemma oracle story
+
+- Trigger: `resattn-qxz` synthesized the saved `registry_v5` Gemma oracle, pattern-analysis, factual-recall cluster, and regime-comparison artifacts into one claim-oriented pass.
+- Decision: close `resattn-qxz` on a narrative correction, not a new run. The repo should now center its main story on: primary-model effective depth mixture, broad grouped/coarse structure, strong stratum-conditioned raw-source structure, and the softmax competition result. Do not center the story on a forced global raw `~8`-cluster pass or on weaker extension lanes.
+- Rationale:
+  - the primary-model oracle result is now strong and held-out at scale:
+    - oracle mean improvement over uniform `= +1.6299` on `1024` confirm prompts
+    - predicted mean improvement over uniform `= +0.8292`
+    - confirm `R^2 = 0.2392`
+    - mean JS `= 0.0985`
+  - the strongest raw-source structure is stratum-conditioned rather than global:
+    - full-surface raw-source silhouette `= 0.1664`
+    - factual-recall raw-source silhouette `= 0.4709`
+    - reasoning/math raw-source silhouette `= 0.2456`
+    - code/procedural and general text raw-source views remain weak
+  - the prereg regime comparison is already a core result:
+    - softmax beats unconstrained and every tested top-k regime on `128 / 128` confirm prompts
+  - the strongest primary-model semantic bridge is factual recall:
+    - factual recall is the strongest stratum on oracle gain, predictiveness, and raw-source structure
+    - factual raw clusters are nearly perfectly pure by factual subcategory and split into multiple internal routing modes
+- Impact:
+  - `resattn-qxz` can close once the synthesis artifact lands.
+  - `resattn-lnu` is now the main next bridge-analysis issue because it connects the strongest factual raw-source structure directly to the narrowed `v5` tool-breakage route modes.
+  - extension lanes should stay bounded until they strengthen the new primary-model oracle-centered story rather than distract from it.

@@ -30,6 +30,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
+| Gemma-2 `registry_v5` oracle synthesis v1 | oracle_alpha | pass | `results/oracle_alpha/20260318-gemma2-registry-v5-synthesis-v1.md` |
 | GPT-2 XL development-model oracle-alpha slice | oracle_alpha | partial | `results/oracle_alpha/20260316-gpt2xl-development-slice.md` |
 | GPT-2 XL pilot stability suite | oracle_alpha | partial | `results/oracle_alpha/20260316-gpt2xl-pilot-stability-suite.md` |
 | GPT-2 XL held-out predictiveness check | oracle_alpha | fail | `results/oracle_alpha/20260316-gpt2xl-heldout-predictiveness-check.md` |

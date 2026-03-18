@@ -1744,3 +1744,25 @@ Suggested entry format:
   - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0898`
   - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.1021`
   - route modes with identical `prompt_permuted_alpha` and `within_family_permuted_alpha` means `= 7 / 10`
+## [2026-03-18T15:55:00-0500] The Gemma Story Is Finally Coherent
+- Stage: oracle synthesis
+- Feel of the Experiment: The repo is finally in a cleaner state than the story around it. The strongest evidence is no longer a scattered pile of artifacts. It points in one direction: effective depth mixture is real on the primary model, competition matters, and the most meaningful raw structure lives inside factual recall rather than in one grand global cluster claim.
+- Working Hypotheses:
+  - The next high-value move is a factual bridge analysis, not another mixed-surface oracle rerun.
+  - The paper should now lead with the primary-model oracle result rather than treating it as one lane among many.
+- Hunches and Guesses:
+  - The best next cross-lane result is to show that the narrowed `v5` tool-breakage route modes overlap the strongest factual raw-source clusters only partially, not perfectly.
+  - Reasoning/math is real but should stay second-tier until it gets an equally strong bridge.
+- Predictions:
+  - `lnu` will clarify whether the current factual tool-breakage bridge already targets the strongest factual routing modes or only a subset.
+  - If we keep the narrative disciplined here, reviewer pushback shifts from “is the signal real?” to “how far can you extend it?”
+- Surprises and Tensions:
+  - The regime-comparison result is stronger and cleaner than some of the flashier extension lanes, which means we should stop treating it like a side artifact.
+  - The global raw-source story is weak enough that forcing it would be dishonest, but the factual-recall raw-source story is strong enough that ignoring it would also be dishonest.
+- Confidence:
+  - high that `qxz` should close on a narrative correction rather than another run
+  - high that `lnu` is the right next bridge issue
+- Interesting facts:
+  - full-surface raw-source silhouette `= 0.1664`
+  - factual-recall raw-source silhouette `= 0.4709`
+  - softmax beats every tested alternative on `128 / 128` confirm prompts
