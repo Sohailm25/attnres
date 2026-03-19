@@ -2144,3 +2144,27 @@ Suggested entry format:
   - `linear`: `R^2 = 0.4076`, mean JS `= 0.0797`
   - `mlp`: `R^2 = 0.4211`, mean JS `= 0.0785`
   - rerun-stable family-comparison hash: `0ceba4be9932c94ff312c7724cf8528fb856c15c`
+
+## [2026-03-18T23:59:20-0500] The Approximate Tokenwise Teacher Was the Wrong Idea
+- Stage: router-distillation bounded tokenwise teacher comparison
+- Feel of the Experiment: This is a good negative result. The bounded teacher did not merely fail to help; it failed hard enough to kill the tempting story that “anything more token-local must be better.” The matched next-token mask control being almost identical to the baseline makes the read cleaner.
+- Working Hypotheses:
+  - The retained Phase 6 baseline should stay `mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`.
+  - The next honest target-fidelity test is a small exact tokenwise oracle slice, not a full export redesign and not another architecture tweak.
+- Hunches and Guesses:
+  - The shared-final-norm next-token contribution teacher is misaligned with the sequence-level alpha object we eventually decode and score.
+  - If true tokenwise oracle targets help, they will need to be genuinely exact on a bounded subset, because this approximation is too wrong to extrapolate from.
+- Predictions:
+  - `resattn-afu` should close as a stable negative result for the bounded approximation.
+  - `resattn-7xo` is now the right next step.
+- Surprises and Tensions:
+  - The first real launch catching the `RMSPre` assumption bug and the missing `_fixed_residual_sources` import was annoying, but also exactly why the first real run mattered.
+  - The matched-mask control staying almost tied means “next-token positions only” is not the missing lever here.
+- Confidence:
+  - high that the bounded contribution teacher should not be used again on this lane
+  - medium-high that the next honest question is exact tokenwise oracle fidelity on a smaller subset
+- Interesting facts:
+  - `all_tokens_target_mse`: `R^2 = 0.4211`, mean JS `= 0.0785`
+  - `next_token_positions_sequence_target_mse`: `R^2 = 0.4201`, mean JS `= 0.0792`
+  - `next_token_positions_oracle_alpha_target_logit_contribution_mse`: `R^2 = -11.2639`, mean JS `= 0.4320`
+  - rerun-stable comparison hash: `97872d32c0f5fa3d6bf5c75bd7f06c7acab5874a`

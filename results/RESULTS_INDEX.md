@@ -138,6 +138,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 router-distillation supervision-granularity audit v1 | router_training | pass | `results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1.md` |
 | Gemma-2 router-distillation supervision-objective comparison v1 | router_training | pass | `results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1.md` |
 | Gemma-2 router-distillation family comparison under all-token supervision v1 | router_training | mixed | `results/router_training/20260318-gemma2-router-distillation-family-comparison-all-tokens-v1.md` |
+| Gemma-2 router-distillation teacher-target comparison v1 | router_training | fail | `results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1.md` |
 
 ## Safety Alignment
 

@@ -1320,14 +1320,37 @@
       - the saved Phase 6 baseline should move to `mlp` under the improved supervision objective, while the next honest blocker becomes target fidelity rather than another blind family or width sweep
     - rerun note:
       - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`0ceba4be9932c94ff312c7724cf8528fb856c15c`)
+  - `resattn-afu` now compares bounded tokenwise teacher targets against the retained all-token Gemma Phase 6 baseline:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_teacher_target_comparison.py` now support frozen-split comparison between the retained repeated sequence target, a matched next-token-position mask control, and a bounded oracle-conditioned tokenwise teacher
+    - the comparison reused the saved all-token family artifact unchanged:
+      - baseline row: `mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`
+      - split: exact `192 / 64` train/eval prompt IDs from `20260318-gemma2-router-distillation-family-comparison-all-tokens-v1/summary.json`
+    - implementation checks:
+      - the first real launch exposed two real defects, both fixed before interpretation:
+        - the teacher builder rejected Gemma `RMSPre` final norm even though Gemma is the intended primary model
+        - `_fixed_residual_sources` had not been imported explicitly into `validation/router_distillation.py`
+      - after the fix, the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`97872d32c0f5fa3d6bf5c75bd7f06c7acab5874a`)
+    - bounded-teacher result:
+      - `all_tokens_target_mse`: `R^2 = 0.4211`, mean JS `= 0.0785`
+      - `next_token_positions_sequence_target_mse`: `R^2 = 0.4201`, mean JS `= 0.0792`
+      - `next_token_positions_oracle_alpha_target_logit_contribution_mse`: `R^2 = -11.2639`, mean JS `= 0.4320`
+      - selected objective stayed `all_tokens_target_mse`
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - the retained repeated all-token sequence target remains the least-bad Phase 6 baseline on this saved export
+      - simply masking to positions with a valid next token is effectively a no-op on the held-out metrics
+      - the bounded shared-final-norm contribution teacher is the wrong target surface, not a near miss
+      - architecture search should stay frozen while target fidelity is tested with a more faithful exact tokenwise oracle slice rather than another approximation
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the bounded family question is now answered on the saved Gemma pilot split: under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head, but the pilot still misses the readiness gate
-   - the main active implementation step is now `resattn-afu`: compare bounded tokenwise teacher targets against the retained all-token MLP baseline rather than reopening broad architecture search
+   - the bounded family and approximate-teacher questions are now answered on the saved Gemma pilot split:
+     - under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head
+     - the bounded shared-final-norm tokenwise teacher fails badly, while the matched next-token-position mask control is essentially a tie
+   - the main active implementation step is now `resattn-7xo`: compare a small exact tokenwise oracle-teacher slice against the retained all-token MLP baseline rather than reopening broad architecture search or redesigning the whole export by assumption
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

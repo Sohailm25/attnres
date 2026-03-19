@@ -1663,3 +1663,27 @@
   - `resattn-d36` can close once the artifact lands.
   - `resattn-afu` is now the next main Phase 6 issue.
   - future architecture work on this saved export should stay frozen unless a more faithful tokenwise target first shows that target fidelity is no longer the main blocker.
+
+## [2026-03-18T23:59:20-0500] DECISION: Close `resattn-afu` as a stable negative result for the bounded shared-final-norm tokenwise teacher
+
+- Trigger: `resattn-afu` compared the retained all-token Gemma Phase 6 baseline against a matched next-token-position mask control and a bounded oracle-conditioned tokenwise teacher derived from shared-final-norm target-logit contributions.
+- Decision: close `resattn-afu` as a real negative result for this bounded approximation. Keep the saved Phase 6 baseline as `mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`. Do not redesign the full export yet. Do not reopen architecture search. The next honest follow-up is a small exact tokenwise oracle-teacher slice on a bounded subset.
+- Rationale:
+  - the retained baseline stayed best on the frozen `192 / 64` split:
+    - `all_tokens_target_mse`: `R^2 = 0.4211`, mean JS `= 0.0785`
+  - the matched support control was effectively a tie, so simple next-token masking is not the missing lever:
+    - `next_token_positions_sequence_target_mse`: `R^2 = 0.4201`, mean JS `= 0.0792`
+  - the bounded oracle-conditioned teacher failed catastrophically rather than narrowly:
+    - `next_token_positions_oracle_alpha_target_logit_contribution_mse`: `R^2 = -11.2639`, mean JS `= 0.4320`
+    - selected `best_epoch = 2`
+  - that combination supports a narrower conclusion than “tokenwise supervision is bad”:
+    - this specific shared-final-norm contribution approximation is the wrong target surface
+    - it is not evidence that exact tokenwise oracle teachers would fail
+  - the first real launch also exposed two implementation defects that had to be fixed before interpretation:
+    - the teacher builder wrongly rejected Gemma `RMSPre` final norm
+    - `_fixed_residual_sources` had not been imported explicitly into `validation/router_distillation.py`
+  - after those fixes, the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the negative result is stable
+- Impact:
+  - `resattn-afu` can close once the artifact lands.
+  - `resattn-7xo` is now the next main Phase 6 issue.
+  - future Phase 6 work on target fidelity should compare against a small exact tokenwise oracle slice before any full export redesign.

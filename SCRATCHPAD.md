@@ -2187,3 +2187,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`13cbb0d9d69f05cdb5d97e0ed69b66d0f72ea350`).
 - Next step: close `resattn-tqn`, move the saved pilot baseline to `all_tokens_target_mse`, and take `resattn-d36` to re-run the family comparison under the improved supervision objective.
+
+## [2026-03-18T23:36:34-0500] PRE-RUN: Gemma router-distillation teacher-target comparison v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_teacher_target_comparison.py`
+- Command: `mkdir -p results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_teacher_target_comparison.py --output-dir results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1 --device mps > results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `frozen_family_summary=20260318-gemma2-router-distillation-family-comparison-all-tokens-v1/summary.json`, `baseline=mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`, `split=family-summary train/eval ids`, `candidate_supervision_objectives=all_tokens_target_mse/next_token_positions_sequence_target_mse/next_token_positions_oracle_alpha_target_logit_contribution_mse`, `hidden_dim=512`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether a bounded oracle-conditioned tokenwise teacher materially improves held-out router fit over the retained repeated sequence-target baseline and a matched next-token-position mask control.
+- Expected outcome: either the oracle-conditioned teacher clearly beats both baselines and justifies a richer tokenwise export redesign, or the result stays near the current baseline and Phase 6 should keep architecture search frozen while we rethink target fidelity more fundamentally.
+- Expected duration: ~10-35 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the saved export lacks true tokenwise oracle targets, any gain here must be read specifically as evidence for a bounded shared-final-norm target-logit teacher, not as proof that full tokenwise oracle supervision would win.
+- Implementation verified: YES - `tests.test_router_distillation` now covers the tokenwise teacher builder, the supervision-loss path, and the broader router-distillation module passes on `.venv`.
+- Status: LAUNCHING
+
+## [2026-03-18T23:59:20-0500] POST-RUN: Gemma router-distillation teacher-target comparison v1
+- Outcome: SUCCESS
+- Key metric: the retained all-token baseline stayed best (`R^2 = 0.4211`, mean JS `= 0.0785`); the matched next-token mask control was effectively a tie (`R^2 = 0.4201`, mean JS `= 0.0792`), while the bounded oracle-conditioned tokenwise teacher collapsed (`R^2 = -11.2639`, mean JS `= 0.4320`).
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: the first launch exposed two implementation defects, both fixed before interpretation: the teacher builder rejected Gemma `RMSPre` final norm and had not imported `_fixed_residual_sources` explicitly. After the fix, the exact-command rerun preserved the `summary.json` hash on MPS (`97872d32c0f5fa3d6bf5c75bd7f06c7acab5874a`).
+- Next step: close `resattn-afu`, keep the repeated all-token sequence target as the saved Phase 6 baseline, and take `resattn-7xo` for a small exact tokenwise oracle-teacher subset before any full export redesign.
