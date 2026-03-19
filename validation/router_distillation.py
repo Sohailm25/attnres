@@ -171,6 +171,7 @@ class RouterDistillationFamilyComparisonSummary:
     fixed_input_field: str
     fixed_target_name: str
     fixed_aggregation: str
+    fixed_supervision_objective: str
     candidate_router_families: tuple[str, ...]
     hidden_dim: int
     selection_primary_metric: str
@@ -1868,11 +1869,14 @@ def compare_router_families(
     candidate_router_families: Sequence[str],
     hidden_dim: int,
     eval_fraction: float,
+    train_prompt_ids: Sequence[str] | None = None,
+    eval_prompt_ids: Sequence[str] | None = None,
     learning_rate: float,
     weight_decay: float = 1e-4,
     batch_size: int = 16,
     max_epochs: int = 300,
     patience: int = 40,
+    supervision_objective: str = "sequence_target_mse",
     seed: int = 11,
     device: str = "cpu",
     collection_id: str = "unknown",
@@ -1891,12 +1895,28 @@ def compare_router_families(
             raise ValueError(f"unsupported router family {router_family!r}")
     if hidden_dim < 1:
         raise ValueError("hidden_dim must be positive")
-
-    train_examples, eval_examples = stratified_router_train_eval_split(
-        examples,
-        eval_fraction=eval_fraction,
-        seed=seed,
-    )
+    if supervision_objective not in ALLOWED_SUPERVISION_OBJECTIVES:
+        raise ValueError(f"unsupported supervision objective {supervision_objective!r}")
+    if (train_prompt_ids is None) != (eval_prompt_ids is None):
+        raise ValueError(
+            "train_prompt_ids and eval_prompt_ids must either both be provided "
+            "or both be omitted"
+        )
+    if train_prompt_ids is None:
+        train_examples, eval_examples = stratified_router_train_eval_split(
+            examples,
+            eval_fraction=eval_fraction,
+            seed=seed,
+        )
+    else:
+        train_examples = _examples_for_prompt_ids(
+            examples=examples,
+            prompt_ids=train_prompt_ids,
+        )
+        eval_examples = _examples_for_prompt_ids(
+            examples=examples,
+            prompt_ids=eval_prompt_ids or (),
+        )
     torch_device = torch.device(device)
 
     input_summaries: list[RouterDistillationInputSummary] = []
@@ -1915,6 +1935,7 @@ def compare_router_families(
             batch_size=batch_size,
             max_epochs=max_epochs,
             patience=patience,
+            supervision_objective=supervision_objective,
             seed=seed,
             device=torch_device,
         )
@@ -1947,6 +1968,7 @@ def compare_router_families(
         fixed_input_field=fixed_input_field,
         fixed_target_name=fixed_target_name,
         fixed_aggregation=fixed_aggregation,
+        fixed_supervision_objective=supervision_objective,
         candidate_router_families=tuple(candidate_router_families),
         hidden_dim=hidden_dim,
         selection_primary_metric="r_squared",

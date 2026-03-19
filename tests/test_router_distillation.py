@@ -493,6 +493,108 @@ class RouterDistillationTests(unittest.TestCase):
         self.assertLess(summaries["linear"].eval_summary.r_squared, 0.3)
         self.assertGreater(summaries["mlp"].eval_summary.r_squared, 0.8)
 
+    def test_compare_router_families_respects_fixed_split_and_all_token_supervision(
+        self,
+    ) -> None:
+        examples = [
+            self._quadrant_parity_example(
+                prompt_id=f"prompt-{index}",
+                subcategory=(
+                    "subcategory_capital_fact"
+                    if index < 8
+                    else "subcategory_author_fact"
+                    if index < 16
+                    else "subcategory_element_fact"
+                    if index < 24
+                    else "subcategory_city_fact"
+                ),
+                point_index=index,
+                signal_field="h_4[t]",
+            )
+            for index in range(32)
+        ]
+        train_prompt_ids = tuple(
+            f"prompt-{index}"
+            for index in (
+                0,
+                1,
+                2,
+                3,
+                8,
+                9,
+                10,
+                11,
+                16,
+                17,
+                18,
+                19,
+                24,
+                25,
+                26,
+                27,
+            )
+        )
+        eval_prompt_ids = tuple(
+            f"prompt-{index}"
+            for index in (
+                4,
+                5,
+                6,
+                7,
+                12,
+                13,
+                14,
+                15,
+                20,
+                21,
+                22,
+                23,
+                28,
+                29,
+                30,
+                31,
+            )
+        )
+
+        comparison = self.compare_router_families(
+            examples=examples,
+            fixed_input_field="h_4[t]",
+            fixed_target_name="oracle_alpha_logit_vector",
+            fixed_aggregation="mean_token_logits_then_softmax",
+            candidate_router_families=("linear", "mlp"),
+            hidden_dim=8,
+            train_prompt_ids=train_prompt_ids,
+            eval_prompt_ids=eval_prompt_ids,
+            supervision_objective="all_tokens_target_mse",
+            eval_fraction=0.25,
+            learning_rate=0.05,
+            max_epochs=400,
+            patience=60,
+            seed=11,
+            device="cpu",
+        )
+
+        self.assertEqual(
+            "all_tokens_target_mse", comparison.fixed_supervision_objective
+        )
+        self.assertEqual(train_prompt_ids, comparison.train_prompt_ids)
+        self.assertEqual(eval_prompt_ids, comparison.eval_prompt_ids)
+        summaries = {
+            summary.router_family: summary for summary in comparison.input_summaries
+        }
+        self.assertEqual(
+            "all_tokens_target_mse",
+            summaries["linear"].supervision_objective,
+        )
+        self.assertEqual(
+            "all_tokens_target_mse",
+            summaries["mlp"].supervision_objective,
+        )
+        self.assertGreater(
+            summaries["mlp"].eval_summary.r_squared,
+            summaries["linear"].eval_summary.r_squared,
+        )
+
     def test_summarize_router_supervision_granularity_highlights_stratum_gap(
         self,
     ) -> None:

@@ -1641,3 +1641,25 @@
   - `resattn-tqn` can close once the artifact lands.
   - `resattn-d36` is now the next main Phase 6 issue.
   - future architecture comparisons on this saved export should use `all_tokens_target_mse` rather than the old sequence-level supervision objective.
+
+## [2026-03-18T22:50:00-0500] DECISION: Close `resattn-d36` as a bounded family reopening and move Phase 6 next to tokenwise teacher fidelity
+
+- Trigger: `resattn-d36` re-ran the saved Gemma router-family comparison under the improved `all_tokens_target_mse` supervision baseline while reusing the frozen `192 / 64` family-summary split unchanged.
+- Decision: close `resattn-d36` as a real but bounded MLP win. Move the saved Phase 6 baseline from `linear` back to `mlp`, but only under `all_tokens_target_mse`. Do not reopen broad architecture search. The next honest Phase 6 step is a bounded tokenwise teacher-target comparison rather than another family or width sweep.
+- Rationale:
+  - the retained all-token linear row matched the saved supervision-objective artifact exactly on the same split:
+    - `linear`: `R^2 = 0.4076`, mean JS `= 0.0797`
+  - under the improved supervision objective, the widened MLP now wins on both held-out metrics:
+    - `mlp`: `R^2 = 0.4211`, mean JS `= 0.0785`
+    - `R^2` delta over linear `= +0.0135`
+    - mean JS delta over linear `= -0.0012`
+  - that is enough to reject the stronger old conclusion that linear remains the least-bad family even after supervision improves
+  - it is not enough to justify another open-ended architecture sweep:
+    - the gain is modest
+    - the pilot still misses the prereg readiness gate by a visible margin
+    - the bigger conceptual mismatch is still the teacher target, because the current all-token objective repeats one sequence-level oracle target at every token
+  - the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the family reordering is stable rather than a seed accident
+- Impact:
+  - `resattn-d36` can close once the artifact lands.
+  - `resattn-afu` is now the next main Phase 6 issue.
+  - future architecture work on this saved export should stay frozen unless a more faithful tokenwise target first shows that target fidelity is no longer the main blocker.

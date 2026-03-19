@@ -2121,3 +2121,26 @@ Suggested entry format:
 - Interesting facts:
   - `all_tokens_target_mse`: `R^2 = 0.4076`, mean JS `= 0.0797`
   - rerun-stable comparison hash: `13cbb0d9d69f05cdb5d97e0ed69b66d0f72ea350`
+
+## [2026-03-18T22:50:00-0500] The MLP Came Back, But Only a Little
+- Stage: router-distillation family comparison under all-token supervision
+- Feel of the Experiment: This is a useful correction, not a breakthrough. The old linear win really was partly about the weaker supervision surface. But the new MLP win is still small enough that I would not trust any story that says “the remaining problem was just head family.”
+- Working Hypotheses:
+  - The retained Phase 6 baseline should now be `mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`.
+  - The next honest blocker is target fidelity, not another blind architecture sweep.
+- Hunches and Guesses:
+  - Repeating one sequence-level teacher target at every token is now the most suspicious simplification left on the saved export.
+  - If a bigger jump is still available on this pilot surface, it is more likely to come from bounded tokenwise teacher targets than from `mlp` versus `deeper_mlp`.
+- Predictions:
+  - `resattn-d36` should close as a bounded pass.
+  - `resattn-afu` should be the next main Phase 6 step.
+- Surprises and Tensions:
+  - I expected either a tie or a noisier rerun. Getting a stable hash with the MLP now winning both metrics is cleaner than that.
+  - The gain is real but annoyingly small, which is exactly the kind of result that can tempt over-iteration if we do not freeze the architecture surface on purpose.
+- Confidence:
+  - high that the Phase 6 baseline should move back to the MLP under `all_tokens_target_mse`
+  - high that more faithful tokenwise teacher targets are now the right next question
+- Interesting facts:
+  - `linear`: `R^2 = 0.4076`, mean JS `= 0.0797`
+  - `mlp`: `R^2 = 0.4211`, mean JS `= 0.0785`
+  - rerun-stable family-comparison hash: `0ceba4be9932c94ff312c7724cf8528fb856c15c`

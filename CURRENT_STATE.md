@@ -1300,13 +1300,34 @@
       - the next honest follow-up is a bounded family comparison under the improved supervision objective rather than a blind return to wider architecture search or an immediate export redesign
     - rerun note:
       - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`13cbb0d9d69f05cdb5d97e0ed69b66d0f72ea350`)
+  - `resattn-d36` now re-runs the bounded Gemma router-family comparison under the improved all-token supervision baseline:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_family_comparison.py` now support reusing a frozen saved split plus an explicit supervision objective instead of forcing a fresh stratified re-split under the old sequence-level default
+    - the comparison reused the saved supervision-objective artifact unchanged:
+      - baseline row: `linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`
+      - split: exact `192 / 64` train/eval prompt IDs from `20260318-gemma2-router-distillation-family-comparison-v1/summary.json`
+    - implementation check:
+      - the retained all-token linear row matched the saved supervision-objective artifact exactly on the same split:
+        - held-out `R^2 = 0.4076`
+        - held-out mean JS `= 0.0797`
+    - family-under-all-tokens result:
+      - `linear`: `R^2 = 0.4076`, mean JS `= 0.0797`
+      - `mlp`: `R^2 = 0.4211`, mean JS `= 0.0785`
+      - selected family moved back to `mlp` under the prereg primary metric and also won on the secondary metric
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - the old linear-favored family conclusion was conditional on the weaker sequence-level supervision objective
+      - architecture family matters again under `all_tokens_target_mse`, but only modestly
+      - the saved Phase 6 baseline should move to `mlp` under the improved supervision objective, while the next honest blocker becomes target fidelity rather than another blind family or width sweep
+    - rerun note:
+      - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`0ceba4be9932c94ff312c7724cf8528fb856c15c`)
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the main active implementation step is now `resattn-d36`: re-test the bounded linear-versus-MLP family question under the improved `all_tokens_target_mse` supervision baseline on the same saved Gemma pilot split
+   - the bounded family question is now answered on the saved Gemma pilot split: under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head, but the pilot still misses the readiness gate
+   - the main active implementation step is now `resattn-afu`: compare bounded tokenwise teacher targets against the retained all-token MLP baseline rather than reopening broad architecture search
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

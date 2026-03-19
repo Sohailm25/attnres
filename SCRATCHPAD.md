@@ -219,6 +219,25 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Command: `.venv/bin/python scripts/run_oracle_alpha_heldout_predictiveness_check.py --output results/oracle_alpha/20260317-gpt2xl-heldout-predictiveness-prompt-hybrid-comparison.json --optimization-steps 20 --learning-rate 0.1 --seed 11`
 - Outcome: FAILURE
 
+## [2026-03-18T22:42:00-0500] PRE-RUN: Gemma router family comparison under all-token supervision
+- Command: `.venv/bin/python scripts/run_router_distillation_family_comparison.py --export-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 --supervision-summary-path results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1/summary.json --output-dir results/router_training/20260318-gemma2-router-distillation-family-comparison-all-tokens-v1 --candidate-router-families linear mlp --device mps`
+- Device: `mps`
+- Model: `google/gemma-2-2b` saved pilot export
+- Data slice: frozen `192 / 64` Gemma router-distillation pilot split from `20260318-gemma2-router-distillation-family-comparison-v1`
+- Output path: `results/router_training/20260318-gemma2-router-distillation-family-comparison-all-tokens-v1`
+- What I'm testing: whether the old linear-versus-MLP family result changes once the family comparison is re-run under the improved `all_tokens_target_mse` supervision baseline on the same saved split.
+- Expected outcome: either the MLP reopens architecture search with a clear held-out gain over the all-token linear baseline, or the family ranking stays effectively unchanged and the next honest move becomes more faithful tokenwise supervision rather than more family tweaking.
+- Implementation verified: YES - targeted unit tests now cover fixed-split family comparison under explicit `all_tokens_target_mse`.
+- Status: LAUNCHING
+
+## [2026-03-18T22:50:00-0500] POST-RUN: Gemma router family comparison under all-token supervision
+- Command: `.venv/bin/python scripts/run_router_distillation_family_comparison.py --export-dir results/router_training/20260318-gemma2-router-distillation-pilot-export-v1 --supervision-summary-path results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1/summary.json --output-dir results/router_training/20260318-gemma2-router-distillation-family-comparison-all-tokens-v1 --candidate-router-families linear mlp --device mps`
+- Outcome: SUCCESS
+- Key metric: selected family moved to `mlp`; held-out `R^2 = 0.4211`, mean JS `= 0.0785`
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-family-comparison-all-tokens-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-family-comparison-all-tokens-v1.md`
+- Anomalies: none; the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`0ceba4be9932c94ff312c7724cf8528fb856c15c`)
+- Next step: compare bounded tokenwise teacher targets against the retained all-token MLP baseline in `resattn-afu`
+
 ## [2026-03-18T15:13:39-0500] PRE-RUN: route-mode-aware donor-arm counterfactual v5
 - tmux session: `tb-v5-donor`
 - Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
