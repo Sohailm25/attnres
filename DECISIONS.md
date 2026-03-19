@@ -1797,3 +1797,24 @@
   - `resattn-b4h` stays first in the queue.
   - `resattn-y4m` is now the next bounded design follow-up after `b4h`.
   - the repo should not reopen Figure 8, tool-breakage, or the raw `~8`-cluster story on the strength of this memoir alone.
+
+## [2026-03-19T09:27:54-0500] DECISION: Close `resattn-b4h` as a variance-dominated diagnosis and move Phase 6 next to coarser compression
+
+- Trigger: `resattn-b4h` reused the frozen `resattn-7xo` subset and exact-teacher config to compare tokenwise exact teachers, their prompt-level aggregations, the repeated sequence target, and the saved sequence-level oracle alpha on the same `48` prompts.
+- Decision: close `resattn-b4h` as a successful diagnosis pass. Do not expand exact-tokenwise-teacher work. Keep the retained broader Phase 6 baseline as `mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`. Move next to `resattn-y4m`, the embedding-isolated block-compressed target comparison.
+- Rationale:
+  - the mismatch audit identifies `within_prompt_teacher_variance` as the dominant failure mechanism, not sequence aggregation mismatch:
+    - mean within-prompt JS to the prompt-mean exact teacher `= 0.1292`
+    - mean prompt-mean-teacher JS to the sequence oracle `= 0.0832`
+    - mean last-position-teacher JS to the sequence oracle `= 0.1910`
+  - that ordering matters:
+    - tokenwise teachers disagree with each other within prompts more than their mean disagrees with the scored sequence-level oracle
+    - the current mean-token sequence summary is already materially better than the last-token alternative, so another simple aggregation tweak is not the main rescue
+  - the averaged exact teachers are also too diffuse:
+    - mean teacher entropy minus oracle entropy `= +0.3727`
+    - mean tokenwise top-1 agreement with the oracle top-1 source `= 0.0446`
+  - the exact-command rerun preserved the `summary.json` hash on MPS (`58819a5bf2eb7b34a3d90fe8959fbbc2bf91e3a4`), so the diagnosis is stable enough to drive the next queue change
+- Impact:
+  - `resattn-b4h` can close once the artifact lands.
+  - `resattn-y4m` becomes the main active Phase 6 issue.
+  - future Phase 6 work should prefer coarser competition-preserving compression targets over more exact tokenwise-teacher fidelity on the current saved pilot surface.

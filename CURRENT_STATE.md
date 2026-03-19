@@ -1384,13 +1384,36 @@
       - the exact teacher is worse than both repeated-sequence controls on the bounded subset
       - the only positive move is the weaker support-only change from supervising next-token-valid positions, and that subset-local gain is not enough to overturn the larger `192 / 64` full-split evidence from `resattn-afu`, where the same support-only control was essentially a tie
       - the next honest question is now why exact tokenwise teachers hurt sequence-level recovery on the saved subset, not whether another tokenwise export build should start immediately
+  - `resattn-b4h` now diagnoses that exact-teacher failure directly on the saved bounded subset:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_exact_teacher_mismatch_audit.py` now reuse the frozen `resattn-7xo` subset ids plus exact-teacher config and compare:
+      - tokenwise exact teachers on valid next-token positions
+      - the prompt-mean exact teacher
+      - the last-position exact teacher
+      - the repeated prompt-level sequence target
+      - the saved final sequence-level oracle alpha
+    - implementation checks:
+      - focused unit tests now cover both variance-dominated and aggregation-mismatch synthetic cases
+      - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`58819a5bf2eb7b34a3d90fe8959fbbc2bf91e3a4`)
+    - bounded mismatch-audit result on the same `48` prompts:
+      - dominant failure mechanism: `within_prompt_teacher_variance`
+      - mean within-prompt JS to the prompt-mean teacher: `0.1292`
+      - mean prompt-mean-teacher JS to the sequence oracle: `0.0832`
+      - mean last-position-teacher JS to the sequence oracle: `0.1910`
+      - mean exact-teacher entropy minus oracle entropy: `+0.3727`
+      - mean tokenwise top-1 agreement with the oracle top-1 source: `0.0446`
+    - interpretation:
+      - the main problem is contradictory tokenwise supervision inside prompts, not an obvious mean-token aggregation bug
+      - the prompt-mean exact teacher is materially closer to the scored sequence-level oracle than the last-position teacher, so simple alternative sequence aggregation is not the main rescue
+      - exact-tokenwise teacher work should stay frozen, and the next honest Phase 6 design branch is now coarser competition-preserving compression rather than another tokenwise-teacher rerun
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the current scientific boundary and the next implementation step separately:
-   - the main active implementation step is `resattn-b4h`: diagnose whether exact-tokenwise failure is driven by within-prompt teacher variance or by sequence-aggregation mismatch before any broader tokenwise redesign is even considered
-   - the next bounded Phase 6 design follow-up is `resattn-y4m`: compare embedding-isolated block-compressed router targets on the saved Gemma pilot while preserving residual-style equal mixing as a special case
+   - `resattn-b4h` is now done:
+     - exact-tokenwise failure on the saved subset is better explained by within-prompt teacher variance than by sequence-aggregation mismatch
+     - prompt-mean exact teachers are already substantially better aligned to the sequence-level oracle than last-position teachers, so another aggregation tweak is not the next honest move
+   - the main active implementation step is now `resattn-y4m`: compare embedding-isolated block-compressed router targets on the saved Gemma pilot while preserving residual-style equal mixing as a special case
    - use the AttnRes memoir only as a design constraint here, not as evidence:
      - prefer compression that can still represent the residual baseline over sparse truncation that cannot
      - test embedding as an isolated block explicitly rather than treating it as an incidental source-type artifact
@@ -1401,7 +1424,7 @@
    - the bounded family, approximate-teacher, and exact-teacher questions are now answered on the saved Gemma pilot surfaces:
      - under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head
      - the bounded shared-final-norm tokenwise teacher fails badly, while the matched next-token-position mask control is essentially a tie
-     - the exact tokenwise teacher also fails on the bounded `32 / 16` deterministic subset, while the matched next-token-position mask gains only modestly on that smaller slice
+     - the exact tokenwise teacher also fails on the bounded `32 / 16` deterministic subset, while the follow-up mismatch audit shows that the main failure is contradictory within-prompt token supervision rather than the current mean-token sequence aggregation rule
    - the broad factual frame-versus-family question is already answered on saved artifacts:
      - the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit

@@ -285,6 +285,65 @@ class RouterDistillationSupervisionGranularityAudit:
     supervision_summary: RouterDistillationSupervisionGranularitySummary
 
 
+@dataclass(frozen=True)
+class RouterDistillationTeacherMismatchPromptDiagnostic:
+    prompt_id: str
+    subset_role: str
+    tags: tuple[str, ...]
+    num_teacher_positions: int
+    oracle_entropy: float
+    repeated_target_entropy: float
+    mean_teacher_entropy: float
+    last_teacher_entropy: float
+    within_prompt_js_to_mean_teacher: float
+    within_prompt_js_to_oracle: float
+    mean_teacher_js_to_oracle: float
+    last_teacher_js_to_oracle: float
+    mean_teacher_js_to_repeated_target: float
+    top1_token_agreement_with_oracle: float
+    top1_token_agreement_with_mean_teacher: float
+
+
+@dataclass(frozen=True)
+class RouterDistillationTeacherMismatchGroupSummary:
+    group_key: str
+    prompt_count: int
+    mean_within_prompt_js_to_mean_teacher: float
+    mean_mean_teacher_js_to_oracle: float
+    mean_last_teacher_js_to_oracle: float
+    mean_top1_token_agreement_with_oracle: float
+    mean_teacher_entropy_minus_oracle_entropy: float
+
+
+@dataclass(frozen=True)
+class RouterDistillationTeacherMismatchSummary:
+    prompt_count: int
+    dominant_failure_mechanism: str
+    recommended_next_step: str
+    rationale: str
+    mean_within_prompt_js_to_mean_teacher: float
+    mean_mean_teacher_js_to_oracle: float
+    mean_last_teacher_js_to_oracle: float
+    mean_top1_token_agreement_with_oracle: float
+    mean_top1_token_agreement_with_mean_teacher: float
+    mean_teacher_entropy_minus_oracle_entropy: float
+    stratum_summaries: tuple[RouterDistillationTeacherMismatchGroupSummary, ...]
+
+
+@dataclass(frozen=True)
+class RouterDistillationTeacherMismatchAudit:
+    collection_id: str
+    model_name: str
+    split: str
+    target_name: str
+    train_prompt_count: int
+    eval_prompt_count: int
+    train_prompt_ids: tuple[str, ...]
+    eval_prompt_ids: tuple[str, ...]
+    prompt_diagnostics: tuple[RouterDistillationTeacherMismatchPromptDiagnostic, ...]
+    mismatch_summary: RouterDistillationTeacherMismatchSummary
+
+
 @dataclass
 class _FittedRouterArtifacts:
     model: torch.nn.Module
@@ -1111,6 +1170,326 @@ def summarize_router_supervision_granularity(
         rationale=rationale,
         stratum_summaries=tuple(stratum_summaries),
         attribute_correlations=attribute_correlations,
+    )
+
+
+def summarize_exact_teacher_mismatch(
+    *,
+    prompt_diagnostics: Sequence[RouterDistillationTeacherMismatchPromptDiagnostic],
+) -> RouterDistillationTeacherMismatchSummary:
+    if not prompt_diagnostics:
+        raise ValueError("prompt_diagnostics must not be empty")
+
+    grouped_by_stratum: dict[
+        str, list[RouterDistillationTeacherMismatchPromptDiagnostic]
+    ] = {}
+    for diagnostic in prompt_diagnostics:
+        grouped_by_stratum.setdefault(
+            _tag_with_prefix(diagnostic.tags, prefix="stratum_"),
+            [],
+        ).append(diagnostic)
+
+    stratum_summaries = []
+    for stratum_tag in sorted(grouped_by_stratum):
+        diagnostics = grouped_by_stratum[stratum_tag]
+        prompt_count = len(diagnostics)
+        stratum_summaries.append(
+            RouterDistillationTeacherMismatchGroupSummary(
+                group_key=stratum_tag,
+                prompt_count=prompt_count,
+                mean_within_prompt_js_to_mean_teacher=sum(
+                    item.within_prompt_js_to_mean_teacher for item in diagnostics
+                )
+                / prompt_count,
+                mean_mean_teacher_js_to_oracle=sum(
+                    item.mean_teacher_js_to_oracle for item in diagnostics
+                )
+                / prompt_count,
+                mean_last_teacher_js_to_oracle=sum(
+                    item.last_teacher_js_to_oracle for item in diagnostics
+                )
+                / prompt_count,
+                mean_top1_token_agreement_with_oracle=sum(
+                    item.top1_token_agreement_with_oracle for item in diagnostics
+                )
+                / prompt_count,
+                mean_teacher_entropy_minus_oracle_entropy=sum(
+                    item.mean_teacher_entropy - item.oracle_entropy
+                    for item in diagnostics
+                )
+                / prompt_count,
+            )
+        )
+
+    prompt_count = len(prompt_diagnostics)
+    mean_within_prompt_js_to_mean_teacher = (
+        sum(item.within_prompt_js_to_mean_teacher for item in prompt_diagnostics)
+        / prompt_count
+    )
+    mean_mean_teacher_js_to_oracle = (
+        sum(item.mean_teacher_js_to_oracle for item in prompt_diagnostics)
+        / prompt_count
+    )
+    mean_last_teacher_js_to_oracle = (
+        sum(item.last_teacher_js_to_oracle for item in prompt_diagnostics)
+        / prompt_count
+    )
+    mean_top1_token_agreement_with_oracle = (
+        sum(item.top1_token_agreement_with_oracle for item in prompt_diagnostics)
+        / prompt_count
+    )
+    mean_top1_token_agreement_with_mean_teacher = (
+        sum(item.top1_token_agreement_with_mean_teacher for item in prompt_diagnostics)
+        / prompt_count
+    )
+    mean_teacher_entropy_minus_oracle_entropy = (
+        sum(
+            item.mean_teacher_entropy - item.oracle_entropy
+            for item in prompt_diagnostics
+        )
+        / prompt_count
+    )
+
+    if mean_last_teacher_js_to_oracle + 0.02 < mean_mean_teacher_js_to_oracle:
+        dominant_failure_mechanism = "sequence_aggregation_mismatch"
+        recommended_next_step = (
+            "test_alternative_sequence_aggregation_before_more_tokenwise_work"
+        )
+        rationale = (
+            "The last-position exact teacher aligns materially better with the "
+            "sequence-level oracle than the current mean-token aggregation, so "
+            "aggregation choice is the clearest bounded mismatch."
+        )
+    elif mean_within_prompt_js_to_mean_teacher >= mean_mean_teacher_js_to_oracle + 0.02:
+        dominant_failure_mechanism = "within_prompt_teacher_variance"
+        recommended_next_step = "do_not_expand_exact_tokenwise_teacher_work"
+        rationale = (
+            "Tokenwise exact teachers disagree within prompts more than their "
+            "mean disagrees with the scored sequence-level oracle, and the "
+            "current mean aggregation is already better than the last-token "
+            "alternative. The main failure is contradictory per-token "
+            "supervision, not an obvious sequence aggregation bug."
+        )
+    elif mean_mean_teacher_js_to_oracle >= mean_within_prompt_js_to_mean_teacher + 0.02:
+        dominant_failure_mechanism = "sequence_level_target_misalignment"
+        recommended_next_step = (
+            "keep_sequence_level_baseline_and_prefer_coarser_targets"
+        )
+        rationale = (
+            "Even after averaging tokenwise exact teachers at the sequence level, "
+            "the result still differs from the scored oracle more than tokenwise "
+            "teachers differ among themselves. The problem looks more like target "
+            "misalignment than token-level noise alone."
+        )
+    else:
+        dominant_failure_mechanism = "mixed_variance_and_target_misalignment"
+        recommended_next_step = (
+            "keep_sequence_level_baseline_and_avoid_more_exact_teacher_runs"
+        )
+        rationale = (
+            "Within-prompt variance and sequence-level mismatch are both material, "
+            "so additional exact-teacher runs are lower-value than staying with "
+            "the retained sequence-level baseline or trying coarser targets."
+        )
+    if mean_teacher_entropy_minus_oracle_entropy >= 0.1:
+        rationale += (
+            " The averaged exact teachers are also noticeably more diffuse than "
+            "the sequence-level oracle, which weakens the case for expanding "
+            "tokenwise-teacher work."
+        )
+
+    return RouterDistillationTeacherMismatchSummary(
+        prompt_count=prompt_count,
+        dominant_failure_mechanism=dominant_failure_mechanism,
+        recommended_next_step=recommended_next_step,
+        rationale=rationale,
+        mean_within_prompt_js_to_mean_teacher=mean_within_prompt_js_to_mean_teacher,
+        mean_mean_teacher_js_to_oracle=mean_mean_teacher_js_to_oracle,
+        mean_last_teacher_js_to_oracle=mean_last_teacher_js_to_oracle,
+        mean_top1_token_agreement_with_oracle=mean_top1_token_agreement_with_oracle,
+        mean_top1_token_agreement_with_mean_teacher=(
+            mean_top1_token_agreement_with_mean_teacher
+        ),
+        mean_teacher_entropy_minus_oracle_entropy=(
+            mean_teacher_entropy_minus_oracle_entropy
+        ),
+        stratum_summaries=tuple(stratum_summaries),
+    )
+
+
+def audit_exact_tokenwise_teacher_mismatch(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    train_prompt_ids: Sequence[str],
+    eval_prompt_ids: Sequence[str],
+    target_name: str,
+    tokenwise_teacher_lookup: Mapping[str, tuple[torch.Tensor, torch.Tensor]],
+    collection_id: str = "unknown",
+    model_name: str = "unknown",
+) -> RouterDistillationTeacherMismatchAudit:
+    if target_name != "oracle_alpha_logit_vector":
+        raise ValueError(
+            "exact tokenwise teacher mismatch audit currently expects the "
+            "'oracle_alpha_logit_vector' target"
+        )
+
+    train_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=train_prompt_ids,
+    )
+    eval_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=eval_prompt_ids,
+    )
+    selected_examples = train_examples + eval_examples
+    source_labels = tuple(selected_examples[0].source_labels)
+    repeated_target_matrix = target_matrix_for_router_distillation(
+        examples=selected_examples,
+        target_name=target_name,
+    )
+    repeated_target_lookup = {
+        example.prompt_id: repeated_target_matrix[index]
+        for index, example in enumerate(selected_examples)
+    }
+
+    prompt_diagnostics: list[RouterDistillationTeacherMismatchPromptDiagnostic] = []
+    for subset_role, subset_examples in (
+        ("train", train_examples),
+        ("eval", eval_examples),
+    ):
+        for example in subset_examples:
+            try:
+                teacher_targets, teacher_mask = tokenwise_teacher_lookup[
+                    example.prompt_id
+                ]
+            except KeyError as error:
+                raise ValueError(
+                    f"missing tokenwise teacher targets for prompt "
+                    f"{example.prompt_id!r}"
+                ) from error
+            if teacher_targets.ndim != 2:
+                raise ValueError("teacher_targets must have shape [pos, sources]")
+            if teacher_mask.ndim != 1:
+                raise ValueError("teacher_mask must have shape [pos]")
+            if teacher_targets.shape[0] != example.token_ids.shape[0]:
+                raise ValueError(
+                    f"teacher_targets for {example.prompt_id!r} must match the "
+                    "prompt token count"
+                )
+            if teacher_mask.shape[0] != example.token_ids.shape[0]:
+                raise ValueError(
+                    f"teacher_mask for {example.prompt_id!r} must match the prompt "
+                    "token count"
+                )
+            if teacher_targets.shape[1] != example.final_alpha.shape[0]:
+                raise ValueError(
+                    f"teacher_targets for {example.prompt_id!r} must match the "
+                    "source count"
+                )
+            valid_teacher_targets = teacher_targets[teacher_mask]
+            if valid_teacher_targets.numel() == 0:
+                raise ValueError(
+                    f"teacher targets for {example.prompt_id!r} must include at "
+                    "least one valid next-token position"
+                )
+
+            tokenwise_teacher_alpha = _prediction_matrix_to_alpha(
+                prediction_matrix=valid_teacher_targets,
+                target_name=target_name,
+                train_examples=selected_examples,
+                source_labels=source_labels,
+            )
+            mean_teacher_alpha = aggregate_token_logits_to_sequence_alpha(
+                token_logits=valid_teacher_targets,
+                aggregation="mean_token_logits_then_softmax",
+            )
+            last_teacher_alpha = aggregate_token_logits_to_sequence_alpha(
+                token_logits=valid_teacher_targets,
+                aggregation="last_token_logits_then_softmax",
+            )
+            repeated_target = repeated_target_lookup[example.prompt_id]
+            repeated_target_alpha = _prediction_matrix_to_alpha(
+                prediction_matrix=repeated_target.unsqueeze(0),
+                target_name=target_name,
+                train_examples=selected_examples,
+                source_labels=source_labels,
+            ).squeeze(0)
+            oracle_alpha = example.final_alpha
+
+            prompt_diagnostics.append(
+                RouterDistillationTeacherMismatchPromptDiagnostic(
+                    prompt_id=example.prompt_id,
+                    subset_role=subset_role,
+                    tags=example.tags,
+                    num_teacher_positions=int(valid_teacher_targets.shape[0]),
+                    oracle_entropy=_distribution_entropy(oracle_alpha.tolist()),
+                    repeated_target_entropy=_distribution_entropy(
+                        repeated_target_alpha.tolist()
+                    ),
+                    mean_teacher_entropy=_distribution_entropy(
+                        mean_teacher_alpha.tolist()
+                    ),
+                    last_teacher_entropy=_distribution_entropy(
+                        last_teacher_alpha.tolist()
+                    ),
+                    within_prompt_js_to_mean_teacher=sum(
+                        _js_divergence(
+                            token_alpha.tolist(),
+                            mean_teacher_alpha.tolist(),
+                        )
+                        for token_alpha in tokenwise_teacher_alpha
+                    )
+                    / int(tokenwise_teacher_alpha.shape[0]),
+                    within_prompt_js_to_oracle=sum(
+                        _js_divergence(
+                            token_alpha.tolist(),
+                            oracle_alpha.tolist(),
+                        )
+                        for token_alpha in tokenwise_teacher_alpha
+                    )
+                    / int(tokenwise_teacher_alpha.shape[0]),
+                    mean_teacher_js_to_oracle=_js_divergence(
+                        mean_teacher_alpha.tolist(),
+                        oracle_alpha.tolist(),
+                    ),
+                    last_teacher_js_to_oracle=_js_divergence(
+                        last_teacher_alpha.tolist(),
+                        oracle_alpha.tolist(),
+                    ),
+                    mean_teacher_js_to_repeated_target=_js_divergence(
+                        mean_teacher_alpha.tolist(),
+                        repeated_target_alpha.tolist(),
+                    ),
+                    top1_token_agreement_with_oracle=sum(
+                        int(int(token_alpha.argmax()) == int(oracle_alpha.argmax()))
+                        for token_alpha in tokenwise_teacher_alpha
+                    )
+                    / int(tokenwise_teacher_alpha.shape[0]),
+                    top1_token_agreement_with_mean_teacher=sum(
+                        int(
+                            int(token_alpha.argmax())
+                            == int(mean_teacher_alpha.argmax())
+                        )
+                        for token_alpha in tokenwise_teacher_alpha
+                    )
+                    / int(tokenwise_teacher_alpha.shape[0]),
+                )
+            )
+
+    mismatch_summary = summarize_exact_teacher_mismatch(
+        prompt_diagnostics=prompt_diagnostics
+    )
+    return RouterDistillationTeacherMismatchAudit(
+        collection_id=collection_id,
+        model_name=model_name,
+        split="pilot_subset",
+        target_name=target_name,
+        train_prompt_count=len(train_examples),
+        eval_prompt_count=len(eval_examples),
+        train_prompt_ids=tuple(train_prompt_ids),
+        eval_prompt_ids=tuple(eval_prompt_ids),
+        prompt_diagnostics=tuple(prompt_diagnostics),
+        mismatch_summary=mismatch_summary,
     )
 
 
@@ -2567,6 +2946,46 @@ def compact_router_distillation_supervision_granularity_payload(
         "attribute_correlations": [
             asdict(correlation)
             for correlation in audit.supervision_summary.attribute_correlations
+        ],
+    }
+    return payload
+
+
+def compact_router_distillation_teacher_mismatch_payload(
+    audit: RouterDistillationTeacherMismatchAudit,
+) -> dict[str, object]:
+    payload = asdict(audit)
+    payload["prompt_diagnostics"] = [
+        asdict(prompt_diagnostic) for prompt_diagnostic in audit.prompt_diagnostics
+    ]
+    payload["mismatch_summary"] = {
+        "prompt_count": audit.mismatch_summary.prompt_count,
+        "dominant_failure_mechanism": (
+            audit.mismatch_summary.dominant_failure_mechanism
+        ),
+        "recommended_next_step": audit.mismatch_summary.recommended_next_step,
+        "rationale": audit.mismatch_summary.rationale,
+        "mean_within_prompt_js_to_mean_teacher": (
+            audit.mismatch_summary.mean_within_prompt_js_to_mean_teacher
+        ),
+        "mean_mean_teacher_js_to_oracle": (
+            audit.mismatch_summary.mean_mean_teacher_js_to_oracle
+        ),
+        "mean_last_teacher_js_to_oracle": (
+            audit.mismatch_summary.mean_last_teacher_js_to_oracle
+        ),
+        "mean_top1_token_agreement_with_oracle": (
+            audit.mismatch_summary.mean_top1_token_agreement_with_oracle
+        ),
+        "mean_top1_token_agreement_with_mean_teacher": (
+            audit.mismatch_summary.mean_top1_token_agreement_with_mean_teacher
+        ),
+        "mean_teacher_entropy_minus_oracle_entropy": (
+            audit.mismatch_summary.mean_teacher_entropy_minus_oracle_entropy
+        ),
+        "stratum_summaries": [
+            asdict(group_summary)
+            for group_summary in audit.mismatch_summary.stratum_summaries
         ],
     }
     return payload
