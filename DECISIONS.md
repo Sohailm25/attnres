@@ -1687,3 +1687,28 @@
   - `resattn-afu` can close once the artifact lands.
   - `resattn-7xo` is now the next main Phase 6 issue.
   - future Phase 6 work on target fidelity should compare against a small exact tokenwise oracle slice before any full export redesign.
+
+## [2026-03-19T00:38:11-0500] DECISION: Close `resattn-7xo` as a negative result for exact tokenwise-teacher rescue on the bounded Gemma subset
+
+- Trigger: `resattn-7xo` regenerated exact per-token oracle alpha-logit teachers on a deterministic `32 / 16` stratum-balanced subset of the frozen Gemma pilot split and compared them against the retained all-token baseline plus a matched next-token-position support control.
+- Decision: close `resattn-7xo` as a real negative result for tokenwise-teacher rescue on the current Phase 6 surface. Do not redesign the full export around tokenwise teachers from this result. Keep the broader saved baseline as `mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`. The next honest follow-up is diagnosis on the saved subset artifact, not another expensive tokenwise run.
+- Rationale:
+  - the exact teacher is worse than both repeated-sequence controls on the bounded subset:
+    - `all_tokens_target_mse`: `R^2 = 0.1567`, mean JS `= 0.1014`
+    - `next_token_positions_sequence_target_mse`: `R^2 = 0.1803`, mean JS `= 0.0998`
+    - `next_token_positions_exact_oracle_alpha_logit_mse`: `R^2 = -0.1126`, mean JS `= 0.1486`
+  - that is enough to reject the main rescue hypothesis:
+    - paying the exact-teacher cost did not help
+    - exact tokenwise oracle supervision is not obviously the missing ingredient on this saved pilot surface
+  - the only positive movement is narrower:
+    - restricting repeated sequence-level supervision to next-token-valid positions helped modestly on the bounded subset
+    - but that does not override the larger `192 / 64` full-split evidence from `resattn-afu`, where the same support-only control was essentially a tie with the retained baseline
+  - so the truthful synthesis is:
+    - full export redesign is not justified
+    - the subset-local support effect is worth remembering but not worth a baseline flip
+    - the remaining unknown is mechanism, not whether another tokenwise teacher run should happen immediately
+  - the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the bounded-subset ordering is stable
+- Impact:
+  - `resattn-7xo` can close once the artifact lands.
+  - `resattn-b4h` is now the next main Phase 6 issue.
+  - future tokenwise-teacher work should start from diagnosing mismatch on the saved subset artifact before launching another expensive teacher-generation run.

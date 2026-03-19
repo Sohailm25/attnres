@@ -1341,16 +1341,37 @@
       - simply masking to positions with a valid next token is effectively a no-op on the held-out metrics
       - the bounded shared-final-norm contribution teacher is the wrong target surface, not a near miss
       - architecture search should stay frozen while target fidelity is tested with a more faithful exact tokenwise oracle slice rather than another approximation
+  - `resattn-7xo` now tests that more faithful exact tokenwise oracle slice on a bounded deterministic subset:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_exact_teacher_subset_comparison.py` now support exact per-token oracle alpha-logit teachers built directly from routed next-token cross-entropy under Gemma-2's own final norm and logits softcap
+    - the exact-teacher comparison uses a deterministic stratum-balanced subset of the frozen all-token family-summary split:
+      - train: `32` prompts (`8` per stratum)
+      - eval: `16` prompts (`4` per stratum)
+      - all other router settings stay frozen from `20260318-gemma2-router-distillation-family-comparison-all-tokens-v1/summary.json`
+    - implementation checks:
+      - a tiny `8 / 4` calibration slice completed cleanly before the real run, so the exact-teacher path was not launched blind
+      - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`ff6c608adfbb05dcf5895a11ce8740553304f9b2`)
+    - bounded exact-teacher result:
+      - `all_tokens_target_mse`: `R^2 = 0.1567`, mean JS `= 0.1014`
+      - `next_token_positions_sequence_target_mse`: `R^2 = 0.1803`, mean JS `= 0.0998`
+      - `next_token_positions_exact_oracle_alpha_logit_mse`: `R^2 = -0.1126`, mean JS `= 0.1486`
+      - selected objective moved to `next_token_positions_sequence_target_mse` on this bounded subset
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - exact tokenwise teachers do not justify a broader Phase 6 export redesign from this result
+      - the exact teacher is worse than both repeated-sequence controls on the bounded subset
+      - the only positive move is the weaker support-only change from supervising next-token-valid positions, and that subset-local gain is not enough to overturn the larger `192 / 64` full-split evidence from `resattn-afu`, where the same support-only control was essentially a tie
+      - the next honest question is now why exact tokenwise teachers hurt sequence-level recovery on the saved subset, not whether another tokenwise export build should start immediately
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the bounded family and approximate-teacher questions are now answered on the saved Gemma pilot split:
+   - the bounded family, approximate-teacher, and exact-teacher questions are now answered on the saved Gemma pilot surfaces:
      - under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head
      - the bounded shared-final-norm tokenwise teacher fails badly, while the matched next-token-position mask control is essentially a tie
-   - the main active implementation step is now `resattn-7xo`: compare a small exact tokenwise oracle-teacher slice against the retained all-token MLP baseline rather than reopening broad architecture search or redesigning the whole export by assumption
+     - the exact tokenwise teacher also fails on the bounded `32 / 16` deterministic subset, while the matched next-token-position mask gains only modestly on that smaller slice
+   - the main active implementation step is now `resattn-b4h`: diagnose whether exact-tokenwise failure is driven by within-prompt teacher variance or by sequence-aggregation mismatch before any broader tokenwise redesign is even considered
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

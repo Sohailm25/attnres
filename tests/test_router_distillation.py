@@ -26,6 +26,7 @@ class RouterDistillationTests(unittest.TestCase):
             compare_router_supervision_objectives,
             compare_router_target_parameterizations,
             build_oracle_alpha_tokenwise_teacher_lookup,
+            exact_tokenwise_oracle_alpha_logit_targets,
             load_router_distillation_pilot_dataset,
             router_supervision_loss,
             summarize_router_supervision_granularity,
@@ -54,6 +55,9 @@ class RouterDistillationTests(unittest.TestCase):
         )
         cls.build_oracle_alpha_tokenwise_teacher_lookup = staticmethod(
             build_oracle_alpha_tokenwise_teacher_lookup
+        )
+        cls.exact_tokenwise_oracle_alpha_logit_targets = staticmethod(
+            exact_tokenwise_oracle_alpha_logit_targets
         )
         cls.load_router_distillation_pilot_dataset = staticmethod(
             load_router_distillation_pilot_dataset
@@ -902,29 +906,62 @@ class RouterDistillationTests(unittest.TestCase):
         )
         tokenwise_teacher_mask = torch.tensor([[True, True, False]])
 
-        teacher_loss = self.router_supervision_loss(
-            token_logits=token_logits,
-            token_mask=token_mask,
-            targets=targets,
-            aggregation="mean_token_logits_then_softmax",
-            target_name="oracle_alpha_logit_vector",
-            supervision_objective=(
-                "next_token_positions_oracle_alpha_target_logit_contribution_mse"
-            ),
-            tokenwise_teacher_targets=tokenwise_teacher_targets,
-            tokenwise_teacher_mask=tokenwise_teacher_mask,
+        for supervision_objective in (
+            "next_token_positions_oracle_alpha_target_logit_contribution_mse",
+            "next_token_positions_exact_oracle_alpha_logit_mse",
+        ):
+            teacher_loss = self.router_supervision_loss(
+                token_logits=token_logits,
+                token_mask=token_mask,
+                targets=targets,
+                aggregation="mean_token_logits_then_softmax",
+                target_name="oracle_alpha_logit_vector",
+                supervision_objective=supervision_objective,
+                tokenwise_teacher_targets=tokenwise_teacher_targets,
+                tokenwise_teacher_mask=tokenwise_teacher_mask,
+            )
+            all_token_loss = self.router_supervision_loss(
+                token_logits=token_logits,
+                token_mask=token_mask,
+                targets=targets,
+                aggregation="mean_token_logits_then_softmax",
+                target_name="oracle_alpha_logit_vector",
+                supervision_objective="all_tokens_target_mse",
+            )
+
+            self.assertAlmostEqual(0.0, float(teacher_loss.item()), places=6)
+            self.assertGreater(float(all_token_loss.item()), 10.0)
+
+    def test_exact_tokenwise_oracle_alpha_logit_targets_follow_per_position_best_source(
+        self,
+    ) -> None:
+        residual_stack = torch.tensor(
+            [
+                [[3.0, 0.0], [3.0, 0.0], [0.0, 0.0]],
+                [[0.0, 3.0], [0.0, 3.0], [0.0, 0.0]],
+            ],
+            dtype=torch.float32,
         )
-        all_token_loss = self.router_supervision_loss(
-            token_logits=token_logits,
-            token_mask=token_mask,
-            targets=targets,
-            aggregation="mean_token_logits_then_softmax",
-            target_name="oracle_alpha_logit_vector",
-            supervision_objective="all_tokens_target_mse",
+        token_ids = torch.tensor([9, 0, 1], dtype=torch.long)
+        final_norm_weight = torch.tensor([1.0, 1.0], dtype=torch.float32)
+        unembed = torch.eye(2, dtype=torch.float32)
+
+        teacher_targets, teacher_mask = self.exact_tokenwise_oracle_alpha_logit_targets(
+            residual_stack=residual_stack,
+            token_ids=token_ids,
+            final_norm_weight=final_norm_weight,
+            unembed=unembed,
+            eps=0.0,
+            output_logits_soft_cap=0.0,
+            optimization_steps=80,
+            learning_rate=0.2,
         )
 
-        self.assertAlmostEqual(0.0, float(teacher_loss.item()), places=6)
-        self.assertGreater(float(all_token_loss.item()), 10.0)
+        self.assertEqual([True, True, False], teacher_mask.tolist())
+        self.assertGreater(float(teacher_targets[0, 0]), 0.5)
+        self.assertLess(float(teacher_targets[0, 1]), -0.5)
+        self.assertLess(float(teacher_targets[1, 0]), -0.5)
+        self.assertGreater(float(teacher_targets[1, 1]), 0.5)
 
     def test_build_oracle_alpha_tokenwise_teacher_lookup_accepts_rmspre(self) -> None:
         example = self.RouterDistillationExample(
