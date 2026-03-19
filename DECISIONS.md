@@ -1453,3 +1453,31 @@
   - `resattn-chz` should be opened and treated as the main scientific synthesis issue.
   - `resattn-914` remains the next implementation issue for Phase 6.
   - future sessions should stop interpreting the single ready implementation task as the full next-step order for the repo.
+
+## [2026-03-18T19:43:56-0500] DECISION: Close `resattn-chz` by centering the main interpretability story on factual family-and-frame-conditioned route modes
+
+- Trigger: `resattn-chz` synthesized the saved Gemma `registry_v5` oracle artifact, the factual cluster profile, the factual route-mode artifact, and the narrowed factual tool-breakage bridge.
+- Decision: close `resattn-chz` as a positive synthesis pass. The main interpretability story should now say that the strongest primary-model raw-source structure is factual recall, and that within factual recall the route modes appear to be organized by semantic family plus prompt frame, not by one global block structure. Keep the bridge claim bounded and make prompt-frame conditioning the next scientific follow-up.
+- Rationale:
+  - factual recall remains the strongest raw-source structure surface in the repo:
+    - silhouette `= 0.4709`
+    - random control `= 0.1401`
+    - resampling oracle-beats-random `= 1.0`
+  - the route-mode split is rich and mechanistically differentiated:
+    - capitals `= 3` modes
+    - elements `= 3` modes
+    - authors `= 5` modes
+    - distinct attention/MLP balances and top-source anchors across modes
+  - the saved examples strongly suggest prompt-frame conditioning inside these families:
+    - capitals split into direct-fact, map-style, and quiz-style prompts
+    - elements split into symbol-definition, table-abbreviation, and chart/notes prompts
+    - authors split into direct-author, novel-title, catalog/indexing, and literature-class prompts
+  - the narrowed `v5` factual bridge is already structurally aligned for the core covered families:
+    - capital coverage `= 3 / 3`
+    - element coverage `= 3 / 3`
+    - author coverage `= 4 / 5`, with only the singleton outlier uncovered
+  - that means the truthful remaining uncertainty is no longer bridge coverage itself; it is whether the strongest current route modes are best understood as semantic-family structure, family-plus-frame structure, or both
+- Impact:
+  - `resattn-chz` can close once the synthesis artifact lands.
+  - `resattn-i6i` is now the next scientific follow-up.
+  - `resattn-914` remains the next implementation follow-up.

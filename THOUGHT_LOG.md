@@ -1944,3 +1944,25 @@ Suggested entry format:
   - full `registry_v5` Gemma oracle improvement `= +1.6299` nats on `1024` confirm prompts
   - factual-recall raw-source silhouette `= 0.4709`
   - router pilot after target fix `R^2 = 0.3028`, still below the Phase 6 readiness gate
+## [2026-03-18T19:43:56-0500] The Factual Story Is Sharper Than “Semantic Family” But Narrower Than “Concept Circuit”
+- Stage: factual-recall synthesis
+- Feel of the Experiment: This is the kind of refinement I want. The strongest result got more interesting and more constrained at the same time.
+- Working Hypotheses:
+  - The best current claim is family-plus-prompt-frame-conditioned route modes inside factual recall.
+  - The next saved-artifact question is whether that frame-conditioned read survives a more explicit audit.
+- Hunches and Guesses:
+  - Capitals and elements are almost template-identified by route mode.
+  - Authors are a little messier, but the same family-plus-frame pattern is still there.
+- Predictions:
+  - A dedicated prompt-frame audit will sharpen the claim boundary further without needing another expensive oracle rerun.
+  - If the frame-conditioned story holds, it will make the current tool-breakage bridge easier to interpret rather than weaker.
+- Surprises and Tensions:
+  - The route-mode bridge is better aligned than I expected; the mixed donor-arm result is harder to dismiss as simple coverage failure now.
+  - The more I read the saved examples, the less I believe the strongest factual route modes are “just semantics” in a narrow answer-family sense.
+- Confidence:
+  - high that `chz` should close as a meaningful synthesis pass
+  - medium-high that `i6i` is the right next scientific follow-up
+- Interesting facts:
+  - factual bridge coverage now spans all capital modes, all element modes, and all non-outlier author modes
+  - strongest covered mode is author `cluster 7` with mean tuned final-position KL delta `= +12.7356`
+  - element family still has the largest within-family centroid JS separation `= 0.2096`
