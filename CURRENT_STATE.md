@@ -429,6 +429,22 @@
     - this is a real improvement over `v4`:
       - matching-family mode coverage rises from `5 / 13` to `10 / 13`
     - interpretation: bridge coverage is no longer the main factual tool-breakage bottleneck for capitals, elements, and authors. If the lane stays mixed from here, the honest next explanation is donor-arm geometry and route-mode heterogeneity rather than missing core factual modes
+  - `resattn-chz` now lands the first compact synthesis of the strongest factual-recall result across the saved primary-model artifacts:
+    - `results/block_structure/20260318-gemma2-factual-recall-routing-synthesis-v1.md` is the new claim-boundary memo tying together the saved Gemma oracle, factual cluster profile, factual route-mode artifact, and narrowed `v5` factual bridge
+    - the synthesis makes the main factual claim sharper:
+      - factual recall is the strongest semantically organized raw-source structure surface on the primary Gemma spine
+      - capitals, elements, and authors all split into multiple route modes with distinct source signatures
+      - the narrowed `v5` factual bridge already covers all capital modes, all element modes, and all non-outlier author modes
+    - the synthesis also tightens the claim boundary:
+      - this is not a global raw `~8`-cluster story
+      - this is not yet a content-only routing story disentangled from prompt frame
+      - the saved examples suggest that many factual route modes are family-plus-prompt-frame-conditioned:
+        - capitals split across direct-fact, map-style, and quiz-style frames
+        - elements split across symbol-definition, table-abbreviation, and chart/notes frames
+        - authors split across direct author prompts, novel-title prompts, catalog/indexing prompts, and literature-class prompts
+    - interpretation:
+      - the strongest current interpretability discovery is now primary-model effective depth mixture plus factual family-and-frame-conditioned route modes
+      - the next scientific follow-up should tighten the frame-versus-content boundary on saved artifacts rather than launch another broad oracle rerun
   - `resattn-oi7` now audits that remaining donor-geometry question directly on the saved `v5` donor-arm artifact:
     - `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` is the new saved-artifact audit
     - the partial collapse between `prompt_permuted_alpha` and `within_family_permuted_alpha` is mostly structural:
@@ -1154,7 +1170,7 @@
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
-   - the main scientific next step is `resattn-chz`: synthesize the saved factual-recall route modes on the `registry_v5` Gemma artifact, because that is currently the strongest underexploited interpretability result in the repo
+   - the main scientific next step is `resattn-i6i`: audit prompt-frame conditioning inside the saved factual route modes so the strongest current claim can distinguish semantic-family structure from family-plus-frame structure
    - the main implementation next step is `resattn-914`: compare sequence aggregation rules on the same saved pilot router-distillation export with `oracle_alpha_logit_vector` frozen
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
