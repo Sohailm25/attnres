@@ -1776,3 +1776,24 @@
   - `resattn-v7h` can close once the artifact lands.
   - `resattn-b4h` becomes the sole active next implementation step again.
   - if reasoning/math reopens later, the next honest move is a targeted audit of the mixed cross-operation clusters rather than another broad rerun.
+
+## [2026-03-19T08:40:03-0500] DECISION: Integrate the AttnRes memoir as a bounded Phase 6 design constraint, not as evidence
+
+- Trigger: Sohail asked whether the AttnRes memoir (`https://kexue.fm/archives/11664`) offered useful intuitions for the repo's next experimental moves.
+- Decision: keep `resattn-b4h` as the immediate next implementation step, but explicitly queue a bounded follow-up (`resattn-y4m`) that tests embedding-isolated block-compressed router targets on the saved Gemma pilot. Use the AttnRes memoir only to constrain Phase 6 design taste:
+  - prefer compression that preserves the residual/equal-mixing baseline as a special case over sparse truncation that cannot
+  - treat embedding-isolated compression as an explicit testable hypothesis
+  - do not treat trained AttnRes block counts or engineering choices as evidence for the frozen-model raw `~8`-cluster hypothesis
+- Rationale:
+  - the memoir's strongest overlap with the repo is architectural intuition, not claim-bearing evidence
+  - its residual-to-weighted-sum rewrite matches our current strongest framing of oracle-alpha as an `effective depth mixture`
+  - its nonnegative normalized mixture argument is directionally consistent with our primary-model regime result, where softmax-constrained routing beats unconstrained and tested top-k regimes on every confirm prompt
+  - its compression-over-sparsity argument is directly relevant to the current Phase 6 state:
+    - exact tokenwise teachers have already failed as a rescue
+    - another blind architecture sweep would be low-value
+    - a compressed target that still contains the residual baseline is a cleaner next design branch than a sparse approximation that throws that baseline away
+  - its embedding-singleton discussion is specific enough to justify an explicit bounded comparison on our saved Gemma pilot surface
+- Impact:
+  - `resattn-b4h` stays first in the queue.
+  - `resattn-y4m` is now the next bounded design follow-up after `b4h`.
+  - the repo should not reopen Figure 8, tool-breakage, or the raw `~8`-cluster story on the strength of this memoir alone.
