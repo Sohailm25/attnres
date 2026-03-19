@@ -1966,3 +1966,26 @@ Suggested entry format:
   - factual bridge coverage now spans all capital modes, all element modes, and all non-outlier author modes
   - strongest covered mode is author `cluster 7` with mean tuned final-position KL delta `= +12.7356`
   - element family still has the largest within-family centroid JS separation `= 0.2096`
+
+## [2026-03-18T20:02:29-0500] The Frame Question Mostly Collapsed Cleanly
+- Stage: factual route-mode frame audit
+- Feel of the Experiment: This is a satisfying kind of narrowing. The result got more specific without getting weaker. The repo no longer has to gesture at prompt framing from a few examples; the capital and element families are almost embarrassingly template-organized, and authors are only slightly messier.
+- Working Hypotheses:
+  - The strongest current factual claim should now explicitly say family-plus-prompt-frame-conditioned route modes.
+  - Any future factual sidecar should focus only on the residual author `novel_title` split.
+- Hunches and Guesses:
+  - The two `novel_title` spillovers into the direct-author cluster feel more like title-shape or lexical-surface effects than like a new semantic family.
+  - The frame-conditioned read actually makes the bounded tool-breakage bridge easier to interpret, not less interesting.
+- Predictions:
+  - `resattn-914` is now the right active next move because the biggest remaining factual-structure ambiguity is small and local.
+  - If we come back to factual route modes later, it should be for a tiny author-title audit rather than another broad family/frame rerun.
+- Surprises and Tensions:
+  - Capitals and elements are cleaner than I expected: they are not merely frame-biased; they are deterministic frame-group splits across all `16` entities.
+  - Authors are messier in exactly one place, and even there the mess is structured rather than diffuse.
+- Confidence:
+  - high that `i6i` should close as a pass
+  - high that the strongest current factual claim is family-plus-frame-conditioned, not family-only
+- Interesting facts:
+  - capital modes partition exactly into `direct+travel`, `map`, and `quiz`
+  - element modes partition exactly into `notes+lab`, `direct`, and `periodic table`
+  - covered author modes have frame-majority share `= 61 / 63 = 0.9683`
