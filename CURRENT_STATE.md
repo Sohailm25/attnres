@@ -1217,13 +1217,32 @@
       - the real signal from this run is that the next honest lever is router family, not another blind width sweep
     - rerun note:
       - after the seeding fix, the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`0cd7c7bee688d503d44f06b54ea9200d634c8b57`)
+  - `resattn-zic` now runs the first bounded router-family comparison on the same saved Gemma pilot export:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_family_comparison.py` now support comparing a `linear` head against the current `mlp` family while freezing the rest of the baseline
+    - the held-out pilot comparison reused the same stratified `192 / 64` train/eval split across both families:
+      - input: `h_4[t]`
+      - target: `oracle_alpha_logit_vector`
+      - aggregation: `mean_token_logits_then_softmax`
+      - families: `linear`, `mlp`
+      - MLP width: `512`
+    - result:
+      - `linear`: `R^2 = 0.3445`, mean JS `= 0.0853`
+      - `mlp`: `R^2 = 0.3270`, mean JS `= 0.0837`
+      - selected family moved to `linear` under the prereg primary metric
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - the current nonlinear MLP family is not the missing rescue on the saved pilot export
+      - simple width and the first obvious family split are now both exhausted as honest next excuses
+      - the next Phase 6 blocker is more likely supervision granularity than another architecture scalar
+    - rerun note:
+      - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`89f3b2682375aa7956f969879af7479e85852fb9`)
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the main active implementation step is now `resattn-zic`: compare router families on the same saved pilot export with `oracle_alpha_logit_vector`, `mean_token_logits_then_softmax`, and `h_4[t]` frozen
+   - the main active implementation step is now `resattn-but`: audit whether the remaining Phase 6 blocker is supervision granularity on the same saved pilot export rather than another architecture tweak
    - if another saved-artifact scientific sidecar is needed later, narrow it to `resattn-0kc`, the residual author `novel_title` split, rather than reopening the general frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

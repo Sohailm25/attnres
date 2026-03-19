@@ -30,6 +30,7 @@ ALLOWED_AGGREGATIONS = {
     "last_token_logits_then_softmax",
 }
 ALLOWED_TARGET_NAMES = {"oracle_alpha_vector", "oracle_alpha_logit_vector"}
+ALLOWED_ROUTER_FAMILIES = {"linear", "mlp"}
 
 
 @dataclass(frozen=True)
@@ -61,7 +62,6 @@ class RouterDistillationInputSummary:
     input_field: str
     target_name: str
     aggregation: str
-    hidden_dim: int
     learning_rate: float
     weight_decay: float
     batch_size: int
@@ -75,6 +75,8 @@ class RouterDistillationInputSummary:
     mean_predicted_entropy: float
     mean_oracle_entropy: float
     eval_summary: PredictivenessSummary
+    router_family: str = "mlp"
+    hidden_dim: int | None = None
     train_prompt_ids: tuple[str, ...] = ()
     eval_prompt_ids: tuple[str, ...] = ()
 
@@ -155,6 +157,32 @@ class RouterDistillationCapacityComparisonSummary:
         return self.input_summaries
 
 
+@dataclass(frozen=True)
+class RouterDistillationFamilyComparisonSummary:
+    collection_id: str
+    model_name: str
+    split: str
+    fixed_input_field: str
+    fixed_target_name: str
+    fixed_aggregation: str
+    candidate_router_families: tuple[str, ...]
+    hidden_dim: int
+    selection_primary_metric: str
+    selection_secondary_metric: str
+    readiness_target_r_squared: float
+    train_prompt_count: int
+    eval_prompt_count: int
+    selected_router_family: str
+    selected_meets_readiness_target: bool
+    train_prompt_ids: tuple[str, ...]
+    eval_prompt_ids: tuple[str, ...]
+    input_summaries: tuple[RouterDistillationInputSummary, ...]
+
+    @property
+    def candidate_summaries(self) -> tuple[RouterDistillationInputSummary, ...]:
+        return self.input_summaries
+
+
 class _SequenceRouterMLP(torch.nn.Module):
     def __init__(self, *, input_dim: int, hidden_dim: int, num_sources: int) -> None:
         super().__init__()
@@ -164,6 +192,15 @@ class _SequenceRouterMLP(torch.nn.Module):
     def forward_token_logits(self, token_states: torch.Tensor) -> torch.Tensor:
         hidden = F.gelu(self.input_layer(token_states))
         return self.output_layer(hidden)
+
+
+class _SequenceRouterLinear(torch.nn.Module):
+    def __init__(self, *, input_dim: int, num_sources: int) -> None:
+        super().__init__()
+        self.output_layer = torch.nn.Linear(input_dim, num_sources)
+
+    def forward_token_logits(self, token_states: torch.Tensor) -> torch.Tensor:
+        return self.output_layer(token_states)
 
 
 def _resolve_checkpoint_path(path_text: str) -> Path:
@@ -576,6 +613,7 @@ def _fit_router_for_input(
     input_field: str,
     target_name: str,
     aggregation: str,
+    router_family: str = "mlp",
     hidden_dim: int,
     learning_rate: float,
     weight_decay: float,
@@ -602,12 +640,22 @@ def _fit_router_for_input(
         example.prompt_id: eval_target_matrix[index]
         for index, example in enumerate(eval_examples)
     }
+    if router_family not in ALLOWED_ROUTER_FAMILIES:
+        raise ValueError(f"unsupported router family {router_family!r}")
     torch.manual_seed(seed)
-    model = _SequenceRouterMLP(
-        input_dim=int(mean.shape[0]),
-        hidden_dim=hidden_dim,
-        num_sources=int(train_examples[0].final_alpha.shape[0]),
-    ).to(device=device)
+    if router_family == "mlp":
+        model = _SequenceRouterMLP(
+            input_dim=int(mean.shape[0]),
+            hidden_dim=hidden_dim,
+            num_sources=int(train_examples[0].final_alpha.shape[0]),
+        ).to(device=device)
+    elif router_family == "linear":
+        model = _SequenceRouterLinear(
+            input_dim=int(mean.shape[0]),
+            num_sources=int(train_examples[0].final_alpha.shape[0]),
+        ).to(device=device)
+    else:
+        raise ValueError(f"unsupported router family {router_family!r}")
     optimizer = torch.optim.Adam(
         model.parameters(),
         lr=learning_rate,
@@ -712,7 +760,8 @@ def _fit_router_for_input(
         input_field=input_field,
         target_name=target_name,
         aggregation=aggregation,
-        hidden_dim=hidden_dim,
+        router_family=router_family,
+        hidden_dim=hidden_dim if router_family == "mlp" else None,
         learning_rate=learning_rate,
         weight_decay=weight_decay,
         batch_size=batch_size,
@@ -1147,6 +1196,111 @@ def compare_router_capacities(
     )
 
 
+def compare_router_families(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    fixed_input_field: str,
+    fixed_target_name: str,
+    fixed_aggregation: str,
+    candidate_router_families: Sequence[str],
+    hidden_dim: int,
+    eval_fraction: float,
+    learning_rate: float,
+    weight_decay: float = 1e-4,
+    batch_size: int = 16,
+    max_epochs: int = 300,
+    patience: int = 40,
+    seed: int = 11,
+    device: str = "cpu",
+    collection_id: str = "unknown",
+    model_name: str = "unknown",
+) -> RouterDistillationFamilyComparisonSummary:
+    if fixed_input_field not in ALLOWED_INPUT_FIELDS:
+        raise ValueError(f"unsupported input field {fixed_input_field!r}")
+    if fixed_target_name not in ALLOWED_TARGET_NAMES:
+        raise ValueError(f"unsupported target name {fixed_target_name!r}")
+    if fixed_aggregation not in ALLOWED_AGGREGATIONS:
+        raise ValueError(f"unsupported aggregation {fixed_aggregation!r}")
+    if not candidate_router_families:
+        raise ValueError("candidate_router_families must not be empty")
+    for router_family in candidate_router_families:
+        if router_family not in ALLOWED_ROUTER_FAMILIES:
+            raise ValueError(f"unsupported router family {router_family!r}")
+    if hidden_dim < 1:
+        raise ValueError("hidden_dim must be positive")
+
+    train_examples, eval_examples = stratified_router_train_eval_split(
+        examples,
+        eval_fraction=eval_fraction,
+        seed=seed,
+    )
+    torch_device = torch.device(device)
+
+    input_summaries: list[RouterDistillationInputSummary] = []
+    selected_summary: RouterDistillationInputSummary | None = None
+    for router_family in candidate_router_families:
+        summary = _fit_router_for_input(
+            train_examples=train_examples,
+            eval_examples=eval_examples,
+            input_field=fixed_input_field,
+            target_name=fixed_target_name,
+            aggregation=fixed_aggregation,
+            router_family=router_family,
+            hidden_dim=hidden_dim,
+            learning_rate=learning_rate,
+            weight_decay=weight_decay,
+            batch_size=batch_size,
+            max_epochs=max_epochs,
+            patience=patience,
+            seed=seed,
+            device=torch_device,
+        )
+        input_summaries.append(summary)
+        if selected_summary is None:
+            selected_summary = summary
+            continue
+        primary_delta = compare_predictiveness_metric_values(
+            metric_name="r_squared",
+            left=summary.eval_summary.r_squared,
+            right=selected_summary.eval_summary.r_squared,
+        )
+        if primary_delta > 1e-12:
+            selected_summary = summary
+            continue
+        if abs(primary_delta) <= 1e-12:
+            secondary_delta = compare_predictiveness_metric_values(
+                metric_name="mean_js_divergence",
+                left=summary.eval_summary.mean_js_divergence,
+                right=selected_summary.eval_summary.mean_js_divergence,
+            )
+            if secondary_delta > 1e-12:
+                selected_summary = summary
+
+    assert selected_summary is not None
+    return RouterDistillationFamilyComparisonSummary(
+        collection_id=collection_id,
+        model_name=model_name,
+        split="pilot",
+        fixed_input_field=fixed_input_field,
+        fixed_target_name=fixed_target_name,
+        fixed_aggregation=fixed_aggregation,
+        candidate_router_families=tuple(candidate_router_families),
+        hidden_dim=hidden_dim,
+        selection_primary_metric="r_squared",
+        selection_secondary_metric="mean_js_divergence",
+        readiness_target_r_squared=READINESS_TARGET_R_SQUARED,
+        train_prompt_count=len(train_examples),
+        eval_prompt_count=len(eval_examples),
+        selected_router_family=selected_summary.router_family,
+        selected_meets_readiness_target=(
+            selected_summary.eval_summary.r_squared >= READINESS_TARGET_R_SQUARED
+        ),
+        train_prompt_ids=tuple(example.prompt_id for example in train_examples),
+        eval_prompt_ids=tuple(example.prompt_id for example in eval_examples),
+        input_summaries=tuple(input_summaries),
+    )
+
+
 def run_router_distillation_pilot_comparison(
     *,
     export_dir: Path,
@@ -1192,6 +1346,7 @@ def compact_router_distillation_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
             "weight_decay": input_summary.weight_decay,
@@ -1221,6 +1376,7 @@ def compact_router_distillation_aggregation_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
             "weight_decay": input_summary.weight_decay,
@@ -1250,6 +1406,37 @@ def compact_router_distillation_capacity_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "router_family": input_summary.router_family,
+            "hidden_dim": input_summary.hidden_dim,
+            "learning_rate": input_summary.learning_rate,
+            "weight_decay": input_summary.weight_decay,
+            "batch_size": input_summary.batch_size,
+            "max_epochs": input_summary.max_epochs,
+            "patience": input_summary.patience,
+            "best_epoch": input_summary.best_epoch,
+            "train_prompt_count": input_summary.train_prompt_count,
+            "eval_prompt_count": input_summary.eval_prompt_count,
+            "train_loss": input_summary.train_loss,
+            "eval_loss": input_summary.eval_loss,
+            "mean_predicted_entropy": input_summary.mean_predicted_entropy,
+            "mean_oracle_entropy": input_summary.mean_oracle_entropy,
+            "eval_summary": asdict(input_summary.eval_summary),
+        }
+        for input_summary in summary.input_summaries
+    ]
+    return payload
+
+
+def compact_router_distillation_family_summary_payload(
+    summary: RouterDistillationFamilyComparisonSummary,
+) -> dict[str, object]:
+    payload = asdict(summary)
+    payload["input_summaries"] = [
+        {
+            "input_field": input_summary.input_field,
+            "target_name": input_summary.target_name,
+            "aggregation": input_summary.aggregation,
+            "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
             "weight_decay": input_summary.weight_decay,

@@ -2104,3 +2104,19 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none after the seeding fix; the exact-command rerun preserved the same `summary.json` hash on MPS (`0cd7c7bee688d503d44f06b54ea9200d634c8b57`).
 - Next step: close `resattn-3ak`, then take `resattn-zic` for a router-family comparison on the same saved pilot export rather than another width sweep.
+
+## [2026-03-18T20:53:00-0500] PRE-RUN: Gemma router-distillation family comparison v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_family_comparison.py`
+- Command: `mkdir -p results/router_training/20260318-gemma2-router-distillation-family-comparison-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_family_comparison.py --output-dir results/router_training/20260318-gemma2-router-distillation-family-comparison-v1 --fixed-input-field 'h_4[t]' --fixed-target-name oracle_alpha_logit_vector --fixed-aggregation mean_token_logits_then_softmax --candidate-router-families linear mlp --hidden-dim 512 --device mps > results/router_training/20260318-gemma2-router-distillation-family-comparison-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `split=pilot`, `input=h_4[t]`, `target=oracle_alpha_logit_vector`, `aggregation=mean_token_logits_then_softmax`, `families=linear/mlp`, `mlp_hidden_dim=512`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether nonlinearity in the router family materially improves held-out pilot fit once the input, target, aggregation, and width baseline are frozen.
+- Expected outcome: either the MLP family materially beats the linear head and keeps router family as the next honest lever, or the comparison stays near-tied and the next blocker is somewhere else entirely.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260318-gemma2-router-distillation-family-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the fixed baseline now uses only `h_4[t]`, a linear-vs-MLP difference should be read as router-family signal on the current best path, not as a reopened `h_1[t]` versus `h_4[t]` comparison.
+- Implementation verified: YES - `tests.test_router_distillation` now covers the family-comparison path directly and the quadratic-parity synthetic case where a linear head underfits but the MLP succeeds.
+- Status: LAUNCHING

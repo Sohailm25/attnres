@@ -1547,3 +1547,24 @@
   - `resattn-3ak` can close once the artifact lands.
   - `resattn-zic` is now the next main Phase 6 issue.
   - future router work on this saved export should compare router families before revisiting width again.
+
+## [2026-03-18T21:00:00-0500] DECISION: Close `resattn-zic` as a stable negative result for nonlinear-family rescue
+
+- Trigger: `resattn-zic` compared a linear head against the current widened MLP on the saved Gemma pilot export while freezing `h_4[t]`, `oracle_alpha_logit_vector`, `mean_token_logits_then_softmax`, and the held-out split.
+- Decision: close `resattn-zic` as a mixed but stable result. Do not treat MLP nonlinearity as the next obvious rescue path on this saved pilot export. Keep the current least-bad baseline as `linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax`, but do not mistake that for a readiness pass. Move next to supervision-granularity audit rather than another blind architecture tweak.
+- Rationale:
+  - the primary selection metric now prefers the simpler head:
+    - `linear`: `R^2 = 0.3445`, mean JS `= 0.0853`
+    - `mlp`: `R^2 = 0.3270`, mean JS `= 0.0837`
+  - the result is metric-mixed rather than a clean linear domination:
+    - `linear` improves `R^2` by `+0.0175`
+    - `linear` worsens mean JS by `+0.0016`
+  - that is still enough to reject the intended rescue hypothesis:
+    - if nonlinear family were the main blocker, the widened MLP should have won cleanly on the fixed baseline
+    - instead, both families remain far below the prereg readiness gate
+  - the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the family ordering is stable under the current seeded path
+  - combined with `resattn-3ak`, this means the repo has now exhausted simple width and the first obvious family split as honest next excuses
+- Impact:
+  - `resattn-zic` can close once the artifact lands.
+  - `resattn-but` is now the next main Phase 6 issue.
+  - future router work on this saved export should justify any architecture change against the supervision-granularity hypothesis rather than by inertia.

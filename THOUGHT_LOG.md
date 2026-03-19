@@ -2033,3 +2033,26 @@ Suggested entry format:
 - Interesting facts:
   - best retained pilot combination after the width sweep: `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t] + hidden_dim=512`
   - stable rerun hash after the seeding fix: `0cd7c7bee688d503d44f06b54ea9200d634c8b57`
+
+## [2026-03-18T21:00:00-0500] Nonlinearity Didn’t Save It Either
+- Stage: router-distillation family comparison
+- Feel of the Experiment: This is the right kind of narrowing again. The MLP story just got weaker in a useful way. I expected either a clean MLP win or a noisy tie; instead the linear head actually won on the primary metric and lost only slightly on JS.
+- Working Hypotheses:
+  - The next honest Phase 6 blocker is supervision granularity, not another architecture scalar.
+  - The least-bad current baseline is now the linear head on `h_4[t]`, but it is still nowhere near a readiness pass.
+- Hunches and Guesses:
+  - The saved prompt-level target is probably too coarse for the token-level object we eventually want a router to learn.
+  - Another family tweak without changing the supervision story would mostly be motion, not discovery.
+- Predictions:
+  - `resattn-but` should be the next main Phase 6 step.
+  - If the supervision-granularity audit points cleanly to coarse targets, the next real implementation move should be richer token/span supervision rather than another head redesign.
+- Surprises and Tensions:
+  - The linear win on `R^2` is real but only modest, and the JS metric still prefers the MLP slightly.
+  - That mixed metric read is annoying, but it is also exactly why the fixed selection rule matters.
+- Confidence:
+  - high that `zic` should close as a negative result for nonlinear-family rescue
+  - medium-high that supervision granularity is now the right next Phase 6 question
+- Interesting facts:
+  - `linear`: `R^2 = 0.3445`, mean JS `= 0.0853`
+  - `mlp`: `R^2 = 0.3270`, mean JS `= 0.0837`
+  - stable rerun hash: `89f3b2682375aa7956f969879af7479e85852fb9`
