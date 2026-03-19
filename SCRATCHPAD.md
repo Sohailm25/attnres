@@ -2120,3 +2120,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Main confound to watch: because the fixed baseline now uses only `h_4[t]`, a linear-vs-MLP difference should be read as router-family signal on the current best path, not as a reopened `h_1[t]` versus `h_4[t]` comparison.
 - Implementation verified: YES - `tests.test_router_distillation` now covers the family-comparison path directly and the quadratic-parity synthetic case where a linear head underfits but the MLP succeeds.
 - Status: LAUNCHING
+
+## [2026-03-18T21:35:23-0500] PRE-RUN: Gemma router-distillation supervision-granularity audit v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_supervision_granularity_audit.py`
+- Command: `mkdir -p results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_supervision_granularity_audit.py --output-dir results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1 --device mps > results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `frozen_family_summary=20260318-gemma2-router-distillation-family-comparison-v1/summary.json`, `baseline=linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax`, `split=family-summary train/eval ids`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether the remaining held-out router error is structured mainly by prompt stratum and saved oracle attributes, which would point to richer supervision granularity rather than another width or family tweak.
+- Expected outcome: either held-out JS/MSE separates materially by prompt stratum and supports a richer token/span supervision next step, or the audit stays diffuse and points instead to a larger training/eval surface.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the audit refits the frozen baseline, so any mismatch with the saved family artifact must be treated as an implementation problem before interpretation.
+- Implementation verified: YES - `tests.test_router_distillation` now covers the supervision summary and the fixed-split audit path directly.
+- Status: LAUNCHING
+
+## [2026-03-18T21:39:10-0500] POST-RUN: Gemma router-distillation supervision-granularity audit v1
+- Outcome: SUCCESS
+- Key metric: the frozen baseline matched the saved family artifact exactly (`R^2 = 0.3445`, mean JS `= 0.0853`), and held-out error separated more by prompt stratum than by coarse scalar surrogates; the worst stratum was `general_text` at mean JS `= 0.0754` versus factual recall at `0.0409`.
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-supervision-granularity-audit-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`e55d9afc17c33a0b3d4ad3961a3d443cea7895dc`).
+- Next step: close `resattn-but`, then take `resattn-tqn` for the first richer token/span supervision comparison on the same saved pilot split.

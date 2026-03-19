@@ -14,20 +14,27 @@ class RouterDistillationTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         from validation.router_distillation import (
             RouterDistillationExample,
+            RouterDistillationPromptDiagnostic,
             aggregate_token_logits_to_sequence_alpha,
+            audit_router_supervision_granularity,
             compare_router_aggregations,
             compare_router_capacities,
             compare_router_families,
             compare_router_input_sources,
             compare_router_target_parameterizations,
             load_router_distillation_pilot_dataset,
+            summarize_router_supervision_granularity,
             stratified_router_train_eval_split,
             target_matrix_for_router_distillation,
         )
 
         cls.RouterDistillationExample = RouterDistillationExample
+        cls.RouterDistillationPromptDiagnostic = RouterDistillationPromptDiagnostic
         cls.aggregate_token_logits_to_sequence_alpha = staticmethod(
             aggregate_token_logits_to_sequence_alpha
+        )
+        cls.audit_router_supervision_granularity = staticmethod(
+            audit_router_supervision_granularity
         )
         cls.compare_router_aggregations = staticmethod(compare_router_aggregations)
         cls.compare_router_capacities = staticmethod(compare_router_capacities)
@@ -38,6 +45,9 @@ class RouterDistillationTests(unittest.TestCase):
         )
         cls.load_router_distillation_pilot_dataset = staticmethod(
             load_router_distillation_pilot_dataset
+        )
+        cls.summarize_router_supervision_granularity = staticmethod(
+            summarize_router_supervision_granularity
         )
         cls.stratified_router_train_eval_split = staticmethod(
             stratified_router_train_eval_split
@@ -476,6 +486,191 @@ class RouterDistillationTests(unittest.TestCase):
         }
         self.assertLess(summaries["linear"].eval_summary.r_squared, 0.3)
         self.assertGreater(summaries["mlp"].eval_summary.r_squared, 0.8)
+
+    def test_summarize_router_supervision_granularity_highlights_stratum_gap(
+        self,
+    ) -> None:
+        diagnostics = (
+            self.RouterDistillationPromptDiagnostic(
+                prompt_id="fact-1",
+                prompt="The capital of France is",
+                tags=(
+                    "oracle_alpha",
+                    "stratum_factual_recall",
+                    "subcategory_capital_fact",
+                ),
+                num_tokens=7,
+                oracle_entropy=3.4,
+                oracle_top1_mass=0.42,
+                mean_js_divergence=0.05,
+                target_mse=0.10,
+            ),
+            self.RouterDistillationPromptDiagnostic(
+                prompt_id="fact-2",
+                prompt="The symbol for sodium is",
+                tags=(
+                    "oracle_alpha",
+                    "stratum_factual_recall",
+                    "subcategory_element_fact",
+                ),
+                num_tokens=8,
+                oracle_entropy=3.35,
+                oracle_top1_mass=0.44,
+                mean_js_divergence=0.06,
+                target_mse=0.12,
+            ),
+            self.RouterDistillationPromptDiagnostic(
+                prompt_id="code-1",
+                prompt="def clean_names(names):",
+                tags=(
+                    "oracle_alpha",
+                    "stratum_code_procedural",
+                    "subcategory_python_snippet",
+                ),
+                num_tokens=20,
+                oracle_entropy=3.38,
+                oracle_top1_mass=0.41,
+                mean_js_divergence=0.13,
+                target_mse=0.31,
+            ),
+            self.RouterDistillationPromptDiagnostic(
+                prompt_id="code-2",
+                prompt="def lowercase_tags(tags):",
+                tags=(
+                    "oracle_alpha",
+                    "stratum_code_procedural",
+                    "subcategory_python_snippet",
+                ),
+                num_tokens=22,
+                oracle_entropy=3.36,
+                oracle_top1_mass=0.43,
+                mean_js_divergence=0.14,
+                target_mse=0.33,
+            ),
+        )
+
+        summary = self.summarize_router_supervision_granularity(
+            prompt_diagnostics=diagnostics
+        )
+
+        self.assertEqual("stratum_code_procedural", summary.worst_stratum_tag)
+        self.assertGreater(summary.stratum_mean_js_range, 0.05)
+        stratum_summaries = {
+            group.group_key: group for group in summary.stratum_summaries
+        }
+        self.assertGreater(
+            stratum_summaries["stratum_code_procedural"].mean_js_divergence,
+            stratum_summaries["stratum_factual_recall"].mean_js_divergence,
+        )
+        correlations = {
+            item.attribute_name: item.pearson_r
+            for item in summary.attribute_correlations
+        }
+        self.assertGreater(correlations["num_tokens"], 0.9)
+        self.assertLess(abs(correlations["oracle_entropy"]), 0.3)
+
+    def test_audit_router_supervision_granularity_flags_unmodeled_stratum(
+        self,
+    ) -> None:
+        source_labels = ("embed", "0_attn_out")
+        examples = []
+        for index in range(4):
+            positive = index % 2 == 0
+            factual_logits = torch.tensor(
+                [2.0, -2.0] if positive else [-2.0, 2.0],
+                dtype=torch.float32,
+            )
+            examples.append(
+                self.RouterDistillationExample(
+                    prompt_id=f"fact-{index}",
+                    prompt=f"Fact {index}",
+                    split="pilot",
+                    target_text=None,
+                    tags=(
+                        "oracle_alpha",
+                        "stratum_factual_recall",
+                        "subcategory_capital_fact",
+                    ),
+                    perturbation_names=(),
+                    token_ids=torch.tensor([1, 2, 3], dtype=torch.long),
+                    h_1=torch.zeros((3, 2), dtype=torch.float32),
+                    h_4=torch.tensor(
+                        [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]
+                        if positive
+                        else [[-1.0, 0.0], [-1.0, 0.0], [-1.0, 0.0]],
+                        dtype=torch.float32,
+                    ),
+                    source_labels=source_labels,
+                    final_alpha=torch.softmax(factual_logits, dim=0),
+                )
+            )
+        for index in range(4):
+            positive = index % 2 == 0
+            code_logits = torch.tensor(
+                [2.0, -2.0] if positive else [-2.0, 2.0],
+                dtype=torch.float32,
+            )
+            examples.append(
+                self.RouterDistillationExample(
+                    prompt_id=f"code-{index}",
+                    prompt=f"Code {index}",
+                    split="pilot",
+                    target_text=None,
+                    tags=(
+                        "oracle_alpha",
+                        "stratum_code_procedural",
+                        "subcategory_python_snippet",
+                    ),
+                    perturbation_names=(),
+                    token_ids=torch.tensor([1, 2, 3, 4, 5], dtype=torch.long),
+                    h_1=torch.zeros((5, 2), dtype=torch.float32),
+                    h_4=torch.tensor(
+                        [[0.25, 0.25]] * 5,
+                        dtype=torch.float32,
+                    ),
+                    source_labels=source_labels,
+                    final_alpha=torch.softmax(code_logits, dim=0),
+                )
+            )
+
+        audit = self.audit_router_supervision_granularity(
+            examples=examples,
+            fixed_input_field="h_4[t]",
+            fixed_target_name="oracle_alpha_logit_vector",
+            fixed_aggregation="mean_token_logits_then_softmax",
+            fixed_router_family="linear",
+            hidden_dim=8,
+            train_prompt_ids=(
+                "fact-0",
+                "fact-1",
+                "code-0",
+                "code-1",
+            ),
+            eval_prompt_ids=(
+                "fact-2",
+                "fact-3",
+                "code-2",
+                "code-3",
+            ),
+            learning_rate=0.05,
+            max_epochs=300,
+            patience=60,
+            seed=11,
+            device="cpu",
+        )
+
+        self.assertEqual(4, audit.eval_prompt_count)
+        self.assertEqual(
+            "stratum_code_procedural", audit.supervision_summary.worst_stratum_tag
+        )
+        self.assertEqual(
+            "richer_token_or_span_supervision",
+            audit.supervision_summary.recommended_next_step,
+        )
+        self.assertGreater(
+            audit.supervision_summary.stratum_mean_js_range,
+            0.05,
+        )
 
     def _synthetic_example(
         self,

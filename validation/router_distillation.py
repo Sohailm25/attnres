@@ -183,6 +183,80 @@ class RouterDistillationFamilyComparisonSummary:
         return self.input_summaries
 
 
+@dataclass(frozen=True)
+class RouterDistillationPromptDiagnostic:
+    prompt_id: str
+    prompt: str
+    tags: tuple[str, ...]
+    num_tokens: int
+    oracle_entropy: float
+    oracle_top1_mass: float
+    mean_js_divergence: float
+    target_mse: float
+    predicted_entropy: float = 0.0
+    predicted_top1_mass: float = 0.0
+
+
+@dataclass(frozen=True)
+class RouterDistillationDiagnosticGroupSummary:
+    group_key: str
+    prompt_count: int
+    mean_js_divergence: float
+    mean_target_mse: float
+    mean_num_tokens: float
+    mean_oracle_entropy: float
+    mean_oracle_top1_mass: float
+
+
+@dataclass(frozen=True)
+class RouterDistillationAttributeCorrelation:
+    attribute_name: str
+    pearson_r: float
+
+
+@dataclass(frozen=True)
+class RouterDistillationSupervisionGranularitySummary:
+    prompt_count: int
+    worst_stratum_tag: str
+    stratum_mean_js_range: float
+    strongest_attribute_name: str
+    strongest_attribute_abs_correlation: float
+    recommended_next_step: str
+    rationale: str
+    stratum_summaries: tuple[RouterDistillationDiagnosticGroupSummary, ...]
+    attribute_correlations: tuple[RouterDistillationAttributeCorrelation, ...]
+
+
+@dataclass(frozen=True)
+class RouterDistillationSupervisionGranularityAudit:
+    collection_id: str
+    model_name: str
+    split: str
+    fixed_input_field: str
+    fixed_target_name: str
+    fixed_aggregation: str
+    fixed_router_family: str
+    hidden_dim: int | None
+    train_prompt_count: int
+    eval_prompt_count: int
+    train_prompt_ids: tuple[str, ...]
+    eval_prompt_ids: tuple[str, ...]
+    baseline_eval_loss: float
+    baseline_eval_summary: PredictivenessSummary
+    prompt_diagnostics: tuple[RouterDistillationPromptDiagnostic, ...]
+    supervision_summary: RouterDistillationSupervisionGranularitySummary
+
+
+@dataclass
+class _FittedRouterArtifacts:
+    model: torch.nn.Module
+    mean: torch.Tensor
+    std: torch.Tensor
+    train_target_lookup: dict[str, torch.Tensor]
+    eval_target_lookup: dict[str, torch.Tensor]
+    best_epoch: int
+
+
 class _SequenceRouterMLP(torch.nn.Module):
     def __init__(self, *, input_dim: int, hidden_dim: int, num_sources: int) -> None:
         super().__init__()
@@ -416,6 +490,156 @@ def _split_group_key(example: RouterDistillationExample) -> str:
     return "all"
 
 
+def _tag_with_prefix(tags: Sequence[str], *, prefix: str) -> str:
+    for tag in tags:
+        if tag.startswith(prefix):
+            return tag
+    return "missing"
+
+
+def _distribution_entropy(distribution: Sequence[float]) -> float:
+    return -sum(value * math.log(value) for value in distribution if value > 0.0)
+
+
+def _js_divergence(
+    left_distribution: Sequence[float],
+    right_distribution: Sequence[float],
+) -> float:
+    if len(left_distribution) != len(right_distribution):
+        raise ValueError("distributions must share the same dimension")
+    midpoint = [
+        0.5 * (left_value + right_value)
+        for left_value, right_value in zip(
+            left_distribution,
+            right_distribution,
+            strict=True,
+        )
+    ]
+
+    def _kl_divergence(left: Sequence[float], right: Sequence[float]) -> float:
+        value = 0.0
+        for left_entry, right_entry in zip(left, right, strict=True):
+            if left_entry <= 0.0:
+                continue
+            value += left_entry * math.log(left_entry / max(right_entry, 1e-12))
+        return value
+
+    return 0.5 * (
+        _kl_divergence(left_distribution, midpoint)
+        + _kl_divergence(right_distribution, midpoint)
+    )
+
+
+def _pearson_r(left_values: Sequence[float], right_values: Sequence[float]) -> float:
+    if len(left_values) != len(right_values):
+        raise ValueError("correlation inputs must share the same length")
+    if len(left_values) < 2:
+        return 0.0
+    left_mean = sum(left_values) / len(left_values)
+    right_mean = sum(right_values) / len(right_values)
+    centered_left = [value - left_mean for value in left_values]
+    centered_right = [value - right_mean for value in right_values]
+    numerator = sum(
+        left * right for left, right in zip(centered_left, centered_right, strict=True)
+    )
+    left_norm = math.sqrt(sum(value * value for value in centered_left))
+    right_norm = math.sqrt(sum(value * value for value in centered_right))
+    if left_norm <= 1e-12 or right_norm <= 1e-12:
+        return 0.0
+    return numerator / (left_norm * right_norm)
+
+
+def summarize_router_supervision_granularity(
+    *,
+    prompt_diagnostics: Sequence[RouterDistillationPromptDiagnostic],
+) -> RouterDistillationSupervisionGranularitySummary:
+    if not prompt_diagnostics:
+        raise ValueError("prompt_diagnostics must not be empty")
+
+    grouped_by_stratum: dict[str, list[RouterDistillationPromptDiagnostic]] = {}
+    for diagnostic in prompt_diagnostics:
+        grouped_by_stratum.setdefault(
+            _tag_with_prefix(diagnostic.tags, prefix="stratum_"),
+            [],
+        ).append(diagnostic)
+
+    stratum_summaries = []
+    for stratum_tag in sorted(grouped_by_stratum):
+        diagnostics = grouped_by_stratum[stratum_tag]
+        prompt_count = len(diagnostics)
+        stratum_summaries.append(
+            RouterDistillationDiagnosticGroupSummary(
+                group_key=stratum_tag,
+                prompt_count=prompt_count,
+                mean_js_divergence=sum(item.mean_js_divergence for item in diagnostics)
+                / prompt_count,
+                mean_target_mse=sum(item.target_mse for item in diagnostics)
+                / prompt_count,
+                mean_num_tokens=sum(item.num_tokens for item in diagnostics)
+                / prompt_count,
+                mean_oracle_entropy=sum(item.oracle_entropy for item in diagnostics)
+                / prompt_count,
+                mean_oracle_top1_mass=sum(item.oracle_top1_mass for item in diagnostics)
+                / prompt_count,
+            )
+        )
+    worst_stratum_summary = max(
+        stratum_summaries,
+        key=lambda summary: summary.mean_js_divergence,
+    )
+    mean_js_values = [summary.mean_js_divergence for summary in stratum_summaries]
+    stratum_mean_js_range = max(mean_js_values) - min(mean_js_values)
+
+    per_prompt_js = [item.mean_js_divergence for item in prompt_diagnostics]
+    attribute_correlations = tuple(
+        RouterDistillationAttributeCorrelation(
+            attribute_name=attribute_name,
+            pearson_r=_pearson_r(attribute_values, per_prompt_js),
+        )
+        for attribute_name, attribute_values in (
+            ("num_tokens", [float(item.num_tokens) for item in prompt_diagnostics]),
+            (
+                "oracle_entropy",
+                [item.oracle_entropy for item in prompt_diagnostics],
+            ),
+            (
+                "oracle_top1_mass",
+                [item.oracle_top1_mass for item in prompt_diagnostics],
+            ),
+        )
+    )
+    strongest_attribute = max(
+        attribute_correlations,
+        key=lambda item: abs(item.pearson_r),
+    )
+    if stratum_mean_js_range >= 0.02:
+        recommended_next_step = "richer_token_or_span_supervision"
+        rationale = (
+            "Held-out error varies materially across prompt strata on the frozen "
+            "baseline, so supervision granularity is a cleaner next hypothesis "
+            "than another width or family tweak."
+        )
+    else:
+        recommended_next_step = "larger_training_eval_surface"
+        rationale = (
+            "Held-out error does not separate cleanly by stratum on the frozen "
+            "baseline, so the next honest move is a larger training/eval surface "
+            "before adding finer supervision."
+        )
+
+    return RouterDistillationSupervisionGranularitySummary(
+        prompt_count=len(prompt_diagnostics),
+        worst_stratum_tag=worst_stratum_summary.group_key,
+        stratum_mean_js_range=stratum_mean_js_range,
+        strongest_attribute_name=strongest_attribute.attribute_name,
+        strongest_attribute_abs_correlation=abs(strongest_attribute.pearson_r),
+        recommended_next_step=recommended_next_step,
+        rationale=rationale,
+        stratum_summaries=tuple(stratum_summaries),
+        attribute_correlations=attribute_correlations,
+    )
+
+
 def stratified_router_train_eval_split(
     examples: Sequence[RouterDistillationExample],
     *,
@@ -606,14 +830,14 @@ def _evaluate_router(
     )
 
 
-def _fit_router_for_input(
+def _fit_router_model(
     *,
     train_examples: Sequence[RouterDistillationExample],
     eval_examples: Sequence[RouterDistillationExample],
     input_field: str,
     target_name: str,
     aggregation: str,
-    router_family: str = "mlp",
+    router_family: str,
     hidden_dim: int,
     learning_rate: float,
     weight_decay: float,
@@ -622,7 +846,7 @@ def _fit_router_for_input(
     patience: int,
     seed: int,
     device: torch.device,
-) -> RouterDistillationInputSummary:
+) -> _FittedRouterArtifacts:
     mean, std = _standardization_stats(train_examples, input_field=input_field)
     train_target_matrix = target_matrix_for_router_distillation(
         examples=train_examples,
@@ -670,7 +894,6 @@ def _fit_router_for_input(
     epochs_without_improvement = 0
     for epoch in range(1, max_epochs + 1):
         model.train()
-        epoch_losses: list[float] = []
         for batch_examples in _batched(
             train_examples,
             batch_size=batch_size,
@@ -696,7 +919,6 @@ def _fit_router_for_input(
             loss = F.mse_loss(predicted_target, targets)
             loss.backward()
             optimizer.step()
-            epoch_losses.append(float(loss.item()))
 
         eval_loss, _, _, _ = _evaluate_router(
             model=model,
@@ -725,15 +947,118 @@ def _fit_router_for_input(
                 break
 
     model.load_state_dict(best_state)
-    train_loss, _, _, _ = _evaluate_router(
+    return _FittedRouterArtifacts(
         model=model,
+        mean=mean,
+        std=std,
+        train_target_lookup=train_target_lookup,
+        eval_target_lookup=eval_target_lookup,
+        best_epoch=best_epoch,
+    )
+
+
+def _collect_prompt_diagnostics(
+    *,
+    model: torch.nn.Module,
+    examples: Sequence[RouterDistillationExample],
+    train_examples: Sequence[RouterDistillationExample],
+    input_field: str,
+    target_name: str,
+    mean: torch.Tensor,
+    std: torch.Tensor,
+    target_lookup: dict[str, torch.Tensor],
+    aggregation: str,
+    device: torch.device,
+) -> tuple[RouterDistillationPromptDiagnostic, ...]:
+    if not examples:
+        raise ValueError("examples must not be empty")
+    source_labels = tuple(examples[0].source_labels)
+    diagnostics = []
+    model.eval()
+    with torch.no_grad():
+        for example in examples:
+            states, mask, targets, alpha_targets = _collate_examples(
+                (example,),
+                input_field=input_field,
+                mean=mean,
+                std=std,
+                target_lookup=target_lookup,
+                device=device,
+            )
+            token_logits = model.forward_token_logits(states)
+            prediction_matrix = _prediction_matrix_for_target(
+                token_logits=token_logits,
+                token_mask=mask,
+                aggregation=aggregation,
+                target_name=target_name,
+            )
+            alpha_predictions = _prediction_matrix_to_alpha(
+                prediction_matrix=prediction_matrix,
+                target_name=target_name,
+                train_examples=train_examples,
+                source_labels=source_labels,
+            )
+            predicted_alpha = alpha_predictions[0].detach().cpu().tolist()
+            oracle_alpha = alpha_targets[0].detach().cpu().tolist()
+            diagnostics.append(
+                RouterDistillationPromptDiagnostic(
+                    prompt_id=example.prompt_id,
+                    prompt=example.prompt,
+                    tags=example.tags,
+                    num_tokens=int(example.token_ids.shape[0]),
+                    oracle_entropy=_distribution_entropy(oracle_alpha),
+                    oracle_top1_mass=max(oracle_alpha),
+                    mean_js_divergence=_js_divergence(predicted_alpha, oracle_alpha),
+                    target_mse=float(F.mse_loss(prediction_matrix, targets).item()),
+                    predicted_entropy=_distribution_entropy(predicted_alpha),
+                    predicted_top1_mass=max(predicted_alpha),
+                )
+            )
+    return tuple(diagnostics)
+
+
+def _fit_router_for_input(
+    *,
+    train_examples: Sequence[RouterDistillationExample],
+    eval_examples: Sequence[RouterDistillationExample],
+    input_field: str,
+    target_name: str,
+    aggregation: str,
+    router_family: str = "mlp",
+    hidden_dim: int,
+    learning_rate: float,
+    weight_decay: float,
+    batch_size: int,
+    max_epochs: int,
+    patience: int,
+    seed: int,
+    device: torch.device,
+) -> RouterDistillationInputSummary:
+    fitted = _fit_router_model(
+        train_examples=train_examples,
+        eval_examples=eval_examples,
+        input_field=input_field,
+        target_name=target_name,
+        aggregation=aggregation,
+        router_family=router_family,
+        hidden_dim=hidden_dim,
+        learning_rate=learning_rate,
+        weight_decay=weight_decay,
+        batch_size=batch_size,
+        max_epochs=max_epochs,
+        patience=patience,
+        seed=seed,
+        device=device,
+    )
+    train_loss, _, _, _ = _evaluate_router(
+        model=fitted.model,
         examples=train_examples,
         train_examples=train_examples,
         input_field=input_field,
         target_name=target_name,
-        mean=mean,
-        std=std,
-        target_lookup=train_target_lookup,
+        mean=fitted.mean,
+        std=fitted.std,
+        target_lookup=fitted.train_target_lookup,
         aggregation=aggregation,
         batch_size=batch_size,
         device=device,
@@ -744,14 +1069,14 @@ def _fit_router_for_input(
         mean_predicted_entropy,
         mean_oracle_entropy,
     ) = _evaluate_router(
-        model=model,
+        model=fitted.model,
         examples=eval_examples,
         train_examples=train_examples,
         input_field=input_field,
         target_name=target_name,
-        mean=mean,
-        std=std,
-        target_lookup=eval_target_lookup,
+        mean=fitted.mean,
+        std=fitted.std,
+        target_lookup=fitted.eval_target_lookup,
         aggregation=aggregation,
         batch_size=batch_size,
         device=device,
@@ -767,7 +1092,7 @@ def _fit_router_for_input(
         batch_size=batch_size,
         max_epochs=max_epochs,
         patience=patience,
-        best_epoch=best_epoch,
+        best_epoch=fitted.best_epoch,
         train_prompt_count=len(train_examples),
         eval_prompt_count=len(eval_examples),
         train_loss=train_loss,
@@ -777,6 +1102,120 @@ def _fit_router_for_input(
         eval_summary=eval_summary,
         train_prompt_ids=tuple(example.prompt_id for example in train_examples),
         eval_prompt_ids=tuple(example.prompt_id for example in eval_examples),
+    )
+
+
+def _examples_for_prompt_ids(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    prompt_ids: Sequence[str],
+) -> tuple[RouterDistillationExample, ...]:
+    example_lookup = {example.prompt_id: example for example in examples}
+    missing = [prompt_id for prompt_id in prompt_ids if prompt_id not in example_lookup]
+    if missing:
+        raise ValueError(f"missing prompt ids in dataset: {missing}")
+    return tuple(example_lookup[prompt_id] for prompt_id in prompt_ids)
+
+
+def audit_router_supervision_granularity(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    fixed_input_field: str,
+    fixed_target_name: str,
+    fixed_aggregation: str,
+    fixed_router_family: str,
+    hidden_dim: int,
+    train_prompt_ids: Sequence[str],
+    eval_prompt_ids: Sequence[str],
+    learning_rate: float,
+    weight_decay: float = 1e-4,
+    batch_size: int = 16,
+    max_epochs: int = 300,
+    patience: int = 40,
+    seed: int = 11,
+    device: str = "cpu",
+    collection_id: str = "unknown",
+    model_name: str = "unknown",
+) -> RouterDistillationSupervisionGranularityAudit:
+    if fixed_input_field not in ALLOWED_INPUT_FIELDS:
+        raise ValueError(f"unsupported input field {fixed_input_field!r}")
+    if fixed_target_name not in ALLOWED_TARGET_NAMES:
+        raise ValueError(f"unsupported target name {fixed_target_name!r}")
+    if fixed_aggregation not in ALLOWED_AGGREGATIONS:
+        raise ValueError(f"unsupported aggregation {fixed_aggregation!r}")
+    if fixed_router_family not in ALLOWED_ROUTER_FAMILIES:
+        raise ValueError(f"unsupported router family {fixed_router_family!r}")
+
+    train_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=train_prompt_ids,
+    )
+    eval_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=eval_prompt_ids,
+    )
+    torch_device = torch.device(device)
+    fitted = _fit_router_model(
+        train_examples=train_examples,
+        eval_examples=eval_examples,
+        input_field=fixed_input_field,
+        target_name=fixed_target_name,
+        aggregation=fixed_aggregation,
+        router_family=fixed_router_family,
+        hidden_dim=hidden_dim,
+        learning_rate=learning_rate,
+        weight_decay=weight_decay,
+        batch_size=batch_size,
+        max_epochs=max_epochs,
+        patience=patience,
+        seed=seed,
+        device=torch_device,
+    )
+    eval_loss, eval_summary, _, _ = _evaluate_router(
+        model=fitted.model,
+        examples=eval_examples,
+        train_examples=train_examples,
+        input_field=fixed_input_field,
+        target_name=fixed_target_name,
+        mean=fitted.mean,
+        std=fitted.std,
+        target_lookup=fitted.eval_target_lookup,
+        aggregation=fixed_aggregation,
+        batch_size=batch_size,
+        device=torch_device,
+    )
+    prompt_diagnostics = _collect_prompt_diagnostics(
+        model=fitted.model,
+        examples=eval_examples,
+        train_examples=train_examples,
+        input_field=fixed_input_field,
+        target_name=fixed_target_name,
+        mean=fitted.mean,
+        std=fitted.std,
+        target_lookup=fitted.eval_target_lookup,
+        aggregation=fixed_aggregation,
+        device=torch_device,
+    )
+    supervision_summary = summarize_router_supervision_granularity(
+        prompt_diagnostics=prompt_diagnostics
+    )
+    return RouterDistillationSupervisionGranularityAudit(
+        collection_id=collection_id,
+        model_name=model_name,
+        split="pilot",
+        fixed_input_field=fixed_input_field,
+        fixed_target_name=fixed_target_name,
+        fixed_aggregation=fixed_aggregation,
+        fixed_router_family=fixed_router_family,
+        hidden_dim=hidden_dim if fixed_router_family == "mlp" else None,
+        train_prompt_count=len(train_examples),
+        eval_prompt_count=len(eval_examples),
+        train_prompt_ids=tuple(train_prompt_ids),
+        eval_prompt_ids=tuple(eval_prompt_ids),
+        baseline_eval_loss=eval_loss,
+        baseline_eval_summary=eval_summary,
+        prompt_diagnostics=prompt_diagnostics,
+        supervision_summary=supervision_summary,
     )
 
 
@@ -1454,4 +1893,34 @@ def compact_router_distillation_family_summary_payload(
         }
         for input_summary in summary.input_summaries
     ]
+    return payload
+
+
+def compact_router_distillation_supervision_granularity_payload(
+    audit: RouterDistillationSupervisionGranularityAudit,
+) -> dict[str, object]:
+    payload = asdict(audit)
+    payload["baseline_eval_summary"] = asdict(audit.baseline_eval_summary)
+    payload["prompt_diagnostics"] = [
+        asdict(prompt_diagnostic) for prompt_diagnostic in audit.prompt_diagnostics
+    ]
+    payload["supervision_summary"] = {
+        "prompt_count": audit.supervision_summary.prompt_count,
+        "worst_stratum_tag": audit.supervision_summary.worst_stratum_tag,
+        "stratum_mean_js_range": audit.supervision_summary.stratum_mean_js_range,
+        "strongest_attribute_name": audit.supervision_summary.strongest_attribute_name,
+        "strongest_attribute_abs_correlation": (
+            audit.supervision_summary.strongest_attribute_abs_correlation
+        ),
+        "recommended_next_step": audit.supervision_summary.recommended_next_step,
+        "rationale": audit.supervision_summary.rationale,
+        "stratum_summaries": [
+            asdict(group_summary)
+            for group_summary in audit.supervision_summary.stratum_summaries
+        ],
+        "attribute_correlations": [
+            asdict(correlation)
+            for correlation in audit.supervision_summary.attribute_correlations
+        ],
+    }
     return payload

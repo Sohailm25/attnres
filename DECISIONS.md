@@ -1591,3 +1591,30 @@
   - `resattn-0kc` can close once the artifact lands.
   - the broader factual route-mode claim stays family-plus-prompt-frame-conditioned.
   - the next main implementation step remains `resattn-but`.
+
+## [2026-03-18T21:39:10-0500] DECISION: Close `resattn-but` as a supervision-granularity diagnosis and move Phase 6 to richer token/span supervision
+
+- Trigger: `resattn-but` reused the saved `20260318` Gemma pilot export and the frozen family-comparison split/baseline to test whether held-out router-distillation errors are better explained by prompt strata or by simple scalar difficulty surrogates.
+- Decision: close `resattn-but` as a positive supervision-granularity diagnosis. Keep the saved baseline fixed as `linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax`. Do not reopen width or family search on this pilot surface first. The next honest Phase 6 move is a minimally richer token/span supervision comparison on the same split.
+- Rationale:
+  - the refit baseline matched the saved family artifact exactly on the same split:
+    - held-out `R^2 = 0.3445`
+    - held-out mean JS `= 0.0853`
+  - held-out error separated materially by prompt stratum:
+    - `factual_recall`: mean JS `= 0.0409`
+    - `reasoning_math`: mean JS `= 0.0576`
+    - `code_procedural`: mean JS `= 0.0627`
+    - `general_text`: mean JS `= 0.0754`
+    - stratum range `= 0.0345`
+  - simple scalar surrogates were weak explanations:
+    - `num_tokens` Pearson `= 0.0169`
+    - `oracle_entropy` Pearson `= -0.1237`
+    - `oracle_top1_mass` Pearson `= 0.1654`
+  - that combination is stronger evidence for supervision mismatch than for another simple architecture miss:
+    - factual prompts are already relatively easy under the current sequence-level target
+    - the larger residuals sit in general-text and code prompts where a single sequence-level alpha target is more plausibly too coarse
+  - the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the diagnosis is stable enough to use as a design pivot
+- Impact:
+  - `resattn-but` can close once the artifact lands.
+  - `resattn-tqn` is now the next main Phase 6 issue.
+  - future router work on this saved pilot export should change supervision granularity before changing width or family again.

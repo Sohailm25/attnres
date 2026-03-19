@@ -2077,3 +2077,25 @@ Suggested entry format:
 - Interesting facts:
   - spillovers: `Moby-Dick`, `Frankenstein`
   - singleton outlier: `Things Fall Apart`
+
+## [2026-03-18T21:39:10-0500] The Router Errors Finally Look Like the Supervision Object, Not the Head
+- Stage: router-distillation supervision-granularity audit
+- Feel of the Experiment: This is the first Phase 6 result in a while that feels like a real design pivot instead of another negative knob turn. The useful surprise is that the worst held-out stratum is `general_text`, not code, and the scalar “difficulty” surrogates are too weak to explain the split away.
+- Working Hypotheses:
+  - The next honest Phase 6 move is richer token/span supervision on the same saved pilot split.
+  - Another width or family tweak before changing the supervision object would mostly be ritual.
+- Hunches and Guesses:
+  - The current sequence-level alpha target is probably adequate for factual prompts and visibly too coarse for more open-ended prompt frames.
+  - General-text prompts may be exposing a token-local routing signal that the current single-vector target washes out.
+- Predictions:
+  - `resattn-tqn` should be the next main Phase 6 step.
+  - If a minimally richer supervision target helps, the gain should appear first on `general_text` and `code_procedural`, not on factual prompts.
+- Surprises and Tensions:
+  - `general_text` landing above `code_procedural` was not my prior.
+  - The strongest scalar correlation being only `|r| = 0.1654` is exactly the kind of weak explanation I wanted to see before blaming the supervision object.
+- Confidence:
+  - high that `resattn-but` should close as a real diagnosis
+  - medium-high that token/span supervision is the next honest lever
+- Interesting facts:
+  - frozen-baseline aggregate matched the saved family artifact exactly on the same split
+  - rerun-stable audit hash: `e55d9afc17c33a0b3d4ad3961a3d443cea7895dc`

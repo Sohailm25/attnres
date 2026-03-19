@@ -1248,13 +1248,40 @@
       - the next Phase 6 blocker is more likely supervision granularity than another architecture scalar
     - rerun note:
       - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`89f3b2682375aa7956f969879af7479e85852fb9`)
+  - `resattn-but` now audits supervision granularity on the frozen Gemma Phase 6 baseline:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_supervision_granularity_audit.py` now support prompt-level held-out diagnostics on a frozen saved-split baseline while leaving the architecture search surface unchanged
+    - the audit reuses the saved family-comparison artifact unchanged:
+      - baseline: `linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax`
+      - split: exact `192 / 64` train/eval prompt IDs from `20260318-gemma2-router-distillation-family-comparison-v1/summary.json`
+    - implementation check:
+      - the refit baseline matched the saved family artifact exactly on the same split:
+        - held-out `R^2 = 0.3445`
+        - held-out mean JS `= 0.0853`
+    - prompt-level audit result:
+      - factual recall remained the easiest stratum:
+        - mean JS `= 0.0409`
+      - the worst held-out stratum was `general_text`:
+        - mean JS `= 0.0754`
+      - the other two strata sat in between:
+        - `reasoning_math`: mean JS `= 0.0576`
+        - `code_procedural`: mean JS `= 0.0627`
+      - stratum mean-JS range `= 0.0345`
+      - simple scalar surrogates were weak explanations:
+        - `num_tokens` Pearson `= 0.0169`
+        - `oracle_entropy` Pearson `= -0.1237`
+        - `oracle_top1_mass` Pearson `= 0.1654`
+    - interpretation:
+      - the remaining Phase 6 error now looks more like a supervision-granularity problem than another width or family problem
+      - the next honest move is richer token/span supervision on the same pilot surface, not another blind architecture tweak and not a generic larger-surface rerun first
+    - rerun note:
+      - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`e55d9afc17c33a0b3d4ad3961a3d443cea7895dc`)
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the main active implementation step is now `resattn-but`: audit whether the remaining Phase 6 blocker is supervision granularity on the same saved pilot export rather than another architecture tweak
+   - the main active implementation step is now `resattn-tqn`: compare a minimally richer token/span supervision path against the retained sequence-level baseline on the same saved Gemma pilot split
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
