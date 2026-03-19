@@ -1501,3 +1501,25 @@
   - `resattn-i6i` can close once the artifact lands.
   - `resattn-914` becomes the main active next step.
   - if another saved-artifact scientific follow-up is needed later, it should target the residual author `novel_title` split rather than reopen the broader frame-versus-family question.
+
+## [2026-03-18T20:18:34-0500] DECISION: Close `resattn-914` as a negative aggregation comparison and move the Phase 6 blocker to capacity
+
+- Trigger: `resattn-914` compared `mean_token_logits_then_softmax` versus `last_token_logits_then_softmax` on the saved Gemma pilot export while freezing `oracle_alpha_logit_vector`, the held-out split, and the candidate inputs.
+- Decision: close `resattn-914` as a landed negative result for simple aggregation rescue. Keep `oracle_alpha_logit_vector` fixed. Keep `mean_token_logits_then_softmax` as the current baseline aggregation. Do not keep iterating blind aggregation tweaks on this fixed export before testing capacity.
+- Rationale:
+  - the stronger token-specific alternative did not help:
+    - `mean + h_4[t]`: `R^2 = 0.3116`, mean JS `= 0.0831`
+    - `last + h_4[t]`: `R^2 = 0.2639`, mean JS `= 0.0966`
+    - `mean + h_1[t]`: `R^2 = 0.2891`, mean JS `= 0.0867`
+    - `last + h_1[t]`: `R^2 = 0.2294`, mean JS `= 0.0979`
+  - the selected pilot combination stayed unchanged:
+    - target `= oracle_alpha_logit_vector`
+    - aggregation `= mean_token_logits_then_softmax`
+    - input `= h_4[t]`
+  - aggregation did not change the input ranking, so this was not a hidden `h_1[t]` versus `h_4[t]` issue either
+  - an exact-command rerun on MPS changed the summary hash and moved the decimals, but it preserved every qualitative conclusion
+  - that means the next honest Phase 6 blocker is no longer “try another obvious aggregation.” It is model capacity or router family
+- Impact:
+  - `resattn-914` can close once the artifact lands.
+  - `resattn-3ak` is now the next main Phase 6 issue.
+  - future router work on this saved export should keep `oracle_alpha_logit_vector` and `mean_token_logits_then_softmax` fixed until the capacity comparison lands.

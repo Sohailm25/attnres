@@ -2056,3 +2056,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: exact-command rerun on MPS changed the summary hash and nudged the decimals, but preserved every qualitative conclusion: logit target stayed selected, `h_4[t]` stayed best, input ranking stayed unchanged, and readiness still failed.
 - Next step: close `resattn-4hj` as a target-geometry pass, then take `resattn-914` to compare sequence aggregation rules on the same saved pilot export before any capacity sweep.
+
+## [2026-03-18T20:18:34-0500] PRE-RUN: Gemma router-distillation aggregation comparison v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_aggregation_comparison.py`
+- Command: `mkdir -p results/router_training/20260318-gemma2-router-distillation-aggregation-comparison-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_aggregation_comparison.py --output-dir results/router_training/20260318-gemma2-router-distillation-aggregation-comparison-v1 --candidate-input-fields 'h_1[t]' 'h_4[t]' --fixed-target-name oracle_alpha_logit_vector --candidate-aggregations mean_token_logits_then_softmax last_token_logits_then_softmax --device mps > results/router_training/20260318-gemma2-router-distillation-aggregation-comparison-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `split=pilot`, `inputs=h_1[t]/h_4[t]`, `target=oracle_alpha_logit_vector`, `aggregations=mean_token_logits_then_softmax/last_token_logits_then_softmax`, `hidden_dim=256`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether the remaining pilot router-distillation error is mainly a lossy sequence aggregation problem rather than model capacity after freezing the alpha-logit target.
+- Expected outcome: either `last_token_logits_then_softmax` materially improves held-out `R^2`/JS enough to become the new baseline, or the mean-vs-last comparison stays too small and capacity remains the next blocker.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260318-gemma2-router-distillation-aggregation-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the saved export is prompt-only, a last-token win should be interpreted as better answer-position conditioning rather than generic token specificity.
+- Implementation verified: YES - `tests.test_router_distillation` now covers `last_token_logits_then_softmax` directly and an order-sensitive synthetic case where last-token aggregation beats mean aggregation while target geometry stays fixed.
+- Status: LAUNCHING
+
+## [2026-03-18T20:19:00-0500] POST-RUN: Gemma router-distillation aggregation comparison v1
+- Outcome: SUCCESS
+- Key metric: `last_token_logits_then_softmax` did not beat the mean baseline; the retained best pilot combination is still `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t]` with held-out `R^2 = 0.3116` and mean JS `= 0.0831`, while `last + h_4[t]` fell to `R^2 = 0.2639`, mean JS `= 0.0966`.
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-aggregation-comparison-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-aggregation-comparison-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: exact-command rerun on MPS changed the summary hash (`8877c487ce076f9109ca0cfb4a04c5f4b11fd222` -> `323923e29f640b0ccee8c6b5e753d11571bbbf23`) and nudged the decimals, but `mean` stayed selected, `h_4[t]` stayed best, and readiness still failed.
+- Next step: close `resattn-914`, then take `resattn-3ak` for the bounded capacity comparison with target and aggregation frozen.
