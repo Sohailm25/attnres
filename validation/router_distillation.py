@@ -31,6 +31,11 @@ ALLOWED_AGGREGATIONS = {
 }
 ALLOWED_TARGET_NAMES = {"oracle_alpha_vector", "oracle_alpha_logit_vector"}
 ALLOWED_ROUTER_FAMILIES = {"linear", "mlp"}
+ALLOWED_SUPERVISION_OBJECTIVES = {
+    "sequence_target_mse",
+    "all_tokens_target_mse",
+    "last_third_tokens_target_mse",
+}
 
 
 @dataclass(frozen=True)
@@ -79,6 +84,7 @@ class RouterDistillationInputSummary:
     hidden_dim: int | None = None
     train_prompt_ids: tuple[str, ...] = ()
     eval_prompt_ids: tuple[str, ...] = ()
+    supervision_objective: str = "sequence_target_mse"
 
 
 @dataclass(frozen=True)
@@ -173,6 +179,33 @@ class RouterDistillationFamilyComparisonSummary:
     train_prompt_count: int
     eval_prompt_count: int
     selected_router_family: str
+    selected_meets_readiness_target: bool
+    train_prompt_ids: tuple[str, ...]
+    eval_prompt_ids: tuple[str, ...]
+    input_summaries: tuple[RouterDistillationInputSummary, ...]
+
+    @property
+    def candidate_summaries(self) -> tuple[RouterDistillationInputSummary, ...]:
+        return self.input_summaries
+
+
+@dataclass(frozen=True)
+class RouterDistillationSupervisionComparisonSummary:
+    collection_id: str
+    model_name: str
+    split: str
+    fixed_input_field: str
+    fixed_target_name: str
+    fixed_aggregation: str
+    fixed_router_family: str
+    hidden_dim: int
+    candidate_supervision_objectives: tuple[str, ...]
+    selection_primary_metric: str
+    selection_secondary_metric: str
+    readiness_target_r_squared: float
+    train_prompt_count: int
+    eval_prompt_count: int
+    selected_supervision_objective: str
     selected_meets_readiness_target: bool
     train_prompt_ids: tuple[str, ...]
     eval_prompt_ids: tuple[str, ...]
@@ -466,6 +499,72 @@ def _prediction_matrix_for_target(
     if target_name == "oracle_alpha_logit_vector":
         return sequence_logits - sequence_logits.mean(dim=-1, keepdim=True)
     raise ValueError(f"unsupported target name {target_name!r}")
+
+
+def _token_prediction_matrix_for_target(
+    *,
+    token_logits: torch.Tensor,
+    target_name: str,
+) -> torch.Tensor:
+    if target_name == "oracle_alpha_vector":
+        return torch.softmax(token_logits, dim=-1)
+    if target_name == "oracle_alpha_logit_vector":
+        return token_logits - token_logits.mean(dim=-1, keepdim=True)
+    raise ValueError(f"unsupported target name {target_name!r}")
+
+
+def _supervision_token_mask(
+    *,
+    token_mask: torch.Tensor,
+    supervision_objective: str,
+) -> torch.Tensor:
+    if supervision_objective == "all_tokens_target_mse":
+        return token_mask
+    if supervision_objective == "last_third_tokens_target_mse":
+        supervision_mask = torch.zeros_like(token_mask)
+        valid_counts = token_mask.sum(dim=1)
+        for batch_index, valid_count in enumerate(valid_counts.tolist()):
+            if valid_count <= 0:
+                continue
+            start_index = max(0, (2 * int(valid_count)) // 3)
+            supervision_mask[batch_index, start_index : int(valid_count)] = True
+        return supervision_mask
+    raise ValueError(f"unsupported supervision objective {supervision_objective!r}")
+
+
+def router_supervision_loss(
+    *,
+    token_logits: torch.Tensor,
+    token_mask: torch.Tensor,
+    targets: torch.Tensor,
+    aggregation: str,
+    target_name: str,
+    supervision_objective: str,
+) -> torch.Tensor:
+    if supervision_objective == "sequence_target_mse":
+        predicted_target = _prediction_matrix_for_target(
+            token_logits=token_logits,
+            token_mask=token_mask,
+            aggregation=aggregation,
+            target_name=target_name,
+        )
+        return F.mse_loss(predicted_target, targets)
+    if supervision_objective not in ALLOWED_SUPERVISION_OBJECTIVES:
+        raise ValueError(f"unsupported supervision objective {supervision_objective!r}")
+    supervision_mask = _supervision_token_mask(
+        token_mask=token_mask,
+        supervision_objective=supervision_objective,
+    )
+    token_predictions = _token_prediction_matrix_for_target(
+        token_logits=token_logits,
+        target_name=target_name,
+    )
+    broadcast_targets = targets.unsqueeze(1).expand_as(token_predictions)
+    mask = supervision_mask.unsqueeze(-1).to(dtype=token_predictions.dtype)
+    denominator = mask.sum() * token_predictions.shape[-1]
+    if float(denominator.item()) <= 0.0:
+        raise ValueError("supervision objective must include at least one token")
+    return ((token_predictions - broadcast_targets) ** 2 * mask).sum() / denominator
 
 
 def _input_tensor_for_field(
@@ -838,6 +937,7 @@ def _fit_router_model(
     target_name: str,
     aggregation: str,
     router_family: str,
+    supervision_objective: str,
     hidden_dim: int,
     learning_rate: float,
     weight_decay: float,
@@ -866,6 +966,8 @@ def _fit_router_model(
     }
     if router_family not in ALLOWED_ROUTER_FAMILIES:
         raise ValueError(f"unsupported router family {router_family!r}")
+    if supervision_objective not in ALLOWED_SUPERVISION_OBJECTIVES:
+        raise ValueError(f"unsupported supervision objective {supervision_objective!r}")
     torch.manual_seed(seed)
     if router_family == "mlp":
         model = _SequenceRouterMLP(
@@ -910,13 +1012,14 @@ def _fit_router_model(
             )
             optimizer.zero_grad(set_to_none=True)
             token_logits = model.forward_token_logits(states)
-            predicted_target = _prediction_matrix_for_target(
+            loss = router_supervision_loss(
                 token_logits=token_logits,
                 token_mask=mask,
+                targets=targets,
                 aggregation=aggregation,
                 target_name=target_name,
+                supervision_objective=supervision_objective,
             )
-            loss = F.mse_loss(predicted_target, targets)
             loss.backward()
             optimizer.step()
 
@@ -1031,6 +1134,7 @@ def _fit_router_for_input(
     batch_size: int,
     max_epochs: int,
     patience: int,
+    supervision_objective: str = "sequence_target_mse",
     seed: int,
     device: torch.device,
 ) -> RouterDistillationInputSummary:
@@ -1041,6 +1145,7 @@ def _fit_router_for_input(
         target_name=target_name,
         aggregation=aggregation,
         router_family=router_family,
+        supervision_objective=supervision_objective,
         hidden_dim=hidden_dim,
         learning_rate=learning_rate,
         weight_decay=weight_decay,
@@ -1085,6 +1190,7 @@ def _fit_router_for_input(
         input_field=input_field,
         target_name=target_name,
         aggregation=aggregation,
+        supervision_objective=supervision_objective,
         router_family=router_family,
         hidden_dim=hidden_dim if router_family == "mlp" else None,
         learning_rate=learning_rate,
@@ -1132,6 +1238,7 @@ def audit_router_supervision_granularity(
     batch_size: int = 16,
     max_epochs: int = 300,
     patience: int = 40,
+    supervision_objective: str = "sequence_target_mse",
     seed: int = 11,
     device: str = "cpu",
     collection_id: str = "unknown",
@@ -1145,6 +1252,8 @@ def audit_router_supervision_granularity(
         raise ValueError(f"unsupported aggregation {fixed_aggregation!r}")
     if fixed_router_family not in ALLOWED_ROUTER_FAMILIES:
         raise ValueError(f"unsupported router family {fixed_router_family!r}")
+    if supervision_objective not in ALLOWED_SUPERVISION_OBJECTIVES:
+        raise ValueError(f"unsupported supervision objective {supervision_objective!r}")
 
     train_examples = _examples_for_prompt_ids(
         examples=examples,
@@ -1162,6 +1271,7 @@ def audit_router_supervision_granularity(
         target_name=fixed_target_name,
         aggregation=fixed_aggregation,
         router_family=fixed_router_family,
+        supervision_objective=supervision_objective,
         hidden_dim=hidden_dim,
         learning_rate=learning_rate,
         weight_decay=weight_decay,
@@ -1216,6 +1326,120 @@ def audit_router_supervision_granularity(
         baseline_eval_summary=eval_summary,
         prompt_diagnostics=prompt_diagnostics,
         supervision_summary=supervision_summary,
+    )
+
+
+def compare_router_supervision_objectives(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    fixed_input_field: str,
+    fixed_target_name: str,
+    fixed_aggregation: str,
+    fixed_router_family: str,
+    hidden_dim: int,
+    train_prompt_ids: Sequence[str],
+    eval_prompt_ids: Sequence[str],
+    candidate_supervision_objectives: Sequence[str],
+    learning_rate: float,
+    weight_decay: float = 1e-4,
+    batch_size: int = 16,
+    max_epochs: int = 300,
+    patience: int = 40,
+    seed: int = 11,
+    device: str = "cpu",
+    collection_id: str = "unknown",
+    model_name: str = "unknown",
+) -> RouterDistillationSupervisionComparisonSummary:
+    if fixed_input_field not in ALLOWED_INPUT_FIELDS:
+        raise ValueError(f"unsupported input field {fixed_input_field!r}")
+    if fixed_target_name not in ALLOWED_TARGET_NAMES:
+        raise ValueError(f"unsupported target name {fixed_target_name!r}")
+    if fixed_aggregation not in ALLOWED_AGGREGATIONS:
+        raise ValueError(f"unsupported aggregation {fixed_aggregation!r}")
+    if fixed_router_family not in ALLOWED_ROUTER_FAMILIES:
+        raise ValueError(f"unsupported router family {fixed_router_family!r}")
+    if not candidate_supervision_objectives:
+        raise ValueError("candidate_supervision_objectives must not be empty")
+    for supervision_objective in candidate_supervision_objectives:
+        if supervision_objective not in ALLOWED_SUPERVISION_OBJECTIVES:
+            raise ValueError(
+                f"unsupported supervision objective {supervision_objective!r}"
+            )
+
+    train_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=train_prompt_ids,
+    )
+    eval_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=eval_prompt_ids,
+    )
+    torch_device = torch.device(device)
+
+    input_summaries: list[RouterDistillationInputSummary] = []
+    selected_summary: RouterDistillationInputSummary | None = None
+    for supervision_objective in candidate_supervision_objectives:
+        summary = _fit_router_for_input(
+            train_examples=train_examples,
+            eval_examples=eval_examples,
+            input_field=fixed_input_field,
+            target_name=fixed_target_name,
+            aggregation=fixed_aggregation,
+            router_family=fixed_router_family,
+            hidden_dim=hidden_dim,
+            learning_rate=learning_rate,
+            weight_decay=weight_decay,
+            batch_size=batch_size,
+            max_epochs=max_epochs,
+            patience=patience,
+            supervision_objective=supervision_objective,
+            seed=seed,
+            device=torch_device,
+        )
+        input_summaries.append(summary)
+        if selected_summary is None:
+            selected_summary = summary
+            continue
+        primary_delta = compare_predictiveness_metric_values(
+            metric_name="r_squared",
+            left=summary.eval_summary.r_squared,
+            right=selected_summary.eval_summary.r_squared,
+        )
+        if primary_delta > 1e-12:
+            selected_summary = summary
+            continue
+        if abs(primary_delta) <= 1e-12:
+            secondary_delta = compare_predictiveness_metric_values(
+                metric_name="mean_js_divergence",
+                left=summary.eval_summary.mean_js_divergence,
+                right=selected_summary.eval_summary.mean_js_divergence,
+            )
+            if secondary_delta > 1e-12:
+                selected_summary = summary
+
+    assert selected_summary is not None
+    return RouterDistillationSupervisionComparisonSummary(
+        collection_id=collection_id,
+        model_name=model_name,
+        split="pilot",
+        fixed_input_field=fixed_input_field,
+        fixed_target_name=fixed_target_name,
+        fixed_aggregation=fixed_aggregation,
+        fixed_router_family=fixed_router_family,
+        hidden_dim=hidden_dim,
+        candidate_supervision_objectives=tuple(candidate_supervision_objectives),
+        selection_primary_metric="r_squared",
+        selection_secondary_metric="mean_js_divergence",
+        readiness_target_r_squared=READINESS_TARGET_R_SQUARED,
+        train_prompt_count=len(train_examples),
+        eval_prompt_count=len(eval_examples),
+        selected_supervision_objective=selected_summary.supervision_objective,
+        selected_meets_readiness_target=(
+            selected_summary.eval_summary.r_squared >= READINESS_TARGET_R_SQUARED
+        ),
+        train_prompt_ids=tuple(train_prompt_ids),
+        eval_prompt_ids=tuple(eval_prompt_ids),
+        input_summaries=tuple(input_summaries),
     )
 
 
@@ -1785,6 +2009,7 @@ def compact_router_distillation_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "supervision_objective": input_summary.supervision_objective,
             "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
@@ -1815,6 +2040,7 @@ def compact_router_distillation_aggregation_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "supervision_objective": input_summary.supervision_objective,
             "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
@@ -1845,6 +2071,7 @@ def compact_router_distillation_capacity_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "supervision_objective": input_summary.supervision_objective,
             "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
@@ -1875,6 +2102,7 @@ def compact_router_distillation_family_summary_payload(
             "input_field": input_summary.input_field,
             "target_name": input_summary.target_name,
             "aggregation": input_summary.aggregation,
+            "supervision_objective": input_summary.supervision_objective,
             "router_family": input_summary.router_family,
             "hidden_dim": input_summary.hidden_dim,
             "learning_rate": input_summary.learning_rate,
@@ -1923,4 +2151,35 @@ def compact_router_distillation_supervision_granularity_payload(
             for correlation in audit.supervision_summary.attribute_correlations
         ],
     }
+    return payload
+
+
+def compact_router_distillation_supervision_comparison_payload(
+    summary: RouterDistillationSupervisionComparisonSummary,
+) -> dict[str, object]:
+    payload = asdict(summary)
+    payload["input_summaries"] = [
+        {
+            "input_field": input_summary.input_field,
+            "target_name": input_summary.target_name,
+            "aggregation": input_summary.aggregation,
+            "supervision_objective": input_summary.supervision_objective,
+            "router_family": input_summary.router_family,
+            "hidden_dim": input_summary.hidden_dim,
+            "learning_rate": input_summary.learning_rate,
+            "weight_decay": input_summary.weight_decay,
+            "batch_size": input_summary.batch_size,
+            "max_epochs": input_summary.max_epochs,
+            "patience": input_summary.patience,
+            "best_epoch": input_summary.best_epoch,
+            "train_prompt_count": input_summary.train_prompt_count,
+            "eval_prompt_count": input_summary.eval_prompt_count,
+            "train_loss": input_summary.train_loss,
+            "eval_loss": input_summary.eval_loss,
+            "mean_predicted_entropy": input_summary.mean_predicted_entropy,
+            "mean_oracle_entropy": input_summary.mean_oracle_entropy,
+            "eval_summary": asdict(input_summary.eval_summary),
+        }
+        for input_summary in summary.input_summaries
+    ]
     return payload

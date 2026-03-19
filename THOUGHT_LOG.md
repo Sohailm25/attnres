@@ -2099,3 +2099,25 @@ Suggested entry format:
 - Interesting facts:
   - frozen-baseline aggregate matched the saved family artifact exactly on the same split
   - rerun-stable audit hash: `e55d9afc17c33a0b3d4ad3961a3d443cea7895dc`
+
+## [2026-03-18T22:09:39-0500] Denser All-Token Supervision Actually Pays Off
+- Stage: router-distillation supervision-objective comparison
+- Feel of the Experiment: This is the right kind of positive result. It is not flashy, but it changes the design landscape. The important surprise is that `all_tokens` helps while `last_third` hurts, which means the missing signal is not just “closer to the answer token.”
+- Working Hypotheses:
+  - The new least-bad Phase 6 baseline should be `all_tokens_target_mse`, not the old sequence-level objective.
+  - The next honest architecture question is whether the old linear-vs-MLP result survives under this better supervision surface.
+- Hunches and Guesses:
+  - The all-token win looks more like distributed local regularization than span localization.
+  - If another gain is available without a new export, it is more likely to come from the family comparison under `all_tokens` than from another handcrafted span mask.
+- Predictions:
+  - `resattn-d36` should be the next main Phase 6 step.
+  - If `d36` stays linear-favored even under `all_tokens`, the next move should probably be more faithful tokenwise targets rather than more architecture churn.
+- Surprises and Tensions:
+  - `general_text` stayed the worst stratum even after the all-token improvement, which is consistent with the earlier audit rather than contradicting it.
+  - `last_third` hurting factual recall this badly is a cleaner negative than I expected.
+- Confidence:
+  - high that `tqn` should close as a real positive result
+  - medium-high that the next bounded follow-up should be family-under-all-tokens, not an immediate export redesign
+- Interesting facts:
+  - `all_tokens_target_mse`: `R^2 = 0.4076`, mean JS `= 0.0797`
+  - rerun-stable comparison hash: `13cbb0d9d69f05cdb5d97e0ed69b66d0f72ea350`

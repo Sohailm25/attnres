@@ -1275,13 +1275,38 @@
       - the next honest move is richer token/span supervision on the same pilot surface, not another blind architecture tweak and not a generic larger-surface rerun first
     - rerun note:
       - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`e55d9afc17c33a0b3d4ad3961a3d443cea7895dc`)
+  - `resattn-tqn` now compares richer token/span supervision objectives on the same frozen Gemma Phase 6 baseline:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_supervision_objective_comparison.py` now support fixed-split comparison of supervision objectives while leaving the model family, input, target, and inference aggregation unchanged
+    - the comparison reused the saved family-comparison artifact unchanged:
+      - baseline: `linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax`
+      - split: exact `192 / 64` train/eval prompt IDs from `20260318-gemma2-router-distillation-family-comparison-v1/summary.json`
+    - implementation check:
+      - the retained `sequence_target_mse` row matched the saved family artifact exactly on the same split:
+        - held-out `R^2 = 0.3445`
+        - held-out mean JS `= 0.0853`
+    - richer-supervision result:
+      - `sequence_target_mse`: `R^2 = 0.3445`, mean JS `= 0.0853`
+      - `all_tokens_target_mse`: `R^2 = 0.4076`, mean JS `= 0.0797`
+      - `last_third_tokens_target_mse`: `R^2 = 0.2140`, mean JS `= 0.1103`
+      - selected supervision objective moved to `all_tokens_target_mse`
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - stratum read from `objective_audits.json`:
+      - `all_tokens_target_mse` improved every stratum modestly
+      - `last_third_tokens_target_mse` hurt every stratum and hurt factual recall most strongly
+      - the gain is therefore better read as denser token coverage than as end-of-prompt localization
+    - interpretation:
+      - the supervision-granularity diagnosis now has real payoff
+      - the Phase 6 baseline should move from `sequence_target_mse` to `all_tokens_target_mse` on this saved export
+      - the next honest follow-up is a bounded family comparison under the improved supervision objective rather than a blind return to wider architecture search or an immediate export redesign
+    - rerun note:
+      - the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`13cbb0d9d69f05cdb5d97e0ed69b66d0f72ea350`)
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the main active implementation step is now `resattn-tqn`: compare a minimally richer token/span supervision path against the retained sequence-level baseline on the same saved Gemma pilot split
+   - the main active implementation step is now `resattn-d36`: re-test the bounded linear-versus-MLP family question under the improved `all_tokens_target_mse` supervision baseline on the same saved Gemma pilot split
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

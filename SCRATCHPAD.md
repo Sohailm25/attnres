@@ -2144,3 +2144,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`e55d9afc17c33a0b3d4ad3961a3d443cea7895dc`).
 - Next step: close `resattn-but`, then take `resattn-tqn` for the first richer token/span supervision comparison on the same saved pilot split.
+
+## [2026-03-18T22:09:39-0500] PRE-RUN: Gemma router-distillation supervision-objective comparison v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_supervision_objective_comparison.py`
+- Command: `mkdir -p results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_supervision_objective_comparison.py --output-dir results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1 --device mps > results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `frozen_family_summary=20260318-gemma2-router-distillation-family-comparison-v1/summary.json`, `baseline=linear + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax`, `split=family-summary train/eval ids`, `candidate_supervision_objectives=sequence_target_mse/all_tokens_target_mse/last_third_tokens_target_mse`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether denser token/span supervision materially improves held-out router fit on the frozen baseline before any new export or architecture change.
+- Expected outcome: either a richer token/span supervision objective beats the retained sequence-level baseline on held-out `R^2`/JS and becomes the new honest Phase 6 direction, or the richer objectives fail and the supervision diagnosis remains real but not yet paid off.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: because the supervision objectives reuse the same sequence-level oracle target, any improvement should be read as denser/localized supervision helping, not as a tokenwise-oracle pass.
+- Implementation verified: YES - `tests.test_router_distillation` now covers the new supervision-loss path directly and a fixed-split synthetic case where a last-third supervision objective beats the current sequence-level baseline under prefix shift.
+- Status: LAUNCHING
+
+## [2026-03-18T22:09:39-0500] POST-RUN: Gemma router-distillation supervision-objective comparison v1
+- Outcome: SUCCESS
+- Key metric: `all_tokens_target_mse` materially improved the frozen baseline on the same saved split (`R^2 = 0.4076`, mean JS `= 0.0797`) versus `sequence_target_mse` (`R^2 = 0.3445`, mean JS `= 0.0853`), while `last_third_tokens_target_mse` was clearly worse (`R^2 = 0.2140`, mean JS `= 0.1103`).
+- Artifacts saved: `results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1/summary.json`, `results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1/objective_audits.json`, `results/router_training/20260318-gemma2-router-distillation-supervision-objective-comparison-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`13cbb0d9d69f05cdb5d97e0ed69b66d0f72ea350`).
+- Next step: close `resattn-tqn`, move the saved pilot baseline to `all_tokens_target_mse`, and take `resattn-d36` to re-run the family comparison under the improved supervision objective.

@@ -1,0 +1,4103 @@
+{
+  "all_tokens_target_mse": {
+    "baseline_eval_loss": 0.5411156117916107,
+    "baseline_eval_summary": {
+      "mean_js_divergence": 0.07965693992696518,
+      "num_eval_examples": 64,
+      "num_train_examples": 64,
+      "r_squared": 0.4075670553779863
+    },
+    "collection_id": "oracle_alpha_phase1_v1",
+    "eval_prompt_count": 64,
+    "eval_prompt_ids": [
+      "oa5-pilot-reasoning_math-011",
+      "oa5-pilot-reasoning_math-006",
+      "oa5-pilot-reasoning_math-001",
+      "oa5-pilot-reasoning_math-002",
+      "oa5-pilot-factual_recall-020",
+      "oa5-pilot-factual_recall-032",
+      "oa5-pilot-factual_recall-031",
+      "oa5-pilot-factual_recall-030",
+      "oa5-pilot-factual_recall-011",
+      "oa5-pilot-factual_recall-007",
+      "oa5-pilot-factual_recall-016",
+      "oa5-pilot-factual_recall-009",
+      "oa5-pilot-general_text-063",
+      "oa5-pilot-general_text-052",
+      "oa5-pilot-general_text-058",
+      "oa5-pilot-general_text-060",
+      "oa5-pilot-factual_recall-036",
+      "oa5-pilot-factual_recall-035",
+      "oa5-pilot-factual_recall-041",
+      "oa5-pilot-factual_recall-046",
+      "oa5-pilot-reasoning_math-057",
+      "oa5-pilot-reasoning_math-059",
+      "oa5-pilot-reasoning_math-054",
+      "oa5-pilot-reasoning_math-056",
+      "oa5-pilot-factual_recall-063",
+      "oa5-pilot-factual_recall-058",
+      "oa5-pilot-factual_recall-062",
+      "oa5-pilot-factual_recall-055",
+      "oa5-pilot-general_text-044",
+      "oa5-pilot-general_text-038",
+      "oa5-pilot-general_text-041",
+      "oa5-pilot-general_text-040",
+      "oa5-pilot-reasoning_math-037",
+      "oa5-pilot-reasoning_math-039",
+      "oa5-pilot-reasoning_math-048",
+      "oa5-pilot-reasoning_math-038",
+      "oa5-pilot-code_procedural-057",
+      "oa5-pilot-code_procedural-056",
+      "oa5-pilot-code_procedural-055",
+      "oa5-pilot-code_procedural-062",
+      "oa5-pilot-code_procedural-001",
+      "oa5-pilot-code_procedural-008",
+      "oa5-pilot-code_procedural-012",
+      "oa5-pilot-code_procedural-010",
+      "oa5-pilot-reasoning_math-025",
+      "oa5-pilot-reasoning_math-024",
+      "oa5-pilot-reasoning_math-029",
+      "oa5-pilot-reasoning_math-019",
+      "oa5-pilot-code_procedural-039",
+      "oa5-pilot-code_procedural-037",
+      "oa5-pilot-code_procedural-048",
+      "oa5-pilot-code_procedural-033",
+      "oa5-pilot-code_procedural-025",
+      "oa5-pilot-code_procedural-023",
+      "oa5-pilot-code_procedural-026",
+      "oa5-pilot-code_procedural-032",
+      "oa5-pilot-general_text-013",
+      "oa5-pilot-general_text-007",
+      "oa5-pilot-general_text-012",
+      "oa5-pilot-general_text-011",
+      "oa5-pilot-general_text-026",
+      "oa5-pilot-general_text-021",
+      "oa5-pilot-general_text-018",
+      "oa5-pilot-general_text-023"
+    ],
+    "fixed_aggregation": "mean_token_logits_then_softmax",
+    "fixed_input_field": "h_4[t]",
+    "fixed_router_family": "linear",
+    "fixed_target_name": "oracle_alpha_logit_vector",
+    "hidden_dim": null,
+    "model_name": "gemma-2-2b",
+    "prompt_diagnostics": [
+      {
+        "mean_js_divergence": 0.0595645071149988,
+        "num_tokens": 22,
+        "oracle_entropy": 3.4694003904142385,
+        "oracle_top1_mass": 0.08735082298517227,
+        "predicted_entropy": 3.6180099796117804,
+        "predicted_top1_mass": 0.07313323765993118,
+        "prompt": "Avery counted 18 tickets, lost 6, and added 2 later. The new total is",
+        "prompt_id": "oa5-pilot-reasoning_math-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.5831332206726074
+      },
+      {
+        "mean_js_divergence": 0.10452103021781163,
+        "num_tokens": 21,
+        "oracle_entropy": 3.4888620657807405,
+        "oracle_top1_mass": 0.08411644399166107,
+        "predicted_entropy": 3.71795919308133,
+        "predicted_top1_mass": 0.08806724846363068,
+        "prompt": "After giving away 5 of the 12 marbles and then buying 4 more, Jonah has",
+        "prompt_id": "oa5-pilot-reasoning_math-006",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.9809750318527222
+      },
+      {
+        "mean_js_divergence": 0.04086603418663816,
+        "num_tokens": 21,
+        "oracle_entropy": 3.651064706762459,
+        "oracle_top1_mass": 0.06308642029762268,
+        "predicted_entropy": 3.7286768965248314,
+        "predicted_top1_mass": 0.0844675675034523,
+        "prompt": "Mira had 7 pencils, gave away 2, and bought 3 more. Mira now has",
+        "prompt_id": "oa5-pilot-reasoning_math-001",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.34750452637672424
+      },
+      {
+        "mean_js_divergence": 0.05138544247349913,
+        "num_tokens": 20,
+        "oracle_entropy": 3.5471643369125614,
+        "oracle_top1_mass": 0.08039966970682144,
+        "predicted_entropy": 3.722199748668741,
+        "predicted_top1_mass": 0.07544326037168503,
+        "prompt": "After giving away 2 of the 7 pencils and then buying 3 more, Mira has",
+        "prompt_id": "oa5-pilot-reasoning_math-002",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.46931105852127075
+      },
+      {
+        "mean_js_divergence": 0.04481372251184387,
+        "num_tokens": 9,
+        "oracle_entropy": 3.454140934836853,
+        "oracle_top1_mass": 0.09027022868394852,
+        "predicted_entropy": 3.720185377009438,
+        "predicted_top1_mass": 0.07640805095434189,
+        "prompt": "Most library catalogs list Pride and Prejudice under",
+        "prompt_id": "oa5-pilot-factual_recall-020",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.3971080482006073
+      },
+      {
+        "mean_js_divergence": 0.06367755024680144,
+        "num_tokens": 8,
+        "oracle_entropy": 3.480499879092722,
+        "oracle_top1_mass": 0.10916078090667725,
+        "predicted_entropy": 3.7682030165468774,
+        "predicted_top1_mass": 0.06429987400770187,
+        "prompt": "Most library catalogs list The Trial under",
+        "prompt_id": "oa5-pilot-factual_recall-032",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.5765799283981323
+      },
+      {
+        "mean_js_divergence": 0.09862884533635069,
+        "num_tokens": 7,
+        "oracle_entropy": 3.4029132544403877,
+        "oracle_top1_mass": 0.08142028003931046,
+        "predicted_entropy": 3.7595389270186192,
+        "predicted_top1_mass": 0.07219327241182327,
+        "prompt": "The author of The Trial is",
+        "prompt_id": "oa5-pilot-factual_recall-031",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 1.0104495286941528
+      },
+      {
+        "mean_js_divergence": 0.06868112288805586,
+        "num_tokens": 10,
+        "oracle_entropy": 3.474560292404411,
+        "oracle_top1_mass": 0.07140197604894638,
+        "predicted_entropy": 3.7770577547542232,
+        "predicted_top1_mass": 0.048011455684900284,
+        "prompt": "Literature students learn that The Trial was written by",
+        "prompt_id": "oa5-pilot-factual_recall-030",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.6061372756958008
+      },
+      {
+        "mean_js_divergence": 0.05129402361543606,
+        "num_tokens": 11,
+        "oracle_entropy": 3.540158587863795,
+        "oracle_top1_mass": 0.10248320549726486,
+        "predicted_entropy": 3.645696049380894,
+        "predicted_top1_mass": 0.07186360657215118,
+        "prompt": "On most maps, the capital of Brazil appears as",
+        "prompt_id": "oa5-pilot-factual_recall-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.46190035343170166
+      },
+      {
+        "mean_js_divergence": 0.033619765337544794,
+        "num_tokens": 11,
+        "oracle_entropy": 3.499096112362117,
+        "oracle_top1_mass": 0.0801287293434143,
+        "predicted_entropy": 3.6440081510656457,
+        "predicted_top1_mass": 0.06592351198196411,
+        "prompt": "On most maps, the capital of Japan appears as",
+        "prompt_id": "oa5-pilot-factual_recall-007",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.322854220867157
+      },
+      {
+        "mean_js_divergence": 0.01409895964816195,
+        "num_tokens": 12,
+        "oracle_entropy": 3.398584352363375,
+        "oracle_top1_mass": 0.10493624210357666,
+        "predicted_entropy": 3.553027464138698,
+        "predicted_top1_mass": 0.07941531389951706,
+        "prompt": "In a geography quiz, the capital of Kenya would be",
+        "prompt_id": "oa5-pilot-factual_recall-016",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.1426616907119751
+      },
+      {
+        "mean_js_divergence": 0.05123240542277961,
+        "num_tokens": 7,
+        "oracle_entropy": 3.3379216454509804,
+        "oracle_top1_mass": 0.08723539113998413,
+        "predicted_entropy": 3.623071277980233,
+        "predicted_top1_mass": 0.06773775815963745,
+        "prompt": "The capital city of Brazil is",
+        "prompt_id": "oa5-pilot-factual_recall-009",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.498811274766922
+      },
+      {
+        "mean_js_divergence": 0.04989074306655608,
+        "num_tokens": 13,
+        "oracle_entropy": 3.517351328403507,
+        "oracle_top1_mass": 0.10314656049013138,
+        "predicted_entropy": 3.797466782879154,
+        "predicted_top1_mass": 0.05637452006340027,
+        "prompt": "By the parking lot, the parents carried soccer bags toward the",
+        "prompt_id": "oa5-pilot-general_text-063",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.49635589122772217
+      },
+      {
+        "mean_js_divergence": 0.10864611869591763,
+        "num_tokens": 12,
+        "oracle_entropy": 3.4015558742025553,
+        "oracle_top1_mass": 0.10384169220924377,
+        "predicted_entropy": 3.8558656881052564,
+        "predicted_top1_mass": 0.05881467089056969,
+        "prompt": "The neighbors left folding chairs resting near the sidewalk's",
+        "prompt_id": "oa5-pilot-general_text-052",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.9969274997711182
+      },
+      {
+        "mean_js_divergence": 0.08783838482712261,
+        "num_tokens": 13,
+        "oracle_entropy": 3.553055542760002,
+        "oracle_top1_mass": 0.08305970579385757,
+        "predicted_entropy": 3.7816016032967203,
+        "predicted_top1_mass": 0.05464814603328705,
+        "prompt": "Inside the food pantry, the volunteers arranged cardboard boxes beside the",
+        "prompt_id": "oa5-pilot-general_text-058",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.731640636920929
+      },
+      {
+        "mean_js_divergence": 0.07432910473383234,
+        "num_tokens": 13,
+        "oracle_entropy": 3.56233511761705,
+        "oracle_top1_mass": 0.08068560063838959,
+        "predicted_entropy": 3.8112078667279703,
+        "predicted_top1_mass": 0.053217705339193344,
+        "prompt": "The volunteers left cardboard boxes resting near the food pantry's",
+        "prompt_id": "oa5-pilot-general_text-060",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.6986536383628845
+      },
+      {
+        "mean_js_divergence": 0.03070835281260291,
+        "num_tokens": 10,
+        "oracle_entropy": 3.4850126839116617,
+        "oracle_top1_mass": 0.0725579634308815,
+        "predicted_entropy": 3.6146607662035013,
+        "predicted_top1_mass": 0.06770290434360504,
+        "prompt": "A lab chart would mark hydrogen with the symbol",
+        "prompt_id": "oa5-pilot-factual_recall-036",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.35050058364868164
+      },
+      {
+        "mean_js_divergence": 0.01172157545138235,
+        "num_tokens": 9,
+        "oracle_entropy": 3.3757648271581973,
+        "oracle_top1_mass": 0.0764603316783905,
+        "predicted_entropy": 3.5240343449461977,
+        "predicted_top1_mass": 0.07525699585676193,
+        "prompt": "Chemistry notes write the symbol for hydrogen as",
+        "prompt_id": "oa5-pilot-factual_recall-035",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.14109449088573456
+      },
+      {
+        "mean_js_divergence": 0.049287941573632865,
+        "num_tokens": 7,
+        "oracle_entropy": 3.4410488368575702,
+        "oracle_top1_mass": 0.0643080621957779,
+        "predicted_entropy": 3.6661735506574753,
+        "predicted_top1_mass": 0.06070348620414734,
+        "prompt": "The chemical symbol for carbon is",
+        "prompt_id": "oa5-pilot-factual_recall-041",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.6337639093399048
+      },
+      {
+        "mean_js_divergence": 0.056386059789947984,
+        "num_tokens": 10,
+        "oracle_entropy": 3.4630948289653287,
+        "oracle_top1_mass": 0.0772884413599968,
+        "predicted_entropy": 3.687824789051826,
+        "predicted_top1_mass": 0.07081958651542664,
+        "prompt": "In the periodic table, sodium is abbreviated as",
+        "prompt_id": "oa5-pilot-factual_recall-046",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.5717657804489136
+      },
+      {
+        "mean_js_divergence": 0.10039005641925092,
+        "num_tokens": 25,
+        "oracle_entropy": 3.509473546770448,
+        "oracle_top1_mass": 0.07185889780521393,
+        "predicted_entropy": 3.736037374657767,
+        "predicted_top1_mass": 0.07509209960699081,
+        "prompt": "A flash drive holds 32 units and a external drive holds 512 units. The larger one is the",
+        "prompt_id": "oa5-pilot-reasoning_math-057",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 1.2295664548873901
+      },
+      {
+        "mean_js_divergence": 0.057128078145647646,
+        "num_tokens": 28,
+        "oracle_entropy": 3.5952501082398216,
+        "oracle_top1_mass": 0.07209810614585876,
+        "predicted_entropy": 3.7991958391764302,
+        "predicted_top1_mass": 0.051291242241859436,
+        "prompt": "A note lists the flash drive as 32 units and the external drive as 512 units. The larger item is the",
+        "prompt_id": "oa5-pilot-reasoning_math-059",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.5823325514793396
+      },
+      {
+        "mean_js_divergence": 0.07762635182976202,
+        "num_tokens": 23,
+        "oracle_entropy": 3.5208165492619314,
+        "oracle_top1_mass": 0.09299904853105545,
+        "predicted_entropy": 3.6792660242381188,
+        "predicted_top1_mass": 0.14101766049861908,
+        "prompt": "Between the backpack at 6 units and the duffel bag at 18 units, the bigger option is the",
+        "prompt_id": "oa5-pilot-reasoning_math-054",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.7387148141860962
+      },
+      {
+        "mean_js_divergence": 0.06367711520025304,
+        "num_tokens": 23,
+        "oracle_entropy": 3.542370803810287,
+        "oracle_top1_mass": 0.0764913558959961,
+        "predicted_entropy": 3.65191563083623,
+        "predicted_top1_mass": 0.06320854276418686,
+        "prompt": "If one backpack measures 6 units while one duffel bag measures 18 units, the larger object is the",
+        "prompt_id": "oa5-pilot-reasoning_math-056",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.6420303583145142
+      },
+      {
+        "mean_js_divergence": 0.010930898375770756,
+        "num_tokens": 14,
+        "oracle_entropy": 3.523680764597382,
+        "oracle_top1_mass": 0.0737559050321579,
+        "predicted_entropy": 3.656159948301554,
+        "predicted_top1_mass": 0.06072721257805824,
+        "prompt": "A solar-system chart would label a major moon of Mars as",
+        "prompt_id": "oa5-pilot-factual_recall-063",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.1314612329006195
+      },
+      {
+        "mean_js_divergence": 0.019394467769237998,
+        "num_tokens": 11,
+        "oracle_entropy": 3.5703829231016115,
+        "oracle_top1_mass": 0.07417839765548706,
+        "predicted_entropy": 3.64886564805655,
+        "predicted_top1_mass": 0.07093086838722229,
+        "prompt": "Astronomy students learn that a major moon of Earth is",
+        "prompt_id": "oa5-pilot-factual_recall-058",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.20600812137126923
+      },
+      {
+        "mean_js_divergence": 0.017511216661667686,
+        "num_tokens": 11,
+        "oracle_entropy": 3.564995303308209,
+        "oracle_top1_mass": 0.08215386420488358,
+        "predicted_entropy": 3.639974823961759,
+        "predicted_top1_mass": 0.07342434674501419,
+        "prompt": "Astronomy students learn that a major moon of Mars is",
+        "prompt_id": "oa5-pilot-factual_recall-062",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.18136143684387207
+      },
+      {
+        "mean_js_divergence": 0.010049029982920909,
+        "num_tokens": 14,
+        "oracle_entropy": 3.515683445513749,
+        "oracle_top1_mass": 0.06721661984920502,
+        "predicted_entropy": 3.647545178385066,
+        "predicted_top1_mass": 0.06081101670861244,
+        "prompt": "A solar-system chart would label a major moon of Saturn as",
+        "prompt_id": "oa5-pilot-factual_recall-055",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.129072904586792
+      },
+      {
+        "mean_js_divergence": 0.07743321591985527,
+        "num_tokens": 11,
+        "oracle_entropy": 3.426630333379621,
+        "oracle_top1_mass": 0.08567414432764053,
+        "predicted_entropy": 3.7156851886190823,
+        "predicted_top1_mass": 0.07879586517810822,
+        "prompt": "The mist above the meadow grass turned the whole scene",
+        "prompt_id": "oa5-pilot-general_text-044",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.7794193625450134
+      },
+      {
+        "mean_js_divergence": 0.05381731320247721,
+        "num_tokens": 12,
+        "oracle_entropy": 3.5235272258876678,
+        "oracle_top1_mass": 0.07272245734930038,
+        "predicted_entropy": 3.649171088466531,
+        "predicted_top1_mass": 0.07327793538570404,
+        "prompt": "Across the pine ridge, the sunlight made the air feel",
+        "prompt_id": "oa5-pilot-general_text-038",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.6642530560493469
+      },
+      {
+        "mean_js_divergence": 0.08317570254468479,
+        "num_tokens": 12,
+        "oracle_entropy": 3.4613594707731026,
+        "oracle_top1_mass": 0.09028934687376022,
+        "predicted_entropy": 3.797611288209556,
+        "predicted_top1_mass": 0.06860874593257904,
+        "prompt": "After the mist passed over the meadow grass, everything looked",
+        "prompt_id": "oa5-pilot-general_text-041",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.7456916570663452
+      },
+      {
+        "mean_js_divergence": 0.08124527058272799,
+        "num_tokens": 11,
+        "oracle_entropy": 3.5459247883431013,
+        "oracle_top1_mass": 0.07784505188465118,
+        "predicted_entropy": 3.819892136146654,
+        "predicted_top1_mass": 0.043260473757982254,
+        "prompt": "The sunlight above the pine ridge turned the whole scene",
+        "prompt_id": "oa5-pilot-general_text-040",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.8633611798286438
+      },
+      {
+        "mean_js_divergence": 0.018095819361029494,
+        "num_tokens": 17,
+        "oracle_entropy": 3.5634120745793947,
+        "oracle_top1_mass": 0.07081428170204163,
+        "predicted_entropy": 3.6719571675242246,
+        "predicted_top1_mass": 0.06349103152751923,
+        "prompt": "The sequence 3, 6, 9, 12 continues with",
+        "prompt_id": "oa5-pilot-reasoning_math-037",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.17418423295021057
+      },
+      {
+        "mean_js_divergence": 0.01650777430665856,
+        "num_tokens": 21,
+        "oracle_entropy": 3.4225596934277434,
+        "oracle_top1_mass": 0.09366432577371597,
+        "predicted_entropy": 3.5304578517850995,
+        "predicted_top1_mass": 0.0846976563334465,
+        "prompt": "Continuing the pattern 3, 6, 9, 12, the next term is",
+        "prompt_id": "oa5-pilot-reasoning_math-039",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.20654411613941193
+      },
+      {
+        "mean_js_divergence": 0.01255383620042129,
+        "num_tokens": 24,
+        "oracle_entropy": 3.543892215305591,
+        "oracle_top1_mass": 0.08360572904348373,
+        "predicted_entropy": 3.6369318269299673,
+        "predicted_top1_mass": 0.06939104944467545,
+        "prompt": "If the pattern 1, 4, 9, 16 is extended one more step, it becomes",
+        "prompt_id": "oa5-pilot-reasoning_math-048",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.10330507904291153
+      },
+      {
+        "mean_js_divergence": 0.011512164545183372,
+        "num_tokens": 22,
+        "oracle_entropy": 3.5740155862814165,
+        "oracle_top1_mass": 0.09297129511833191,
+        "predicted_entropy": 3.6758028980198634,
+        "predicted_top1_mass": 0.06767398864030838,
+        "prompt": "A worksheet lists 3, 6, 9, 12; the next number would be",
+        "prompt_id": "oa5-pilot-reasoning_math-038",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.1037854328751564
+      },
+      {
+        "mean_js_divergence": 0.07724034127681101,
+        "num_tokens": 20,
+        "oracle_entropy": 3.5599084734377398,
+        "oracle_top1_mass": 0.07348260283470154,
+        "predicted_entropy": 3.7333607819542594,
+        "predicted_top1_mass": 0.06276851892471313,
+        "prompt": "To service the report export, first place the summary page near the file name and then check the",
+        "prompt_id": "oa5-pilot-code_procedural-057",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.7502167224884033
+      },
+      {
+        "mean_js_divergence": 0.058031268148151884,
+        "num_tokens": 20,
+        "oracle_entropy": 3.4867739939474762,
+        "oracle_top1_mass": 0.08866895735263824,
+        "predicted_entropy": 3.6728907413044123,
+        "predicted_top1_mass": 0.12393005937337875,
+        "prompt": "The checklist for the kitchen scale says to keep the reference weight by the display and then inspect the",
+        "prompt_id": "oa5-pilot-code_procedural-056",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.6896867752075195
+      },
+      {
+        "mean_js_divergence": 0.04821854373318231,
+        "num_tokens": 18,
+        "oracle_entropy": 3.5376222528379175,
+        "oracle_top1_mass": 0.06779597699642181,
+        "predicted_entropy": 3.6959964456032925,
+        "predicted_top1_mass": 0.06879759579896927,
+        "prompt": "A technician completing the kitchen scale would position the reference weight near the display before opening the",
+        "prompt_id": "oa5-pilot-code_procedural-055",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.5929126143455505
+      },
+      {
+        "mean_js_divergence": 0.05814346686491567,
+        "num_tokens": 18,
+        "oracle_entropy": 3.5753756139535207,
+        "oracle_top1_mass": 0.07585444301366806,
+        "predicted_entropy": 3.748499235720907,
+        "predicted_top1_mass": 0.10188107192516327,
+        "prompt": "Before finishing the bike chain, set the rear wheel beside the master link and review the",
+        "prompt_id": "oa5-pilot-code_procedural-062",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.4362030029296875
+      },
+      {
+        "mean_js_divergence": 0.040986363821435806,
+        "num_tokens": 19,
+        "oracle_entropy": 3.498338588052172,
+        "oracle_top1_mass": 0.08093287795782089,
+        "predicted_entropy": 3.7474126626967017,
+        "predicted_top1_mass": 0.07759648561477661,
+        "prompt": "def clean_names(names):\n    return [name.strip() for name in",
+        "prompt_id": "oa5-pilot-code_procedural-001",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.41354095935821533
+      },
+      {
+        "mean_js_divergence": 0.10904033494421997,
+        "num_tokens": 16,
+        "oracle_entropy": 3.571409540897624,
+        "oracle_top1_mass": 0.0770750418305397,
+        "predicted_entropy": 3.668742252271169,
+        "predicted_top1_mass": 0.062220294028520584,
+        "prompt": "lowercase_tags = lambda tags: [tag.lower() for tag in",
+        "prompt_id": "oa5-pilot-code_procedural-008",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 1.0939241647720337
+      },
+      {
+        "mean_js_divergence": 0.09703908966861677,
+        "num_tokens": 17,
+        "oracle_entropy": 3.523205387508511,
+        "oracle_top1_mass": 0.10121114552021027,
+        "predicted_entropy": 3.6175058255886565,
+        "predicted_top1_mass": 0.07492783665657043,
+        "prompt": "titlecase_titles = lambda titles: [title.title() for title in",
+        "prompt_id": "oa5-pilot-code_procedural-012",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.9072045087814331
+      },
+      {
+        "mean_js_divergence": 0.02155995973169209,
+        "num_tokens": 34,
+        "oracle_entropy": 3.6143633327835665,
+        "oracle_top1_mass": 0.07694610953330994,
+        "predicted_entropy": 3.750794395201931,
+        "predicted_top1_mass": 0.07795373350381851,
+        "prompt": "def titlecase_titles(titles):\n    cleaned = []\n    for title in titles:\n        cleaned.append(title.title())\n    return",
+        "prompt_id": "oa5-pilot-code_procedural-010",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.21833966672420502
+      },
+      {
+        "mean_js_divergence": 0.0606099302253513,
+        "num_tokens": 23,
+        "oracle_entropy": 3.4112933701780097,
+        "oracle_top1_mass": 0.0984875038266182,
+        "predicted_entropy": 3.6947111917989894,
+        "predicted_top1_mass": 0.12392809987068176,
+        "prompt": "If the ferry begins at 11:40 AM and lasts 50 minutes, it ends at",
+        "prompt_id": "oa5-pilot-reasoning_math-025",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.500963032245636
+      },
+      {
+        "mean_js_divergence": 0.0485213058832064,
+        "num_tokens": 24,
+        "oracle_entropy": 3.549087995178574,
+        "oracle_top1_mass": 0.09418688714504242,
+        "predicted_entropy": 3.677071855462628,
+        "predicted_top1_mass": 0.07543324679136276,
+        "prompt": "When the train begins at 3:25 PM and runs for 45 minutes, it wraps up at",
+        "prompt_id": "oa5-pilot-reasoning_math-024",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.4219684600830078
+      },
+      {
+        "mean_js_divergence": 0.07621615384383518,
+        "num_tokens": 22,
+        "oracle_entropy": 3.4033557027856878,
+        "oracle_top1_mass": 0.10478680580854416,
+        "predicted_entropy": 3.645904922870244,
+        "predicted_top1_mass": 0.09921125322580338,
+        "prompt": "If the lecture begins at 1:15 PM and lasts 90 minutes, it ends at",
+        "prompt_id": "oa5-pilot-reasoning_math-029",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.5028849244117737
+      },
+      {
+        "mean_js_divergence": 0.0367620116415886,
+        "num_tokens": 23,
+        "oracle_entropy": 3.593991979831636,
+        "oracle_top1_mass": 0.07718979567289352,
+        "predicted_entropy": 3.6712396580705846,
+        "predicted_top1_mass": 0.07253170013427734,
+        "prompt": "A schedule shows the shuttle at 7:10 AM for 35 minutes. The finish time is",
+        "prompt_id": "oa5-pilot-reasoning_math-019",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.43979501724243164
+      },
+      {
+        "mean_js_divergence": 0.07465787834712662,
+        "num_tokens": 14,
+        "oracle_entropy": 3.450936067244914,
+        "oracle_top1_mass": 0.07803187519311905,
+        "predicted_entropy": 3.7758243038592325,
+        "predicted_top1_mass": 0.06740552932024002,
+        "prompt": "tar -czf reports-archive.tar.gz reports/",
+        "prompt_id": "oa5-pilot-code_procedural-039",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.8609333634376526
+      },
+      {
+        "mean_js_divergence": 0.047270822759687706,
+        "num_tokens": 12,
+        "oracle_entropy": 3.542570399790069,
+        "oracle_top1_mass": 0.08238254487514496,
+        "predicted_entropy": 3.719336373441318,
+        "predicted_top1_mass": 0.0660763531923294,
+        "prompt": "find reports -name '*.csv' -print |",
+        "prompt_id": "oa5-pilot-code_procedural-037",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.5029609203338623
+      },
+      {
+        "mean_js_divergence": 0.036647189219885745,
+        "num_tokens": 5,
+        "oracle_entropy": 3.4849593190485155,
+        "oracle_top1_mass": 0.09512514621019363,
+        "predicted_entropy": 3.632173450472191,
+        "predicted_top1_mass": 0.08036620169878006,
+        "prompt": "systemctl status redis |",
+        "prompt_id": "oa5-pilot-code_procedural-048",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.36342692375183105
+      },
+      {
+        "mean_js_divergence": 0.0506775941663551,
+        "num_tokens": 12,
+        "oracle_entropy": 3.5212461354293443,
+        "oracle_top1_mass": 0.08422640711069107,
+        "predicted_entropy": 3.7023142023651596,
+        "predicted_top1_mass": 0.08270657062530518,
+        "prompt": "find logs -name '*.log' -print |",
+        "prompt_id": "oa5-pilot-code_procedural-033",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.5061163306236267
+      },
+      {
+        "mean_js_divergence": 0.050662702999451296,
+        "num_tokens": 12,
+        "oracle_entropy": 3.63315639923339,
+        "oracle_top1_mass": 0.07583688944578171,
+        "predicted_entropy": 3.801700599119682,
+        "predicted_top1_mass": 0.06357680261135101,
+        "prompt": "SELECT region, COUNT(*)\nFROM shipments\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-025",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.4227966368198395
+      },
+      {
+        "mean_js_divergence": 0.04655044759797164,
+        "num_tokens": 18,
+        "oracle_entropy": 3.507182138740836,
+        "oracle_top1_mass": 0.08153009414672852,
+        "predicted_entropy": 3.7732438812597677,
+        "predicted_top1_mass": 0.06573769450187683,
+        "prompt": "SELECT agent_id, MAX(resolution_minutes)\nFROM tickets\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-023",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.4022041857242584
+      },
+      {
+        "mean_js_divergence": 0.030555151157572933,
+        "num_tokens": 16,
+        "oracle_entropy": 3.64334530135598,
+        "oracle_top1_mass": 0.08916296064853668,
+        "predicted_entropy": 3.7803899212854044,
+        "predicted_top1_mass": 0.05540944263339043,
+        "prompt": "SELECT region, AVG(delivery_days)\nFROM shipments\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-026",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.2226574420928955
+      },
+      {
+        "mean_js_divergence": 0.06117694501923478,
+        "num_tokens": 16,
+        "oracle_entropy": 3.67555774102579,
+        "oracle_top1_mass": 0.06087121739983559,
+        "predicted_entropy": 3.817640310610835,
+        "predicted_top1_mass": 0.050068192183971405,
+        "prompt": "SELECT user_id\nFROM sessions\nORDER BY started_at DESC,",
+        "prompt_id": "oa5-pilot-code_procedural-032",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.6591587662696838
+      },
+      {
+        "mean_js_divergence": 0.0647617382968195,
+        "num_tokens": 13,
+        "oracle_entropy": 3.535680361196304,
+        "oracle_top1_mass": 0.06501734256744385,
+        "predicted_entropy": 3.727147904253816,
+        "predicted_top1_mass": 0.064710333943367,
+        "prompt": "Near the cafe window, a cyclist set a helmet beside the",
+        "prompt_id": "oa5-pilot-general_text-013",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.6113671660423279
+      },
+      {
+        "mean_js_divergence": 0.053411332180533344,
+        "num_tokens": 15,
+        "oracle_entropy": 3.608232782851985,
+        "oracle_top1_mass": 0.06744108349084854,
+        "predicted_entropy": 3.834837854471364,
+        "predicted_top1_mass": 0.04685506969690323,
+        "prompt": "At the brick path, a gardener reached for a watering can under the",
+        "prompt_id": "oa5-pilot-general_text-007",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.5877761244773865
+      },
+      {
+        "mean_js_divergence": 0.06681038059103542,
+        "num_tokens": 13,
+        "oracle_entropy": 3.5497759919038874,
+        "oracle_top1_mass": 0.09548633545637131,
+        "predicted_entropy": 3.719381618894674,
+        "predicted_top1_mass": 0.08468053489923477,
+        "prompt": "A librarian passed the reading room carrying a book cart toward the",
+        "prompt_id": "oa5-pilot-general_text-012",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.5504785776138306
+      },
+      {
+        "mean_js_divergence": 0.1025171650198623,
+        "num_tokens": 15,
+        "oracle_entropy": 3.4444593382004105,
+        "oracle_top1_mass": 0.07765048742294312,
+        "predicted_entropy": 3.77942164028563,
+        "predicted_top1_mass": 0.051335856318473816,
+        "prompt": "At the reading room, a librarian reached for a book cart under the",
+        "prompt_id": "oa5-pilot-general_text-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 1.0172948837280273
+      },
+      {
+        "mean_js_divergence": 0.04771696379009594,
+        "num_tokens": 17,
+        "oracle_entropy": 3.4277351801986025,
+        "oracle_top1_mass": 0.08481435477733612,
+        "predicted_entropy": 3.69576618811462,
+        "predicted_top1_mass": 0.05923379585146904,
+        "prompt": "At the storage room, an archivist reached for a box of files near the",
+        "prompt_id": "oa5-pilot-general_text-026",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.49101269245147705
+      },
+      {
+        "mean_js_divergence": 0.06948565671147502,
+        "num_tokens": 13,
+        "oracle_entropy": 3.5198615833450777,
+        "oracle_top1_mass": 0.09440585225820541,
+        "predicted_entropy": 3.7689129319260464,
+        "predicted_top1_mass": 0.05460355803370476,
+        "prompt": "At the drafting table, an engineer set a blueprint beside the",
+        "prompt_id": "oa5-pilot-general_text-021",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.6861599683761597
+      },
+      {
+        "mean_js_divergence": 0.04599587140010071,
+        "num_tokens": 14,
+        "oracle_entropy": 3.5836368225566946,
+        "oracle_top1_mass": 0.10065905004739761,
+        "predicted_entropy": 3.790356568953659,
+        "predicted_top1_mass": 0.049585990607738495,
+        "prompt": "At the ward station, a nurse reached for a clipboard near the",
+        "prompt_id": "oa5-pilot-general_text-018",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.40636998414993286
+      },
+      {
+        "mean_js_divergence": 0.09018832258151196,
+        "num_tokens": 13,
+        "oracle_entropy": 3.4664172181649304,
+        "oracle_top1_mass": 0.08590318262577057,
+        "predicted_entropy": 3.725240479999273,
+        "predicted_top1_mass": 0.06712145358324051,
+        "prompt": "The engineer checked a blueprint before crossing the drafting table toward the",
+        "prompt_id": "oa5-pilot-general_text-023",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.8738247752189636
+      }
+    ],
+    "split": "pilot",
+    "supervision_objective": "all_tokens_target_mse",
+    "supervision_summary": {
+      "attribute_correlations": [
+        {
+          "attribute_name": "num_tokens",
+          "pearson_r": -0.03733235311030714
+        },
+        {
+          "attribute_name": "oracle_entropy",
+          "pearson_r": -0.16743269617033285
+        },
+        {
+          "attribute_name": "oracle_top1_mass",
+          "pearson_r": 0.11328140184930716
+        }
+      ],
+      "prompt_count": 64,
+      "rationale": "Held-out error varies materially across prompt strata on the frozen baseline, so supervision granularity is a cleaner next hypothesis than another width or family tweak.",
+      "recommended_next_step": "richer_token_or_span_supervision",
+      "stratum_mean_js_range": 0.0328267091700294,
+      "stratum_summaries": [
+        {
+          "group_key": "stratum_code_procedural",
+          "mean_js_divergence": 0.056778631216019455,
+          "mean_num_tokens": 16.6875,
+          "mean_oracle_entropy": 3.5516219178304604,
+          "mean_oracle_top1_mass": 0.08057089312933385,
+          "mean_target_mse": 0.5651426864787936,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_factual_recall",
+          "mean_js_divergence": 0.03950224608900861,
+          "mean_num_tokens": 10.0625,
+          "mean_oracle_entropy": 3.470471167014272,
+          "mean_oracle_top1_mass": 0.08218477619811893,
+          "mean_target_mse": 0.39759567379951477,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_general_text",
+          "mean_js_divergence": 0.07232895525903801,
+          "mean_num_tokens": 13.125,
+          "mean_oracle_entropy": 3.5079711849865314,
+          "mean_oracle_top1_mass": 0.0855401405133307,
+          "mean_target_mse": 0.7000366933643818,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_reasoning_math",
+          "mean_js_divergence": 0.052246100724695974,
+          "mean_num_tokens": 22.4375,
+          "mean_oracle_entropy": 3.5241256953450337,
+          "mean_oracle_top1_mass": 0.08400671184062958,
+          "mean_target_mse": 0.5016873944550753,
+          "prompt_count": 16
+        }
+      ],
+      "strongest_attribute_abs_correlation": 0.16743269617033285,
+      "strongest_attribute_name": "oracle_entropy",
+      "worst_stratum_tag": "stratum_general_text"
+    },
+    "train_prompt_count": 192,
+    "train_prompt_ids": [
+      "oa5-pilot-reasoning_math-010",
+      "oa5-pilot-reasoning_math-005",
+      "oa5-pilot-reasoning_math-007",
+      "oa5-pilot-reasoning_math-003",
+      "oa5-pilot-reasoning_math-004",
+      "oa5-pilot-reasoning_math-016",
+      "oa5-pilot-reasoning_math-012",
+      "oa5-pilot-reasoning_math-008",
+      "oa5-pilot-reasoning_math-013",
+      "oa5-pilot-reasoning_math-009",
+      "oa5-pilot-reasoning_math-014",
+      "oa5-pilot-reasoning_math-015",
+      "oa5-pilot-factual_recall-021",
+      "oa5-pilot-factual_recall-029",
+      "oa5-pilot-factual_recall-022",
+      "oa5-pilot-factual_recall-024",
+      "oa5-pilot-factual_recall-023",
+      "oa5-pilot-factual_recall-017",
+      "oa5-pilot-factual_recall-027",
+      "oa5-pilot-factual_recall-028",
+      "oa5-pilot-factual_recall-025",
+      "oa5-pilot-factual_recall-018",
+      "oa5-pilot-factual_recall-019",
+      "oa5-pilot-factual_recall-026",
+      "oa5-pilot-factual_recall-002",
+      "oa5-pilot-factual_recall-005",
+      "oa5-pilot-factual_recall-012",
+      "oa5-pilot-factual_recall-006",
+      "oa5-pilot-factual_recall-008",
+      "oa5-pilot-factual_recall-014",
+      "oa5-pilot-factual_recall-010",
+      "oa5-pilot-factual_recall-013",
+      "oa5-pilot-factual_recall-004",
+      "oa5-pilot-factual_recall-015",
+      "oa5-pilot-factual_recall-001",
+      "oa5-pilot-factual_recall-003",
+      "oa5-pilot-general_text-057",
+      "oa5-pilot-general_text-051",
+      "oa5-pilot-general_text-054",
+      "oa5-pilot-general_text-061",
+      "oa5-pilot-general_text-055",
+      "oa5-pilot-general_text-053",
+      "oa5-pilot-general_text-062",
+      "oa5-pilot-general_text-056",
+      "oa5-pilot-general_text-050",
+      "oa5-pilot-general_text-059",
+      "oa5-pilot-general_text-049",
+      "oa5-pilot-general_text-064",
+      "oa5-pilot-factual_recall-038",
+      "oa5-pilot-factual_recall-040",
+      "oa5-pilot-factual_recall-048",
+      "oa5-pilot-factual_recall-043",
+      "oa5-pilot-factual_recall-037",
+      "oa5-pilot-factual_recall-044",
+      "oa5-pilot-factual_recall-039",
+      "oa5-pilot-factual_recall-047",
+      "oa5-pilot-factual_recall-045",
+      "oa5-pilot-factual_recall-042",
+      "oa5-pilot-factual_recall-034",
+      "oa5-pilot-factual_recall-033",
+      "oa5-pilot-reasoning_math-062",
+      "oa5-pilot-reasoning_math-049",
+      "oa5-pilot-reasoning_math-051",
+      "oa5-pilot-reasoning_math-053",
+      "oa5-pilot-reasoning_math-052",
+      "oa5-pilot-reasoning_math-058",
+      "oa5-pilot-reasoning_math-050",
+      "oa5-pilot-reasoning_math-061",
+      "oa5-pilot-reasoning_math-063",
+      "oa5-pilot-reasoning_math-060",
+      "oa5-pilot-reasoning_math-055",
+      "oa5-pilot-reasoning_math-064",
+      "oa5-pilot-factual_recall-053",
+      "oa5-pilot-factual_recall-054",
+      "oa5-pilot-factual_recall-061",
+      "oa5-pilot-factual_recall-057",
+      "oa5-pilot-factual_recall-056",
+      "oa5-pilot-factual_recall-059",
+      "oa5-pilot-factual_recall-049",
+      "oa5-pilot-factual_recall-050",
+      "oa5-pilot-factual_recall-060",
+      "oa5-pilot-factual_recall-064",
+      "oa5-pilot-factual_recall-051",
+      "oa5-pilot-factual_recall-052",
+      "oa5-pilot-general_text-042",
+      "oa5-pilot-general_text-048",
+      "oa5-pilot-general_text-035",
+      "oa5-pilot-general_text-033",
+      "oa5-pilot-general_text-036",
+      "oa5-pilot-general_text-046",
+      "oa5-pilot-general_text-045",
+      "oa5-pilot-general_text-034",
+      "oa5-pilot-general_text-047",
+      "oa5-pilot-general_text-043",
+      "oa5-pilot-general_text-039",
+      "oa5-pilot-general_text-037",
+      "oa5-pilot-reasoning_math-044",
+      "oa5-pilot-reasoning_math-041",
+      "oa5-pilot-reasoning_math-040",
+      "oa5-pilot-reasoning_math-036",
+      "oa5-pilot-reasoning_math-035",
+      "oa5-pilot-reasoning_math-033",
+      "oa5-pilot-reasoning_math-034",
+      "oa5-pilot-reasoning_math-047",
+      "oa5-pilot-reasoning_math-043",
+      "oa5-pilot-reasoning_math-042",
+      "oa5-pilot-reasoning_math-046",
+      "oa5-pilot-reasoning_math-045",
+      "oa5-pilot-code_procedural-060",
+      "oa5-pilot-code_procedural-053",
+      "oa5-pilot-code_procedural-064",
+      "oa5-pilot-code_procedural-054",
+      "oa5-pilot-code_procedural-049",
+      "oa5-pilot-code_procedural-061",
+      "oa5-pilot-code_procedural-059",
+      "oa5-pilot-code_procedural-058",
+      "oa5-pilot-code_procedural-052",
+      "oa5-pilot-code_procedural-063",
+      "oa5-pilot-code_procedural-050",
+      "oa5-pilot-code_procedural-051",
+      "oa5-pilot-code_procedural-015",
+      "oa5-pilot-code_procedural-002",
+      "oa5-pilot-code_procedural-006",
+      "oa5-pilot-code_procedural-009",
+      "oa5-pilot-code_procedural-004",
+      "oa5-pilot-code_procedural-016",
+      "oa5-pilot-code_procedural-013",
+      "oa5-pilot-code_procedural-011",
+      "oa5-pilot-code_procedural-003",
+      "oa5-pilot-code_procedural-007",
+      "oa5-pilot-code_procedural-014",
+      "oa5-pilot-code_procedural-005",
+      "oa5-pilot-reasoning_math-020",
+      "oa5-pilot-reasoning_math-022",
+      "oa5-pilot-reasoning_math-031",
+      "oa5-pilot-reasoning_math-021",
+      "oa5-pilot-reasoning_math-028",
+      "oa5-pilot-reasoning_math-027",
+      "oa5-pilot-reasoning_math-030",
+      "oa5-pilot-reasoning_math-017",
+      "oa5-pilot-reasoning_math-023",
+      "oa5-pilot-reasoning_math-018",
+      "oa5-pilot-reasoning_math-026",
+      "oa5-pilot-reasoning_math-032",
+      "oa5-pilot-code_procedural-038",
+      "oa5-pilot-code_procedural-047",
+      "oa5-pilot-code_procedural-043",
+      "oa5-pilot-code_procedural-045",
+      "oa5-pilot-code_procedural-040",
+      "oa5-pilot-code_procedural-036",
+      "oa5-pilot-code_procedural-046",
+      "oa5-pilot-code_procedural-034",
+      "oa5-pilot-code_procedural-044",
+      "oa5-pilot-code_procedural-035",
+      "oa5-pilot-code_procedural-041",
+      "oa5-pilot-code_procedural-042",
+      "oa5-pilot-code_procedural-018",
+      "oa5-pilot-code_procedural-031",
+      "oa5-pilot-code_procedural-028",
+      "oa5-pilot-code_procedural-027",
+      "oa5-pilot-code_procedural-022",
+      "oa5-pilot-code_procedural-021",
+      "oa5-pilot-code_procedural-019",
+      "oa5-pilot-code_procedural-029",
+      "oa5-pilot-code_procedural-017",
+      "oa5-pilot-code_procedural-020",
+      "oa5-pilot-code_procedural-024",
+      "oa5-pilot-code_procedural-030",
+      "oa5-pilot-general_text-003",
+      "oa5-pilot-general_text-009",
+      "oa5-pilot-general_text-004",
+      "oa5-pilot-general_text-016",
+      "oa5-pilot-general_text-010",
+      "oa5-pilot-general_text-014",
+      "oa5-pilot-general_text-005",
+      "oa5-pilot-general_text-006",
+      "oa5-pilot-general_text-008",
+      "oa5-pilot-general_text-001",
+      "oa5-pilot-general_text-015",
+      "oa5-pilot-general_text-002",
+      "oa5-pilot-general_text-020",
+      "oa5-pilot-general_text-031",
+      "oa5-pilot-general_text-027",
+      "oa5-pilot-general_text-030",
+      "oa5-pilot-general_text-029",
+      "oa5-pilot-general_text-032",
+      "oa5-pilot-general_text-017",
+      "oa5-pilot-general_text-028",
+      "oa5-pilot-general_text-022",
+      "oa5-pilot-general_text-025",
+      "oa5-pilot-general_text-024",
+      "oa5-pilot-general_text-019"
+    ]
+  },
+  "last_third_tokens_target_mse": {
+    "baseline_eval_loss": 0.7406727224588394,
+    "baseline_eval_summary": {
+      "mean_js_divergence": 0.11033482796588927,
+      "num_eval_examples": 64,
+      "num_train_examples": 64,
+      "r_squared": 0.21395325065420134
+    },
+    "collection_id": "oracle_alpha_phase1_v1",
+    "eval_prompt_count": 64,
+    "eval_prompt_ids": [
+      "oa5-pilot-reasoning_math-011",
+      "oa5-pilot-reasoning_math-006",
+      "oa5-pilot-reasoning_math-001",
+      "oa5-pilot-reasoning_math-002",
+      "oa5-pilot-factual_recall-020",
+      "oa5-pilot-factual_recall-032",
+      "oa5-pilot-factual_recall-031",
+      "oa5-pilot-factual_recall-030",
+      "oa5-pilot-factual_recall-011",
+      "oa5-pilot-factual_recall-007",
+      "oa5-pilot-factual_recall-016",
+      "oa5-pilot-factual_recall-009",
+      "oa5-pilot-general_text-063",
+      "oa5-pilot-general_text-052",
+      "oa5-pilot-general_text-058",
+      "oa5-pilot-general_text-060",
+      "oa5-pilot-factual_recall-036",
+      "oa5-pilot-factual_recall-035",
+      "oa5-pilot-factual_recall-041",
+      "oa5-pilot-factual_recall-046",
+      "oa5-pilot-reasoning_math-057",
+      "oa5-pilot-reasoning_math-059",
+      "oa5-pilot-reasoning_math-054",
+      "oa5-pilot-reasoning_math-056",
+      "oa5-pilot-factual_recall-063",
+      "oa5-pilot-factual_recall-058",
+      "oa5-pilot-factual_recall-062",
+      "oa5-pilot-factual_recall-055",
+      "oa5-pilot-general_text-044",
+      "oa5-pilot-general_text-038",
+      "oa5-pilot-general_text-041",
+      "oa5-pilot-general_text-040",
+      "oa5-pilot-reasoning_math-037",
+      "oa5-pilot-reasoning_math-039",
+      "oa5-pilot-reasoning_math-048",
+      "oa5-pilot-reasoning_math-038",
+      "oa5-pilot-code_procedural-057",
+      "oa5-pilot-code_procedural-056",
+      "oa5-pilot-code_procedural-055",
+      "oa5-pilot-code_procedural-062",
+      "oa5-pilot-code_procedural-001",
+      "oa5-pilot-code_procedural-008",
+      "oa5-pilot-code_procedural-012",
+      "oa5-pilot-code_procedural-010",
+      "oa5-pilot-reasoning_math-025",
+      "oa5-pilot-reasoning_math-024",
+      "oa5-pilot-reasoning_math-029",
+      "oa5-pilot-reasoning_math-019",
+      "oa5-pilot-code_procedural-039",
+      "oa5-pilot-code_procedural-037",
+      "oa5-pilot-code_procedural-048",
+      "oa5-pilot-code_procedural-033",
+      "oa5-pilot-code_procedural-025",
+      "oa5-pilot-code_procedural-023",
+      "oa5-pilot-code_procedural-026",
+      "oa5-pilot-code_procedural-032",
+      "oa5-pilot-general_text-013",
+      "oa5-pilot-general_text-007",
+      "oa5-pilot-general_text-012",
+      "oa5-pilot-general_text-011",
+      "oa5-pilot-general_text-026",
+      "oa5-pilot-general_text-021",
+      "oa5-pilot-general_text-018",
+      "oa5-pilot-general_text-023"
+    ],
+    "fixed_aggregation": "mean_token_logits_then_softmax",
+    "fixed_input_field": "h_4[t]",
+    "fixed_router_family": "linear",
+    "fixed_target_name": "oracle_alpha_logit_vector",
+    "hidden_dim": null,
+    "model_name": "gemma-2-2b",
+    "prompt_diagnostics": [
+      {
+        "mean_js_divergence": 0.06326656938679928,
+        "num_tokens": 22,
+        "oracle_entropy": 3.4694003904142385,
+        "oracle_top1_mass": 0.08735082298517227,
+        "predicted_entropy": 3.8089965785303295,
+        "predicted_top1_mass": 0.046975210309028625,
+        "prompt": "Avery counted 18 tickets, lost 6, and added 2 later. The new total is",
+        "prompt_id": "oa5-pilot-reasoning_math-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.6320971250534058
+      },
+      {
+        "mean_js_divergence": 0.10376446937691505,
+        "num_tokens": 21,
+        "oracle_entropy": 3.4888620657807405,
+        "oracle_top1_mass": 0.08411644399166107,
+        "predicted_entropy": 3.835097294238068,
+        "predicted_top1_mass": 0.06983231753110886,
+        "prompt": "After giving away 5 of the 12 marbles and then buying 4 more, Jonah has",
+        "prompt_id": "oa5-pilot-reasoning_math-006",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.9228836894035339
+      },
+      {
+        "mean_js_divergence": 0.05006796374846574,
+        "num_tokens": 21,
+        "oracle_entropy": 3.651064706762459,
+        "oracle_top1_mass": 0.06308642029762268,
+        "predicted_entropy": 3.883081078334263,
+        "predicted_top1_mass": 0.04710518196225166,
+        "prompt": "Mira had 7 pencils, gave away 2, and bought 3 more. Mira now has",
+        "prompt_id": "oa5-pilot-reasoning_math-001",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.4474742114543915
+      },
+      {
+        "mean_js_divergence": 0.06461092636407885,
+        "num_tokens": 20,
+        "oracle_entropy": 3.5471643369125614,
+        "oracle_top1_mass": 0.08039966970682144,
+        "predicted_entropy": 3.8600374981016237,
+        "predicted_top1_mass": 0.04434961825609207,
+        "prompt": "After giving away 2 of the 7 pencils and then buying 3 more, Mira has",
+        "prompt_id": "oa5-pilot-reasoning_math-002",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.6008120775222778
+      },
+      {
+        "mean_js_divergence": 0.08998356091930415,
+        "num_tokens": 9,
+        "oracle_entropy": 3.454140934836853,
+        "oracle_top1_mass": 0.09027022868394852,
+        "predicted_entropy": 3.850611971489748,
+        "predicted_top1_mass": 0.049747664481401443,
+        "prompt": "Most library catalogs list Pride and Prejudice under",
+        "prompt_id": "oa5-pilot-factual_recall-020",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.7101742029190063
+      },
+      {
+        "mean_js_divergence": 0.11344944071200172,
+        "num_tokens": 8,
+        "oracle_entropy": 3.480499879092722,
+        "oracle_top1_mass": 0.10916078090667725,
+        "predicted_entropy": 3.8554215716706635,
+        "predicted_top1_mass": 0.05583512410521507,
+        "prompt": "Most library catalogs list The Trial under",
+        "prompt_id": "oa5-pilot-factual_recall-032",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.9482998251914978
+      },
+      {
+        "mean_js_divergence": 0.12255116517498454,
+        "num_tokens": 7,
+        "oracle_entropy": 3.4029132544403877,
+        "oracle_top1_mass": 0.08142028003931046,
+        "predicted_entropy": 3.8516118473739844,
+        "predicted_top1_mass": 0.052853506058454514,
+        "prompt": "The author of The Trial is",
+        "prompt_id": "oa5-pilot-factual_recall-031",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 1.2975081205368042
+      },
+      {
+        "mean_js_divergence": 0.09440976725010988,
+        "num_tokens": 10,
+        "oracle_entropy": 3.474560292404411,
+        "oracle_top1_mass": 0.07140197604894638,
+        "predicted_entropy": 3.889421384230532,
+        "predicted_top1_mass": 0.03747444227337837,
+        "prompt": "Literature students learn that The Trial was written by",
+        "prompt_id": "oa5-pilot-factual_recall-030",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.8269229531288147
+      },
+      {
+        "mean_js_divergence": 0.07942080884989372,
+        "num_tokens": 11,
+        "oracle_entropy": 3.540158587863795,
+        "oracle_top1_mass": 0.10248320549726486,
+        "predicted_entropy": 3.8792256327310617,
+        "predicted_top1_mass": 0.04606837034225464,
+        "prompt": "On most maps, the capital of Brazil appears as",
+        "prompt_id": "oa5-pilot-factual_recall-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.7063730955123901
+      },
+      {
+        "mean_js_divergence": 0.08492721144149436,
+        "num_tokens": 11,
+        "oracle_entropy": 3.499096112362117,
+        "oracle_top1_mass": 0.0801287293434143,
+        "predicted_entropy": 3.875821984031221,
+        "predicted_top1_mass": 0.04541368409991264,
+        "prompt": "On most maps, the capital of Japan appears as",
+        "prompt_id": "oa5-pilot-factual_recall-007",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.7862017750740051
+      },
+      {
+        "mean_js_divergence": 0.06331312799282815,
+        "num_tokens": 12,
+        "oracle_entropy": 3.398584352363375,
+        "oracle_top1_mass": 0.10493624210357666,
+        "predicted_entropy": 3.8561059125809964,
+        "predicted_top1_mass": 0.045589879155159,
+        "prompt": "In a geography quiz, the capital of Kenya would be",
+        "prompt_id": "oa5-pilot-factual_recall-016",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.5774893164634705
+      },
+      {
+        "mean_js_divergence": 0.06595882439548789,
+        "num_tokens": 7,
+        "oracle_entropy": 3.3379216454509804,
+        "oracle_top1_mass": 0.08723539113998413,
+        "predicted_entropy": 3.7573341084590934,
+        "predicted_top1_mass": 0.060989126563072205,
+        "prompt": "The capital city of Brazil is",
+        "prompt_id": "oa5-pilot-factual_recall-009",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.6789522171020508
+      },
+      {
+        "mean_js_divergence": 0.09213814184863961,
+        "num_tokens": 13,
+        "oracle_entropy": 3.517351328403507,
+        "oracle_top1_mass": 0.10314656049013138,
+        "predicted_entropy": 3.894547005027553,
+        "predicted_top1_mass": 0.04048975184559822,
+        "prompt": "By the parking lot, the parents carried soccer bags toward the",
+        "prompt_id": "oa5-pilot-general_text-063",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.7985144257545471
+      },
+      {
+        "mean_js_divergence": 0.1221314821848439,
+        "num_tokens": 12,
+        "oracle_entropy": 3.4015558742025553,
+        "oracle_top1_mass": 0.10384169220924377,
+        "predicted_entropy": 3.9228346436312624,
+        "predicted_top1_mass": 0.032296307384967804,
+        "prompt": "The neighbors left folding chairs resting near the sidewalk's",
+        "prompt_id": "oa5-pilot-general_text-052",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 1.0075652599334717
+      },
+      {
+        "mean_js_divergence": 0.09641455595431693,
+        "num_tokens": 13,
+        "oracle_entropy": 3.553055542760002,
+        "oracle_top1_mass": 0.08305970579385757,
+        "predicted_entropy": 3.902837056870985,
+        "predicted_top1_mass": 0.03709445148706436,
+        "prompt": "Inside the food pantry, the volunteers arranged cardboard boxes beside the",
+        "prompt_id": "oa5-pilot-general_text-058",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.8827174305915833
+      },
+      {
+        "mean_js_divergence": 0.09515375968540485,
+        "num_tokens": 13,
+        "oracle_entropy": 3.56233511761705,
+        "oracle_top1_mass": 0.08068560063838959,
+        "predicted_entropy": 3.905011834980905,
+        "predicted_top1_mass": 0.03569338098168373,
+        "prompt": "The volunteers left cardboard boxes resting near the food pantry's",
+        "prompt_id": "oa5-pilot-general_text-060",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.9124497771263123
+      },
+      {
+        "mean_js_divergence": 0.05672869558488855,
+        "num_tokens": 10,
+        "oracle_entropy": 3.4850126839116617,
+        "oracle_top1_mass": 0.0725579634308815,
+        "predicted_entropy": 3.7961126326699,
+        "predicted_top1_mass": 0.07152139395475388,
+        "prompt": "A lab chart would mark hydrogen with the symbol",
+        "prompt_id": "oa5-pilot-factual_recall-036",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.7773974537849426
+      },
+      {
+        "mean_js_divergence": 0.05459606667827064,
+        "num_tokens": 9,
+        "oracle_entropy": 3.3757648271581973,
+        "oracle_top1_mass": 0.0764603316783905,
+        "predicted_entropy": 3.7162666818955703,
+        "predicted_top1_mass": 0.05652251094579697,
+        "prompt": "Chemistry notes write the symbol for hydrogen as",
+        "prompt_id": "oa5-pilot-factual_recall-035",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.5365424156188965
+      },
+      {
+        "mean_js_divergence": 0.06759338924279645,
+        "num_tokens": 7,
+        "oracle_entropy": 3.4410488368575702,
+        "oracle_top1_mass": 0.0643080621957779,
+        "predicted_entropy": 3.7339127509803465,
+        "predicted_top1_mass": 0.08147341012954712,
+        "prompt": "The chemical symbol for carbon is",
+        "prompt_id": "oa5-pilot-factual_recall-041",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.8093731999397278
+      },
+      {
+        "mean_js_divergence": 0.10380064242050258,
+        "num_tokens": 10,
+        "oracle_entropy": 3.4630948289653287,
+        "oracle_top1_mass": 0.0772884413599968,
+        "predicted_entropy": 3.867463847006081,
+        "predicted_top1_mass": 0.04602517932653427,
+        "prompt": "In the periodic table, sodium is abbreviated as",
+        "prompt_id": "oa5-pilot-factual_recall-046",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.9966501593589783
+      },
+      {
+        "mean_js_divergence": 0.0891988490843494,
+        "num_tokens": 25,
+        "oracle_entropy": 3.509473546770448,
+        "oracle_top1_mass": 0.07185889780521393,
+        "predicted_entropy": 3.8658773632157,
+        "predicted_top1_mass": 0.04259440675377846,
+        "prompt": "A flash drive holds 32 units and a external drive holds 512 units. The larger one is the",
+        "prompt_id": "oa5-pilot-reasoning_math-057",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.9881672263145447
+      },
+      {
+        "mean_js_divergence": 0.06734894333749367,
+        "num_tokens": 28,
+        "oracle_entropy": 3.5952501082398216,
+        "oracle_top1_mass": 0.07209810614585876,
+        "predicted_entropy": 3.8833225890185115,
+        "predicted_top1_mass": 0.050250835716724396,
+        "prompt": "A note lists the flash drive as 32 units and the external drive as 512 units. The larger item is the",
+        "prompt_id": "oa5-pilot-reasoning_math-059",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.7030996084213257
+      },
+      {
+        "mean_js_divergence": 0.07939825926579736,
+        "num_tokens": 23,
+        "oracle_entropy": 3.5208165492619314,
+        "oracle_top1_mass": 0.09299904853105545,
+        "predicted_entropy": 3.8074737217514643,
+        "predicted_top1_mass": 0.10725723952054977,
+        "prompt": "Between the backpack at 6 units and the duffel bag at 18 units, the bigger option is the",
+        "prompt_id": "oa5-pilot-reasoning_math-054",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.765612781047821
+      },
+      {
+        "mean_js_divergence": 0.06496306489674211,
+        "num_tokens": 23,
+        "oracle_entropy": 3.542370803810287,
+        "oracle_top1_mass": 0.0764913558959961,
+        "predicted_entropy": 3.7956106499765876,
+        "predicted_top1_mass": 0.05361166596412659,
+        "prompt": "If one backpack measures 6 units while one duffel bag measures 18 units, the larger object is the",
+        "prompt_id": "oa5-pilot-reasoning_math-056",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.6529755592346191
+      },
+      {
+        "mean_js_divergence": 0.04265798888950319,
+        "num_tokens": 14,
+        "oracle_entropy": 3.523680764597382,
+        "oracle_top1_mass": 0.0737559050321579,
+        "predicted_entropy": 3.7940689309457793,
+        "predicted_top1_mass": 0.0686236172914505,
+        "prompt": "A solar-system chart would label a major moon of Mars as",
+        "prompt_id": "oa5-pilot-factual_recall-063",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.4643175005912781
+      },
+      {
+        "mean_js_divergence": 0.0637056346675382,
+        "num_tokens": 11,
+        "oracle_entropy": 3.5703829231016115,
+        "oracle_top1_mass": 0.07417839765548706,
+        "predicted_entropy": 3.8935001648208254,
+        "predicted_top1_mass": 0.04229689761996269,
+        "prompt": "Astronomy students learn that a major moon of Earth is",
+        "prompt_id": "oa5-pilot-factual_recall-058",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.596304178237915
+      },
+      {
+        "mean_js_divergence": 0.053221662431140224,
+        "num_tokens": 11,
+        "oracle_entropy": 3.564995303308209,
+        "oracle_top1_mass": 0.08215386420488358,
+        "predicted_entropy": 3.881043409828642,
+        "predicted_top1_mass": 0.043160952627658844,
+        "prompt": "Astronomy students learn that a major moon of Mars is",
+        "prompt_id": "oa5-pilot-factual_recall-062",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.5095980167388916
+      },
+      {
+        "mean_js_divergence": 0.045797661624605926,
+        "num_tokens": 14,
+        "oracle_entropy": 3.515683445513749,
+        "oracle_top1_mass": 0.06721661984920502,
+        "predicted_entropy": 3.7944415917286403,
+        "predicted_top1_mass": 0.06458606570959091,
+        "prompt": "A solar-system chart would label a major moon of Saturn as",
+        "prompt_id": "oa5-pilot-factual_recall-055",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.5217093229293823
+      },
+      {
+        "mean_js_divergence": 0.10752328335997238,
+        "num_tokens": 11,
+        "oracle_entropy": 3.426630333379621,
+        "oracle_top1_mass": 0.08567414432764053,
+        "predicted_entropy": 3.8934046068627572,
+        "predicted_top1_mass": 0.0447753481566906,
+        "prompt": "The mist above the meadow grass turned the whole scene",
+        "prompt_id": "oa5-pilot-general_text-044",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 1.0524907112121582
+      },
+      {
+        "mean_js_divergence": 0.09356054807935296,
+        "num_tokens": 12,
+        "oracle_entropy": 3.5235272258876678,
+        "oracle_top1_mass": 0.07272245734930038,
+        "predicted_entropy": 3.85544375733217,
+        "predicted_top1_mass": 0.0488346591591835,
+        "prompt": "Across the pine ridge, the sunlight made the air feel",
+        "prompt_id": "oa5-pilot-general_text-038",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 1.1309877634048462
+      },
+      {
+        "mean_js_divergence": 0.12185299466154874,
+        "num_tokens": 12,
+        "oracle_entropy": 3.4613594707731026,
+        "oracle_top1_mass": 0.09028934687376022,
+        "predicted_entropy": 3.9098276785027655,
+        "predicted_top1_mass": 0.04451069235801697,
+        "prompt": "After the mist passed over the meadow grass, everything looked",
+        "prompt_id": "oa5-pilot-general_text-041",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 1.0662773847579956
+      },
+      {
+        "mean_js_divergence": 0.11097324844276418,
+        "num_tokens": 11,
+        "oracle_entropy": 3.5459247883431013,
+        "oracle_top1_mass": 0.07784505188465118,
+        "predicted_entropy": 3.907105046992879,
+        "predicted_top1_mass": 0.03565451130270958,
+        "prompt": "The sunlight above the pine ridge turned the whole scene",
+        "prompt_id": "oa5-pilot-general_text-040",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 1.1654890775680542
+      },
+      {
+        "mean_js_divergence": 0.029135029002075635,
+        "num_tokens": 17,
+        "oracle_entropy": 3.5634120745793947,
+        "oracle_top1_mass": 0.07081428170204163,
+        "predicted_entropy": 3.707686853486774,
+        "predicted_top1_mass": 0.05754278600215912,
+        "prompt": "The sequence 3, 6, 9, 12 continues with",
+        "prompt_id": "oa5-pilot-reasoning_math-037",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.27483612298965454
+      },
+      {
+        "mean_js_divergence": 0.03492337115385006,
+        "num_tokens": 21,
+        "oracle_entropy": 3.4225596934277434,
+        "oracle_top1_mass": 0.09366432577371597,
+        "predicted_entropy": 3.6897110299112263,
+        "predicted_top1_mass": 0.06291840225458145,
+        "prompt": "Continuing the pattern 3, 6, 9, 12, the next term is",
+        "prompt_id": "oa5-pilot-reasoning_math-039",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.3199220299720764
+      },
+      {
+        "mean_js_divergence": 0.02803290970144124,
+        "num_tokens": 24,
+        "oracle_entropy": 3.543892215305591,
+        "oracle_top1_mass": 0.08360572904348373,
+        "predicted_entropy": 3.7688320983083203,
+        "predicted_top1_mass": 0.049720071256160736,
+        "prompt": "If the pattern 1, 4, 9, 16 is extended one more step, it becomes",
+        "prompt_id": "oa5-pilot-reasoning_math-048",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.2898261249065399
+      },
+      {
+        "mean_js_divergence": 0.030294624894554277,
+        "num_tokens": 22,
+        "oracle_entropy": 3.5740155862814165,
+        "oracle_top1_mass": 0.09297129511833191,
+        "predicted_entropy": 3.828699004562836,
+        "predicted_top1_mass": 0.04518379643559456,
+        "prompt": "A worksheet lists 3, 6, 9, 12; the next number would be",
+        "prompt_id": "oa5-pilot-reasoning_math-038",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.25198012590408325
+      },
+      {
+        "mean_js_divergence": 0.07859360439668348,
+        "num_tokens": 20,
+        "oracle_entropy": 3.5599084734377398,
+        "oracle_top1_mass": 0.07348260283470154,
+        "predicted_entropy": 3.868841880110575,
+        "predicted_top1_mass": 0.04276450350880623,
+        "prompt": "To service the report export, first place the summary page near the file name and then check the",
+        "prompt_id": "oa5-pilot-code_procedural-057",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.8323066234588623
+      },
+      {
+        "mean_js_divergence": 0.06573535513665382,
+        "num_tokens": 20,
+        "oracle_entropy": 3.4867739939474762,
+        "oracle_top1_mass": 0.08866895735263824,
+        "predicted_entropy": 3.831825667369006,
+        "predicted_top1_mass": 0.07064349949359894,
+        "prompt": "The checklist for the kitchen scale says to keep the reference weight by the display and then inspect the",
+        "prompt_id": "oa5-pilot-code_procedural-056",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.7226340770721436
+      },
+      {
+        "mean_js_divergence": 0.06397137214620159,
+        "num_tokens": 18,
+        "oracle_entropy": 3.5376222528379175,
+        "oracle_top1_mass": 0.06779597699642181,
+        "predicted_entropy": 3.8637494231389136,
+        "predicted_top1_mass": 0.04639941453933716,
+        "prompt": "A technician completing the kitchen scale would position the reference weight near the display before opening the",
+        "prompt_id": "oa5-pilot-code_procedural-055",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.7391750812530518
+      },
+      {
+        "mean_js_divergence": 0.06632308870494828,
+        "num_tokens": 18,
+        "oracle_entropy": 3.5753756139535207,
+        "oracle_top1_mass": 0.07585444301366806,
+        "predicted_entropy": 3.8996448612022787,
+        "predicted_top1_mass": 0.03843488171696663,
+        "prompt": "Before finishing the bike chain, set the rear wheel beside the master link and review the",
+        "prompt_id": "oa5-pilot-code_procedural-062",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.5633648633956909
+      },
+      {
+        "mean_js_divergence": 0.08734080077243278,
+        "num_tokens": 19,
+        "oracle_entropy": 3.498338588052172,
+        "oracle_top1_mass": 0.08093287795782089,
+        "predicted_entropy": 3.8793615926195093,
+        "predicted_top1_mass": 0.04825263097882271,
+        "prompt": "def clean_names(names):\n    return [name.strip() for name in",
+        "prompt_id": "oa5-pilot-code_procedural-001",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.9202300906181335
+      },
+      {
+        "mean_js_divergence": 0.11462695507551045,
+        "num_tokens": 16,
+        "oracle_entropy": 3.571409540897624,
+        "oracle_top1_mass": 0.0770750418305397,
+        "predicted_entropy": 3.761712872600631,
+        "predicted_top1_mass": 0.07175426930189133,
+        "prompt": "lowercase_tags = lambda tags: [tag.lower() for tag in",
+        "prompt_id": "oa5-pilot-code_procedural-008",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 1.1461862325668335
+      },
+      {
+        "mean_js_divergence": 0.10552218436038413,
+        "num_tokens": 17,
+        "oracle_entropy": 3.523205387508511,
+        "oracle_top1_mass": 0.10121114552021027,
+        "predicted_entropy": 3.696781111946605,
+        "predicted_top1_mass": 0.09994000196456909,
+        "prompt": "titlecase_titles = lambda titles: [title.title() for title in",
+        "prompt_id": "oa5-pilot-code_procedural-012",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.8837369084358215
+      },
+      {
+        "mean_js_divergence": 0.0380096990125043,
+        "num_tokens": 34,
+        "oracle_entropy": 3.6143633327835665,
+        "oracle_top1_mass": 0.07694610953330994,
+        "predicted_entropy": 3.8618734021181145,
+        "predicted_top1_mass": 0.05210433155298233,
+        "prompt": "def titlecase_titles(titles):\n    cleaned = []\n    for title in titles:\n        cleaned.append(title.title())\n    return",
+        "prompt_id": "oa5-pilot-code_procedural-010",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.36493805050849915
+      },
+      {
+        "mean_js_divergence": 0.08282090355763003,
+        "num_tokens": 23,
+        "oracle_entropy": 3.4112933701780097,
+        "oracle_top1_mass": 0.0984875038266182,
+        "predicted_entropy": 3.845642501243791,
+        "predicted_top1_mass": 0.0680803433060646,
+        "prompt": "If the ferry begins at 11:40 AM and lasts 50 minutes, it ends at",
+        "prompt_id": "oa5-pilot-reasoning_math-025",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.6718843579292297
+      },
+      {
+        "mean_js_divergence": 0.057429224904485,
+        "num_tokens": 24,
+        "oracle_entropy": 3.549087995178574,
+        "oracle_top1_mass": 0.09418688714504242,
+        "predicted_entropy": 3.8391039812513603,
+        "predicted_top1_mass": 0.04875575751066208,
+        "prompt": "When the train begins at 3:25 PM and runs for 45 minutes, it wraps up at",
+        "prompt_id": "oa5-pilot-reasoning_math-024",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.5133424997329712
+      },
+      {
+        "mean_js_divergence": 0.0855367855349094,
+        "num_tokens": 22,
+        "oracle_entropy": 3.4033557027856878,
+        "oracle_top1_mass": 0.10478680580854416,
+        "predicted_entropy": 3.7469899328237695,
+        "predicted_top1_mass": 0.08067319542169571,
+        "prompt": "If the lecture begins at 1:15 PM and lasts 90 minutes, it ends at",
+        "prompt_id": "oa5-pilot-reasoning_math-029",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.5985854864120483
+      },
+      {
+        "mean_js_divergence": 0.049888232611545597,
+        "num_tokens": 23,
+        "oracle_entropy": 3.593991979831636,
+        "oracle_top1_mass": 0.07718979567289352,
+        "predicted_entropy": 3.836932456032617,
+        "predicted_top1_mass": 0.0441242940723896,
+        "prompt": "A schedule shows the shuttle at 7:10 AM for 35 minutes. The finish time is",
+        "prompt_id": "oa5-pilot-reasoning_math-019",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.637843132019043
+      },
+      {
+        "mean_js_divergence": 0.09536625526105466,
+        "num_tokens": 14,
+        "oracle_entropy": 3.450936067244914,
+        "oracle_top1_mass": 0.07803187519311905,
+        "predicted_entropy": 3.843592301898066,
+        "predicted_top1_mass": 0.05543529987335205,
+        "prompt": "tar -czf reports-archive.tar.gz reports/",
+        "prompt_id": "oa5-pilot-code_procedural-039",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 1.0880969762802124
+      },
+      {
+        "mean_js_divergence": 0.06248220700621648,
+        "num_tokens": 12,
+        "oracle_entropy": 3.542570399790069,
+        "oracle_top1_mass": 0.08238254487514496,
+        "predicted_entropy": 3.8386576704762674,
+        "predicted_top1_mass": 0.044096749275922775,
+        "prompt": "find reports -name '*.csv' -print |",
+        "prompt_id": "oa5-pilot-code_procedural-037",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.6224859356880188
+      },
+      {
+        "mean_js_divergence": 0.08568790356171879,
+        "num_tokens": 5,
+        "oracle_entropy": 3.4849593190485155,
+        "oracle_top1_mass": 0.09512514621019363,
+        "predicted_entropy": 3.8265806773171493,
+        "predicted_top1_mass": 0.04282056912779808,
+        "prompt": "systemctl status redis |",
+        "prompt_id": "oa5-pilot-code_procedural-048",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.7551455497741699
+      },
+      {
+        "mean_js_divergence": 0.07087966833068937,
+        "num_tokens": 12,
+        "oracle_entropy": 3.5212461354293443,
+        "oracle_top1_mass": 0.08422640711069107,
+        "predicted_entropy": 3.8197734420956686,
+        "predicted_top1_mass": 0.05248376354575157,
+        "prompt": "find logs -name '*.log' -print |",
+        "prompt_id": "oa5-pilot-code_procedural-033",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.6722345948219299
+      },
+      {
+        "mean_js_divergence": 0.07284815302566922,
+        "num_tokens": 12,
+        "oracle_entropy": 3.63315639923339,
+        "oracle_top1_mass": 0.07583688944578171,
+        "predicted_entropy": 3.8343955185404037,
+        "predicted_top1_mass": 0.054587479680776596,
+        "prompt": "SELECT region, COUNT(*)\nFROM shipments\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-025",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.6801164746284485
+      },
+      {
+        "mean_js_divergence": 0.07775836676972794,
+        "num_tokens": 18,
+        "oracle_entropy": 3.507182138740836,
+        "oracle_top1_mass": 0.08153009414672852,
+        "predicted_entropy": 3.8931787523687036,
+        "predicted_top1_mass": 0.04171685874462128,
+        "prompt": "SELECT agent_id, MAX(resolution_minutes)\nFROM tickets\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-023",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.6336835026741028
+      },
+      {
+        "mean_js_divergence": 0.0422053014646889,
+        "num_tokens": 16,
+        "oracle_entropy": 3.64334530135598,
+        "oracle_top1_mass": 0.08916296064853668,
+        "predicted_entropy": 3.844283160113093,
+        "predicted_top1_mass": 0.057539861649274826,
+        "prompt": "SELECT region, AVG(delivery_days)\nFROM shipments\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-026",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.3776305317878723
+      },
+      {
+        "mean_js_divergence": 0.06529877487710639,
+        "num_tokens": 16,
+        "oracle_entropy": 3.67555774102579,
+        "oracle_top1_mass": 0.06087121739983559,
+        "predicted_entropy": 3.850271069646341,
+        "predicted_top1_mass": 0.039532747119665146,
+        "prompt": "SELECT user_id\nFROM sessions\nORDER BY started_at DESC,",
+        "prompt_id": "oa5-pilot-code_procedural-032",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.6989749073982239
+      },
+      {
+        "mean_js_divergence": 0.07658723498220171,
+        "num_tokens": 13,
+        "oracle_entropy": 3.535680361196304,
+        "oracle_top1_mass": 0.06501734256744385,
+        "predicted_entropy": 3.884702517104535,
+        "predicted_top1_mass": 0.042234648019075394,
+        "prompt": "Near the cafe window, a cyclist set a helmet beside the",
+        "prompt_id": "oa5-pilot-general_text-013",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.8260856866836548
+      },
+      {
+        "mean_js_divergence": 0.08092067071109163,
+        "num_tokens": 15,
+        "oracle_entropy": 3.608232782851985,
+        "oracle_top1_mass": 0.06744108349084854,
+        "predicted_entropy": 3.9000338925548577,
+        "predicted_top1_mass": 0.04317748174071312,
+        "prompt": "At the brick path, a gardener reached for a watering can under the",
+        "prompt_id": "oa5-pilot-general_text-007",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.7880546450614929
+      },
+      {
+        "mean_js_divergence": 0.07532210070061278,
+        "num_tokens": 13,
+        "oracle_entropy": 3.5497759919038874,
+        "oracle_top1_mass": 0.09548633545637131,
+        "predicted_entropy": 3.8232138992710487,
+        "predicted_top1_mass": 0.07572149485349655,
+        "prompt": "A librarian passed the reading room carrying a book cart toward the",
+        "prompt_id": "oa5-pilot-general_text-012",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.666106104850769
+      },
+      {
+        "mean_js_divergence": 0.13324558124188335,
+        "num_tokens": 15,
+        "oracle_entropy": 3.4444593382004105,
+        "oracle_top1_mass": 0.07765048742294312,
+        "predicted_entropy": 3.880657812952576,
+        "predicted_top1_mass": 0.048866283148527145,
+        "prompt": "At the reading room, a librarian reached for a book cart under the",
+        "prompt_id": "oa5-pilot-general_text-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 1.3478463888168335
+      },
+      {
+        "mean_js_divergence": 0.062485631905995084,
+        "num_tokens": 17,
+        "oracle_entropy": 3.4277351801986025,
+        "oracle_top1_mass": 0.08481435477733612,
+        "predicted_entropy": 3.8332907317499525,
+        "predicted_top1_mass": 0.04838711395859718,
+        "prompt": "At the storage room, an archivist reached for a box of files near the",
+        "prompt_id": "oa5-pilot-general_text-026",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.6646522283554077
+      },
+      {
+        "mean_js_divergence": 0.07291449190979865,
+        "num_tokens": 13,
+        "oracle_entropy": 3.5198615833450777,
+        "oracle_top1_mass": 0.09440585225820541,
+        "predicted_entropy": 3.8934477063628923,
+        "predicted_top1_mass": 0.0453495979309082,
+        "prompt": "At the drafting table, an engineer set a blueprint beside the",
+        "prompt_id": "oa5-pilot-general_text-021",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.7243354916572571
+      },
+      {
+        "mean_js_divergence": 0.07196314008649074,
+        "num_tokens": 14,
+        "oracle_entropy": 3.5836368225566946,
+        "oracle_top1_mass": 0.10065905004739761,
+        "predicted_entropy": 3.9055297060177607,
+        "predicted_top1_mass": 0.04125183820724487,
+        "prompt": "At the ward station, a nurse reached for a clipboard near the",
+        "prompt_id": "oa5-pilot-general_text-018",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.6421841979026794
+      },
+      {
+        "mean_js_divergence": 0.10597741382963244,
+        "num_tokens": 13,
+        "oracle_entropy": 3.4664172181649304,
+        "oracle_top1_mass": 0.08590318262577057,
+        "predicted_entropy": 3.8672416423840983,
+        "predicted_top1_mass": 0.04975593835115433,
+        "prompt": "The engineer checked a blueprint before crossing the drafting table toward the",
+        "prompt_id": "oa5-pilot-general_text-023",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 1.0112056732177734
+      }
+    ],
+    "split": "pilot",
+    "supervision_objective": "last_third_tokens_target_mse",
+    "supervision_summary": {
+      "attribute_correlations": [
+        {
+          "attribute_name": "num_tokens",
+          "pearson_r": -0.3861369955043888
+        },
+        {
+          "attribute_name": "oracle_entropy",
+          "pearson_r": -0.3475350713894297
+        },
+        {
+          "attribute_name": "oracle_top1_mass",
+          "pearson_r": 0.21157678974543634
+        }
+      ],
+      "prompt_count": 64,
+      "rationale": "Held-out error varies materially across prompt strata on the frozen baseline, so supervision granularity is a cleaner next hypothesis than another width or family tweak.",
+      "recommended_next_step": "richer_token_or_span_supervision",
+      "stratum_mean_js_range": 0.033655259547713576,
+      "stratum_summaries": [
+        {
+          "group_key": "stratum_code_procedural",
+          "mean_js_divergence": 0.07454060561888691,
+          "mean_num_tokens": 16.6875,
+          "mean_oracle_entropy": 3.5516219178304604,
+          "mean_oracle_top1_mass": 0.08057089312933385,
+          "mean_target_mse": 0.7313087750226259,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_factual_recall",
+          "mean_js_divergence": 0.07513222801720938,
+          "mean_num_tokens": 10.0625,
+          "mean_oracle_entropy": 3.470471167014272,
+          "mean_oracle_top1_mass": 0.08218477619811893,
+          "mean_target_mse": 0.7339883595705032,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_general_text",
+          "mean_js_divergence": 0.09494776747403437,
+          "mean_num_tokens": 13.125,
+          "mean_oracle_entropy": 3.5079711849865314,
+          "mean_oracle_top1_mass": 0.0855401405133307,
+          "mean_target_mse": 0.9179351404309273,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_reasoning_math",
+          "mean_js_divergence": 0.061292507926320794,
+          "mean_num_tokens": 22.4375,
+          "mean_oracle_entropy": 3.5241256953450337,
+          "mean_oracle_top1_mass": 0.08400671184062958,
+          "mean_target_mse": 0.5794588848948479,
+          "prompt_count": 16
+        }
+      ],
+      "strongest_attribute_abs_correlation": 0.3861369955043888,
+      "strongest_attribute_name": "num_tokens",
+      "worst_stratum_tag": "stratum_general_text"
+    },
+    "train_prompt_count": 192,
+    "train_prompt_ids": [
+      "oa5-pilot-reasoning_math-010",
+      "oa5-pilot-reasoning_math-005",
+      "oa5-pilot-reasoning_math-007",
+      "oa5-pilot-reasoning_math-003",
+      "oa5-pilot-reasoning_math-004",
+      "oa5-pilot-reasoning_math-016",
+      "oa5-pilot-reasoning_math-012",
+      "oa5-pilot-reasoning_math-008",
+      "oa5-pilot-reasoning_math-013",
+      "oa5-pilot-reasoning_math-009",
+      "oa5-pilot-reasoning_math-014",
+      "oa5-pilot-reasoning_math-015",
+      "oa5-pilot-factual_recall-021",
+      "oa5-pilot-factual_recall-029",
+      "oa5-pilot-factual_recall-022",
+      "oa5-pilot-factual_recall-024",
+      "oa5-pilot-factual_recall-023",
+      "oa5-pilot-factual_recall-017",
+      "oa5-pilot-factual_recall-027",
+      "oa5-pilot-factual_recall-028",
+      "oa5-pilot-factual_recall-025",
+      "oa5-pilot-factual_recall-018",
+      "oa5-pilot-factual_recall-019",
+      "oa5-pilot-factual_recall-026",
+      "oa5-pilot-factual_recall-002",
+      "oa5-pilot-factual_recall-005",
+      "oa5-pilot-factual_recall-012",
+      "oa5-pilot-factual_recall-006",
+      "oa5-pilot-factual_recall-008",
+      "oa5-pilot-factual_recall-014",
+      "oa5-pilot-factual_recall-010",
+      "oa5-pilot-factual_recall-013",
+      "oa5-pilot-factual_recall-004",
+      "oa5-pilot-factual_recall-015",
+      "oa5-pilot-factual_recall-001",
+      "oa5-pilot-factual_recall-003",
+      "oa5-pilot-general_text-057",
+      "oa5-pilot-general_text-051",
+      "oa5-pilot-general_text-054",
+      "oa5-pilot-general_text-061",
+      "oa5-pilot-general_text-055",
+      "oa5-pilot-general_text-053",
+      "oa5-pilot-general_text-062",
+      "oa5-pilot-general_text-056",
+      "oa5-pilot-general_text-050",
+      "oa5-pilot-general_text-059",
+      "oa5-pilot-general_text-049",
+      "oa5-pilot-general_text-064",
+      "oa5-pilot-factual_recall-038",
+      "oa5-pilot-factual_recall-040",
+      "oa5-pilot-factual_recall-048",
+      "oa5-pilot-factual_recall-043",
+      "oa5-pilot-factual_recall-037",
+      "oa5-pilot-factual_recall-044",
+      "oa5-pilot-factual_recall-039",
+      "oa5-pilot-factual_recall-047",
+      "oa5-pilot-factual_recall-045",
+      "oa5-pilot-factual_recall-042",
+      "oa5-pilot-factual_recall-034",
+      "oa5-pilot-factual_recall-033",
+      "oa5-pilot-reasoning_math-062",
+      "oa5-pilot-reasoning_math-049",
+      "oa5-pilot-reasoning_math-051",
+      "oa5-pilot-reasoning_math-053",
+      "oa5-pilot-reasoning_math-052",
+      "oa5-pilot-reasoning_math-058",
+      "oa5-pilot-reasoning_math-050",
+      "oa5-pilot-reasoning_math-061",
+      "oa5-pilot-reasoning_math-063",
+      "oa5-pilot-reasoning_math-060",
+      "oa5-pilot-reasoning_math-055",
+      "oa5-pilot-reasoning_math-064",
+      "oa5-pilot-factual_recall-053",
+      "oa5-pilot-factual_recall-054",
+      "oa5-pilot-factual_recall-061",
+      "oa5-pilot-factual_recall-057",
+      "oa5-pilot-factual_recall-056",
+      "oa5-pilot-factual_recall-059",
+      "oa5-pilot-factual_recall-049",
+      "oa5-pilot-factual_recall-050",
+      "oa5-pilot-factual_recall-060",
+      "oa5-pilot-factual_recall-064",
+      "oa5-pilot-factual_recall-051",
+      "oa5-pilot-factual_recall-052",
+      "oa5-pilot-general_text-042",
+      "oa5-pilot-general_text-048",
+      "oa5-pilot-general_text-035",
+      "oa5-pilot-general_text-033",
+      "oa5-pilot-general_text-036",
+      "oa5-pilot-general_text-046",
+      "oa5-pilot-general_text-045",
+      "oa5-pilot-general_text-034",
+      "oa5-pilot-general_text-047",
+      "oa5-pilot-general_text-043",
+      "oa5-pilot-general_text-039",
+      "oa5-pilot-general_text-037",
+      "oa5-pilot-reasoning_math-044",
+      "oa5-pilot-reasoning_math-041",
+      "oa5-pilot-reasoning_math-040",
+      "oa5-pilot-reasoning_math-036",
+      "oa5-pilot-reasoning_math-035",
+      "oa5-pilot-reasoning_math-033",
+      "oa5-pilot-reasoning_math-034",
+      "oa5-pilot-reasoning_math-047",
+      "oa5-pilot-reasoning_math-043",
+      "oa5-pilot-reasoning_math-042",
+      "oa5-pilot-reasoning_math-046",
+      "oa5-pilot-reasoning_math-045",
+      "oa5-pilot-code_procedural-060",
+      "oa5-pilot-code_procedural-053",
+      "oa5-pilot-code_procedural-064",
+      "oa5-pilot-code_procedural-054",
+      "oa5-pilot-code_procedural-049",
+      "oa5-pilot-code_procedural-061",
+      "oa5-pilot-code_procedural-059",
+      "oa5-pilot-code_procedural-058",
+      "oa5-pilot-code_procedural-052",
+      "oa5-pilot-code_procedural-063",
+      "oa5-pilot-code_procedural-050",
+      "oa5-pilot-code_procedural-051",
+      "oa5-pilot-code_procedural-015",
+      "oa5-pilot-code_procedural-002",
+      "oa5-pilot-code_procedural-006",
+      "oa5-pilot-code_procedural-009",
+      "oa5-pilot-code_procedural-004",
+      "oa5-pilot-code_procedural-016",
+      "oa5-pilot-code_procedural-013",
+      "oa5-pilot-code_procedural-011",
+      "oa5-pilot-code_procedural-003",
+      "oa5-pilot-code_procedural-007",
+      "oa5-pilot-code_procedural-014",
+      "oa5-pilot-code_procedural-005",
+      "oa5-pilot-reasoning_math-020",
+      "oa5-pilot-reasoning_math-022",
+      "oa5-pilot-reasoning_math-031",
+      "oa5-pilot-reasoning_math-021",
+      "oa5-pilot-reasoning_math-028",
+      "oa5-pilot-reasoning_math-027",
+      "oa5-pilot-reasoning_math-030",
+      "oa5-pilot-reasoning_math-017",
+      "oa5-pilot-reasoning_math-023",
+      "oa5-pilot-reasoning_math-018",
+      "oa5-pilot-reasoning_math-026",
+      "oa5-pilot-reasoning_math-032",
+      "oa5-pilot-code_procedural-038",
+      "oa5-pilot-code_procedural-047",
+      "oa5-pilot-code_procedural-043",
+      "oa5-pilot-code_procedural-045",
+      "oa5-pilot-code_procedural-040",
+      "oa5-pilot-code_procedural-036",
+      "oa5-pilot-code_procedural-046",
+      "oa5-pilot-code_procedural-034",
+      "oa5-pilot-code_procedural-044",
+      "oa5-pilot-code_procedural-035",
+      "oa5-pilot-code_procedural-041",
+      "oa5-pilot-code_procedural-042",
+      "oa5-pilot-code_procedural-018",
+      "oa5-pilot-code_procedural-031",
+      "oa5-pilot-code_procedural-028",
+      "oa5-pilot-code_procedural-027",
+      "oa5-pilot-code_procedural-022",
+      "oa5-pilot-code_procedural-021",
+      "oa5-pilot-code_procedural-019",
+      "oa5-pilot-code_procedural-029",
+      "oa5-pilot-code_procedural-017",
+      "oa5-pilot-code_procedural-020",
+      "oa5-pilot-code_procedural-024",
+      "oa5-pilot-code_procedural-030",
+      "oa5-pilot-general_text-003",
+      "oa5-pilot-general_text-009",
+      "oa5-pilot-general_text-004",
+      "oa5-pilot-general_text-016",
+      "oa5-pilot-general_text-010",
+      "oa5-pilot-general_text-014",
+      "oa5-pilot-general_text-005",
+      "oa5-pilot-general_text-006",
+      "oa5-pilot-general_text-008",
+      "oa5-pilot-general_text-001",
+      "oa5-pilot-general_text-015",
+      "oa5-pilot-general_text-002",
+      "oa5-pilot-general_text-020",
+      "oa5-pilot-general_text-031",
+      "oa5-pilot-general_text-027",
+      "oa5-pilot-general_text-030",
+      "oa5-pilot-general_text-029",
+      "oa5-pilot-general_text-032",
+      "oa5-pilot-general_text-017",
+      "oa5-pilot-general_text-028",
+      "oa5-pilot-general_text-022",
+      "oa5-pilot-general_text-025",
+      "oa5-pilot-general_text-024",
+      "oa5-pilot-general_text-019"
+    ]
+  },
+  "sequence_target_mse": {
+    "baseline_eval_loss": 0.5807916522026062,
+    "baseline_eval_summary": {
+      "mean_js_divergence": 0.08534882281112108,
+      "num_eval_examples": 64,
+      "num_train_examples": 64,
+      "r_squared": 0.34453501791634134
+    },
+    "collection_id": "oracle_alpha_phase1_v1",
+    "eval_prompt_count": 64,
+    "eval_prompt_ids": [
+      "oa5-pilot-reasoning_math-011",
+      "oa5-pilot-reasoning_math-006",
+      "oa5-pilot-reasoning_math-001",
+      "oa5-pilot-reasoning_math-002",
+      "oa5-pilot-factual_recall-020",
+      "oa5-pilot-factual_recall-032",
+      "oa5-pilot-factual_recall-031",
+      "oa5-pilot-factual_recall-030",
+      "oa5-pilot-factual_recall-011",
+      "oa5-pilot-factual_recall-007",
+      "oa5-pilot-factual_recall-016",
+      "oa5-pilot-factual_recall-009",
+      "oa5-pilot-general_text-063",
+      "oa5-pilot-general_text-052",
+      "oa5-pilot-general_text-058",
+      "oa5-pilot-general_text-060",
+      "oa5-pilot-factual_recall-036",
+      "oa5-pilot-factual_recall-035",
+      "oa5-pilot-factual_recall-041",
+      "oa5-pilot-factual_recall-046",
+      "oa5-pilot-reasoning_math-057",
+      "oa5-pilot-reasoning_math-059",
+      "oa5-pilot-reasoning_math-054",
+      "oa5-pilot-reasoning_math-056",
+      "oa5-pilot-factual_recall-063",
+      "oa5-pilot-factual_recall-058",
+      "oa5-pilot-factual_recall-062",
+      "oa5-pilot-factual_recall-055",
+      "oa5-pilot-general_text-044",
+      "oa5-pilot-general_text-038",
+      "oa5-pilot-general_text-041",
+      "oa5-pilot-general_text-040",
+      "oa5-pilot-reasoning_math-037",
+      "oa5-pilot-reasoning_math-039",
+      "oa5-pilot-reasoning_math-048",
+      "oa5-pilot-reasoning_math-038",
+      "oa5-pilot-code_procedural-057",
+      "oa5-pilot-code_procedural-056",
+      "oa5-pilot-code_procedural-055",
+      "oa5-pilot-code_procedural-062",
+      "oa5-pilot-code_procedural-001",
+      "oa5-pilot-code_procedural-008",
+      "oa5-pilot-code_procedural-012",
+      "oa5-pilot-code_procedural-010",
+      "oa5-pilot-reasoning_math-025",
+      "oa5-pilot-reasoning_math-024",
+      "oa5-pilot-reasoning_math-029",
+      "oa5-pilot-reasoning_math-019",
+      "oa5-pilot-code_procedural-039",
+      "oa5-pilot-code_procedural-037",
+      "oa5-pilot-code_procedural-048",
+      "oa5-pilot-code_procedural-033",
+      "oa5-pilot-code_procedural-025",
+      "oa5-pilot-code_procedural-023",
+      "oa5-pilot-code_procedural-026",
+      "oa5-pilot-code_procedural-032",
+      "oa5-pilot-general_text-013",
+      "oa5-pilot-general_text-007",
+      "oa5-pilot-general_text-012",
+      "oa5-pilot-general_text-011",
+      "oa5-pilot-general_text-026",
+      "oa5-pilot-general_text-021",
+      "oa5-pilot-general_text-018",
+      "oa5-pilot-general_text-023"
+    ],
+    "fixed_aggregation": "mean_token_logits_then_softmax",
+    "fixed_input_field": "h_4[t]",
+    "fixed_router_family": "linear",
+    "fixed_target_name": "oracle_alpha_logit_vector",
+    "hidden_dim": null,
+    "model_name": "gemma-2-2b",
+    "prompt_diagnostics": [
+      {
+        "mean_js_divergence": 0.05905837543973867,
+        "num_tokens": 22,
+        "oracle_entropy": 3.4694003904142385,
+        "oracle_top1_mass": 0.08735082298517227,
+        "predicted_entropy": 3.735986673450774,
+        "predicted_top1_mass": 0.068125881254673,
+        "prompt": "Avery counted 18 tickets, lost 6, and added 2 later. The new total is",
+        "prompt_id": "oa5-pilot-reasoning_math-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.6094887256622314
+      },
+      {
+        "mean_js_divergence": 0.11143420712099808,
+        "num_tokens": 21,
+        "oracle_entropy": 3.4888620657807405,
+        "oracle_top1_mass": 0.08411644399166107,
+        "predicted_entropy": 3.7425787464370495,
+        "predicted_top1_mass": 0.06268251687288284,
+        "prompt": "After giving away 5 of the 12 marbles and then buying 4 more, Jonah has",
+        "prompt_id": "oa5-pilot-reasoning_math-006",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 1.040747046470642
+      },
+      {
+        "mean_js_divergence": 0.047164283904737564,
+        "num_tokens": 21,
+        "oracle_entropy": 3.651064706762459,
+        "oracle_top1_mass": 0.06308642029762268,
+        "predicted_entropy": 3.8030180156691835,
+        "predicted_top1_mass": 0.06889823079109192,
+        "prompt": "Mira had 7 pencils, gave away 2, and bought 3 more. Mira now has",
+        "prompt_id": "oa5-pilot-reasoning_math-001",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.4244791865348816
+      },
+      {
+        "mean_js_divergence": 0.05935081472465832,
+        "num_tokens": 20,
+        "oracle_entropy": 3.5471643369125614,
+        "oracle_top1_mass": 0.08039966970682144,
+        "predicted_entropy": 3.746222191546063,
+        "predicted_top1_mass": 0.07362150400876999,
+        "prompt": "After giving away 2 of the 7 pencils and then buying 3 more, Mira has",
+        "prompt_id": "oa5-pilot-reasoning_math-002",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_arithmetic_story"
+        ],
+        "target_mse": 0.5829892754554749
+      },
+      {
+        "mean_js_divergence": 0.04936583029368291,
+        "num_tokens": 9,
+        "oracle_entropy": 3.454140934836853,
+        "oracle_top1_mass": 0.09027022868394852,
+        "predicted_entropy": 3.4868149007019307,
+        "predicted_top1_mass": 0.11158239096403122,
+        "prompt": "Most library catalogs list Pride and Prejudice under",
+        "prompt_id": "oa5-pilot-factual_recall-020",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.5245597958564758
+      },
+      {
+        "mean_js_divergence": 0.07864245400405076,
+        "num_tokens": 8,
+        "oracle_entropy": 3.480499879092722,
+        "oracle_top1_mass": 0.10916078090667725,
+        "predicted_entropy": 3.695094899939414,
+        "predicted_top1_mass": 0.07506927102804184,
+        "prompt": "Most library catalogs list The Trial under",
+        "prompt_id": "oa5-pilot-factual_recall-032",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.7306354641914368
+      },
+      {
+        "mean_js_divergence": 0.11395800163881678,
+        "num_tokens": 7,
+        "oracle_entropy": 3.4029132544403877,
+        "oracle_top1_mass": 0.08142028003931046,
+        "predicted_entropy": 3.4676529581393885,
+        "predicted_top1_mass": 0.15358582139015198,
+        "prompt": "The author of The Trial is",
+        "prompt_id": "oa5-pilot-factual_recall-031",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 1.0529903173446655
+      },
+      {
+        "mean_js_divergence": 0.0636346802599165,
+        "num_tokens": 10,
+        "oracle_entropy": 3.474560292404411,
+        "oracle_top1_mass": 0.07140197604894638,
+        "predicted_entropy": 3.7542682025865513,
+        "predicted_top1_mass": 0.051644545048475266,
+        "prompt": "Literature students learn that The Trial was written by",
+        "prompt_id": "oa5-pilot-factual_recall-030",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_author_fact"
+        ],
+        "target_mse": 0.5927868485450745
+      },
+      {
+        "mean_js_divergence": 0.05265415046954029,
+        "num_tokens": 11,
+        "oracle_entropy": 3.540158587863795,
+        "oracle_top1_mass": 0.10248320549726486,
+        "predicted_entropy": 3.6522295523066775,
+        "predicted_top1_mass": 0.06450159102678299,
+        "prompt": "On most maps, the capital of Brazil appears as",
+        "prompt_id": "oa5-pilot-factual_recall-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.46799448132514954
+      },
+      {
+        "mean_js_divergence": 0.03777450601197641,
+        "num_tokens": 11,
+        "oracle_entropy": 3.499096112362117,
+        "oracle_top1_mass": 0.0801287293434143,
+        "predicted_entropy": 3.645343127075414,
+        "predicted_top1_mass": 0.06733449548482895,
+        "prompt": "On most maps, the capital of Japan appears as",
+        "prompt_id": "oa5-pilot-factual_recall-007",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.3527233302593231
+      },
+      {
+        "mean_js_divergence": 0.01385021676021914,
+        "num_tokens": 12,
+        "oracle_entropy": 3.398584352363375,
+        "oracle_top1_mass": 0.10493624210357666,
+        "predicted_entropy": 3.5063247372586472,
+        "predicted_top1_mass": 0.08446592092514038,
+        "prompt": "In a geography quiz, the capital of Kenya would be",
+        "prompt_id": "oa5-pilot-factual_recall-016",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.15180760622024536
+      },
+      {
+        "mean_js_divergence": 0.038338669009306214,
+        "num_tokens": 7,
+        "oracle_entropy": 3.3379216454509804,
+        "oracle_top1_mass": 0.08723539113998413,
+        "predicted_entropy": 3.4273289838758934,
+        "predicted_top1_mass": 0.10329219698905945,
+        "prompt": "The capital city of Brazil is",
+        "prompt_id": "oa5-pilot-factual_recall-009",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_capital_fact"
+        ],
+        "target_mse": 0.3747752606868744
+      },
+      {
+        "mean_js_divergence": 0.052085257341330814,
+        "num_tokens": 13,
+        "oracle_entropy": 3.517351328403507,
+        "oracle_top1_mass": 0.10314656049013138,
+        "predicted_entropy": 3.7331772115766344,
+        "predicted_top1_mass": 0.06948147714138031,
+        "prompt": "By the parking lot, the parents carried soccer bags toward the",
+        "prompt_id": "oa5-pilot-general_text-063",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.5708845853805542
+      },
+      {
+        "mean_js_divergence": 0.11877461408202317,
+        "num_tokens": 12,
+        "oracle_entropy": 3.4015558742025553,
+        "oracle_top1_mass": 0.10384169220924377,
+        "predicted_entropy": 3.832936065121174,
+        "predicted_top1_mass": 0.043695367872714996,
+        "prompt": "The neighbors left folding chairs resting near the sidewalk's",
+        "prompt_id": "oa5-pilot-general_text-052",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 1.0111345052719116
+      },
+      {
+        "mean_js_divergence": 0.0798063472024701,
+        "num_tokens": 13,
+        "oracle_entropy": 3.553055542760002,
+        "oracle_top1_mass": 0.08305970579385757,
+        "predicted_entropy": 3.69967583470184,
+        "predicted_top1_mass": 0.10876268148422241,
+        "prompt": "Inside the food pantry, the volunteers arranged cardboard boxes beside the",
+        "prompt_id": "oa5-pilot-general_text-058",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.7169631719589233
+      },
+      {
+        "mean_js_divergence": 0.08092328995944936,
+        "num_tokens": 13,
+        "oracle_entropy": 3.56233511761705,
+        "oracle_top1_mass": 0.08068560063838959,
+        "predicted_entropy": 3.809548220939502,
+        "predicted_top1_mass": 0.04259475693106651,
+        "prompt": "The volunteers left cardboard boxes resting near the food pantry's",
+        "prompt_id": "oa5-pilot-general_text-060",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_community_scene"
+        ],
+        "target_mse": 0.7476818561553955
+      },
+      {
+        "mean_js_divergence": 0.03174193444426757,
+        "num_tokens": 10,
+        "oracle_entropy": 3.4850126839116617,
+        "oracle_top1_mass": 0.0725579634308815,
+        "predicted_entropy": 3.5188230649194567,
+        "predicted_top1_mass": 0.0718153715133667,
+        "prompt": "A lab chart would mark hydrogen with the symbol",
+        "prompt_id": "oa5-pilot-factual_recall-036",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.36965692043304443
+      },
+      {
+        "mean_js_divergence": 0.008940704097534322,
+        "num_tokens": 9,
+        "oracle_entropy": 3.3757648271581973,
+        "oracle_top1_mass": 0.0764603316783905,
+        "predicted_entropy": 3.4571067118252508,
+        "predicted_top1_mass": 0.06734952330589294,
+        "prompt": "Chemistry notes write the symbol for hydrogen as",
+        "prompt_id": "oa5-pilot-factual_recall-035",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.10948450863361359
+      },
+      {
+        "mean_js_divergence": 0.04743099870112428,
+        "num_tokens": 7,
+        "oracle_entropy": 3.4410488368575702,
+        "oracle_top1_mass": 0.0643080621957779,
+        "predicted_entropy": 3.4238606882050937,
+        "predicted_top1_mass": 0.0839410051703453,
+        "prompt": "The chemical symbol for carbon is",
+        "prompt_id": "oa5-pilot-factual_recall-041",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.527894139289856
+      },
+      {
+        "mean_js_divergence": 0.06008630256816133,
+        "num_tokens": 10,
+        "oracle_entropy": 3.4630948289653287,
+        "oracle_top1_mass": 0.0772884413599968,
+        "predicted_entropy": 3.6003522697404233,
+        "predicted_top1_mass": 0.11118177324533463,
+        "prompt": "In the periodic table, sodium is abbreviated as",
+        "prompt_id": "oa5-pilot-factual_recall-046",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_element_symbol"
+        ],
+        "target_mse": 0.5878424048423767
+      },
+      {
+        "mean_js_divergence": 0.09701892047210472,
+        "num_tokens": 25,
+        "oracle_entropy": 3.509473546770448,
+        "oracle_top1_mass": 0.07185889780521393,
+        "predicted_entropy": 3.823195736592378,
+        "predicted_top1_mass": 0.04678145423531532,
+        "prompt": "A flash drive holds 32 units and a external drive holds 512 units. The larger one is the",
+        "prompt_id": "oa5-pilot-reasoning_math-057",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 1.0732759237289429
+      },
+      {
+        "mean_js_divergence": 0.06275528440179302,
+        "num_tokens": 28,
+        "oracle_entropy": 3.5952501082398216,
+        "oracle_top1_mass": 0.07209810614585876,
+        "predicted_entropy": 3.8708768400306393,
+        "predicted_top1_mass": 0.03659621253609657,
+        "prompt": "A note lists the flash drive as 32 units and the external drive as 512 units. The larger item is the",
+        "prompt_id": "oa5-pilot-reasoning_math-059",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.6721749901771545
+      },
+      {
+        "mean_js_divergence": 0.09151120624391113,
+        "num_tokens": 23,
+        "oracle_entropy": 3.5208165492619314,
+        "oracle_top1_mass": 0.09299904853105545,
+        "predicted_entropy": 3.8172689076513744,
+        "predicted_top1_mass": 0.0821591466665268,
+        "prompt": "Between the backpack at 6 units and the duffel bag at 18 units, the bigger option is the",
+        "prompt_id": "oa5-pilot-reasoning_math-054",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.8785104155540466
+      },
+      {
+        "mean_js_divergence": 0.0565578060513426,
+        "num_tokens": 23,
+        "oracle_entropy": 3.542370803810287,
+        "oracle_top1_mass": 0.0764913558959961,
+        "predicted_entropy": 3.7637765721779832,
+        "predicted_top1_mass": 0.05118884891271591,
+        "prompt": "If one backpack measures 6 units while one duffel bag measures 18 units, the larger object is the",
+        "prompt_id": "oa5-pilot-reasoning_math-056",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_magnitude_comparison"
+        ],
+        "target_mse": 0.582089900970459
+      },
+      {
+        "mean_js_divergence": 0.01049216118057722,
+        "num_tokens": 14,
+        "oracle_entropy": 3.523680764597382,
+        "oracle_top1_mass": 0.0737559050321579,
+        "predicted_entropy": 3.567117569285034,
+        "predicted_top1_mass": 0.07590272277593613,
+        "prompt": "A solar-system chart would label a major moon of Mars as",
+        "prompt_id": "oa5-pilot-factual_recall-063",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.10367505252361298
+      },
+      {
+        "mean_js_divergence": 0.02127414355987045,
+        "num_tokens": 11,
+        "oracle_entropy": 3.5703829231016115,
+        "oracle_top1_mass": 0.07417839765548706,
+        "predicted_entropy": 3.6278300125209224,
+        "predicted_top1_mass": 0.07486417144536972,
+        "prompt": "Astronomy students learn that a major moon of Earth is",
+        "prompt_id": "oa5-pilot-factual_recall-058",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.20078933238983154
+      },
+      {
+        "mean_js_divergence": 0.01678987102195422,
+        "num_tokens": 11,
+        "oracle_entropy": 3.564995303308209,
+        "oracle_top1_mass": 0.08215386420488358,
+        "predicted_entropy": 3.6120998043292585,
+        "predicted_top1_mass": 0.07709350436925888,
+        "prompt": "Astronomy students learn that a major moon of Mars is",
+        "prompt_id": "oa5-pilot-factual_recall-062",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.183355912566185
+      },
+      {
+        "mean_js_divergence": 0.009085793899750996,
+        "num_tokens": 14,
+        "oracle_entropy": 3.515683445513749,
+        "oracle_top1_mass": 0.06721661984920502,
+        "predicted_entropy": 3.5711902508779207,
+        "predicted_top1_mass": 0.07232335209846497,
+        "prompt": "A solar-system chart would label a major moon of Saturn as",
+        "prompt_id": "oa5-pilot-factual_recall-055",
+        "tags": [
+          "oracle_alpha",
+          "stratum_factual_recall",
+          "subcategory_moon_fact"
+        ],
+        "target_mse": 0.10373198240995407
+      },
+      {
+        "mean_js_divergence": 0.07359491521019486,
+        "num_tokens": 11,
+        "oracle_entropy": 3.426630333379621,
+        "oracle_top1_mass": 0.08567414432764053,
+        "predicted_entropy": 3.609248745164963,
+        "predicted_top1_mass": 0.11987617611885071,
+        "prompt": "The mist above the meadow grass turned the whole scene",
+        "prompt_id": "oa5-pilot-general_text-044",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.744045615196228
+      },
+      {
+        "mean_js_divergence": 0.04889268501595857,
+        "num_tokens": 12,
+        "oracle_entropy": 3.5235272258876678,
+        "oracle_top1_mass": 0.07272245734930038,
+        "predicted_entropy": 3.5725029761226423,
+        "predicted_top1_mass": 0.08090090751647949,
+        "prompt": "Across the pine ridge, the sunlight made the air feel",
+        "prompt_id": "oa5-pilot-general_text-038",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.6629886627197266
+      },
+      {
+        "mean_js_divergence": 0.09504244323321329,
+        "num_tokens": 12,
+        "oracle_entropy": 3.4613594707731026,
+        "oracle_top1_mass": 0.09028934687376022,
+        "predicted_entropy": 3.727111174801158,
+        "predicted_top1_mass": 0.07670116424560547,
+        "prompt": "After the mist passed over the meadow grass, everything looked",
+        "prompt_id": "oa5-pilot-general_text-041",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.8313483595848083
+      },
+      {
+        "mean_js_divergence": 0.08224185247495817,
+        "num_tokens": 11,
+        "oracle_entropy": 3.5459247883431013,
+        "oracle_top1_mass": 0.07784505188465118,
+        "predicted_entropy": 3.7355025040287324,
+        "predicted_top1_mass": 0.05526227504014969,
+        "prompt": "The sunlight above the pine ridge turned the whole scene",
+        "prompt_id": "oa5-pilot-general_text-040",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_nature_scene"
+        ],
+        "target_mse": 0.8964093923568726
+      },
+      {
+        "mean_js_divergence": 0.023906469246620713,
+        "num_tokens": 17,
+        "oracle_entropy": 3.5634120745793947,
+        "oracle_top1_mass": 0.07081428170204163,
+        "predicted_entropy": 3.6519438479504114,
+        "predicted_top1_mass": 0.07158003747463226,
+        "prompt": "The sequence 3, 6, 9, 12 continues with",
+        "prompt_id": "oa5-pilot-reasoning_math-037",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.22147570550441742
+      },
+      {
+        "mean_js_divergence": 0.025585623788712906,
+        "num_tokens": 21,
+        "oracle_entropy": 3.4225596934277434,
+        "oracle_top1_mass": 0.09366432577371597,
+        "predicted_entropy": 3.5772653082571306,
+        "predicted_top1_mass": 0.08721709996461868,
+        "prompt": "Continuing the pattern 3, 6, 9, 12, the next term is",
+        "prompt_id": "oa5-pilot-reasoning_math-039",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.269803524017334
+      },
+      {
+        "mean_js_divergence": 0.016109213182354674,
+        "num_tokens": 24,
+        "oracle_entropy": 3.543892215305591,
+        "oracle_top1_mass": 0.08360572904348373,
+        "predicted_entropy": 3.608522941133562,
+        "predicted_top1_mass": 0.07925011962652206,
+        "prompt": "If the pattern 1, 4, 9, 16 is extended one more step, it becomes",
+        "prompt_id": "oa5-pilot-reasoning_math-048",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.14565253257751465
+      },
+      {
+        "mean_js_divergence": 0.01816455689025,
+        "num_tokens": 22,
+        "oracle_entropy": 3.5740155862814165,
+        "oracle_top1_mass": 0.09297129511833191,
+        "predicted_entropy": 3.689800722021546,
+        "predicted_top1_mass": 0.07675226777791977,
+        "prompt": "A worksheet lists 3, 6, 9, 12; the next number would be",
+        "prompt_id": "oa5-pilot-reasoning_math-038",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_number_sequence"
+        ],
+        "target_mse": 0.15459944307804108
+      },
+      {
+        "mean_js_divergence": 0.07583407012189723,
+        "num_tokens": 20,
+        "oracle_entropy": 3.5599084734377398,
+        "oracle_top1_mass": 0.07348260283470154,
+        "predicted_entropy": 3.78315225114734,
+        "predicted_top1_mass": 0.05124427005648613,
+        "prompt": "To service the report export, first place the summary page near the file name and then check the",
+        "prompt_id": "oa5-pilot-code_procedural-057",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.7396283745765686
+      },
+      {
+        "mean_js_divergence": 0.05650371720470847,
+        "num_tokens": 20,
+        "oracle_entropy": 3.4867739939474762,
+        "oracle_top1_mass": 0.08866895735263824,
+        "predicted_entropy": 3.6190320491440624,
+        "predicted_top1_mass": 0.15063929557800293,
+        "prompt": "The checklist for the kitchen scale says to keep the reference weight by the display and then inspect the",
+        "prompt_id": "oa5-pilot-code_procedural-056",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.6413816213607788
+      },
+      {
+        "mean_js_divergence": 0.04025128696339325,
+        "num_tokens": 18,
+        "oracle_entropy": 3.5376222528379175,
+        "oracle_top1_mass": 0.06779597699642181,
+        "predicted_entropy": 3.6636641769084317,
+        "predicted_top1_mass": 0.06953144818544388,
+        "prompt": "A technician completing the kitchen scale would position the reference weight near the display before opening the",
+        "prompt_id": "oa5-pilot-code_procedural-055",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.5158979892730713
+      },
+      {
+        "mean_js_divergence": 0.0684124811188391,
+        "num_tokens": 18,
+        "oracle_entropy": 3.5753756139535207,
+        "oracle_top1_mass": 0.07585444301366806,
+        "predicted_entropy": 3.6962151790571096,
+        "predicted_top1_mass": 0.11540620774030685,
+        "prompt": "Before finishing the bike chain, set the rear wheel beside the master link and review the",
+        "prompt_id": "oa5-pilot-code_procedural-062",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_procedure_text"
+        ],
+        "target_mse": 0.5027697086334229
+      },
+      {
+        "mean_js_divergence": 0.05582334598702076,
+        "num_tokens": 19,
+        "oracle_entropy": 3.498338588052172,
+        "oracle_top1_mass": 0.08093287795782089,
+        "predicted_entropy": 3.738183709210155,
+        "predicted_top1_mass": 0.07984722405672073,
+        "prompt": "def clean_names(names):\n    return [name.strip() for name in",
+        "prompt_id": "oa5-pilot-code_procedural-001",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.5605043768882751
+      },
+      {
+        "mean_js_divergence": 0.14413073933769038,
+        "num_tokens": 16,
+        "oracle_entropy": 3.571409540897624,
+        "oracle_top1_mass": 0.0770750418305397,
+        "predicted_entropy": 3.58414826089171,
+        "predicted_top1_mass": 0.06966394931077957,
+        "prompt": "lowercase_tags = lambda tags: [tag.lower() for tag in",
+        "prompt_id": "oa5-pilot-code_procedural-008",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 1.4891587495803833
+      },
+      {
+        "mean_js_divergence": 0.12088529045754737,
+        "num_tokens": 17,
+        "oracle_entropy": 3.523205387508511,
+        "oracle_top1_mass": 0.10121114552021027,
+        "predicted_entropy": 3.5113585166082055,
+        "predicted_top1_mass": 0.09288505464792252,
+        "prompt": "titlecase_titles = lambda titles: [title.title() for title in",
+        "prompt_id": "oa5-pilot-code_procedural-012",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 1.1355377435684204
+      },
+      {
+        "mean_js_divergence": 0.032679668421305506,
+        "num_tokens": 34,
+        "oracle_entropy": 3.6143633327835665,
+        "oracle_top1_mass": 0.07694610953330994,
+        "predicted_entropy": 3.7631600192929273,
+        "predicted_top1_mass": 0.06663013249635696,
+        "prompt": "def titlecase_titles(titles):\n    cleaned = []\n    for title in titles:\n        cleaned.append(title.title())\n    return",
+        "prompt_id": "oa5-pilot-code_procedural-010",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_python_snippet"
+        ],
+        "target_mse": 0.3177184760570526
+      },
+      {
+        "mean_js_divergence": 0.0732177142266504,
+        "num_tokens": 23,
+        "oracle_entropy": 3.4112933701780097,
+        "oracle_top1_mass": 0.0984875038266182,
+        "predicted_entropy": 3.7497584577016583,
+        "predicted_top1_mass": 0.09893810003995895,
+        "prompt": "If the ferry begins at 11:40 AM and lasts 50 minutes, it ends at",
+        "prompt_id": "oa5-pilot-reasoning_math-025",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.6512743234634399
+      },
+      {
+        "mean_js_divergence": 0.04746930735274954,
+        "num_tokens": 24,
+        "oracle_entropy": 3.549087995178574,
+        "oracle_top1_mass": 0.09418688714504242,
+        "predicted_entropy": 3.7362952560532343,
+        "predicted_top1_mass": 0.06729330867528915,
+        "prompt": "When the train begins at 3:25 PM and runs for 45 minutes, it wraps up at",
+        "prompt_id": "oa5-pilot-reasoning_math-024",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.4504815638065338
+      },
+      {
+        "mean_js_divergence": 0.09013954096293283,
+        "num_tokens": 22,
+        "oracle_entropy": 3.4033557027856878,
+        "oracle_top1_mass": 0.10478680580854416,
+        "predicted_entropy": 3.6730513127032376,
+        "predicted_top1_mass": 0.11334045231342316,
+        "prompt": "If the lecture begins at 1:15 PM and lasts 90 minutes, it ends at",
+        "prompt_id": "oa5-pilot-reasoning_math-029",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.6389062404632568
+      },
+      {
+        "mean_js_divergence": 0.042335329645971115,
+        "num_tokens": 23,
+        "oracle_entropy": 3.593991979831636,
+        "oracle_top1_mass": 0.07718979567289352,
+        "predicted_entropy": 3.7501988880274144,
+        "predicted_top1_mass": 0.06343348324298859,
+        "prompt": "A schedule shows the shuttle at 7:10 AM for 35 minutes. The finish time is",
+        "prompt_id": "oa5-pilot-reasoning_math-019",
+        "tags": [
+          "oracle_alpha",
+          "stratum_reasoning_math",
+          "subcategory_schedule_reasoning"
+        ],
+        "target_mse": 0.5613740086555481
+      },
+      {
+        "mean_js_divergence": 0.0693313538314414,
+        "num_tokens": 14,
+        "oracle_entropy": 3.450936067244914,
+        "oracle_top1_mass": 0.07803187519311905,
+        "predicted_entropy": 3.7477912707680208,
+        "predicted_top1_mass": 0.07127085328102112,
+        "prompt": "tar -czf reports-archive.tar.gz reports/",
+        "prompt_id": "oa5-pilot-code_procedural-039",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.805700421333313
+      },
+      {
+        "mean_js_divergence": 0.04518986715309535,
+        "num_tokens": 12,
+        "oracle_entropy": 3.542570399790069,
+        "oracle_top1_mass": 0.08238254487514496,
+        "predicted_entropy": 3.692554526746414,
+        "predicted_top1_mass": 0.05659465491771698,
+        "prompt": "find reports -name '*.csv' -print |",
+        "prompt_id": "oa5-pilot-code_procedural-037",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.5126214027404785
+      },
+      {
+        "mean_js_divergence": 0.044173178667273716,
+        "num_tokens": 5,
+        "oracle_entropy": 3.4849593190485155,
+        "oracle_top1_mass": 0.09512514621019363,
+        "predicted_entropy": 3.592084254339622,
+        "predicted_top1_mass": 0.08903549611568451,
+        "prompt": "systemctl status redis |",
+        "prompt_id": "oa5-pilot-code_procedural-048",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.4325590431690216
+      },
+      {
+        "mean_js_divergence": 0.04735391126421615,
+        "num_tokens": 12,
+        "oracle_entropy": 3.5212461354293443,
+        "oracle_top1_mass": 0.08422640711069107,
+        "predicted_entropy": 3.62748331988243,
+        "predicted_top1_mass": 0.06796417385339737,
+        "prompt": "find logs -name '*.log' -print |",
+        "prompt_id": "oa5-pilot-code_procedural-033",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_shell_snippet"
+        ],
+        "target_mse": 0.4881914258003235
+      },
+      {
+        "mean_js_divergence": 0.056624605626950125,
+        "num_tokens": 12,
+        "oracle_entropy": 3.63315639923339,
+        "oracle_top1_mass": 0.07583688944578171,
+        "predicted_entropy": 3.7374480759290454,
+        "predicted_top1_mass": 0.06028127297759056,
+        "prompt": "SELECT region, COUNT(*)\nFROM shipments\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-025",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.48794662952423096
+      },
+      {
+        "mean_js_divergence": 0.048229132570342136,
+        "num_tokens": 18,
+        "oracle_entropy": 3.507182138740836,
+        "oracle_top1_mass": 0.08153009414672852,
+        "predicted_entropy": 3.7658583340339327,
+        "predicted_top1_mass": 0.04613567516207695,
+        "prompt": "SELECT agent_id, MAX(resolution_minutes)\nFROM tickets\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-023",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.38854020833969116
+      },
+      {
+        "mean_js_divergence": 0.042806535798862975,
+        "num_tokens": 16,
+        "oracle_entropy": 3.64334530135598,
+        "oracle_top1_mass": 0.08916296064853668,
+        "predicted_entropy": 3.7674105997041503,
+        "predicted_top1_mass": 0.062388889491558075,
+        "prompt": "SELECT region, AVG(delivery_days)\nFROM shipments\nGROUP BY",
+        "prompt_id": "oa5-pilot-code_procedural-026",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.3252337574958801
+      },
+      {
+        "mean_js_divergence": 0.05536791527459027,
+        "num_tokens": 16,
+        "oracle_entropy": 3.67555774102579,
+        "oracle_top1_mass": 0.06087121739983559,
+        "predicted_entropy": 3.784208319713625,
+        "predicted_top1_mass": 0.05440404638648033,
+        "prompt": "SELECT user_id\nFROM sessions\nORDER BY started_at DESC,",
+        "prompt_id": "oa5-pilot-code_procedural-032",
+        "tags": [
+          "oracle_alpha",
+          "stratum_code_procedural",
+          "subcategory_sql_snippet"
+        ],
+        "target_mse": 0.600895345211029
+      },
+      {
+        "mean_js_divergence": 0.06992499001221728,
+        "num_tokens": 13,
+        "oracle_entropy": 3.535680361196304,
+        "oracle_top1_mass": 0.06501734256744385,
+        "predicted_entropy": 3.6478020973951772,
+        "predicted_top1_mass": 0.08806703984737396,
+        "prompt": "Near the cafe window, a cyclist set a helmet beside the",
+        "prompt_id": "oa5-pilot-general_text-013",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.634881317615509
+      },
+      {
+        "mean_js_divergence": 0.06692782100842548,
+        "num_tokens": 15,
+        "oracle_entropy": 3.608232782851985,
+        "oracle_top1_mass": 0.06744108349084854,
+        "predicted_entropy": 3.724224050763959,
+        "predicted_top1_mass": 0.07856560498476028,
+        "prompt": "At the brick path, a gardener reached for a watering can under the",
+        "prompt_id": "oa5-pilot-general_text-007",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.6742635369300842
+      },
+      {
+        "mean_js_divergence": 0.07068286657180767,
+        "num_tokens": 13,
+        "oracle_entropy": 3.5497759919038874,
+        "oracle_top1_mass": 0.09548633545637131,
+        "predicted_entropy": 3.606103147962054,
+        "predicted_top1_mass": 0.10795313864946365,
+        "prompt": "A librarian passed the reading room carrying a book cart toward the",
+        "prompt_id": "oa5-pilot-general_text-012",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 0.5827736258506775
+      },
+      {
+        "mean_js_divergence": 0.12061735764855906,
+        "num_tokens": 15,
+        "oracle_entropy": 3.4444593382004105,
+        "oracle_top1_mass": 0.07765048742294312,
+        "predicted_entropy": 3.6975545163263,
+        "predicted_top1_mass": 0.07047650218009949,
+        "prompt": "At the reading room, a librarian reached for a book cart under the",
+        "prompt_id": "oa5-pilot-general_text-011",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_street_scene"
+        ],
+        "target_mse": 1.1899354457855225
+      },
+      {
+        "mean_js_divergence": 0.04801528734589215,
+        "num_tokens": 17,
+        "oracle_entropy": 3.4277351801986025,
+        "oracle_top1_mass": 0.08481435477733612,
+        "predicted_entropy": 3.6478921198883842,
+        "predicted_top1_mass": 0.07307622581720352,
+        "prompt": "At the storage room, an archivist reached for a box of files near the",
+        "prompt_id": "oa5-pilot-general_text-026",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.5349708199501038
+      },
+      {
+        "mean_js_divergence": 0.05520197446374135,
+        "num_tokens": 13,
+        "oracle_entropy": 3.5198615833450777,
+        "oracle_top1_mass": 0.09440585225820541,
+        "predicted_entropy": 3.7197473818340034,
+        "predicted_top1_mass": 0.07089267671108246,
+        "prompt": "At the drafting table, an engineer set a blueprint beside the",
+        "prompt_id": "oa5-pilot-general_text-021",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.591088593006134
+      },
+      {
+        "mean_js_divergence": 0.052775252745638414,
+        "num_tokens": 14,
+        "oracle_entropy": 3.5836368225566946,
+        "oracle_top1_mass": 0.10065905004739761,
+        "predicted_entropy": 3.7626877126362794,
+        "predicted_top1_mass": 0.08034638315439224,
+        "prompt": "At the ward station, a nurse reached for a clipboard near the",
+        "prompt_id": "oa5-pilot-general_text-018",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.49336567521095276
+      },
+      {
+        "mean_js_divergence": 0.091251767361305,
+        "num_tokens": 13,
+        "oracle_entropy": 3.4664172181649304,
+        "oracle_top1_mass": 0.08590318262577057,
+        "predicted_entropy": 3.645957147713042,
+        "predicted_top1_mass": 0.08678311854600906,
+        "prompt": "The engineer checked a blueprint before crossing the drafting table toward the",
+        "prompt_id": "oa5-pilot-general_text-023",
+        "tags": [
+          "oracle_alpha",
+          "stratum_general_text",
+          "subcategory_workplace_scene"
+        ],
+        "target_mse": 0.9516189098358154
+      }
+    ],
+    "split": "pilot",
+    "supervision_objective": "sequence_target_mse",
+    "supervision_summary": {
+      "attribute_correlations": [
+        {
+          "attribute_name": "num_tokens",
+          "pearson_r": 0.01685434934235896
+        },
+        {
+          "attribute_name": "oracle_entropy",
+          "pearson_r": -0.12367998038116579
+        },
+        {
+          "attribute_name": "oracle_top1_mass",
+          "pearson_r": 0.1653595426761329
+        }
+      ],
+      "prompt_count": 64,
+      "rationale": "Held-out error varies materially across prompt strata on the frozen baseline, so supervision granularity is a cleaner next hypothesis than another width or family tweak.",
+      "recommended_next_step": "richer_token_or_span_supervision",
+      "stratum_mean_js_range": 0.0345436439847772,
+      "stratum_summaries": [
+        {
+          "group_key": "stratum_code_procedural",
+          "mean_js_divergence": 0.06272481873744838,
+          "mean_num_tokens": 16.6875,
+          "mean_oracle_entropy": 3.5516219178304604,
+          "mean_oracle_top1_mass": 0.08057089312933385,
+          "mean_target_mse": 0.6215178295969963,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_factual_recall",
+          "mean_js_divergence": 0.04087877612004684,
+          "mean_num_tokens": 10.0625,
+          "mean_oracle_entropy": 3.470471167014272,
+          "mean_oracle_top1_mass": 0.08218477619811893,
+          "mean_target_mse": 0.40216895984485745,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_general_text",
+          "mean_js_divergence": 0.07542242010482404,
+          "mean_num_tokens": 13.125,
+          "mean_oracle_entropy": 3.5079711849865314,
+          "mean_oracle_top1_mass": 0.0855401405133307,
+          "mean_target_mse": 0.7396471295505762,
+          "prompt_count": 16
+        },
+        {
+          "group_key": "stratum_reasoning_math",
+          "mean_js_divergence": 0.05761116585347039,
+          "mean_num_tokens": 22.4375,
+          "mean_oracle_entropy": 3.5241256953450337,
+          "mean_oracle_top1_mass": 0.08400671184062958,
+          "mean_target_mse": 0.5598326753824949,
+          "prompt_count": 16
+        }
+      ],
+      "strongest_attribute_abs_correlation": 0.1653595426761329,
+      "strongest_attribute_name": "oracle_top1_mass",
+      "worst_stratum_tag": "stratum_general_text"
+    },
+    "train_prompt_count": 192,
+    "train_prompt_ids": [
+      "oa5-pilot-reasoning_math-010",
+      "oa5-pilot-reasoning_math-005",
+      "oa5-pilot-reasoning_math-007",
+      "oa5-pilot-reasoning_math-003",
+      "oa5-pilot-reasoning_math-004",
+      "oa5-pilot-reasoning_math-016",
+      "oa5-pilot-reasoning_math-012",
+      "oa5-pilot-reasoning_math-008",
+      "oa5-pilot-reasoning_math-013",
+      "oa5-pilot-reasoning_math-009",
+      "oa5-pilot-reasoning_math-014",
+      "oa5-pilot-reasoning_math-015",
+      "oa5-pilot-factual_recall-021",
+      "oa5-pilot-factual_recall-029",
+      "oa5-pilot-factual_recall-022",
+      "oa5-pilot-factual_recall-024",
+      "oa5-pilot-factual_recall-023",
+      "oa5-pilot-factual_recall-017",
+      "oa5-pilot-factual_recall-027",
+      "oa5-pilot-factual_recall-028",
+      "oa5-pilot-factual_recall-025",
+      "oa5-pilot-factual_recall-018",
+      "oa5-pilot-factual_recall-019",
+      "oa5-pilot-factual_recall-026",
+      "oa5-pilot-factual_recall-002",
+      "oa5-pilot-factual_recall-005",
+      "oa5-pilot-factual_recall-012",
+      "oa5-pilot-factual_recall-006",
+      "oa5-pilot-factual_recall-008",
+      "oa5-pilot-factual_recall-014",
+      "oa5-pilot-factual_recall-010",
+      "oa5-pilot-factual_recall-013",
+      "oa5-pilot-factual_recall-004",
+      "oa5-pilot-factual_recall-015",
+      "oa5-pilot-factual_recall-001",
+      "oa5-pilot-factual_recall-003",
+      "oa5-pilot-general_text-057",
+      "oa5-pilot-general_text-051",
+      "oa5-pilot-general_text-054",
+      "oa5-pilot-general_text-061",
+      "oa5-pilot-general_text-055",
+      "oa5-pilot-general_text-053",
+      "oa5-pilot-general_text-062",
+      "oa5-pilot-general_text-056",
+      "oa5-pilot-general_text-050",
+      "oa5-pilot-general_text-059",
+      "oa5-pilot-general_text-049",
+      "oa5-pilot-general_text-064",
+      "oa5-pilot-factual_recall-038",
+      "oa5-pilot-factual_recall-040",
+      "oa5-pilot-factual_recall-048",
+      "oa5-pilot-factual_recall-043",
+      "oa5-pilot-factual_recall-037",
+      "oa5-pilot-factual_recall-044",
+      "oa5-pilot-factual_recall-039",
+      "oa5-pilot-factual_recall-047",
+      "oa5-pilot-factual_recall-045",
+      "oa5-pilot-factual_recall-042",
+      "oa5-pilot-factual_recall-034",
+      "oa5-pilot-factual_recall-033",
+      "oa5-pilot-reasoning_math-062",
+      "oa5-pilot-reasoning_math-049",
+      "oa5-pilot-reasoning_math-051",
+      "oa5-pilot-reasoning_math-053",
+      "oa5-pilot-reasoning_math-052",
+      "oa5-pilot-reasoning_math-058",
+      "oa5-pilot-reasoning_math-050",
+      "oa5-pilot-reasoning_math-061",
+      "oa5-pilot-reasoning_math-063",
+      "oa5-pilot-reasoning_math-060",
+      "oa5-pilot-reasoning_math-055",
+      "oa5-pilot-reasoning_math-064",
+      "oa5-pilot-factual_recall-053",
+      "oa5-pilot-factual_recall-054",
+      "oa5-pilot-factual_recall-061",
+      "oa5-pilot-factual_recall-057",
+      "oa5-pilot-factual_recall-056",
+      "oa5-pilot-factual_recall-059",
+      "oa5-pilot-factual_recall-049",
+      "oa5-pilot-factual_recall-050",
+      "oa5-pilot-factual_recall-060",
+      "oa5-pilot-factual_recall-064",
+      "oa5-pilot-factual_recall-051",
+      "oa5-pilot-factual_recall-052",
+      "oa5-pilot-general_text-042",
+      "oa5-pilot-general_text-048",
+      "oa5-pilot-general_text-035",
+      "oa5-pilot-general_text-033",
+      "oa5-pilot-general_text-036",
+      "oa5-pilot-general_text-046",
+      "oa5-pilot-general_text-045",
+      "oa5-pilot-general_text-034",
+      "oa5-pilot-general_text-047",
+      "oa5-pilot-general_text-043",
+      "oa5-pilot-general_text-039",
+      "oa5-pilot-general_text-037",
+      "oa5-pilot-reasoning_math-044",
+      "oa5-pilot-reasoning_math-041",
+      "oa5-pilot-reasoning_math-040",
+      "oa5-pilot-reasoning_math-036",
+      "oa5-pilot-reasoning_math-035",
+      "oa5-pilot-reasoning_math-033",
+      "oa5-pilot-reasoning_math-034",
+      "oa5-pilot-reasoning_math-047",
+      "oa5-pilot-reasoning_math-043",
+      "oa5-pilot-reasoning_math-042",
+      "oa5-pilot-reasoning_math-046",
+      "oa5-pilot-reasoning_math-045",
+      "oa5-pilot-code_procedural-060",
+      "oa5-pilot-code_procedural-053",
+      "oa5-pilot-code_procedural-064",
+      "oa5-pilot-code_procedural-054",
+      "oa5-pilot-code_procedural-049",
+      "oa5-pilot-code_procedural-061",
+      "oa5-pilot-code_procedural-059",
+      "oa5-pilot-code_procedural-058",
+      "oa5-pilot-code_procedural-052",
+      "oa5-pilot-code_procedural-063",
+      "oa5-pilot-code_procedural-050",
+      "oa5-pilot-code_procedural-051",
+      "oa5-pilot-code_procedural-015",
+      "oa5-pilot-code_procedural-002",
+      "oa5-pilot-code_procedural-006",
+      "oa5-pilot-code_procedural-009",
+      "oa5-pilot-code_procedural-004",
+      "oa5-pilot-code_procedural-016",
+      "oa5-pilot-code_procedural-013",
+      "oa5-pilot-code_procedural-011",
+      "oa5-pilot-code_procedural-003",
+      "oa5-pilot-code_procedural-007",
+      "oa5-pilot-code_procedural-014",
+      "oa5-pilot-code_procedural-005",
+      "oa5-pilot-reasoning_math-020",
+      "oa5-pilot-reasoning_math-022",
+      "oa5-pilot-reasoning_math-031",
+      "oa5-pilot-reasoning_math-021",
+      "oa5-pilot-reasoning_math-028",
+      "oa5-pilot-reasoning_math-027",
+      "oa5-pilot-reasoning_math-030",
+      "oa5-pilot-reasoning_math-017",
+      "oa5-pilot-reasoning_math-023",
+      "oa5-pilot-reasoning_math-018",
+      "oa5-pilot-reasoning_math-026",
+      "oa5-pilot-reasoning_math-032",
+      "oa5-pilot-code_procedural-038",
+      "oa5-pilot-code_procedural-047",
+      "oa5-pilot-code_procedural-043",
+      "oa5-pilot-code_procedural-045",
+      "oa5-pilot-code_procedural-040",
+      "oa5-pilot-code_procedural-036",
+      "oa5-pilot-code_procedural-046",
+      "oa5-pilot-code_procedural-034",
+      "oa5-pilot-code_procedural-044",
+      "oa5-pilot-code_procedural-035",
+      "oa5-pilot-code_procedural-041",
+      "oa5-pilot-code_procedural-042",
+      "oa5-pilot-code_procedural-018",
+      "oa5-pilot-code_procedural-031",
+      "oa5-pilot-code_procedural-028",
+      "oa5-pilot-code_procedural-027",
+      "oa5-pilot-code_procedural-022",
+      "oa5-pilot-code_procedural-021",
+      "oa5-pilot-code_procedural-019",
+      "oa5-pilot-code_procedural-029",
+      "oa5-pilot-code_procedural-017",
+      "oa5-pilot-code_procedural-020",
+      "oa5-pilot-code_procedural-024",
+      "oa5-pilot-code_procedural-030",
+      "oa5-pilot-general_text-003",
+      "oa5-pilot-general_text-009",
+      "oa5-pilot-general_text-004",
+      "oa5-pilot-general_text-016",
+      "oa5-pilot-general_text-010",
+      "oa5-pilot-general_text-014",
+      "oa5-pilot-general_text-005",
+      "oa5-pilot-general_text-006",
+      "oa5-pilot-general_text-008",
+      "oa5-pilot-general_text-001",
+      "oa5-pilot-general_text-015",
+      "oa5-pilot-general_text-002",
+      "oa5-pilot-general_text-020",
+      "oa5-pilot-general_text-031",
+      "oa5-pilot-general_text-027",
+      "oa5-pilot-general_text-030",
+      "oa5-pilot-general_text-029",
+      "oa5-pilot-general_text-032",
+      "oa5-pilot-general_text-017",
+      "oa5-pilot-general_text-028",
+      "oa5-pilot-general_text-022",
+      "oa5-pilot-general_text-025",
+      "oa5-pilot-general_text-024",
+      "oa5-pilot-general_text-019"
+    ]
+  }
+}

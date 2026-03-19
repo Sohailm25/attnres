@@ -1618,3 +1618,26 @@
   - `resattn-but` can close once the artifact lands.
   - `resattn-tqn` is now the next main Phase 6 issue.
   - future router work on this saved pilot export should change supervision granularity before changing width or family again.
+
+## [2026-03-18T22:09:39-0500] DECISION: Close `resattn-tqn` as a real positive result for denser all-token supervision and reopen the family question only under that improved objective
+
+- Trigger: `resattn-tqn` compared richer token/span supervision objectives on the frozen Gemma pilot baseline while reusing the saved family-summary split unchanged.
+- Decision: close `resattn-tqn` as a positive Phase 6 result. Move the saved pilot baseline from `sequence_target_mse` to `all_tokens_target_mse`. Do not treat `last_third_tokens_target_mse` as promising. Do not jump straight to a new export yet. The next honest bounded follow-up is to re-test the linear-versus-MLP family comparison under the improved all-token supervision objective.
+- Rationale:
+  - the retained sequence-level row matched the saved family artifact exactly on the same split:
+    - `sequence_target_mse`: `R^2 = 0.3445`, mean JS `= 0.0853`
+  - denser all-token supervision materially improved held-out fit:
+    - `all_tokens_target_mse`: `R^2 = 0.4076`, mean JS `= 0.0797`
+    - `R^2` delta `= +0.0630`
+    - mean JS delta `= -0.0057`
+  - end-concentrated span supervision failed:
+    - `last_third_tokens_target_mse`: `R^2 = 0.2140`, mean JS `= 0.1103`
+  - the stratum audits make the qualitative read cleaner:
+    - `all_tokens_target_mse` improved every stratum modestly
+    - `last_third_tokens_target_mse` hurt every stratum and especially factual recall
+  - so the gain is better explained by denser token coverage than by a last-span story
+  - the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the comparison is stable enough to use as a new pilot baseline
+- Impact:
+  - `resattn-tqn` can close once the artifact lands.
+  - `resattn-d36` is now the next main Phase 6 issue.
+  - future architecture comparisons on this saved export should use `all_tokens_target_mse` rather than the old sequence-level supervision objective.
