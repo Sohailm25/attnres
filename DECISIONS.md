@@ -1481,3 +1481,23 @@
   - `resattn-chz` can close once the synthesis artifact lands.
   - `resattn-i6i` is now the next scientific follow-up.
   - `resattn-914` remains the next implementation follow-up.
+
+## [2026-03-18T20:02:29-0500] DECISION: Close `resattn-i6i` by quantifying the factual route modes as family-plus-frame-conditioned
+
+- Trigger: `resattn-i6i` re-used the saved `registry_v5` Gemma oracle artifact, the factual cluster profile, and the narrowed `v5` factual bridge to replace the earlier qualitative frame read with explicit mode-by-frame counts.
+- Decision: close `resattn-i6i` as a positive saved-artifact audit. The strongest current factual-structure claim should now be family-plus-prompt-frame-conditioned route modes, not family-only structure. Do not reopen another broad oracle rerun or another general frame audit from this result.
+- Rationale:
+  - capitals and elements are deterministic frame-group splits on the locked factual confirm set:
+    - capitals: all `64 / 64` prompts fall into `{direct_capital, travel_guide}`, `{map_surface}`, or `{quiz_surface}`, and each mode spans all `16` countries
+    - elements: all `64 / 64` prompts fall into `{chemistry_notes, lab_chart}`, `{direct_symbol}`, or `{periodic_table}`, and each mode spans all `16` elements
+  - authors are still overwhelmingly frame-dominated:
+    - covered-mode frame-majority share `= 61 / 63 = 0.9683`
+    - all `16` `literature_students` prompts, all `16` `library_catalog` prompts, and all `16` `direct_author` prompts each stay together in their own modes
+    - the only residual split is within `novel_title`: `13 / 16` prompts in `cluster 11`, `2 / 16` (`Moby-Dick`, `Frankenstein`) in the direct-author cluster, and `1 / 16` (`Things Fall Apart`) as the singleton outlier
+  - this sharpens the bounded bridge interpretation:
+    - the narrowed `v5` tool-breakage bridge now reads as family-plus-frame-conditioned for the covered capital, element, and non-outlier author modes
+    - the remaining uncertainty is the small residual author-title split, not whether the bridge still misses the main frame groups
+- Impact:
+  - `resattn-i6i` can close once the artifact lands.
+  - `resattn-914` becomes the main active next step.
+  - if another saved-artifact scientific follow-up is needed later, it should target the residual author `novel_title` split rather than reopen the broader frame-versus-family question.

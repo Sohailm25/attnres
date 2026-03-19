@@ -445,6 +445,18 @@
     - interpretation:
       - the strongest current interpretability discovery is now primary-model effective depth mixture plus factual family-and-frame-conditioned route modes
       - the next scientific follow-up should tighten the frame-versus-content boundary on saved artifacts rather than launch another broad oracle rerun
+  - `resattn-i6i` now quantifies that prompt-frame boundary directly on the saved factual route modes:
+    - `results/block_structure/20260318-gemma2-factual-route-mode-frame-audit-v1.md` is the saved-artifact follow-up over the same locked factual confirm split
+    - the capital and element families are deterministic frame-group splits rather than content shards:
+      - capitals: all `64 / 64` prompts fall into `{direct_capital, travel_guide}`, `{map_surface}`, or `{quiz_surface}`, and every mode spans all `16` countries
+      - elements: all `64 / 64` prompts fall into `{chemistry_notes, lab_chart}`, `{direct_symbol}`, or `{periodic_table}`, and every mode spans all `16` elements
+    - the author family is still frame-dominated rather than content-dominated:
+      - covered-mode frame-majority share `= 61 / 63 = 0.9683`
+      - `literature_students`, `library_catalog`, and `direct_author` each form their own mode
+      - the only residual split is inside `novel_title`, with `13 / 16` prompts in `cluster 11`, `2 / 16` (`Moby-Dick`, `Frankenstein`) spilling into the direct-author mode, and `1 / 16` (`Things Fall Apart`) staying as the singleton outlier `cluster 10`
+    - interpretation:
+      - the strongest current factual claim is now family-plus-prompt-frame-conditioned route modes with limited residual within-frame author structure
+      - the bounded factual tool-breakage bridge should now be read as family-plus-frame-conditioned for the covered capital, element, and non-outlier author families, not as a content-only bridge
   - `resattn-oi7` now audits that remaining donor-geometry question directly on the saved `v5` donor-arm artifact:
     - `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` is the new saved-artifact audit
     - the partial collapse between `prompt_permuted_alpha` and `within_family_permuted_alpha` is mostly structural:
@@ -1170,8 +1182,9 @@
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
-   - the main scientific next step is `resattn-i6i`: audit prompt-frame conditioning inside the saved factual route modes so the strongest current claim can distinguish semantic-family structure from family-plus-frame structure
-   - the main implementation next step is `resattn-914`: compare sequence aggregation rules on the same saved pilot router-distillation export with `oracle_alpha_logit_vector` frozen
+   - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
+   - the main active next step is `resattn-914`: compare sequence aggregation rules on the same saved pilot router-distillation export with `oracle_alpha_logit_vector` frozen
+   - if another saved-artifact scientific sidecar is needed later, narrow it to `resattn-0kc`, the residual author `novel_title` split, rather than reopening the general frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
