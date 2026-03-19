@@ -2283,3 +2283,43 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: the first cluster-profile attempt exposed a real singleton-cluster bug in `summarize_source_type_mass()`; fixed in `validation/pattern_analysis.py` with coverage in `tests/test_pattern_analysis.py`
 - Next step: close `resattn-v7h`, keep factual recall as the main structured bridge lane, and take `resattn-b4h` next.
+
+## [2026-03-19T08:47:00-0500] PRE-RUN: resattn-b4h exact-teacher diagnosis probe
+- tmux session: `N/A`
+- Script: ad hoc `.venv/bin/python` probe using `validation/router_distillation.py`
+- Command: `.venv/bin/python - <<'PY' ... build_exact_tokenwise_oracle_teacher_lookup(...) ... summarize prompt-level variance/alignment metrics ... PY`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `subset summary=20260319-gemma2-router-distillation-exact-teacher-subset-v1/summary.json`, `subset=32 train / 16 eval`, `exact_teacher_steps=30`, `exact_teacher_lr=0.1`, `device=mps`, `seed=11`
+- What I'm testing: whether the saved exact-teacher failure looks more like high within-prompt tokenwise variance or more like misalignment between aggregated tokenwise teachers and the sequence-level oracle alpha we score.
+- Expected outcome: enough empirical shape to choose the right compact diagnostics and avoid writing the wrong summary script.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `N/A`
+- Resume command: rerun the exact ad hoc command
+- Main confound to watch: this probe is for metric design only; it must not be treated as a separate claim-bearing artifact.
+- Implementation verified: YES - the exact teacher path already completed cleanly in `resattn-7xo`; this probe only reuses it with prompt-level summaries.
+- Status: LAUNCHING
+
+## [2026-03-19T09:05:00-0500] PRE-RUN: resattn-b4h exact-teacher mismatch audit v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_exact_teacher_mismatch_audit.py`
+- Command: `mkdir -p results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_exact_teacher_mismatch_audit.py --output-dir results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1 --device mps > results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `exact_subset_summary=20260319-gemma2-router-distillation-exact-teacher-subset-v1/summary.json`, `subset=32 train / 16 eval`, `exact_teacher_steps=30`, `exact_teacher_lr=0.1`, `target=oracle_alpha_logit_vector`, `device=mps`
+- What I'm testing: whether the saved exact-teacher failure is better explained by within-prompt teacher variance, sequence aggregation mismatch, or a mixed mechanism on the same bounded prompt slice.
+- Expected outcome: a compact saved artifact with prompt diagnostics, a dominant failure mechanism, and an explicit recommendation about whether any more tokenwise-teacher work is justified.
+- Expected duration: ~8-15 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the script rebuilds exact teachers from the frozen subset summary; the read should stay on teacher/object mismatch, not on retraining variance.
+- Implementation verified: YES - focused unit tests for the diagnosis helper now pass, and the one-off probe already showed the metric surface is informative on the same saved subset.
+- Status: LAUNCHING
+
+## [2026-03-19T09:27:54-0500] POST-RUN: resattn-b4h exact-teacher mismatch audit v1
+- Outcome: SUCCESS
+- Key metric: dominant failure mechanism `= within_prompt_teacher_variance`; mean within-prompt JS to prompt-mean exact teacher `= 0.1292`, mean prompt-mean-teacher JS to sequence oracle `= 0.0832`, and mean last-position-teacher JS to sequence oracle `= 0.1910`.
+- Artifacts saved: `results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1/summary.json`, `results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`58819a5bf2eb7b34a3d90fe8959fbbc2bf91e3a4`).
+- Next step: close `resattn-b4h`, unblock `resattn-y4m`, and move Phase 6 to the embedding-isolated block-compressed target comparison.

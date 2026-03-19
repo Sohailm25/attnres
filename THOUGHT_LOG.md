@@ -2256,3 +2256,29 @@ Suggested entry format:
   - Their block design isolates embedding and compresses the rest into a small number of blocks rather than dropping history outright.
 - Sidecar research:
   - This is one of the cleaner external arguments for testing compressed Phase 6 teacher targets before any more open-ended architecture search.
+
+## [2026-03-19T09:27:54-0500] The Exact-Teacher Story Finally Collapsed The Right Way
+- Stage: analysis / diagnosis
+- Feel of the Result: This is the clean negative I wanted. The wrong easy story would have been “maybe we just aggregate tokenwise teachers badly.” The audit makes that much harder to believe. Mean aggregation is already the less-bad sequence summary; the deeper problem is that the tokenwise teachers fight each other within prompts and average into something blurrier than the sequence oracle.
+- Working Hypotheses:
+  - The current Phase 6 failure is dominated by contradictory within-prompt tokenwise supervision, not by the current sequence aggregation rule.
+  - The next useful target-design move is coarser compression that preserves competition, not more exact teacher fidelity.
+- Hunches and Guesses:
+  - The exact-tokenwise objective is probably too local relative to the sequence-level routing object we actually care about.
+  - Embedding-isolated block compression is now the cleanest next comparison because it moves toward a coarser object without abandoning the competitive routing geometry.
+- Predictions:
+  - `resattn-b4h` should close cleanly.
+  - `resattn-y4m` is now the right next Phase 6 step.
+- Surprises and Tensions:
+  - The last-position exact teacher is much worse than the prompt-mean exact teacher, which is stronger evidence against a simple aggregation bug than I expected.
+  - The entropy gap is large enough that even the averaged exact teachers feel like the wrong object, not just a noisy one.
+- Confidence:
+  - high that exact-tokenwise teacher work should stay frozen on this pilot surface
+  - medium-high that a coarser compressed target is the right next design branch
+- Interesting facts:
+  - mean within-prompt JS to the prompt-mean exact teacher: `0.1292`
+  - mean prompt-mean exact-teacher JS to sequence oracle: `0.0832`
+  - mean last-position exact-teacher JS to sequence oracle: `0.1910`
+  - mean exact-teacher entropy minus oracle entropy: `+0.3727`
+- Sidecar research:
+  - This is the strongest internal argument yet for compression-over-sparsity in Phase 6: not because AttnRes used blocks, but because our exact tokenwise teachers are too internally inconsistent to be the trainable object we want.

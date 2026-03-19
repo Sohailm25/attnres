@@ -17,7 +17,9 @@ class RouterDistillationTests(unittest.TestCase):
         from validation.router_distillation import (
             RouterDistillationExample,
             RouterDistillationPromptDiagnostic,
+            RouterDistillationTeacherMismatchPromptDiagnostic,
             aggregate_token_logits_to_sequence_alpha,
+            audit_exact_tokenwise_teacher_mismatch,
             audit_router_supervision_granularity,
             compare_router_aggregations,
             compare_router_capacities,
@@ -26,9 +28,11 @@ class RouterDistillationTests(unittest.TestCase):
             compare_router_supervision_objectives,
             compare_router_target_parameterizations,
             build_oracle_alpha_tokenwise_teacher_lookup,
+            compact_router_distillation_teacher_mismatch_payload,
             exact_tokenwise_oracle_alpha_logit_targets,
             load_router_distillation_pilot_dataset,
             router_supervision_loss,
+            summarize_exact_teacher_mismatch,
             summarize_router_supervision_granularity,
             stratified_router_train_eval_split,
             target_matrix_for_router_distillation,
@@ -37,8 +41,14 @@ class RouterDistillationTests(unittest.TestCase):
 
         cls.RouterDistillationExample = RouterDistillationExample
         cls.RouterDistillationPromptDiagnostic = RouterDistillationPromptDiagnostic
+        cls.RouterDistillationTeacherMismatchPromptDiagnostic = (
+            RouterDistillationTeacherMismatchPromptDiagnostic
+        )
         cls.aggregate_token_logits_to_sequence_alpha = staticmethod(
             aggregate_token_logits_to_sequence_alpha
+        )
+        cls.audit_exact_tokenwise_teacher_mismatch = staticmethod(
+            audit_exact_tokenwise_teacher_mismatch
         )
         cls.audit_router_supervision_granularity = staticmethod(
             audit_router_supervision_granularity
@@ -56,6 +66,9 @@ class RouterDistillationTests(unittest.TestCase):
         cls.build_oracle_alpha_tokenwise_teacher_lookup = staticmethod(
             build_oracle_alpha_tokenwise_teacher_lookup
         )
+        cls.compact_router_distillation_teacher_mismatch_payload = staticmethod(
+            compact_router_distillation_teacher_mismatch_payload
+        )
         cls.exact_tokenwise_oracle_alpha_logit_targets = staticmethod(
             exact_tokenwise_oracle_alpha_logit_targets
         )
@@ -63,6 +76,9 @@ class RouterDistillationTests(unittest.TestCase):
             load_router_distillation_pilot_dataset
         )
         cls.router_supervision_loss = staticmethod(router_supervision_loss)
+        cls.summarize_exact_teacher_mismatch = staticmethod(
+            summarize_exact_teacher_mismatch
+        )
         cls.summarize_router_supervision_granularity = staticmethod(
             summarize_router_supervision_granularity
         )
@@ -823,6 +839,180 @@ class RouterDistillationTests(unittest.TestCase):
 
         self.assertAlmostEqual(0.0, float(sequence_loss.item()), places=6)
         self.assertGreater(float(all_token_loss.item()), 0.0)
+
+    def test_summarize_exact_teacher_mismatch_prefers_within_prompt_variance(
+        self,
+    ) -> None:
+        diagnostics = (
+            self.RouterDistillationTeacherMismatchPromptDiagnostic(
+                prompt_id="prompt-1",
+                subset_role="train",
+                tags=("stratum_factual_recall",),
+                num_teacher_positions=8,
+                oracle_entropy=3.2,
+                repeated_target_entropy=3.2,
+                mean_teacher_entropy=3.6,
+                last_teacher_entropy=3.5,
+                within_prompt_js_to_mean_teacher=0.16,
+                within_prompt_js_to_oracle=0.22,
+                mean_teacher_js_to_oracle=0.08,
+                last_teacher_js_to_oracle=0.18,
+                mean_teacher_js_to_repeated_target=0.08,
+                top1_token_agreement_with_oracle=0.05,
+                top1_token_agreement_with_mean_teacher=0.08,
+            ),
+            self.RouterDistillationTeacherMismatchPromptDiagnostic(
+                prompt_id="prompt-2",
+                subset_role="eval",
+                tags=("stratum_reasoning_math",),
+                num_teacher_positions=9,
+                oracle_entropy=3.3,
+                repeated_target_entropy=3.3,
+                mean_teacher_entropy=3.7,
+                last_teacher_entropy=3.6,
+                within_prompt_js_to_mean_teacher=0.15,
+                within_prompt_js_to_oracle=0.20,
+                mean_teacher_js_to_oracle=0.09,
+                last_teacher_js_to_oracle=0.19,
+                mean_teacher_js_to_repeated_target=0.09,
+                top1_token_agreement_with_oracle=0.04,
+                top1_token_agreement_with_mean_teacher=0.09,
+            ),
+        )
+
+        summary = self.summarize_exact_teacher_mismatch(prompt_diagnostics=diagnostics)
+
+        self.assertEqual(
+            "within_prompt_teacher_variance",
+            summary.dominant_failure_mechanism,
+        )
+        self.assertEqual(
+            "do_not_expand_exact_tokenwise_teacher_work",
+            summary.recommended_next_step,
+        )
+        self.assertGreater(
+            summary.mean_within_prompt_js_to_mean_teacher,
+            summary.mean_mean_teacher_js_to_oracle,
+        )
+
+    def test_summarize_exact_teacher_mismatch_flags_aggregation_mismatch_when_last_beats_mean(
+        self,
+    ) -> None:
+        diagnostics = (
+            self.RouterDistillationTeacherMismatchPromptDiagnostic(
+                prompt_id="prompt-1",
+                subset_role="train",
+                tags=("stratum_factual_recall",),
+                num_teacher_positions=6,
+                oracle_entropy=3.0,
+                repeated_target_entropy=3.0,
+                mean_teacher_entropy=3.2,
+                last_teacher_entropy=3.1,
+                within_prompt_js_to_mean_teacher=0.03,
+                within_prompt_js_to_oracle=0.10,
+                mean_teacher_js_to_oracle=0.14,
+                last_teacher_js_to_oracle=0.05,
+                mean_teacher_js_to_repeated_target=0.14,
+                top1_token_agreement_with_oracle=0.60,
+                top1_token_agreement_with_mean_teacher=0.70,
+            ),
+        )
+
+        summary = self.summarize_exact_teacher_mismatch(prompt_diagnostics=diagnostics)
+
+        self.assertEqual(
+            "sequence_aggregation_mismatch",
+            summary.dominant_failure_mechanism,
+        )
+        self.assertLess(
+            summary.mean_last_teacher_js_to_oracle,
+            summary.mean_mean_teacher_js_to_oracle,
+        )
+
+    def test_audit_exact_tokenwise_teacher_mismatch_reports_variance_when_mean_teacher_matches_oracle(
+        self,
+    ) -> None:
+        source_labels = ("embed", "0_attn_out")
+        examples = (
+            self.RouterDistillationExample(
+                prompt_id="prompt-train",
+                prompt="prompt-train",
+                split="pilot",
+                target_text=None,
+                tags=("oracle_alpha", "stratum_factual_recall"),
+                perturbation_names=(),
+                token_ids=torch.tensor([1, 2, 3], dtype=torch.long),
+                h_1=torch.zeros((3, 2), dtype=torch.float32),
+                h_4=torch.zeros((3, 2), dtype=torch.float32),
+                source_labels=source_labels,
+                final_alpha=torch.tensor([0.5, 0.5], dtype=torch.float32),
+            ),
+            self.RouterDistillationExample(
+                prompt_id="prompt-eval",
+                prompt="prompt-eval",
+                split="pilot",
+                target_text=None,
+                tags=("oracle_alpha", "stratum_general_text"),
+                perturbation_names=(),
+                token_ids=torch.tensor([4, 5, 6], dtype=torch.long),
+                h_1=torch.zeros((3, 2), dtype=torch.float32),
+                h_4=torch.zeros((3, 2), dtype=torch.float32),
+                source_labels=source_labels,
+                final_alpha=torch.tensor([0.5, 0.5], dtype=torch.float32),
+            ),
+        )
+        tokenwise_teacher_lookup = {
+            "prompt-train": (
+                torch.tensor(
+                    [
+                        [2.0, -2.0],
+                        [-2.0, 2.0],
+                        [0.0, 0.0],
+                    ],
+                    dtype=torch.float32,
+                ),
+                torch.tensor([True, True, False]),
+            ),
+            "prompt-eval": (
+                torch.tensor(
+                    [
+                        [2.0, -2.0],
+                        [-2.0, 2.0],
+                        [0.0, 0.0],
+                    ],
+                    dtype=torch.float32,
+                ),
+                torch.tensor([True, True, False]),
+            ),
+        }
+
+        audit = self.audit_exact_tokenwise_teacher_mismatch(
+            examples=examples,
+            train_prompt_ids=("prompt-train",),
+            eval_prompt_ids=("prompt-eval",),
+            target_name="oracle_alpha_logit_vector",
+            tokenwise_teacher_lookup=tokenwise_teacher_lookup,
+            collection_id="oracle_alpha_phase1_v1",
+            model_name="test-model",
+        )
+
+        self.assertEqual(2, audit.mismatch_summary.prompt_count)
+        self.assertEqual(
+            "within_prompt_teacher_variance",
+            audit.mismatch_summary.dominant_failure_mechanism,
+        )
+        self.assertAlmostEqual(
+            0.0,
+            audit.prompt_diagnostics[0].mean_teacher_js_to_oracle,
+            places=6,
+        )
+        self.assertGreater(
+            audit.prompt_diagnostics[0].within_prompt_js_to_mean_teacher,
+            0.1,
+        )
+        payload = self.compact_router_distillation_teacher_mismatch_payload(audit)
+        self.assertIn("mismatch_summary", payload)
+        self.assertEqual(2, len(payload["prompt_diagnostics"]))
 
     def test_tokenwise_oracle_alpha_target_logit_contribution_targets_uses_shared_scale(
         self,
