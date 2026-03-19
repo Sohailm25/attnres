@@ -1196,13 +1196,34 @@
       - the next honest Phase 6 blocker is now model capacity or router family rather than more blind aggregation churn
     - rerun note:
       - an exact-command rerun on MPS changed the summary hash and nudged the decimals, but `mean` stayed selected, `h_4[t]` stayed best, and readiness still failed
+  - `resattn-3ak` now runs the bounded width-only capacity comparison on the same saved Gemma pilot export:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_capacity_comparison.py` now support fixed-target, fixed-aggregation capacity comparison while reusing the same saved stratified split across all candidate widths
+    - the router fitter now seeds Torch model initialization from the run seed instead of only seeding the split and batch order
+    - the held-out pilot comparison reused the same stratified `192 / 64` train/eval split across all four combinations:
+      - inputs: `h_1[t]`, `h_4[t]`
+      - target: `oracle_alpha_logit_vector`
+      - aggregation: `mean_token_logits_then_softmax`
+      - hidden widths: `256`, `512`
+    - result:
+      - `256 + h_1[t]`: `R^2 = 0.2831`, mean JS `= 0.0874`
+      - `256 + h_4[t]`: `R^2 = 0.3236`, mean JS `= 0.0837`
+      - `512 + h_1[t]`: `R^2 = 0.2692`, mean JS `= 0.0882`
+      - `512 + h_4[t]`: `R^2 = 0.3270`, mean JS `= 0.0837`
+      - selected combination moved only slightly to `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t] + hidden_dim=512`
+      - hidden width did not change the input ranking
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - width is not completely irrelevant, but width alone is not the main remaining Phase 6 blocker on this saved pilot export
+      - the real signal from this run is that the next honest lever is router family, not another blind width sweep
+    - rerun note:
+      - after the seeding fix, the exact-command rerun preserved the `summary.json` hash unchanged on MPS (`0cd7c7bee688d503d44f06b54ea9200d634c8b57`)
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the main active implementation step is now `resattn-3ak`: compare router capacity regimes on the same saved pilot export with `oracle_alpha_logit_vector` and `mean_token_logits_then_softmax` frozen
+   - the main active implementation step is now `resattn-zic`: compare router families on the same saved pilot export with `oracle_alpha_logit_vector`, `mean_token_logits_then_softmax`, and `h_4[t]` frozen
    - if another saved-artifact scientific sidecar is needed later, narrow it to `resattn-0kc`, the residual author `novel_title` split, rather than reopening the general frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

@@ -1523,3 +1523,27 @@
   - `resattn-914` can close once the artifact lands.
   - `resattn-3ak` is now the next main Phase 6 issue.
   - future router work on this saved export should keep `oracle_alpha_logit_vector` and `mean_token_logits_then_softmax` fixed until the capacity comparison lands.
+
+## [2026-03-18T20:40:28-0500] DECISION: Close `resattn-3ak` as a mixed width-only result and move the Phase 6 blocker to router family
+
+- Trigger: `resattn-3ak` compared hidden widths `256` and `512` on the saved Gemma pilot export while freezing `oracle_alpha_logit_vector`, `mean_token_logits_then_softmax`, the candidate inputs, and the held-out split.
+- Decision: close `resattn-3ak` as a real but non-rescuing capacity result. Keep `oracle_alpha_logit_vector` fixed. Keep `mean_token_logits_then_softmax` fixed. Keep `h_4[t]` as the current best baseline input. Do not launch another blind width sweep on this saved export before comparing router families.
+- Rationale:
+  - widening only helped slightly on the best path and hurt the weaker path:
+    - `256 + h_4[t]`: `R^2 = 0.3236`, mean JS `= 0.0837`
+    - `512 + h_4[t]`: `R^2 = 0.3270`, mean JS `= 0.0837`
+    - `256 + h_1[t]`: `R^2 = 0.2831`, mean JS `= 0.0874`
+    - `512 + h_1[t]`: `R^2 = 0.2692`, mean JS `= 0.0882`
+  - the selected combination changed only minimally:
+    - target `= oracle_alpha_logit_vector`
+    - aggregation `= mean_token_logits_then_softmax`
+    - input `= h_4[t]`
+    - hidden width `= 512`
+  - hidden width did not change the input ranking, so this was not a disguised `h_1[t]` versus `h_4[t]` issue either
+  - the pilot still missed the prereg readiness gate by a large margin, so width alone is not the route to confirmatory router training
+  - this run also surfaced a real implementation problem: the fitter was not seeding Torch model initialization from the run seed
+  - after fixing that bug, the exact-command rerun preserved the `summary.json` hash unchanged on MPS, so the result is stable enough to treat as real signal rather than training noise
+- Impact:
+  - `resattn-3ak` can close once the artifact lands.
+  - `resattn-zic` is now the next main Phase 6 issue.
+  - future router work on this saved export should compare router families before revisiting width again.

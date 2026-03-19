@@ -16,6 +16,7 @@ class RouterDistillationTests(unittest.TestCase):
             RouterDistillationExample,
             aggregate_token_logits_to_sequence_alpha,
             compare_router_aggregations,
+            compare_router_capacities,
             compare_router_input_sources,
             compare_router_target_parameterizations,
             load_router_distillation_pilot_dataset,
@@ -28,6 +29,7 @@ class RouterDistillationTests(unittest.TestCase):
             aggregate_token_logits_to_sequence_alpha
         )
         cls.compare_router_aggregations = staticmethod(compare_router_aggregations)
+        cls.compare_router_capacities = staticmethod(compare_router_capacities)
         cls.compare_router_input_sources = staticmethod(compare_router_input_sources)
         cls.compare_router_target_parameterizations = staticmethod(
             compare_router_target_parameterizations
@@ -389,6 +391,47 @@ class RouterDistillationTests(unittest.TestCase):
             0.8,
         )
 
+    def test_compare_router_capacities_prefers_larger_hidden_dim_when_width_is_bottleneck(
+        self,
+    ) -> None:
+        examples = [
+            self._quadrant_parity_example(
+                prompt_id=f"prompt-{index}",
+                subcategory=(
+                    "subcategory_capital_fact"
+                    if index < 8
+                    else "subcategory_author_fact"
+                    if index < 16
+                    else "subcategory_element_fact"
+                    if index < 24
+                    else "subcategory_city_fact"
+                ),
+                point_index=index,
+            )
+            for index in range(32)
+        ]
+
+        comparison = self.compare_router_capacities(
+            examples=examples,
+            candidate_input_fields=("h_1[t]",),
+            fixed_target_name="oracle_alpha_logit_vector",
+            fixed_aggregation="mean_token_logits_then_softmax",
+            candidate_hidden_dims=(1, 8),
+            eval_fraction=0.25,
+            learning_rate=0.05,
+            max_epochs=400,
+            patience=60,
+            seed=11,
+            device="cpu",
+        )
+
+        self.assertEqual(8, comparison.selected_hidden_dim)
+        summaries = {
+            summary.hidden_dim: summary for summary in comparison.input_summaries
+        }
+        self.assertLess(summaries[1].eval_summary.r_squared, 0.3)
+        self.assertGreater(summaries[8].eval_summary.r_squared, 0.8)
+
     def _synthetic_example(
         self,
         *,
@@ -419,6 +462,47 @@ class RouterDistillationTests(unittest.TestCase):
                     [0.0, 1.0],
                     [0.0, -1.0],
                     [0.0, 0.5],
+                ],
+                dtype=torch.float32,
+            ),
+            source_labels=("embed", "0_attn_out"),
+            final_alpha=final_alpha,
+        )
+
+    def _quadrant_parity_example(
+        self,
+        *,
+        prompt_id: str,
+        subcategory: str,
+        point_index: int,
+    ):
+        angle = ((point_index + 0.5) / 32.0) * (2.0 * torch.pi)
+        x_value = float(torch.cos(torch.tensor(angle)))
+        y_value = float(torch.sin(torch.tensor(angle)))
+        positive = (x_value > 0) ^ (y_value > 0)
+        final_alpha = torch.tensor(
+            [0.85, 0.15] if positive else [0.15, 0.85],
+            dtype=torch.float32,
+        )
+        return self.RouterDistillationExample(
+            prompt_id=prompt_id,
+            prompt=f"Prompt {prompt_id}",
+            split="pilot",
+            target_text=None,
+            tags=("oracle_alpha", "stratum_factual_recall", subcategory),
+            perturbation_names=("prompt_paraphrase",),
+            token_ids=torch.tensor([1, 2], dtype=torch.long),
+            h_1=torch.tensor(
+                [
+                    [x_value, y_value],
+                    [x_value, y_value],
+                ],
+                dtype=torch.float32,
+            ),
+            h_4=torch.tensor(
+                [
+                    [0.5, 0.5],
+                    [0.5, 0.5],
                 ],
                 dtype=torch.float32,
             ),

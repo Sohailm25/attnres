@@ -129,6 +129,32 @@ class RouterDistillationAggregationComparisonSummary:
         return self.input_summaries
 
 
+@dataclass(frozen=True)
+class RouterDistillationCapacityComparisonSummary:
+    collection_id: str
+    model_name: str
+    split: str
+    fixed_target_name: str
+    fixed_aggregation: str
+    candidate_hidden_dims: tuple[int, ...]
+    selection_primary_metric: str
+    selection_secondary_metric: str
+    readiness_target_r_squared: float
+    train_prompt_count: int
+    eval_prompt_count: int
+    selected_input_field: str
+    selected_hidden_dim: int
+    capacity_changed_input_ranking: bool
+    selected_meets_readiness_target: bool
+    train_prompt_ids: tuple[str, ...]
+    eval_prompt_ids: tuple[str, ...]
+    input_summaries: tuple[RouterDistillationInputSummary, ...]
+
+    @property
+    def candidate_summaries(self) -> tuple[RouterDistillationInputSummary, ...]:
+        return self.input_summaries
+
+
 class _SequenceRouterMLP(torch.nn.Module):
     def __init__(self, *, input_dim: int, hidden_dim: int, num_sources: int) -> None:
         super().__init__()
@@ -576,6 +602,7 @@ def _fit_router_for_input(
         example.prompt_id: eval_target_matrix[index]
         for index, example in enumerate(eval_examples)
     }
+    torch.manual_seed(seed)
     model = _SequenceRouterMLP(
         input_dim=int(mean.shape[0]),
         hidden_dim=hidden_dim,
@@ -992,6 +1019,134 @@ def compare_router_aggregations(
     )
 
 
+def compare_router_capacities(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    candidate_input_fields: Sequence[str],
+    fixed_target_name: str,
+    fixed_aggregation: str,
+    candidate_hidden_dims: Sequence[int],
+    eval_fraction: float,
+    learning_rate: float,
+    weight_decay: float = 1e-4,
+    batch_size: int = 16,
+    max_epochs: int = 300,
+    patience: int = 40,
+    seed: int = 11,
+    device: str = "cpu",
+    collection_id: str = "unknown",
+    model_name: str = "unknown",
+) -> RouterDistillationCapacityComparisonSummary:
+    if fixed_target_name not in ALLOWED_TARGET_NAMES:
+        raise ValueError(f"unsupported target name {fixed_target_name!r}")
+    if fixed_aggregation not in ALLOWED_AGGREGATIONS:
+        raise ValueError(f"unsupported aggregation {fixed_aggregation!r}")
+    if not candidate_input_fields:
+        raise ValueError("candidate_input_fields must not be empty")
+    if not candidate_hidden_dims:
+        raise ValueError("candidate_hidden_dims must not be empty")
+    for input_field in candidate_input_fields:
+        if input_field not in ALLOWED_INPUT_FIELDS:
+            raise ValueError(f"unsupported input field {input_field!r}")
+    for hidden_dim in candidate_hidden_dims:
+        if hidden_dim < 1:
+            raise ValueError("candidate_hidden_dims must be positive")
+
+    train_examples, eval_examples = stratified_router_train_eval_split(
+        examples,
+        eval_fraction=eval_fraction,
+        seed=seed,
+    )
+    torch_device = torch.device(device)
+
+    input_summaries: list[RouterDistillationInputSummary] = []
+    selected_summary: RouterDistillationInputSummary | None = None
+    best_input_by_hidden_dim: dict[int, str] = {}
+    for hidden_dim in candidate_hidden_dims:
+        best_for_hidden_dim: RouterDistillationInputSummary | None = None
+        for input_field in candidate_input_fields:
+            summary = _fit_router_for_input(
+                train_examples=train_examples,
+                eval_examples=eval_examples,
+                input_field=input_field,
+                target_name=fixed_target_name,
+                aggregation=fixed_aggregation,
+                hidden_dim=hidden_dim,
+                learning_rate=learning_rate,
+                weight_decay=weight_decay,
+                batch_size=batch_size,
+                max_epochs=max_epochs,
+                patience=patience,
+                seed=seed,
+                device=torch_device,
+            )
+            input_summaries.append(summary)
+            if selected_summary is None:
+                selected_summary = summary
+            else:
+                primary_delta = compare_predictiveness_metric_values(
+                    metric_name="r_squared",
+                    left=summary.eval_summary.r_squared,
+                    right=selected_summary.eval_summary.r_squared,
+                )
+                if primary_delta > 1e-12:
+                    selected_summary = summary
+                elif abs(primary_delta) <= 1e-12:
+                    secondary_delta = compare_predictiveness_metric_values(
+                        metric_name="mean_js_divergence",
+                        left=summary.eval_summary.mean_js_divergence,
+                        right=selected_summary.eval_summary.mean_js_divergence,
+                    )
+                    if secondary_delta > 1e-12:
+                        selected_summary = summary
+
+            if best_for_hidden_dim is None:
+                best_for_hidden_dim = summary
+                continue
+            primary_delta = compare_predictiveness_metric_values(
+                metric_name="r_squared",
+                left=summary.eval_summary.r_squared,
+                right=best_for_hidden_dim.eval_summary.r_squared,
+            )
+            if primary_delta > 1e-12:
+                best_for_hidden_dim = summary
+                continue
+            if abs(primary_delta) <= 1e-12:
+                secondary_delta = compare_predictiveness_metric_values(
+                    metric_name="mean_js_divergence",
+                    left=summary.eval_summary.mean_js_divergence,
+                    right=best_for_hidden_dim.eval_summary.mean_js_divergence,
+                )
+                if secondary_delta > 1e-12:
+                    best_for_hidden_dim = summary
+        assert best_for_hidden_dim is not None
+        best_input_by_hidden_dim[int(hidden_dim)] = best_for_hidden_dim.input_field
+
+    assert selected_summary is not None
+    return RouterDistillationCapacityComparisonSummary(
+        collection_id=collection_id,
+        model_name=model_name,
+        split="pilot",
+        fixed_target_name=fixed_target_name,
+        fixed_aggregation=fixed_aggregation,
+        candidate_hidden_dims=tuple(int(value) for value in candidate_hidden_dims),
+        selection_primary_metric="r_squared",
+        selection_secondary_metric="mean_js_divergence",
+        readiness_target_r_squared=READINESS_TARGET_R_SQUARED,
+        train_prompt_count=len(train_examples),
+        eval_prompt_count=len(eval_examples),
+        selected_input_field=selected_summary.input_field,
+        selected_hidden_dim=selected_summary.hidden_dim,
+        capacity_changed_input_ranking=len(set(best_input_by_hidden_dim.values())) > 1,
+        selected_meets_readiness_target=(
+            selected_summary.eval_summary.r_squared >= READINESS_TARGET_R_SQUARED
+        ),
+        train_prompt_ids=tuple(example.prompt_id for example in train_examples),
+        eval_prompt_ids=tuple(example.prompt_id for example in eval_examples),
+        input_summaries=tuple(input_summaries),
+    )
+
+
 def run_router_distillation_pilot_comparison(
     *,
     export_dir: Path,
@@ -1059,6 +1214,35 @@ def compact_router_distillation_summary_payload(
 
 def compact_router_distillation_aggregation_summary_payload(
     summary: RouterDistillationAggregationComparisonSummary,
+) -> dict[str, object]:
+    payload = asdict(summary)
+    payload["input_summaries"] = [
+        {
+            "input_field": input_summary.input_field,
+            "target_name": input_summary.target_name,
+            "aggregation": input_summary.aggregation,
+            "hidden_dim": input_summary.hidden_dim,
+            "learning_rate": input_summary.learning_rate,
+            "weight_decay": input_summary.weight_decay,
+            "batch_size": input_summary.batch_size,
+            "max_epochs": input_summary.max_epochs,
+            "patience": input_summary.patience,
+            "best_epoch": input_summary.best_epoch,
+            "train_prompt_count": input_summary.train_prompt_count,
+            "eval_prompt_count": input_summary.eval_prompt_count,
+            "train_loss": input_summary.train_loss,
+            "eval_loss": input_summary.eval_loss,
+            "mean_predicted_entropy": input_summary.mean_predicted_entropy,
+            "mean_oracle_entropy": input_summary.mean_oracle_entropy,
+            "eval_summary": asdict(input_summary.eval_summary),
+        }
+        for input_summary in summary.input_summaries
+    ]
+    return payload
+
+
+def compact_router_distillation_capacity_summary_payload(
+    summary: RouterDistillationCapacityComparisonSummary,
 ) -> dict[str, object]:
     payload = asdict(summary)
     payload["input_summaries"] = [

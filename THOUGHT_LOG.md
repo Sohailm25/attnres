@@ -2011,3 +2011,25 @@ Suggested entry format:
 - Interesting facts:
   - best retained pilot combination: `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t]`
   - rerun-stable ordering: `mean` stayed above `last` for both inputs
+
+## [2026-03-18T20:40:28-0500] Width Was Real Signal, But Not the Rescue
+- Stage: router-distillation capacity comparison
+- Feel of the Experiment: This is the right kind of mixed result. The run moved just enough to say width is not totally irrelevant, but not enough to justify another width-by-inertia sweep. The more important win is that the seed bug is now fixed and the rerun finally stayed bit-stable.
+- Working Hypotheses:
+  - The next honest Phase 6 blocker is router family, not another width bump.
+  - `h_4[t]` is still the best tested baseline input, but the lane is not bottlenecked on input choice right now.
+- Hunches and Guesses:
+  - A linear-versus-MLP family comparison is more likely to teach something than `512` versus `768`.
+  - The tiny `h_4[t]` gain from width may just mean the current family can exploit a little more smooth capacity, not that it is the right family for the target.
+- Predictions:
+  - `resattn-zic` should be the next main Phase 6 step.
+  - If a router-family comparison also stays bounded, the next blocker will likely be target object or supervision granularity rather than another architecture scalar.
+- Surprises and Tensions:
+  - The most useful result in this pass may be operational rather than scientific: the fitter was not seeding Torch initialization, which was a real bug.
+  - After the seeding fix, the rerun staying on the exact same hash is unusually satisfying on MPS.
+- Confidence:
+  - high that `3ak` should close as a mixed width-only result
+  - medium-high that router family is now the next honest lever
+- Interesting facts:
+  - best retained pilot combination after the width sweep: `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t] + hidden_dim=512`
+  - stable rerun hash after the seeding fix: `0cd7c7bee688d503d44f06b54ea9200d634c8b57`
