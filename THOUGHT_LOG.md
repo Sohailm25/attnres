@@ -2212,3 +2212,23 @@ Suggested entry format:
   - high that Figure 8 and tool-breakage should stay frozen at their current honest boundaries
   - high that the next queue should expose both a scientific saved-artifact step and an implementation step
   - medium-high that reasoning/math is the right underexplored science follow-up
+
+## [2026-03-19T11:10:00-0500] Reasoning/Math Was More Task-Like Than Factual, But Not Cleaner
+- Stage: saved-artifact reasoning/math route-mode audit
+- Feel of the Result: This is a genuinely useful secondary result. The good surprise is that reasoning/math is more operation-dominated than the factual stratum at the top cluster level. The limiting surprise is that the within-operation splits are still heavily frame-conditioned, so this is not the clean “content-only reasoning route” story either.
+- Working Hypotheses:
+  - Factual recall should remain the main structured-interpretability center because it is both stronger and already bridgeable.
+  - Reasoning/math should be kept as the strongest supporting contrast: it shows that the primary Gemma oracle signal is not only factual-family routing, but it still does not justify a new bridge lane ahead of Phase 6.
+- Hunches and Guesses:
+  - The mixed arithmetic/sequence and arithmetic/magnitude clusters may be tracking abstract surface forms like continuation or comparison statements more than semantic subcategory labels.
+  - If reasoning/math comes back later, the honest move is to inspect those cross-operation joins directly rather than rerunning the whole oracle surface.
+- Predictions:
+  - `resattn-v7h` should close cleanly.
+  - `resattn-b4h` is again the highest-value next active step.
+- Surprises and Tensions:
+  - Weighted dominant-subcategory majority (`0.8125`) came out much higher than weighted dominant-frame majority (`0.5938`), which is more task-like than the factual surface.
+  - Arithmetic still ended up almost perfectly frame-organized (`0.9844`), which keeps me from wanting to overstate the result.
+- Confidence:
+  - high that reasoning/math is a real secondary positive
+  - high that it should not displace factual recall as the main bridge lane
+  - medium that the mixed cross-operation joins would repay a later targeted audit

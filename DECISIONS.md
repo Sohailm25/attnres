@@ -1734,3 +1734,45 @@
   - `resattn-b4h` remains the next active implementation task.
   - `resattn-v7h` is now the next active saved-artifact scientific task.
   - `CURRENT_STATE.md` and `journal/current_state.md` should make that dual ordering explicit so future sessions do not default to Phase 6 only.
+
+## [2026-03-19T10:55:00-0500] DECISION: Fix singleton-cluster source-type summaries rather than special-casing reasoning/math
+
+- Trigger: the saved-artifact reasoning/math cluster-profile run crashed inside `scripts/run_oracle_alpha_subset_cluster_profile.py` because one reasoning/math cluster was a singleton and `summarize_source_type_mass()` incorrectly required at least two distributions.
+- Decision: fix `validation/pattern_analysis.py` so `summarize_source_type_mass()` accepts a single valid distribution directly instead of adding a one-off workaround in the reasoning/math path.
+- Rationale:
+  - the failure was an infrastructure bug, not a reasoning/math-specific edge case
+  - saved-artifact cluster profiling is supposed to support any valid cluster size, including singleton outliers
+  - the smallest faithful fix is to normalize a single rank-1 alpha vector locally while keeping the existing multi-distribution validation path unchanged
+  - `tests.test_pattern_analysis` now covers the singleton case explicitly
+- Impact:
+  - the reasoning/math saved-artifact audit can run cleanly
+  - future subset-cluster profiles will not silently depend on every cluster containing at least two prompts
+
+## [2026-03-19T11:10:00-0500] DECISION: Close `resattn-v7h` by treating reasoning/math as a secondary operation-dominated result, not the main bridge lane
+
+- Trigger: the saved `registry_v5` reasoning/math audit is complete:
+  - `results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.json`
+  - `results/block_structure/20260319-gemma2-reasoning-math-route-modes-v1.json`
+  - `results/block_structure/20260319-gemma2-reasoning-math-route-mode-frame-audit-v1.json`
+  - `results/block_structure/20260319-gemma2-reasoning-math-route-mode-audit-v1.md`
+- Decision: close `resattn-v7h` as a meaningful saved-artifact result. Keep factual recall as the main structured-interpretability center and extension bridge. Do not elevate reasoning/math above factual recall. Do not launch another broad oracle run from this result.
+- Rationale:
+  - reasoning/math is real but weaker than factual recall on raw-source structure:
+    - silhouette `= 0.2456` vs random `0.1401`
+    - still well below factual recall `= 0.4709`
+  - the top-level clusters are more operation-dominated than frame-dominated:
+    - weighted dominant-subcategory majority share `= 0.8125`
+    - weighted dominant-frame majority share `= 0.5938`
+  - within each operation, frame still conditions the modes heavily:
+    - arithmetic overall frame-majority share `= 0.9844`
+    - number-sequence `= 0.7500`
+    - schedule-reasoning `= 0.6875`
+    - magnitude-comparison `= 0.6875`
+  - that combination makes reasoning/math scientifically useful as a secondary contrast:
+    - more operation-like than factual recall at the top cluster level
+    - still not disentangled from templated prompt form
+  - because factual recall remains both stronger and better connected to the bounded tool-breakage bridge, the honest project center should not move
+- Impact:
+  - `resattn-v7h` can close once the artifact lands.
+  - `resattn-b4h` becomes the sole active next implementation step again.
+  - if reasoning/math reopens later, the next honest move is a targeted audit of the mixed cross-operation clusters rather than another broad rerun.

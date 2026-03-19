@@ -1,0 +1,1515 @@
+{
+  "model_name": "gemma-2-2b",
+  "collection_id": "oracle_alpha_phase1_v1",
+  "split": "confirm",
+  "group_tag": "stratum_reasoning_math",
+  "run_path": "results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/oracle_eval_run.json",
+  "cluster_profile_path": "results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.json",
+  "num_sequences": 256,
+  "num_sources": 53,
+  "cluster_count": 12,
+  "num_families": 4,
+  "family_summaries": [
+    {
+      "family_tag": "subcategory_arithmetic_story",
+      "prompt_count": 64,
+      "mode_count": 6,
+      "mode_sizes": [
+        1,
+        1,
+        14,
+        15,
+        16,
+        17
+      ],
+      "cluster_labels": [
+        2,
+        6,
+        7,
+        8,
+        10,
+        11
+      ],
+      "mode_centroid_js": {
+        "min": 0.09573661135905,
+        "mean": 0.1589257432073662,
+        "max": 0.23398529326615808
+      },
+      "family_source_type_mass": {
+        "mean_embedding_mass": 0.011384157467918214,
+        "mean_attention_mass": 0.497986228145579,
+        "mean_mlp_mass": 0.4906296143865028
+      },
+      "family_top_mean_sources": [
+        {
+          "source_label": "12_attn_out",
+          "mean_mass": 0.04206141569011379
+        },
+        {
+          "source_label": "8_mlp_out",
+          "mean_mass": 0.04029795600217767
+        },
+        {
+          "source_label": "17_attn_out",
+          "mean_mass": 0.034269878691702615
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.034265713667991804
+        },
+        {
+          "source_label": "14_attn_out",
+          "mean_mass": 0.03126028169572237
+        }
+      ],
+      "modes": [
+        {
+          "cluster_label": 10,
+          "size": 17,
+          "family_fraction": 0.265625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.011606000910762176,
+            "mean_attention_mass": 0.5567087790065876,
+            "mean_mlp_mass": 0.4316852200826502
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.00022184344284396224,
+            "attention": 0.05872255086100853,
+            "mlp": -0.05894439430385262
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "14_attn_out",
+              "mean_mass": 0.06772479419048656
+            },
+            {
+              "source_label": "17_attn_out",
+              "mean_mass": 0.058053171919549215
+            },
+            {
+              "source_label": "12_attn_out",
+              "mean_mass": 0.050594197504003256
+            },
+            {
+              "source_label": "8_mlp_out",
+              "mean_mass": 0.046189519741079384
+            },
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.04281937309047755
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "14_attn_out",
+              "delta_mass": 0.03646451249476419
+            },
+            {
+              "source_label": "17_attn_out",
+              "delta_mass": 0.0237832932278466
+            },
+            {
+              "source_label": "10_attn_out",
+              "delta_mass": 0.021160707491670858
+            },
+            {
+              "source_label": "13_attn_out",
+              "delta_mass": 0.014652813875941584
+            },
+            {
+              "source_label": "3_attn_out",
+              "delta_mass": 0.010084472594719368
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-004",
+            "oa5-confirm-reasoning_math-005",
+            "oa5-confirm-reasoning_math-008"
+          ],
+          "example_prompts": [
+            "Noah starts with 9 notebooks. If Noah gives away 4 and gets 7 back later, the total becomes",
+            "Priya had 14 berries, gave away 2, and bought 6 more. Priya now has",
+            "Priya starts with 14 berries. If Priya gives away 2 and gets 6 back later, the total becomes"
+          ]
+        },
+        {
+          "cluster_label": 2,
+          "size": 16,
+          "family_fraction": 0.25,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.0098128124550742,
+            "mean_attention_mass": 0.4707756407441256,
+            "mean_mlp_mass": 0.5194115468008003
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.001571345012844014,
+            "attention": -0.027210587401453434,
+            "mlp": 0.02878193241429744
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "8_mlp_out",
+              "mean_mass": 0.0733802632894367
+            },
+            {
+              "source_label": "17_attn_out",
+              "mean_mass": 0.060475064907222986
+            },
+            {
+              "source_label": "6_mlp_out",
+              "mean_mass": 0.050581461226101965
+            },
+            {
+              "source_label": "12_attn_out",
+              "mean_mass": 0.047272994270315394
+            },
+            {
+              "source_label": "15_mlp_out",
+              "mean_mass": 0.04622938251122832
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "8_mlp_out",
+              "delta_mass": 0.03308230728725903
+            },
+            {
+              "source_label": "6_mlp_out",
+              "delta_mass": 0.0318687306062202
+            },
+            {
+              "source_label": "19_attn_out",
+              "delta_mass": 0.027951538209890714
+            },
+            {
+              "source_label": "17_attn_out",
+              "delta_mass": 0.02620518621552037
+            },
+            {
+              "source_label": "15_mlp_out",
+              "delta_mass": 0.022293404676020145
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-003",
+            "oa5-confirm-reasoning_math-007",
+            "oa5-confirm-reasoning_math-011"
+          ],
+          "example_prompts": [
+            "Noah counted 9 notebooks, lost 4, and added 7 later. The new total is",
+            "Priya counted 14 berries, lost 2, and added 6 later. The new total is",
+            "Owen counted 20 blocks, lost 8, and added 1 later. The new total is"
+          ]
+        },
+        {
+          "cluster_label": 6,
+          "size": 15,
+          "family_fraction": 0.234375,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.013041337249663646,
+            "mean_attention_mass": 0.5003969255780519,
+            "mean_mlp_mass": 0.48656173717228435
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.0016571797817454322,
+            "attention": 0.002410697432472908,
+            "mlp": -0.004067877214218474
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "8_attn_out",
+              "mean_mass": 0.0680456494136403
+            },
+            {
+              "source_label": "9_attn_out",
+              "mean_mass": 0.058345898737510046
+            },
+            {
+              "source_label": "11_attn_out",
+              "mean_mass": 0.04475654866546393
+            },
+            {
+              "source_label": "14_mlp_out",
+              "mean_mass": 0.043215981622536974
+            },
+            {
+              "source_label": "7_mlp_out",
+              "mean_mass": 0.04060232260574897
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "9_attn_out",
+              "delta_mass": 0.03426685173956988
+            },
+            {
+              "source_label": "8_attn_out",
+              "delta_mass": 0.0337799357456485
+            },
+            {
+              "source_label": "7_mlp_out",
+              "delta_mass": 0.018022508580300682
+            },
+            {
+              "source_label": "11_attn_out",
+              "delta_mass": 0.015770026148675245
+            },
+            {
+              "source_label": "2_mlp_out",
+              "delta_mass": 0.01568871502568072
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-002",
+            "oa5-confirm-reasoning_math-006",
+            "oa5-confirm-reasoning_math-010"
+          ],
+          "example_prompts": [
+            "After giving away 4 of the 9 notebooks and then buying 7 more, Noah has",
+            "After giving away 2 of the 14 berries and then buying 6 more, Priya has",
+            "After giving away 8 of the 20 blocks and then buying 1 more, Owen has"
+          ]
+        },
+        {
+          "cluster_label": 8,
+          "size": 14,
+          "family_fraction": 0.21875,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.010596213391096244,
+            "mean_attention_mass": 0.4547056670952553,
+            "mean_mlp_mass": 0.5346981195136485
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.0007879440768219694,
+            "attention": -0.04328056105032374,
+            "mlp": 0.04406850512714572
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "12_attn_out",
+              "mean_mass": 0.05710689309385738
+            },
+            {
+              "source_label": "5_mlp_out",
+              "mean_mass": 0.048381292926413674
+            },
+            {
+              "source_label": "8_attn_out",
+              "mean_mass": 0.045722757116891444
+            },
+            {
+              "source_label": "16_mlp_out",
+              "mean_mass": 0.041870789136737585
+            },
+            {
+              "source_label": "14_mlp_out",
+              "mean_mass": 0.03895612233983619
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "5_mlp_out",
+              "delta_mass": 0.026477740676844927
+            },
+            {
+              "source_label": "16_mlp_out",
+              "delta_mass": 0.025957848854886834
+            },
+            {
+              "source_label": "5_attn_out",
+              "delta_mass": 0.017369413940156973
+            },
+            {
+              "source_label": "12_attn_out",
+              "delta_mass": 0.015045477403743589
+            },
+            {
+              "source_label": "22_attn_out",
+              "delta_mass": 0.014844476145039413
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-001",
+            "oa5-confirm-reasoning_math-009",
+            "oa5-confirm-reasoning_math-013"
+          ],
+          "example_prompts": [
+            "Noah had 9 notebooks, gave away 4, and bought 7 more. Noah now has",
+            "Owen had 20 blocks, gave away 8, and bought 1 more. Owen now has",
+            "Clara had 16 beads, gave away 7, and bought 4 more. Clara now has"
+          ]
+        },
+        {
+          "cluster_label": 7,
+          "size": 1,
+          "family_fraction": 0.015625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.015253558837436008,
+            "mean_attention_mass": 0.5169947818942012,
+            "mean_mlp_mass": 0.4677516592683628
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.0038694013695177946,
+            "attention": 0.019008553748622203,
+            "mlp": -0.022877955118140003
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "3_mlp_out",
+              "mean_mass": 0.0785904973745346
+            },
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.0712832659482956
+            },
+            {
+              "source_label": "14_mlp_out",
+              "mean_mass": 0.06463252007961273
+            },
+            {
+              "source_label": "16_attn_out",
+              "mean_mass": 0.055720005184412
+            },
+            {
+              "source_label": "4_attn_out",
+              "mean_mass": 0.04795844480395317
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "3_mlp_out",
+              "delta_mass": 0.05653272407653276
+            },
+            {
+              "source_label": "10_attn_out",
+              "delta_mass": 0.0496246003494889
+            },
+            {
+              "source_label": "14_mlp_out",
+              "delta_mass": 0.03502412898524199
+            },
+            {
+              "source_label": "16_attn_out",
+              "delta_mass": 0.033652797144895885
+            },
+            {
+              "source_label": "4_attn_out",
+              "delta_mass": 0.02884368803643156
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-030"
+          ],
+          "example_prompts": [
+            "After giving away 9 of the 19 markers and then buying 2 more, Sara has"
+          ]
+        },
+        {
+          "cluster_label": 11,
+          "size": 1,
+          "family_fraction": 0.015625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.015058458124883411,
+            "mean_attention_mass": 0.48583110140050434,
+            "mean_mlp_mass": 0.4991104404746123
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.0036743006569651977,
+            "attention": -0.012155126745074685,
+            "mlp": 0.008480826088109461
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "8_attn_out",
+              "mean_mass": 0.10264762490987778
+            },
+            {
+              "source_label": "14_attn_out",
+              "mean_mass": 0.061531659215688705
+            },
+            {
+              "source_label": "8_mlp_out",
+              "mean_mass": 0.06148470565676689
+            },
+            {
+              "source_label": "22_attn_out",
+              "mean_mass": 0.041958052664995193
+            },
+            {
+              "source_label": "10_mlp_out",
+              "mean_mass": 0.041819795966148376
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "8_attn_out",
+              "delta_mass": 0.06838191124188597
+            },
+            {
+              "source_label": "14_attn_out",
+              "delta_mass": 0.030271377519966336
+            },
+            {
+              "source_label": "22_attn_out",
+              "delta_mass": 0.02768408230986097
+            },
+            {
+              "source_label": "10_mlp_out",
+              "delta_mass": 0.021449501065944787
+            },
+            {
+              "source_label": "8_mlp_out",
+              "delta_mass": 0.02118674965458922
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-053"
+          ],
+          "example_prompts": [
+            "Rhea had 9 candles, gave away 2, and bought 7 more. Rhea now has"
+          ]
+        }
+      ]
+    },
+    {
+      "family_tag": "subcategory_magnitude_comparison",
+      "prompt_count": 64,
+      "mode_count": 4,
+      "mode_sizes": [
+        1,
+        14,
+        15,
+        34
+      ],
+      "cluster_labels": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "mode_centroid_js": {
+        "min": 0.06433892411361716,
+        "mean": 0.10685696068808268,
+        "max": 0.15314446598141884
+      },
+      "family_source_type_mass": {
+        "mean_embedding_mass": 0.0140593687582431,
+        "mean_attention_mass": 0.5332348703192409,
+        "mean_mlp_mass": 0.452705760922516
+      },
+      "family_top_mean_sources": [
+        {
+          "source_label": "17_attn_out",
+          "mean_mass": 0.041570249493815936
+        },
+        {
+          "source_label": "13_attn_out",
+          "mean_mass": 0.0392317288533377
+        },
+        {
+          "source_label": "10_attn_out",
+          "mean_mass": 0.035463627384160645
+        },
+        {
+          "source_label": "8_attn_out",
+          "mean_mass": 0.03381604524111026
+        },
+        {
+          "source_label": "11_attn_out",
+          "mean_mass": 0.03346632808461436
+        }
+      ],
+      "modes": [
+        {
+          "cluster_label": 11,
+          "size": 34,
+          "family_fraction": 0.53125,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.01427774707446866,
+            "mean_attention_mass": 0.5443552914199206,
+            "mean_mlp_mass": 0.4413669615056108
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.00021837831622556134,
+            "attention": 0.011120421100679678,
+            "mlp": -0.011338799416905243
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "13_attn_out",
+              "mean_mass": 0.04473040217999369
+            },
+            {
+              "source_label": "17_attn_out",
+              "mean_mass": 0.0446872174849405
+            },
+            {
+              "source_label": "5_mlp_out",
+              "mean_mass": 0.04015420138945475
+            },
+            {
+              "source_label": "14_attn_out",
+              "mean_mass": 0.03947680940687218
+            },
+            {
+              "source_label": "8_attn_out",
+              "mean_mass": 0.03514085978488712
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "14_attn_out",
+              "delta_mass": 0.013097954686921133
+            },
+            {
+              "source_label": "3_attn_out",
+              "delta_mass": 0.010798831425798947
+            },
+            {
+              "source_label": "7_attn_out",
+              "delta_mass": 0.00887111247656696
+            },
+            {
+              "source_label": "5_mlp_out",
+              "delta_mass": 0.007926061974799004
+            },
+            {
+              "source_label": "13_attn_out",
+              "delta_mass": 0.0054986733266559895
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-195",
+            "oa5-confirm-reasoning_math-196",
+            "oa5-confirm-reasoning_math-199"
+          ],
+          "example_prompts": [
+            "A note lists the notebook as 120 units and the binder as 240 units. The larger item is the",
+            "If one notebook measures 120 units while one binder measures 240 units, the larger object is the",
+            "A note lists the jar as 500 units and the bucket as 5000 units. The larger item is the"
+          ]
+        },
+        {
+          "cluster_label": 9,
+          "size": 15,
+          "family_fraction": 0.234375,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.015924715631782528,
+            "mean_attention_mass": 0.5278700577995812,
+            "mean_mlp_mass": 0.45620522656863627
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.0018653468735394287,
+            "attention": -0.005364812519659701,
+            "mlp": 0.003499465646120248
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "17_attn_out",
+              "mean_mass": 0.05457775282363097
+            },
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.05022789292658369
+            },
+            {
+              "source_label": "15_attn_out",
+              "mean_mass": 0.04726946981002887
+            },
+            {
+              "source_label": "2_mlp_out",
+              "mean_mass": 0.04713667705655098
+            },
+            {
+              "source_label": "13_mlp_out",
+              "mean_mass": 0.045157276280224326
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "15_attn_out",
+              "delta_mass": 0.019071783622105917
+            },
+            {
+              "source_label": "2_mlp_out",
+              "delta_mass": 0.01686324062611675
+            },
+            {
+              "source_label": "7_mlp_out",
+              "delta_mass": 0.01684684958915265
+            },
+            {
+              "source_label": "10_attn_out",
+              "delta_mass": 0.014764265542423043
+            },
+            {
+              "source_label": "17_attn_out",
+              "delta_mass": 0.013007503329815033
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-193",
+            "oa5-confirm-reasoning_math-197",
+            "oa5-confirm-reasoning_math-201"
+          ],
+          "example_prompts": [
+            "A notebook holds 120 units and a binder holds 240 units. The larger one is the",
+            "A jar holds 500 units and a bucket holds 5000 units. The larger one is the",
+            "A bike trip holds 14 units and a train ride holds 55 units. The larger one is the"
+          ]
+        },
+        {
+          "cluster_label": 10,
+          "size": 14,
+          "family_fraction": 0.21875,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.011778239234246396,
+            "mean_attention_mass": 0.5150460596994036,
+            "mean_mlp_mass": 0.47317570106635004
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.0022811295239967035,
+            "attention": -0.018188810619837237,
+            "mlp": 0.02046994014383402
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "12_attn_out",
+              "mean_mass": 0.06155877557050969
+            },
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.053518526222822924
+            },
+            {
+              "source_label": "8_mlp_out",
+              "mean_mass": 0.05173101828300527
+            },
+            {
+              "source_label": "4_attn_out",
+              "mean_mass": 0.04007334149043475
+            },
+            {
+              "source_label": "11_attn_out",
+              "mean_mass": 0.03955577252366181
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "12_attn_out",
+              "delta_mass": 0.03579835407747721
+            },
+            {
+              "source_label": "8_mlp_out",
+              "delta_mass": 0.024754964247092302
+            },
+            {
+              "source_label": "10_attn_out",
+              "delta_mass": 0.01805489883866228
+            },
+            {
+              "source_label": "4_attn_out",
+              "delta_mass": 0.013392299094058605
+            },
+            {
+              "source_label": "20_mlp_out",
+              "delta_mass": 0.009851750257699417
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-194",
+            "oa5-confirm-reasoning_math-202",
+            "oa5-confirm-reasoning_math-206"
+          ],
+          "example_prompts": [
+            "Between the notebook at 120 units and the binder at 240 units, the bigger option is the",
+            "Between the bike trip at 14 units and the train ride at 55 units, the bigger option is the",
+            "Between the hallway at 12 units and the gym at 28 units, the bigger option is the"
+          ]
+        },
+        {
+          "cluster_label": 8,
+          "size": 1,
+          "family_fraction": 0.015625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.010590116239436443,
+            "mean_attention_mass": 0.49025608936874726,
+            "mean_mlp_mass": 0.4991537943918163
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.0034692525188066564,
+            "attention": -0.04297878095049362,
+            "mlp": 0.046448033469300265
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "12_attn_out",
+              "mean_mass": 0.0656094029545784
+            },
+            {
+              "source_label": "15_mlp_out",
+              "mean_mass": 0.06459435075521469
+            },
+            {
+              "source_label": "5_mlp_out",
+              "mean_mass": 0.0518127903342247
+            },
+            {
+              "source_label": "11_attn_out",
+              "mean_mass": 0.051705993711948395
+            },
+            {
+              "source_label": "5_attn_out",
+              "mean_mass": 0.04891897365450859
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "12_attn_out",
+              "delta_mass": 0.03984898146154592
+            },
+            {
+              "source_label": "15_mlp_out",
+              "delta_mass": 0.039629533279367024
+            },
+            {
+              "source_label": "10_mlp_out",
+              "delta_mass": 0.0324190671708493
+            },
+            {
+              "source_label": "16_attn_out",
+              "delta_mass": 0.029896662334067514
+            },
+            {
+              "source_label": "5_attn_out",
+              "delta_mass": 0.02468778725960874
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-198"
+          ],
+          "example_prompts": [
+            "Between the jar at 500 units and the bucket at 5000 units, the bigger option is the"
+          ]
+        }
+      ]
+    },
+    {
+      "family_tag": "subcategory_number_sequence",
+      "prompt_count": 64,
+      "mode_count": 3,
+      "mode_sizes": [
+        16,
+        16,
+        32
+      ],
+      "cluster_labels": [
+        1,
+        2,
+        8
+      ],
+      "mode_centroid_js": {
+        "min": 0.15124653493825754,
+        "mean": 0.17284551142670204,
+        "max": 0.19436203600975296
+      },
+      "family_source_type_mass": {
+        "mean_embedding_mass": 0.013140397586242275,
+        "mean_attention_mass": 0.5502679582770252,
+        "mean_mlp_mass": 0.43659164413673246
+      },
+      "family_top_mean_sources": [
+        {
+          "source_label": "15_attn_out",
+          "mean_mass": 0.06042420756421052
+        },
+        {
+          "source_label": "19_attn_out",
+          "mean_mass": 0.04446614201151533
+        },
+        {
+          "source_label": "18_attn_out",
+          "mean_mass": 0.03617979632690549
+        },
+        {
+          "source_label": "12_mlp_out",
+          "mean_mass": 0.03588022718759021
+        },
+        {
+          "source_label": "20_attn_out",
+          "mean_mass": 0.0338544861151604
+        }
+      ],
+      "modes": [
+        {
+          "cluster_label": 2,
+          "size": 32,
+          "family_fraction": 0.5,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.014368473030040265,
+            "mean_attention_mass": 0.5785922475541889,
+            "mean_mlp_mass": 0.40703927941577095
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.00122807544379799,
+            "attention": 0.028324289277163683,
+            "mlp": -0.02955236472096151
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "15_attn_out",
+              "mean_mass": 0.057340797618962824
+            },
+            {
+              "source_label": "19_attn_out",
+              "mean_mass": 0.054315311601385474
+            },
+            {
+              "source_label": "17_attn_out",
+              "mean_mass": 0.05202461511362344
+            },
+            {
+              "source_label": "16_attn_out",
+              "mean_mass": 0.042900773987639695
+            },
+            {
+              "source_label": "3_mlp_out",
+              "mean_mass": 0.039855751165305264
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "17_attn_out",
+              "delta_mass": 0.02364361557556549
+            },
+            {
+              "source_label": "16_attn_out",
+              "delta_mass": 0.017619215082959272
+            },
+            {
+              "source_label": "3_mlp_out",
+              "delta_mass": 0.0157038670113252
+            },
+            {
+              "source_label": "6_attn_out",
+              "delta_mass": 0.015395781061670277
+            },
+            {
+              "source_label": "19_attn_out",
+              "delta_mass": 0.009849169589870144
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-129",
+            "oa5-confirm-reasoning_math-132",
+            "oa5-confirm-reasoning_math-133"
+          ],
+          "example_prompts": [
+            "The sequence 8, 16, 24, 32 continues with",
+            "If the pattern 8, 16, 24, 32 is extended one more step, it becomes",
+            "The sequence 7, 14, 21, 28 continues with"
+          ]
+        },
+        {
+          "cluster_label": 1,
+          "size": 16,
+          "family_fraction": 0.25,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.010257390106336653,
+            "mean_attention_mass": 0.4987808695327365,
+            "mean_mlp_mass": 0.4909617403609269
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.002883007479905622,
+            "attention": -0.051487088744288756,
+            "mlp": 0.05437009622419442
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "12_mlp_out",
+              "mean_mass": 0.07777710887603462
+            },
+            {
+              "source_label": "8_mlp_out",
+              "mean_mass": 0.07552633271552622
+            },
+            {
+              "source_label": "15_attn_out",
+              "mean_mass": 0.06760611769277602
+            },
+            {
+              "source_label": "20_attn_out",
+              "mean_mass": 0.06149484030902386
+            },
+            {
+              "source_label": "23_mlp_out",
+              "mean_mass": 0.050352334743365645
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "8_mlp_out",
+              "delta_mass": 0.04227681071643019
+            },
+            {
+              "source_label": "12_mlp_out",
+              "delta_mass": 0.04189688168844441
+            },
+            {
+              "source_label": "20_attn_out",
+              "delta_mass": 0.02764035419386346
+            },
+            {
+              "source_label": "13_attn_out",
+              "delta_mass": 0.02386384061537683
+            },
+            {
+              "source_label": "23_mlp_out",
+              "delta_mass": 0.023014961094304454
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-131",
+            "oa5-confirm-reasoning_math-135",
+            "oa5-confirm-reasoning_math-139"
+          ],
+          "example_prompts": [
+            "Continuing the pattern 8, 16, 24, 32, the next term is",
+            "Continuing the pattern 7, 14, 21, 28, the next term is",
+            "Continuing the pattern 10, 20, 30, 40, the next term is"
+          ]
+        },
+        {
+          "cluster_label": 8,
+          "size": 16,
+          "family_fraction": 0.25,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.01356725417855191,
+            "mean_attention_mass": 0.5451064684669868,
+            "mean_mlp_mass": 0.4413262773544612
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.00042685659230963513,
+            "attention": -0.005161489810038389,
+            "mlp": 0.0047346332177287676
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "5_attn_out",
+              "mean_mass": 0.08747681742534041
+            },
+            {
+              "source_label": "12_attn_out",
+              "mean_mass": 0.061880179680883884
+            },
+            {
+              "source_label": "15_attn_out",
+              "mean_mass": 0.059409117326140404
+            },
+            {
+              "source_label": "18_attn_out",
+              "mean_mass": 0.04753832798451185
+            },
+            {
+              "source_label": "16_mlp_out",
+              "mean_mass": 0.040346387308090925
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "5_attn_out",
+              "delta_mass": 0.0575932259853289
+            },
+            {
+              "source_label": "12_attn_out",
+              "delta_mass": 0.03230376277497271
+            },
+            {
+              "source_label": "16_mlp_out",
+              "delta_mass": 0.024072815587715013
+            },
+            {
+              "source_label": "10_mlp_out",
+              "delta_mass": 0.01822874457866419
+            },
+            {
+              "source_label": "14_attn_out",
+              "delta_mass": 0.018216612545074895
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-130",
+            "oa5-confirm-reasoning_math-134",
+            "oa5-confirm-reasoning_math-138"
+          ],
+          "example_prompts": [
+            "A worksheet lists 8, 16, 24, 32; the next number would be",
+            "A worksheet lists 7, 14, 21, 28; the next number would be",
+            "A worksheet lists 10, 20, 30, 40; the next number would be"
+          ]
+        }
+      ]
+    },
+    {
+      "family_tag": "subcategory_schedule_reasoning",
+      "prompt_count": 64,
+      "mode_count": 6,
+      "mode_sizes": [
+        1,
+        1,
+        7,
+        10,
+        13,
+        32
+      ],
+      "cluster_labels": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        12
+      ],
+      "mode_centroid_js": {
+        "min": 0.0648512950310506,
+        "mean": 0.16074904576595703,
+        "max": 0.3612675911935468
+      },
+      "family_source_type_mass": {
+        "mean_embedding_mass": 0.012648762170917122,
+        "mean_attention_mass": 0.49539191998811005,
+        "mean_mlp_mass": 0.4919593178409728
+      },
+      "family_top_mean_sources": [
+        {
+          "source_label": "10_attn_out",
+          "mean_mass": 0.058346234436612576
+        },
+        {
+          "source_label": "3_mlp_out",
+          "mean_mass": 0.046140521346387686
+        },
+        {
+          "source_label": "7_mlp_out",
+          "mean_mass": 0.032967986044241115
+        },
+        {
+          "source_label": "5_attn_out",
+          "mean_mass": 0.03156302730531024
+        },
+        {
+          "source_label": "1_mlp_out",
+          "mean_mass": 0.03138620377285406
+        }
+      ],
+      "modes": [
+        {
+          "cluster_label": 7,
+          "size": 32,
+          "family_fraction": 0.5,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.012845933567526929,
+            "mean_attention_mass": 0.5223129387392003,
+            "mean_mlp_mass": 0.46484112769327285
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.00019717139660980695,
+            "attention": 0.02692101875109021,
+            "mlp": -0.02711819014769995
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "3_mlp_out",
+              "mean_mass": 0.06584495468996465
+            },
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.05473258144047577
+            },
+            {
+              "source_label": "6_attn_out",
+              "mean_mass": 0.04913590718206251
+            },
+            {
+              "source_label": "1_mlp_out",
+              "mean_mass": 0.04049959572148509
+            },
+            {
+              "source_label": "7_attn_out",
+              "mean_mass": 0.035788243483693805
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "6_attn_out",
+              "delta_mass": 0.020288746596634155
+            },
+            {
+              "source_label": "3_mlp_out",
+              "delta_mass": 0.019704433343576966
+            },
+            {
+              "source_label": "15_attn_out",
+              "delta_mass": 0.011126236622658325
+            },
+            {
+              "source_label": "7_attn_out",
+              "delta_mass": 0.010903295398748014
+            },
+            {
+              "source_label": "11_attn_out",
+              "delta_mass": 0.010767452011350542
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-066",
+            "oa5-confirm-reasoning_math-067",
+            "oa5-confirm-reasoning_math-070"
+          ],
+          "example_prompts": [
+            "the movie starts at 6:05 PM. 125 minutes later, the time will be",
+            "A schedule shows the movie at 6:05 PM for 125 minutes. The finish time is",
+            "the workshop starts at 9:30 AM. 75 minutes later, the time will be"
+          ]
+        },
+        {
+          "cluster_label": 4,
+          "size": 13,
+          "family_fraction": 0.203125,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.011818326427741378,
+            "mean_attention_mass": 0.49744920001999154,
+            "mean_mlp_mass": 0.49073247355226723
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.0008304357431757441,
+            "attention": 0.002057280031881492,
+            "mlp": -0.0012268442887055642
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.07329934978714356
+            },
+            {
+              "source_label": "8_attn_out",
+              "mean_mass": 0.06540069931473297
+            },
+            {
+              "source_label": "7_mlp_out",
+              "mean_mass": 0.05941199941130785
+            },
+            {
+              "source_label": "5_attn_out",
+              "mean_mass": 0.05050775235017332
+            },
+            {
+              "source_label": "2_mlp_out",
+              "mean_mass": 0.047579371549475655
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "8_attn_out",
+              "delta_mass": 0.03453468316477554
+            },
+            {
+              "source_label": "7_mlp_out",
+              "delta_mass": 0.026444013367066733
+            },
+            {
+              "source_label": "2_mlp_out",
+              "delta_mass": 0.024812622964348593
+            },
+            {
+              "source_label": "5_attn_out",
+              "delta_mass": 0.018944725044863074
+            },
+            {
+              "source_label": "10_attn_out",
+              "delta_mass": 0.014953115350530982
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-068",
+            "oa5-confirm-reasoning_math-076",
+            "oa5-confirm-reasoning_math-077"
+          ],
+          "example_prompts": [
+            "When the movie begins at 6:05 PM and runs for 125 minutes, it wraps up at",
+            "When the rehearsal begins at 4:20 PM and runs for 55 minutes, it wraps up at",
+            "If the meeting begins at 10:45 AM and lasts 40 minutes, it ends at"
+          ]
+        },
+        {
+          "cluster_label": 3,
+          "size": 10,
+          "family_fraction": 0.15625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.01230393112920333,
+            "mean_attention_mass": 0.44997424606654296,
+            "mean_mlp_mass": 0.5377218228042537
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.00034483104171379245,
+            "attention": -0.04541767392156709,
+            "mlp": 0.04576250496328094
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.0728037029504776
+            },
+            {
+              "source_label": "2_mlp_out",
+              "mean_mass": 0.052570863906294105
+            },
+            {
+              "source_label": "13_mlp_out",
+              "mean_mass": 0.04384214049205184
+            },
+            {
+              "source_label": "3_mlp_out",
+              "mean_mass": 0.04251468835864216
+            },
+            {
+              "source_label": "15_mlp_out",
+              "mean_mass": 0.03491899827495217
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "2_mlp_out",
+              "delta_mass": 0.029804115321167043
+            },
+            {
+              "source_label": "13_mlp_out",
+              "delta_mass": 0.016560148729331557
+            },
+            {
+              "source_label": "8_mlp_out",
+              "delta_mass": 0.016297822880733292
+            },
+            {
+              "source_label": "15_mlp_out",
+              "delta_mass": 0.015440081163978901
+            },
+            {
+              "source_label": "10_attn_out",
+              "delta_mass": 0.014457468513865021
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-065",
+            "oa5-confirm-reasoning_math-069",
+            "oa5-confirm-reasoning_math-072"
+          ],
+          "example_prompts": [
+            "If the movie begins at 6:05 PM and lasts 125 minutes, it ends at",
+            "If the workshop begins at 9:30 AM and lasts 75 minutes, it ends at",
+            "When the workshop begins at 9:30 AM and runs for 75 minutes, it wraps up at"
+          ]
+        },
+        {
+          "cluster_label": 5,
+          "size": 7,
+          "family_fraction": 0.109375,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.01364364253467353,
+            "mean_attention_mass": 0.4383142720254671,
+            "mean_mlp_mass": 0.5480420854398594
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.0009948803637564087,
+            "attention": -0.057077647962642974,
+            "mlp": 0.05608276759888664
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "7_mlp_out",
+              "mean_mass": 0.06425843959940332
+            },
+            {
+              "source_label": "25_attn_out",
+              "mean_mass": 0.04013558849692345
+            },
+            {
+              "source_label": "19_mlp_out",
+              "mean_mass": 0.03998236757303987
+            },
+            {
+              "source_label": "5_mlp_out",
+              "mean_mass": 0.036081132878150256
+            },
+            {
+              "source_label": "13_mlp_out",
+              "mean_mass": 0.0355957347367491
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "7_mlp_out",
+              "delta_mass": 0.031290453555162204
+            },
+            {
+              "source_label": "19_mlp_out",
+              "delta_mass": 0.026204880949600398
+            },
+            {
+              "source_label": "25_attn_out",
+              "delta_mass": 0.020357870191219263
+            },
+            {
+              "source_label": "22_mlp_out",
+              "delta_mass": 0.013459640339403577
+            },
+            {
+              "source_label": "5_mlp_out",
+              "delta_mass": 0.01292676199123629
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-073",
+            "oa5-confirm-reasoning_math-089",
+            "oa5-confirm-reasoning_math-092"
+          ],
+          "example_prompts": [
+            "If the rehearsal begins at 4:20 PM and lasts 55 minutes, it ends at",
+            "If the concert begins at 7:45 PM and lasts 110 minutes, it ends at",
+            "When the concert begins at 7:45 PM and runs for 110 minutes, it wraps up at"
+          ]
+        },
+        {
+          "cluster_label": 6,
+          "size": 1,
+          "family_fraction": 0.015625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.01037940973892377,
+            "mean_attention_mass": 0.565362926850391,
+            "mean_mlp_mass": 0.42425766341068527
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": -0.0022693524319933513,
+            "attention": 0.06997100686228097,
+            "mlp": -0.06770165443028753
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "8_attn_out",
+              "mean_mass": 0.082758828997612
+            },
+            {
+              "source_label": "4_attn_out",
+              "mean_mass": 0.08091546595096588
+            },
+            {
+              "source_label": "10_attn_out",
+              "mean_mass": 0.06785834580659866
+            },
+            {
+              "source_label": "5_mlp_out",
+              "mean_mass": 0.06630122661590576
+            },
+            {
+              "source_label": "11_attn_out",
+              "mean_mass": 0.05552336201071739
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "4_attn_out",
+              "delta_mass": 0.056167063437897014
+            },
+            {
+              "source_label": "8_attn_out",
+              "delta_mass": 0.05189281284765457
+            },
+            {
+              "source_label": "5_mlp_out",
+              "delta_mass": 0.043146855728991795
+            },
+            {
+              "source_label": "11_attn_out",
+              "delta_mass": 0.03527280043635983
+            },
+            {
+              "source_label": "17_attn_out",
+              "delta_mass": 0.02755972200066026
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-120"
+          ],
+          "example_prompts": [
+            "When the shift begins at 11:05 PM and runs for 45 minutes, it wraps up at"
+          ]
+        },
+        {
+          "cluster_label": 12,
+          "size": 1,
+          "family_fraction": 0.015625,
+          "source_type_mass": {
+            "mean_embedding_mass": 0.015888442443524376,
+            "mean_attention_mass": 0.3909239476306585,
+            "mean_mlp_mass": 0.5931876099258171
+          },
+          "source_type_mass_delta_vs_family": {
+            "embedding": 0.0032396802726072545,
+            "attention": -0.10446797235745153,
+            "mlp": 0.1012282920848443
+          },
+          "top_mean_sources": [
+            {
+              "source_label": "16_attn_out",
+              "mean_mass": 0.08834094554185867
+            },
+            {
+              "source_label": "14_mlp_out",
+              "mean_mass": 0.06890600174665451
+            },
+            {
+              "source_label": "3_mlp_out",
+              "mean_mass": 0.06295018643140793
+            },
+            {
+              "source_label": "19_mlp_out",
+              "mean_mass": 0.05718733370304108
+            },
+            {
+              "source_label": "10_mlp_out",
+              "mean_mass": 0.056707315146923065
+            }
+          ],
+          "top_enriched_sources_vs_family": [
+            {
+              "source_label": "16_attn_out",
+              "delta_mass": 0.06219198345570476
+            },
+            {
+              "source_label": "14_mlp_out",
+              "delta_mass": 0.05476562797775841
+            },
+            {
+              "source_label": "19_mlp_out",
+              "delta_mass": 0.043409847079601604
+            },
+            {
+              "source_label": "10_mlp_out",
+              "delta_mass": 0.040099337726132944
+            },
+            {
+              "source_label": "9_mlp_out",
+              "delta_mass": 0.03838812128742575
+            }
+          ],
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-093"
+          ],
+          "example_prompts": [
+            "If the practice begins at 5:10 PM and lasts 80 minutes, it ends at"
+          ]
+        }
+      ]
+    }
+  ]
+}

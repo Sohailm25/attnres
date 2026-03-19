@@ -61,6 +61,23 @@ class PatternAnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(0.55, summary.mean_attention_mass)
         self.assertAlmostEqual(0.20, summary.mean_mlp_mass)
 
+    def test_summarize_source_type_mass_supports_single_distribution(self) -> None:
+        source_labels = (
+            "embed",
+            "pos_embed",
+            "0_attn_out",
+            "0_mlp_out",
+            "1_attn_out",
+            "1_mlp_out",
+        )
+        alpha_vectors = ((0.10, 0.20, 0.30, 0.10, 0.20, 0.10),)
+
+        summary = self.summarize_source_type_mass(alpha_vectors, source_labels)
+
+        self.assertAlmostEqual(0.30, summary.mean_embedding_mass)
+        self.assertAlmostEqual(0.50, summary.mean_attention_mass)
+        self.assertAlmostEqual(0.20, summary.mean_mlp_mass)
+
     def test_scan_average_linkage_clusters_finds_two_cluster_structure(self) -> None:
         distributions = (
             (0.88, 0.08, 0.02, 0.02),

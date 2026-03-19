@@ -1,0 +1,465 @@
+{
+  "cluster_summaries": [
+    {
+      "cluster": 2,
+      "size": 48,
+      "dominant_subcategory_fraction": 0.6666666666666666,
+      "dominant_frame_fraction": 0.3333333333333333,
+      "subcategory_counts": {
+        "subcategory_arithmetic_story": 16,
+        "subcategory_number_sequence": 32
+      },
+      "frame_counts": {
+        "counted_lost_added": 16,
+        "sequence_continues": 16,
+        "extend_pattern": 16
+      }
+    },
+    {
+      "cluster": 11,
+      "size": 35,
+      "dominant_subcategory_fraction": 0.9714285714285714,
+      "dominant_frame_fraction": 0.45714285714285713,
+      "subcategory_counts": {
+        "subcategory_arithmetic_story": 1,
+        "subcategory_magnitude_comparison": 34
+      },
+      "frame_counts": {
+        "had_gave_bought": 1,
+        "note_lists": 16,
+        "if_measures": 15,
+        "holds_vs_holds": 1,
+        "between_amounts": 2
+      }
+    },
+    {
+      "cluster": 7,
+      "size": 33,
+      "dominant_subcategory_fraction": 0.9696969696969697,
+      "dominant_frame_fraction": 0.48484848484848486,
+      "subcategory_counts": {
+        "subcategory_arithmetic_story": 1,
+        "subcategory_schedule_reasoning": 32
+      },
+      "frame_counts": {
+        "after_give_then_buy": 1,
+        "starts_minutes_later": 16,
+        "schedule_shows": 16
+      }
+    },
+    {
+      "cluster": 8,
+      "size": 31,
+      "dominant_subcategory_fraction": 0.5161290322580645,
+      "dominant_frame_fraction": 0.5161290322580645,
+      "subcategory_counts": {
+        "subcategory_arithmetic_story": 14,
+        "subcategory_number_sequence": 16,
+        "subcategory_magnitude_comparison": 1
+      },
+      "frame_counts": {
+        "had_gave_bought": 14,
+        "worksheet_lists": 16,
+        "between_amounts": 1
+      }
+    },
+    {
+      "cluster": 10,
+      "size": 31,
+      "dominant_subcategory_fraction": 0.5483870967741935,
+      "dominant_frame_fraction": 0.5161290322580645,
+      "subcategory_counts": {
+        "subcategory_arithmetic_story": 17,
+        "subcategory_magnitude_comparison": 14
+      },
+      "frame_counts": {
+        "starts_gives_gets": 16,
+        "had_gave_bought": 1,
+        "between_amounts": 13,
+        "holds_vs_holds": 1
+      }
+    },
+    {
+      "cluster": 1,
+      "size": 16,
+      "dominant_subcategory_fraction": 1.0,
+      "dominant_frame_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_number_sequence": 16
+      },
+      "frame_counts": {
+        "continuing_pattern": 16
+      }
+    },
+    {
+      "cluster": 6,
+      "size": 16,
+      "dominant_subcategory_fraction": 0.9375,
+      "dominant_frame_fraction": 0.9375,
+      "subcategory_counts": {
+        "subcategory_arithmetic_story": 15,
+        "subcategory_schedule_reasoning": 1
+      },
+      "frame_counts": {
+        "after_give_then_buy": 15,
+        "wraps_up_at": 1
+      }
+    },
+    {
+      "cluster": 9,
+      "size": 15,
+      "dominant_subcategory_fraction": 1.0,
+      "dominant_frame_fraction": 0.9333333333333333,
+      "subcategory_counts": {
+        "subcategory_magnitude_comparison": 15
+      },
+      "frame_counts": {
+        "holds_vs_holds": 14,
+        "if_measures": 1
+      }
+    },
+    {
+      "cluster": 4,
+      "size": 13,
+      "dominant_subcategory_fraction": 1.0,
+      "dominant_frame_fraction": 0.9230769230769231,
+      "subcategory_counts": {
+        "subcategory_schedule_reasoning": 13
+      },
+      "frame_counts": {
+        "wraps_up_at": 12,
+        "if_begins_lasts": 1
+      }
+    },
+    {
+      "cluster": 3,
+      "size": 10,
+      "dominant_subcategory_fraction": 1.0,
+      "dominant_frame_fraction": 0.8,
+      "subcategory_counts": {
+        "subcategory_schedule_reasoning": 10
+      },
+      "frame_counts": {
+        "if_begins_lasts": 8,
+        "wraps_up_at": 2
+      }
+    },
+    {
+      "cluster": 5,
+      "size": 7,
+      "dominant_subcategory_fraction": 1.0,
+      "dominant_frame_fraction": 0.8571428571428571,
+      "subcategory_counts": {
+        "subcategory_schedule_reasoning": 7
+      },
+      "frame_counts": {
+        "if_begins_lasts": 6,
+        "wraps_up_at": 1
+      }
+    },
+    {
+      "cluster": 12,
+      "size": 1,
+      "dominant_subcategory_fraction": 1.0,
+      "dominant_frame_fraction": 1.0,
+      "subcategory_counts": {
+        "subcategory_schedule_reasoning": 1
+      },
+      "frame_counts": {
+        "if_begins_lasts": 1
+      }
+    }
+  ],
+  "subcategory_frame_clusters": {
+    "subcategory_arithmetic_story": {
+      "prompt_count": 64,
+      "mode_count": 6,
+      "overall_frame_majority_share": 0.984375,
+      "modes": [
+        {
+          "cluster": 10,
+          "size": 17,
+          "frame_counts": {
+            "starts_gives_gets": 16,
+            "had_gave_bought": 1
+          },
+          "frame_majority_share": 0.9411764705882353,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-004",
+            "oa5-confirm-reasoning_math-005",
+            "oa5-confirm-reasoning_math-008",
+            "oa5-confirm-reasoning_math-012"
+          ]
+        },
+        {
+          "cluster": 2,
+          "size": 16,
+          "frame_counts": {
+            "counted_lost_added": 16
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-003",
+            "oa5-confirm-reasoning_math-007",
+            "oa5-confirm-reasoning_math-011",
+            "oa5-confirm-reasoning_math-015"
+          ]
+        },
+        {
+          "cluster": 6,
+          "size": 15,
+          "frame_counts": {
+            "after_give_then_buy": 15
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-002",
+            "oa5-confirm-reasoning_math-006",
+            "oa5-confirm-reasoning_math-010",
+            "oa5-confirm-reasoning_math-014"
+          ]
+        },
+        {
+          "cluster": 8,
+          "size": 14,
+          "frame_counts": {
+            "had_gave_bought": 14
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-001",
+            "oa5-confirm-reasoning_math-009",
+            "oa5-confirm-reasoning_math-013",
+            "oa5-confirm-reasoning_math-017"
+          ]
+        },
+        {
+          "cluster": 7,
+          "size": 1,
+          "frame_counts": {
+            "after_give_then_buy": 1
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-030"
+          ]
+        },
+        {
+          "cluster": 11,
+          "size": 1,
+          "frame_counts": {
+            "had_gave_bought": 1
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-053"
+          ]
+        }
+      ]
+    },
+    "subcategory_magnitude_comparison": {
+      "prompt_count": 64,
+      "mode_count": 4,
+      "overall_frame_majority_share": 0.6875,
+      "modes": [
+        {
+          "cluster": 11,
+          "size": 34,
+          "frame_counts": {
+            "note_lists": 16,
+            "if_measures": 15,
+            "holds_vs_holds": 1,
+            "between_amounts": 2
+          },
+          "frame_majority_share": 0.47058823529411764,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-195",
+            "oa5-confirm-reasoning_math-196",
+            "oa5-confirm-reasoning_math-199",
+            "oa5-confirm-reasoning_math-200"
+          ]
+        },
+        {
+          "cluster": 9,
+          "size": 15,
+          "frame_counts": {
+            "holds_vs_holds": 14,
+            "if_measures": 1
+          },
+          "frame_majority_share": 0.9333333333333333,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-193",
+            "oa5-confirm-reasoning_math-197",
+            "oa5-confirm-reasoning_math-201",
+            "oa5-confirm-reasoning_math-205"
+          ]
+        },
+        {
+          "cluster": 10,
+          "size": 14,
+          "frame_counts": {
+            "between_amounts": 13,
+            "holds_vs_holds": 1
+          },
+          "frame_majority_share": 0.9285714285714286,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-194",
+            "oa5-confirm-reasoning_math-202",
+            "oa5-confirm-reasoning_math-206",
+            "oa5-confirm-reasoning_math-210"
+          ]
+        },
+        {
+          "cluster": 8,
+          "size": 1,
+          "frame_counts": {
+            "between_amounts": 1
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-198"
+          ]
+        }
+      ]
+    },
+    "subcategory_number_sequence": {
+      "prompt_count": 64,
+      "mode_count": 3,
+      "overall_frame_majority_share": 0.75,
+      "modes": [
+        {
+          "cluster": 2,
+          "size": 32,
+          "frame_counts": {
+            "sequence_continues": 16,
+            "extend_pattern": 16
+          },
+          "frame_majority_share": 0.5,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-129",
+            "oa5-confirm-reasoning_math-132",
+            "oa5-confirm-reasoning_math-133",
+            "oa5-confirm-reasoning_math-136"
+          ]
+        },
+        {
+          "cluster": 1,
+          "size": 16,
+          "frame_counts": {
+            "continuing_pattern": 16
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-131",
+            "oa5-confirm-reasoning_math-135",
+            "oa5-confirm-reasoning_math-139",
+            "oa5-confirm-reasoning_math-143"
+          ]
+        },
+        {
+          "cluster": 8,
+          "size": 16,
+          "frame_counts": {
+            "worksheet_lists": 16
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-130",
+            "oa5-confirm-reasoning_math-134",
+            "oa5-confirm-reasoning_math-138",
+            "oa5-confirm-reasoning_math-142"
+          ]
+        }
+      ]
+    },
+    "subcategory_schedule_reasoning": {
+      "prompt_count": 64,
+      "mode_count": 6,
+      "overall_frame_majority_share": 0.6875,
+      "modes": [
+        {
+          "cluster": 7,
+          "size": 32,
+          "frame_counts": {
+            "starts_minutes_later": 16,
+            "schedule_shows": 16
+          },
+          "frame_majority_share": 0.5,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-066",
+            "oa5-confirm-reasoning_math-067",
+            "oa5-confirm-reasoning_math-070",
+            "oa5-confirm-reasoning_math-071"
+          ]
+        },
+        {
+          "cluster": 4,
+          "size": 13,
+          "frame_counts": {
+            "wraps_up_at": 12,
+            "if_begins_lasts": 1
+          },
+          "frame_majority_share": 0.9230769230769231,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-068",
+            "oa5-confirm-reasoning_math-076",
+            "oa5-confirm-reasoning_math-077",
+            "oa5-confirm-reasoning_math-080"
+          ]
+        },
+        {
+          "cluster": 3,
+          "size": 10,
+          "frame_counts": {
+            "if_begins_lasts": 8,
+            "wraps_up_at": 2
+          },
+          "frame_majority_share": 0.8,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-065",
+            "oa5-confirm-reasoning_math-069",
+            "oa5-confirm-reasoning_math-072",
+            "oa5-confirm-reasoning_math-081"
+          ]
+        },
+        {
+          "cluster": 5,
+          "size": 7,
+          "frame_counts": {
+            "if_begins_lasts": 6,
+            "wraps_up_at": 1
+          },
+          "frame_majority_share": 0.8571428571428571,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-073",
+            "oa5-confirm-reasoning_math-089",
+            "oa5-confirm-reasoning_math-092",
+            "oa5-confirm-reasoning_math-097"
+          ]
+        },
+        {
+          "cluster": 6,
+          "size": 1,
+          "frame_counts": {
+            "wraps_up_at": 1
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-120"
+          ]
+        },
+        {
+          "cluster": 12,
+          "size": 1,
+          "frame_counts": {
+            "if_begins_lasts": 1
+          },
+          "frame_majority_share": 1.0,
+          "example_prompt_ids": [
+            "oa5-confirm-reasoning_math-093"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -185,7 +185,22 @@ def summarize_source_type_mass(
     alpha_vectors: Sequence[Sequence[float]],
     source_labels: Sequence[str],
 ) -> SourceTypeMassSummary:
-    distributions = _validated_distribution_matrix(alpha_vectors)
+    if len(alpha_vectors) == 0:
+        raise ValueError("alpha_vectors must not be empty")
+
+    if len(alpha_vectors) == 1:
+        distribution = np.asarray(alpha_vectors[0], dtype=float)
+        if distribution.ndim != 1:
+            raise ValueError("single alpha vector must be rank-1")
+        if np.any(distribution < 0.0):
+            raise ValueError("distribution values must be non-negative")
+        total_mass = float(distribution.sum())
+        if total_mass <= 0.0:
+            raise ValueError("distribution values must sum to a positive value")
+        distributions = (distribution / total_mass).reshape(1, -1)
+    else:
+        distributions = _validated_distribution_matrix(alpha_vectors)
+
     labels = _validated_source_labels(
         source_labels,
         expected_num_sources=distributions.shape[1],

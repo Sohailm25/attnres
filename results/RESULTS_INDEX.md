@@ -81,6 +81,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 factual-recall routing synthesis v1 | block_structure | pass | `results/block_structure/20260318-gemma2-factual-recall-routing-synthesis-v1.md` |
 | Gemma-2 factual route-mode frame audit v1 | block_structure | pass | `results/block_structure/20260318-gemma2-factual-route-mode-frame-audit-v1.md` |
 | Gemma-2 author novel-title residual audit v1 | block_structure | mixed | `results/block_structure/20260318-gemma2-author-novel-title-residual-audit-v1.md` |
+| Gemma-2 reasoning/math route-mode audit v1 | block_structure | mixed | `results/block_structure/20260319-gemma2-reasoning-math-route-mode-audit-v1.md` |
 
 ## Comparison Regimes
 

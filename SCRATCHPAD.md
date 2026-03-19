@@ -2259,3 +2259,27 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`ff6c608adfbb05dcf5895a11ce8740553304f9b2`). The run is expensive enough to matter (`566.14s` first run, `559.56s` rerun) but still small enough for this bounded slice without tmux.
 - Next step: close `resattn-7xo`, do not escalate to a full tokenwise export redesign, and take `resattn-b4h` to audit whether the exact-teacher failure is driven by within-prompt tokenwise variance or by sequence-aggregation mismatch.
+
+## [2026-03-19T10:45:00-0500] PRE-RUN: resattn-v7h saved reasoning-math audit
+- tmux session: `N/A`
+- Script: `scripts/run_oracle_alpha_subset_cluster_profile.py` and `scripts/run_oracle_alpha_factual_route_modes.py`
+- Command: `.venv/bin/python scripts/run_oracle_alpha_subset_cluster_profile.py --run-path results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/oracle_eval_run.json --registry-path prompts/registry_v5.yaml --collection-id oracle_alpha_phase1_v1 --group-tag stratum_reasoning_math --output results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.json > results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.log 2>&1` then `.venv/bin/python scripts/run_oracle_alpha_factual_route_modes.py --run-path results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1/oracle_eval_run.json --cluster-profile-path results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.json --registry-path prompts/registry_v5.yaml --collection-id oracle_alpha_phase1_v1 --group-tag stratum_reasoning_math --output results/block_structure/20260319-gemma2-reasoning-math-route-modes-v1.json`
+- Config: saved `registry_v5` confirm artifact, `composition_tag_prefix=subcategory_`, `top_sources=5`, `example_prompts=3`
+- What I'm testing: whether the second-strongest raw-source stratum on Gemma contains route modes that look operation-dominated, frame-dominated, or otherwise task-like
+- Expected outcome: a saved-artifact result that either reveals interpretable reasoning/math modes worth follow-up or honestly demotes the stratum below factual recall
+- Expected duration: ~5 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.log`
+- Resume command: rerun the exact commands above
+- Main confound to watch: deterministic frame labels for reasoning/math prompts are not stored directly in the registry, so the audit must derive them carefully from the fixed template construction rather than by eyeballing examples
+- Implementation verified: YES - existing saved-artifact subset-cluster and route-mode scripts already power the factual-recall analyses on `registry_v5`
+- Status: LAUNCHING
+
+## [2026-03-19T11:10:00-0500] POST-RUN: resattn-v7h saved reasoning-math audit
+- Outcome: SUCCESS
+- Key metric: reasoning/math clusters are more operation-dominated than frame-dominated at the top level (`weighted dominant subcategory = 0.8125` vs `weighted dominant frame = 0.5938`), but within-operation frame concentration stays high (`arithmetic = 0.9844`, `number_sequence = 0.7500`, `magnitude_comparison = 0.6875`, `schedule_reasoning = 0.6875`).
+- Artifacts saved: `results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.json`, `results/block_structure/20260319-gemma2-reasoning-math-route-modes-v1.json`, `results/block_structure/20260319-gemma2-reasoning-math-route-mode-frame-audit-v1.json`, `results/block_structure/20260319-gemma2-reasoning-math-route-mode-audit-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: the first cluster-profile attempt exposed a real singleton-cluster bug in `summarize_source_type_mass()`; fixed in `validation/pattern_analysis.py` with coverage in `tests/test_pattern_analysis.py`
+- Next step: close `resattn-v7h`, keep factual recall as the main structured bridge lane, and take `resattn-b4h` next.

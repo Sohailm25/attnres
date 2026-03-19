@@ -469,6 +469,29 @@
     - interpretation:
       - the residual split is better read as title-shape / lexical-surface heterogeneity than as answer-entity heterogeneity
       - this does not reopen the broader family-plus-frame conclusion and does not justify a new content-only author mode
+  - `resattn-v7h` now audits the second-strongest raw-source stratum, `stratum_reasoning_math`, on saved `registry_v5` artifacts only:
+    - `results/block_structure/20260319-gemma2-reasoning-math-route-mode-audit-v1.md` is the new saved-artifact reasoning/math memo
+    - `results/block_structure/20260319-gemma2-reasoning-math-cluster-profile-v1.json` is the raw-source subset profile
+    - `results/block_structure/20260319-gemma2-reasoning-math-route-modes-v1.json` summarizes the subcategory-level route modes
+    - `results/block_structure/20260319-gemma2-reasoning-math-route-mode-frame-audit-v1.json` records the deterministic frame-label audit
+    - the result is a meaningful secondary positive, not a replacement for factual recall:
+      - reasoning/math raw-source structure is real (`silhouette = 0.2456` vs random `0.1401`) but still weaker than factual recall
+      - the top-level clusters are more operation-dominated than frame-dominated:
+        - weighted dominant-subcategory majority share `= 0.8125`
+        - weighted dominant-frame majority share `= 0.5938`
+      - within each operation, prompt frame still matters heavily:
+        - arithmetic overall frame-majority share `= 0.9844`
+        - number-sequence `= 0.7500`
+        - magnitude-comparison `= 0.6875`
+        - schedule-reasoning `= 0.6875`
+      - cross-operation mixed clusters remain concentrated in a few structured joins:
+        - arithmetic `counted_lost_added` with number-sequence `{sequence_continues, extend_pattern}`
+        - arithmetic `had_gave_bought` with number-sequence `worksheet_lists`
+        - arithmetic `starts_gives_gets` with magnitude `between_amounts`
+    - interpretation:
+      - reasoning/math is a meaningful secondary result because it is more operation-dominated than factual recall at the top cluster level
+      - it still does not displace factual recall as the main structured-interpretability center or bridge lane
+      - if the reasoning/math lane reopens later, the next honest step is a targeted audit of those mixed cross-operation joins rather than another broad oracle rerun
   - `resattn-oi7` now audits that remaining donor-geometry question directly on the saved `v5` donor-arm artifact:
     - `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` is the new saved-artifact audit
     - the partial collapse between `prompt_permuted_alpha` and `within_family_permuted_alpha` is mostly structural:
@@ -1365,9 +1388,11 @@
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
-2. Treat the next scientific step and the next implementation step separately:
+2. Treat the current scientific boundary and the next implementation step separately:
    - the main active implementation step is `resattn-b4h`: diagnose whether exact-tokenwise failure is driven by within-prompt teacher variance or by sequence-aggregation mismatch before any broader tokenwise redesign is even considered
-   - the main active saved-artifact scientific step is `resattn-v7h`: audit reasoning/math route modes on the saved `registry_v5` Gemma confirm artifact to see whether the second-strongest raw-source stratum contains interpretable task-like structure beyond the already-solved factual family-plus-frame result
+   - the saved-artifact reasoning/math follow-up is now done:
+     - reasoning/math is operation-dominated at the top cluster level but still heavily frame-conditioned inside each operation
+     - that makes it a meaningful supporting result, not a better bridge lane than factual recall
    - the bounded family, approximate-teacher, and exact-teacher questions are now answered on the saved Gemma pilot surfaces:
      - under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head
      - the bounded shared-final-norm tokenwise teacher fails badly, while the matched next-token-position mask control is essentially a tie
@@ -1378,7 +1403,7 @@
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
-   - strong stratum-conditioned raw-source structure, especially factual recall
+   - strong stratum-conditioned raw-source structure, especially factual recall and secondarily reasoning/math
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
 4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
