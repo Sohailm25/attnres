@@ -1568,3 +1568,26 @@
   - `resattn-zic` can close once the artifact lands.
   - `resattn-but` is now the next main Phase 6 issue.
   - future router work on this saved export should justify any architecture change against the supervision-granularity hypothesis rather than by inertia.
+
+## [2026-03-18T21:20:00-0500] DECISION: Close `resattn-0kc` by treating the residual author novel-title split as lexical-surface cleanup, not a new semantic mode
+
+- Trigger: `resattn-0kc` audited the saved residual `novel_title` split from the factual route-mode frame audit.
+- Decision: close `resattn-0kc` as a bounded saved-artifact clarification. Do not reopen the general family-versus-frame question from this result. Treat the residual author split as more consistent with title-shape / lexical-surface heterogeneity than with answer-entity heterogeneity.
+- Rationale:
+  - the residual split is tiny and specific:
+    - `13 / 16` `novel_title` prompts in `cluster 11`
+    - `2 / 16` spill into direct-author `cluster 12` (`Moby-Dick`, `Frankenstein`)
+    - `1 / 16` singleton outlier `cluster 10` (`Things Fall Apart`)
+  - the exceptional prompts do not share an answer entity or author:
+    - Herman Melville
+    - Mary Shelley
+    - Chinua Achebe
+  - the titles themselves are the cleaner commonality:
+    - hyphenated punctuation-heavy surface (`Moby-Dick`)
+    - eponymous single-token title that also looks like a surname (`Frankenstein`)
+    - clause-like multiword title that becomes a singleton (`Things Fall Apart`)
+  - that is enough to weaken the answer-entity explanation without pretending the lexical explanation is a fully solved mechanistic story
+- Impact:
+  - `resattn-0kc` can close once the artifact lands.
+  - the broader factual route-mode claim stays family-plus-prompt-frame-conditioned.
+  - the next main implementation step remains `resattn-but`.

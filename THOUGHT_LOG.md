@@ -2056,3 +2056,24 @@ Suggested entry format:
   - `linear`: `R^2 = 0.3445`, mean JS `= 0.0853`
   - `mlp`: `R^2 = 0.3270`, mean JS `= 0.0837`
   - stable rerun hash: `89f3b2682375aa7956f969879af7479e85852fb9`
+
+## [2026-03-18T21:20:00-0500] The Residual Author Split Looks Lexical, Not Like a New Mode
+- Stage: factual route-mode cleanup
+- Feel of the Experiment: This is the sort of sidecar I want more of. It narrows a lingering ambiguity without pretending the repo discovered a whole new result.
+- Working Hypotheses:
+  - The residual `novel_title` split is mostly lexical/title-shape noise on top of the stronger family-plus-frame structure.
+  - It is not evidence for a distinct answer-entity routing mode.
+- Hunches and Guesses:
+  - `Moby-Dick`, `Frankenstein`, and `Things Fall Apart` are exceptional because their title surfaces are unusual in different ways, not because Melville, Shelley, and Achebe form a coherent author cluster.
+- Predictions:
+  - `0kc` should close the factual sidecar cleanly rather than spawning another broad audit.
+  - The next high-value work should stay on `resattn-but`, not on more author-title prompt archaeology.
+- Surprises and Tensions:
+  - The lexical read is plausible, but it is still only `n = 3` exceptional titles, so it should stay bounded.
+  - The singleton `Things Fall Apart` outlier is interesting, but not enough to justify reopening the broader factual clustering story.
+- Confidence:
+  - medium-high that the residual split is better read as lexical/title-shape than answer-entity
+  - high that this is cleanup, not a new core discovery
+- Interesting facts:
+  - spillovers: `Moby-Dick`, `Frankenstein`
+  - singleton outlier: `Things Fall Apart`

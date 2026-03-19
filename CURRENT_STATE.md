@@ -457,6 +457,18 @@
     - interpretation:
       - the strongest current factual claim is now family-plus-prompt-frame-conditioned route modes with limited residual within-frame author structure
       - the bounded factual tool-breakage bridge should now be read as family-plus-frame-conditioned for the covered capital, element, and non-outlier author families, not as a content-only bridge
+  - `resattn-0kc` now audits the residual split inside the author `novel_title` frame on saved `registry_v5` artifacts only:
+    - the saved `13 / 2 / 1` split remains:
+      - `13 / 16` `novel_title` prompts in `cluster 11`
+      - `2 / 16` spill into direct-author `cluster 12` (`Moby-Dick`, `Frankenstein`)
+      - `1 / 16` stays the singleton outlier `cluster 10` (`Things Fall Apart`)
+    - the exceptional titles do not share answer entities:
+      - Herman Melville
+      - Mary Shelley
+      - Chinua Achebe
+    - interpretation:
+      - the residual split is better read as title-shape / lexical-surface heterogeneity than as answer-entity heterogeneity
+      - this does not reopen the broader family-plus-frame conclusion and does not justify a new content-only author mode
   - `resattn-oi7` now audits that remaining donor-geometry question directly on the saved `v5` donor-arm artifact:
     - `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` is the new saved-artifact audit
     - the partial collapse between `prompt_permuted_alpha` and `within_family_permuted_alpha` is mostly structural:
@@ -1243,7 +1255,7 @@
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
    - the main active implementation step is now `resattn-but`: audit whether the remaining Phase 6 blocker is supervision granularity on the same saved pilot export rather than another architecture tweak
-   - if another saved-artifact scientific sidecar is needed later, narrow it to `resattn-0kc`, the residual author `novel_title` split, rather than reopening the general frame audit
+   - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
