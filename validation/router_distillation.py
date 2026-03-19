@@ -38,6 +38,7 @@ ALLOWED_SUPERVISION_OBJECTIVES = {
     "last_third_tokens_target_mse",
     "next_token_positions_sequence_target_mse",
     "next_token_positions_oracle_alpha_target_logit_contribution_mse",
+    "next_token_positions_exact_oracle_alpha_logit_mse",
 }
 
 
@@ -577,6 +578,139 @@ def tokenwise_oracle_alpha_target_logit_contribution_targets(
     return teacher_targets, teacher_mask
 
 
+def _rms_style_final_norm_parameters(model) -> tuple[torch.Tensor, torch.Tensor]:
+    normalization_type = str(model.cfg.normalization_type).upper()
+    if normalization_type not in {"RMS", "RMSPRE"}:
+        raise ValueError(
+            "oracle-alpha tokenwise teachers currently require RMS-style final "
+            "normalization"
+        )
+    if getattr(model.ln_final, "b", None) is not None:
+        raise ValueError(
+            "oracle-alpha tokenwise teachers do not support a final-norm bias term"
+        )
+    unembed = model.unembed.W_U.detach().cpu().to(dtype=torch.float32)
+    final_norm_weight_param = getattr(model.ln_final, "w", None)
+    if final_norm_weight_param is None:
+        final_norm_weight = torch.ones(unembed.shape[0], dtype=torch.float32)
+    else:
+        final_norm_weight = (
+            final_norm_weight_param.detach().cpu().to(dtype=torch.float32)
+        )
+    return final_norm_weight, unembed
+
+
+def _position_routed_logits(
+    *,
+    residual_sources: torch.Tensor,
+    alpha: torch.Tensor,
+    final_norm_weight: torch.Tensor,
+    unembed: torch.Tensor,
+    eps: float,
+    output_logits_soft_cap: float,
+) -> torch.Tensor:
+    mixture = torch.einsum("s,sd->d", alpha, residual_sources)
+    shared_scale = mixture.pow(2).mean().add(eps).sqrt()
+    normalized = (mixture / shared_scale) * final_norm_weight
+    logits = normalized @ unembed
+    if output_logits_soft_cap > 0.0:
+        logits = output_logits_soft_cap * torch.tanh(logits / output_logits_soft_cap)
+    return logits
+
+
+def exact_tokenwise_oracle_alpha_logit_targets(
+    *,
+    residual_stack: torch.Tensor,
+    token_ids: torch.Tensor,
+    final_norm_weight: torch.Tensor,
+    unembed: torch.Tensor,
+    eps: float,
+    output_logits_soft_cap: float,
+    optimization_steps: int,
+    learning_rate: float,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    if residual_stack.ndim != 3:
+        raise ValueError("residual_stack must have shape [sources, pos, d_model]")
+    if token_ids.ndim != 1:
+        raise ValueError("token_ids must have shape [pos]")
+    if final_norm_weight.ndim != 1:
+        raise ValueError("final_norm_weight must have shape [d_model]")
+    if unembed.ndim != 2:
+        raise ValueError("unembed must have shape [d_model, vocab]")
+    if residual_stack.shape[1] != token_ids.shape[0]:
+        raise ValueError("residual_stack and token_ids must share the position axis")
+    if residual_stack.shape[2] != final_norm_weight.shape[0]:
+        raise ValueError(
+            "residual_stack and final_norm_weight must share the model dimension"
+        )
+    if unembed.shape[0] != final_norm_weight.shape[0]:
+        raise ValueError("unembed and final_norm_weight must share the model dimension")
+    if optimization_steps < 1:
+        raise ValueError("optimization_steps must be positive")
+    if learning_rate <= 0.0:
+        raise ValueError("learning_rate must be positive")
+
+    num_sources, num_tokens, _ = residual_stack.shape
+    teacher_targets = torch.zeros(
+        (num_tokens, num_sources),
+        dtype=residual_stack.dtype,
+        device=residual_stack.device,
+    )
+    teacher_mask = torch.zeros(
+        num_tokens,
+        dtype=torch.bool,
+        device=residual_stack.device,
+    )
+    teacher_mask[:-1] = True
+    final_norm_weight = final_norm_weight.to(device=residual_stack.device)
+    unembed = unembed.to(device=residual_stack.device)
+
+    for position, target_token_id in enumerate(token_ids[1:].tolist()):
+        residual_sources = residual_stack[:, position, :]
+        alpha_logits = torch.zeros(
+            num_sources,
+            dtype=residual_stack.dtype,
+            device=residual_stack.device,
+            requires_grad=True,
+        )
+        optimizer = torch.optim.Adam([alpha_logits], lr=learning_rate)
+        best_loss = float("inf")
+        best_alpha = torch.full(
+            (num_sources,),
+            1.0 / num_sources,
+            dtype=residual_stack.dtype,
+            device=residual_stack.device,
+        )
+        target = torch.tensor(
+            [int(target_token_id)],
+            dtype=torch.long,
+            device=residual_stack.device,
+        )
+        for _ in range(optimization_steps):
+            optimizer.zero_grad()
+            alpha = torch.softmax(alpha_logits, dim=0)
+            logits = _position_routed_logits(
+                residual_sources=residual_sources,
+                alpha=alpha,
+                final_norm_weight=final_norm_weight,
+                unembed=unembed,
+                eps=eps,
+                output_logits_soft_cap=output_logits_soft_cap,
+            )
+            loss = F.cross_entropy(logits.unsqueeze(0), target)
+            loss.backward()
+            optimizer.step()
+            with torch.no_grad():
+                loss_value = float(loss.detach().cpu().item())
+                if loss_value < best_loss:
+                    best_loss = loss_value
+                    best_alpha = torch.softmax(alpha_logits, dim=0).detach().clone()
+
+        stabilized = best_alpha.clamp_min(1e-12)
+        teacher_targets[position] = torch.log(stabilized) - torch.log(stabilized).mean()
+    return teacher_targets, teacher_mask
+
+
 def _supervision_token_mask(
     *,
     token_mask: torch.Tensor,
@@ -587,6 +721,7 @@ def _supervision_token_mask(
     if supervision_objective in {
         "next_token_positions_sequence_target_mse",
         "next_token_positions_oracle_alpha_target_logit_contribution_mse",
+        "next_token_positions_exact_oracle_alpha_logit_mse",
     }:
         supervision_mask = token_mask.clone()
         valid_counts = token_mask.sum(dim=1)
@@ -636,14 +771,14 @@ def router_supervision_loss(
         token_logits=token_logits,
         target_name=target_name,
     )
-    if (
-        supervision_objective
-        == "next_token_positions_oracle_alpha_target_logit_contribution_mse"
-    ):
+    if supervision_objective in {
+        "next_token_positions_oracle_alpha_target_logit_contribution_mse",
+        "next_token_positions_exact_oracle_alpha_logit_mse",
+    }:
         if tokenwise_teacher_targets is None or tokenwise_teacher_mask is None:
             raise ValueError(
-                "tokenwise teacher targets and mask are required for oracle-alpha "
-                "tokenwise contribution supervision"
+                "tokenwise teacher targets and mask are required for tokenwise "
+                "oracle-alpha supervision"
             )
         if tokenwise_teacher_targets.shape != token_predictions.shape:
             raise ValueError(
@@ -670,29 +805,11 @@ def build_oracle_alpha_tokenwise_teacher_lookup(
     prompt_ids: Sequence[str],
     prepend_bos: bool | None = None,
 ) -> dict[str, tuple[torch.Tensor, torch.Tensor]]:
-    normalization_type = str(model.cfg.normalization_type).upper()
-    if normalization_type not in {"RMS", "RMSPRE"}:
-        raise ValueError(
-            "oracle-alpha tokenwise contribution teachers currently require "
-            "RMS-style final normalization"
-        )
-    if getattr(model.ln_final, "b", None) is not None:
-        raise ValueError(
-            "oracle-alpha tokenwise contribution teachers do not support a "
-            "final-norm bias term"
-        )
     selected_examples = _examples_for_prompt_ids(
         examples=examples,
         prompt_ids=prompt_ids,
     )
-    unembed = model.unembed.W_U.detach().cpu().to(dtype=torch.float32)
-    final_norm_weight_param = getattr(model.ln_final, "w", None)
-    if final_norm_weight_param is None:
-        final_norm_weight = torch.ones(unembed.shape[0], dtype=torch.float32)
-    else:
-        final_norm_weight = (
-            final_norm_weight_param.detach().cpu().to(dtype=torch.float32)
-        )
+    final_norm_weight, unembed = _rms_style_final_norm_parameters(model)
     lookup: dict[str, tuple[torch.Tensor, torch.Tensor]] = {}
     for example in selected_examples:
         residual_stack, source_labels, token_ids = _fixed_residual_sources(
@@ -719,6 +836,50 @@ def build_oracle_alpha_tokenwise_teacher_lookup(
                 unembed=unembed,
                 eps=float(model.cfg.eps),
             )
+        )
+    return lookup
+
+
+def build_exact_tokenwise_oracle_teacher_lookup(
+    *,
+    model,
+    examples: Sequence[RouterDistillationExample],
+    prompt_ids: Sequence[str],
+    optimization_steps: int,
+    learning_rate: float,
+    prepend_bos: bool | None = None,
+) -> dict[str, tuple[torch.Tensor, torch.Tensor]]:
+    selected_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=prompt_ids,
+    )
+    final_norm_weight, unembed = _rms_style_final_norm_parameters(model)
+    lookup: dict[str, tuple[torch.Tensor, torch.Tensor]] = {}
+    for example in selected_examples:
+        residual_stack, source_labels, token_ids = _fixed_residual_sources(
+            model=model,
+            prompt=example.prompt,
+            prepend_bos=prepend_bos,
+        )
+        residual_stack = residual_stack.detach().cpu().to(dtype=torch.float32)
+        token_ids = token_ids.detach().cpu().to(dtype=torch.long)
+        if tuple(source_labels) != tuple(example.source_labels):
+            raise ValueError(
+                f"source labels for {example.prompt_id!r} do not match the saved export"
+            )
+        if not torch.equal(token_ids, example.token_ids):
+            raise ValueError(
+                f"token ids for {example.prompt_id!r} do not match the saved export"
+            )
+        lookup[example.prompt_id] = exact_tokenwise_oracle_alpha_logit_targets(
+            residual_stack=residual_stack,
+            token_ids=token_ids,
+            final_norm_weight=final_norm_weight,
+            unembed=unembed,
+            eps=float(model.cfg.eps),
+            output_logits_soft_cap=float(model.cfg.output_logits_soft_cap),
+            optimization_steps=optimization_steps,
+            learning_rate=learning_rate,
         )
     return lookup
 

@@ -2211,3 +2211,51 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: the first launch exposed two implementation defects, both fixed before interpretation: the teacher builder rejected Gemma `RMSPre` final norm and had not imported `_fixed_residual_sources` explicitly. After the fix, the exact-command rerun preserved the `summary.json` hash on MPS (`97872d32c0f5fa3d6bf5c75bd7f06c7acab5874a`).
 - Next step: close `resattn-afu`, keep the repeated all-token sequence target as the saved Phase 6 baseline, and take `resattn-7xo` for a small exact tokenwise oracle-teacher subset before any full export redesign.
+
+## [2026-03-19T00:16:03-0500] PRE-RUN: Gemma exact-tokenwise teacher calibration v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_exact_teacher_subset_comparison.py`
+- Command: `mkdir -p results/router_training/20260319-gemma2-router-distillation-exact-teacher-calibration-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_exact_teacher_subset_comparison.py --output-dir results/router_training/20260319-gemma2-router-distillation-exact-teacher-calibration-v1 --train-per-stratum 2 --eval-per-stratum 1 --exact-optimization-steps 30 --exact-learning-rate 0.1 --device mps > results/router_training/20260319-gemma2-router-distillation-exact-teacher-calibration-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `frozen_family_summary=20260318-gemma2-router-distillation-family-comparison-all-tokens-v1/summary.json`, `baseline=mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`, `subset=8 train / 4 eval`, `candidate_supervision_objectives=all_tokens_target_mse/next_token_positions_sequence_target_mse/next_token_positions_exact_oracle_alpha_logit_mse`, `exact_teacher_steps=30`, `exact_teacher_lr=0.1`, `hidden_dim=512`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether the exact tokenwise teacher path runs end-to-end cleanly on a tiny fixed subset and what runtime it implies before the real bounded comparison.
+- Expected outcome: either the exact-teacher runner completes cleanly with a believable runtime envelope, or it reveals another implementation or scaling defect before the real subset run.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260319-gemma2-router-distillation-exact-teacher-calibration-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: this calibration is only for runtime and implementation health; its metrics are too small-sample to interpret scientifically.
+- Implementation verified: YES - `tests.test_router_distillation` now covers the exact tokenwise teacher primitive, the new supervision objective path, and the full router-distillation module passes on `.venv`.
+- Status: LAUNCHING
+
+## [2026-03-19T00:18:57-0500] POST-RUN: Gemma exact-tokenwise teacher calibration v1
+- Outcome: SUCCESS
+- Key metric: the exact-teacher path completed end-to-end on the `8 / 4` subset, but it was already worse than the retained baseline (`all_tokens_target_mse`: `R^2 = -0.1422`, mean JS `= 0.1204`; `next_token_positions_exact_oracle_alpha_logit_mse`: `R^2 = -0.2797`, mean JS `= 0.1402`).
+- Artifacts saved: temporary calibration summary under `results/router_training/20260319-gemma2-router-distillation-exact-teacher-calibration-v1/` (removed after runtime estimate; not registered as a durable artifact)
+- Latest checkpoint: `N/A`
+- Anomalies: none; wall-clock was `154.31s`, which makes the planned `32 / 16` real subset still reasonable. This calibration is too small to interpret scientifically.
+- Next step: run the real bounded subset at `32 / 16` with the same exact-teacher settings.
+
+## [2026-03-19T00:19:15-0500] PRE-RUN: Gemma exact-tokenwise teacher subset comparison v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_exact_teacher_subset_comparison.py`
+- Command: `mkdir -p results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1 && /usr/bin/time -p .venv/bin/python scripts/run_router_distillation_exact_teacher_subset_comparison.py --output-dir results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1 --train-per-stratum 8 --eval-per-stratum 4 --exact-optimization-steps 30 --exact-learning-rate 0.1 --device mps > results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1/run.log 2>&1`
+- Config: `model=google/gemma-2-2b`, `export=20260318-gemma2-router-distillation-pilot-export-v1`, `frozen_family_summary=20260318-gemma2-router-distillation-family-comparison-all-tokens-v1/summary.json`, `baseline=mlp + h_4[t] + oracle_alpha_logit_vector + mean_token_logits_then_softmax + all_tokens_target_mse`, `subset=32 train / 16 eval`, `candidate_supervision_objectives=all_tokens_target_mse/next_token_positions_sequence_target_mse/next_token_positions_exact_oracle_alpha_logit_mse`, `exact_teacher_steps=30`, `exact_teacher_lr=0.1`, `hidden_dim=512`, `lr=1e-3`, `weight_decay=1e-4`, `batch_size=16`, `max_epochs=300`, `patience=40`, `seed=11`
+- What I'm testing: whether exact per-token oracle alpha-logit teachers on a deterministic stratum-balanced subset materially beat the retained repeated-sequence all-token baseline.
+- Expected outcome: either the exact teacher clearly improves held-out `R^2`/JS and justifies a larger export redesign, or the repeated all-token sequence target remains the least-bad baseline and the tokenwise-teacher rescue path weakens materially.
+- Expected duration: ~10-20 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: the run is scientifically bounded to the deterministic subset; if the exact teacher loses here, that is evidence against immediate export redesign, not a proof about every possible tokenwise teacher design.
+- Implementation verified: YES - the exact-teacher path completed end-to-end on the calibration slice with the same optimization settings.
+- Status: LAUNCHING
+
+## [2026-03-19T00:38:11-0500] POST-RUN: Gemma exact-tokenwise teacher subset comparison v1
+- Outcome: SUCCESS
+- Key metric: the exact teacher still lost on the real bounded subset (`R^2 = -0.1126`, mean JS `= 0.1486`), while the only positive move was the support-only control (`next_token_positions_sequence_target_mse`: `R^2 = 0.1803`, mean JS `= 0.0998`) over the retained all-token baseline (`R^2 = 0.1567`, mean JS `= 0.1014`).
+- Artifacts saved: `results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1/summary.json`, `results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1.md`
+- Latest checkpoint: `N/A`
+- Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`ff6c608adfbb05dcf5895a11ce8740553304f9b2`). The run is expensive enough to matter (`566.14s` first run, `559.56s` rerun) but still small enough for this bounded slice without tmux.
+- Next step: close `resattn-7xo`, do not escalate to a full tokenwise export redesign, and take `resattn-b4h` to audit whether the exact-teacher failure is driven by within-prompt tokenwise variance or by sequence-aggregation mismatch.

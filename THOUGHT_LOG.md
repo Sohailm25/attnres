@@ -2168,3 +2168,27 @@ Suggested entry format:
   - `next_token_positions_sequence_target_mse`: `R^2 = 0.4201`, mean JS `= 0.0792`
   - `next_token_positions_oracle_alpha_target_logit_contribution_mse`: `R^2 = -11.2639`, mean JS `= 0.4320`
   - rerun-stable comparison hash: `97872d32c0f5fa3d6bf5c75bd7f06c7acab5874a`
+
+## [2026-03-19T00:38:11-0500] Exact Tokenwise Teachers Still Didn’t Save It
+- Stage: exact tokenwise-oracle subset comparison
+- Feel of the Experiment: This is the kind of negative result I trust. We removed the approximation excuse, paid the runtime cost, and the exact teacher still lost. That narrows the space a lot. The only wrinkle is that the support-only next-token mask got a small win on the bounded subset, which is interesting but not big enough to rewrite the larger full-split story.
+- Working Hypotheses:
+  - The broader Phase 6 default should stay the retained all-token sequence target, because the larger `192 / 64` split still outweighs the subset-local support-only gain.
+  - The next honest question is diagnosis, not redesign: is the exact teacher failing because tokenwise routes vary too much within prompts for mean-token decoding, or because the sequence-level alpha target is simply the wrong thing to compare tokenwise supervision against?
+- Hunches and Guesses:
+  - The exact tokenwise teacher is probably too high-variance within prompt for the current sequence aggregation to absorb cleanly.
+  - The small positive shift for `next_token_positions_sequence_target_mse` may just be a support/alignment effect on the bounded slice rather than a new default objective.
+- Predictions:
+  - `resattn-7xo` should close as a stable negative result for exact teacher rescue.
+  - `resattn-b4h` is the right next step.
+- Surprises and Tensions:
+  - The exact teacher being worse than both controls is cleaner than I expected after paying the “exactness” tax.
+  - The support-only control beating `all_tokens` on the bounded slice but not on the larger full split is exactly the sort of scale-sensitive tension that should slow down any baseline switch.
+- Confidence:
+  - high that a full tokenwise export redesign is not justified by current evidence
+  - medium-high that the next value is in diagnosing mismatch rather than launching another training run
+- Interesting facts:
+  - `all_tokens_target_mse`: `R^2 = 0.1567`, mean JS `= 0.1014`
+  - `next_token_positions_sequence_target_mse`: `R^2 = 0.1803`, mean JS `= 0.0998`
+  - `next_token_positions_exact_oracle_alpha_logit_mse`: `R^2 = -0.1126`, mean JS `= 0.1486`
+  - rerun-stable subset hash: `ff6c608adfbb05dcf5895a11ce8740553304f9b2`
