@@ -8,7 +8,7 @@ import json
 import math
 from pathlib import Path
 import random
-from typing import Sequence
+from typing import Mapping, Sequence
 
 import torch
 import torch.nn.functional as F
@@ -20,6 +20,7 @@ from .oracle_alpha_controls import (
     compare_predictiveness_metric_values,
     predictiveness_summary_from_predictions,
 )
+from .oracle_alpha_runner import _fixed_residual_sources
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,8 @@ ALLOWED_SUPERVISION_OBJECTIVES = {
     "sequence_target_mse",
     "all_tokens_target_mse",
     "last_third_tokens_target_mse",
+    "next_token_positions_sequence_target_mse",
+    "next_token_positions_oracle_alpha_target_logit_contribution_mse",
 }
 
 
@@ -514,6 +517,66 @@ def _token_prediction_matrix_for_target(
     raise ValueError(f"unsupported target name {target_name!r}")
 
 
+def tokenwise_oracle_alpha_target_logit_contribution_targets(
+    *,
+    residual_stack: torch.Tensor,
+    final_alpha: torch.Tensor,
+    token_ids: torch.Tensor,
+    final_norm_weight: torch.Tensor,
+    unembed: torch.Tensor,
+    eps: float,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    if residual_stack.ndim != 3:
+        raise ValueError("residual_stack must have shape [sources, pos, d_model]")
+    if final_alpha.ndim != 1:
+        raise ValueError("final_alpha must have shape [sources]")
+    if token_ids.ndim != 1:
+        raise ValueError("token_ids must have shape [pos]")
+    if final_norm_weight.ndim != 1:
+        raise ValueError("final_norm_weight must have shape [d_model]")
+    if unembed.ndim != 2:
+        raise ValueError("unembed must have shape [d_model, vocab]")
+    if residual_stack.shape[0] != final_alpha.shape[0]:
+        raise ValueError("residual_stack and final_alpha must share the source axis")
+    if residual_stack.shape[1] != token_ids.shape[0]:
+        raise ValueError("residual_stack and token_ids must share the position axis")
+    if residual_stack.shape[2] != final_norm_weight.shape[0]:
+        raise ValueError(
+            "residual_stack and final_norm_weight must share the model dimension"
+        )
+    if unembed.shape[0] != final_norm_weight.shape[0]:
+        raise ValueError("unembed and final_norm_weight must share the model dimension")
+
+    source_weights = final_alpha[:, None, None]
+    weighted_sources = residual_stack * source_weights
+    mixture = weighted_sources.sum(dim=0)
+    shared_scale = mixture.pow(2).mean(dim=-1, keepdim=True).add(eps).sqrt()
+    normalized_weighted_sources = (
+        weighted_sources / shared_scale.unsqueeze(0)
+    ) * final_norm_weight[None, None, :]
+    next_token_ids = token_ids[1:]
+    per_source_target_logits = torch.stack(
+        [
+            normalized_weighted_sources[:, position, :]
+            @ unembed[:, int(target_token_id.item())]
+            for position, target_token_id in enumerate(next_token_ids)
+        ],
+        dim=0,
+    )
+    centered_logits = per_source_target_logits - per_source_target_logits.mean(
+        dim=-1,
+        keepdim=True,
+    )
+    teacher_targets = torch.zeros(
+        (token_ids.shape[0], residual_stack.shape[0]),
+        dtype=residual_stack.dtype,
+    )
+    teacher_targets[:-1] = centered_logits.to(dtype=residual_stack.dtype)
+    teacher_mask = torch.zeros(token_ids.shape[0], dtype=torch.bool)
+    teacher_mask[:-1] = True
+    return teacher_targets, teacher_mask
+
+
 def _supervision_token_mask(
     *,
     token_mask: torch.Tensor,
@@ -521,6 +584,17 @@ def _supervision_token_mask(
 ) -> torch.Tensor:
     if supervision_objective == "all_tokens_target_mse":
         return token_mask
+    if supervision_objective in {
+        "next_token_positions_sequence_target_mse",
+        "next_token_positions_oracle_alpha_target_logit_contribution_mse",
+    }:
+        supervision_mask = token_mask.clone()
+        valid_counts = token_mask.sum(dim=1)
+        for batch_index, valid_count in enumerate(valid_counts.tolist()):
+            if valid_count <= 0:
+                continue
+            supervision_mask[batch_index, int(valid_count) - 1] = False
+        return supervision_mask
     if supervision_objective == "last_third_tokens_target_mse":
         supervision_mask = torch.zeros_like(token_mask)
         valid_counts = token_mask.sum(dim=1)
@@ -541,6 +615,8 @@ def router_supervision_loss(
     aggregation: str,
     target_name: str,
     supervision_objective: str,
+    tokenwise_teacher_targets: torch.Tensor | None = None,
+    tokenwise_teacher_mask: torch.Tensor | None = None,
 ) -> torch.Tensor:
     if supervision_objective == "sequence_target_mse":
         predicted_target = _prediction_matrix_for_target(
@@ -560,12 +636,149 @@ def router_supervision_loss(
         token_logits=token_logits,
         target_name=target_name,
     )
-    broadcast_targets = targets.unsqueeze(1).expand_as(token_predictions)
+    if (
+        supervision_objective
+        == "next_token_positions_oracle_alpha_target_logit_contribution_mse"
+    ):
+        if tokenwise_teacher_targets is None or tokenwise_teacher_mask is None:
+            raise ValueError(
+                "tokenwise teacher targets and mask are required for oracle-alpha "
+                "tokenwise contribution supervision"
+            )
+        if tokenwise_teacher_targets.shape != token_predictions.shape:
+            raise ValueError(
+                "tokenwise_teacher_targets must match token_logits over batch, "
+                "sequence, and source dimensions"
+            )
+        if tokenwise_teacher_mask.shape != token_mask.shape:
+            raise ValueError("tokenwise_teacher_mask must match token_mask")
+        broadcast_targets = tokenwise_teacher_targets
+        supervision_mask = supervision_mask & tokenwise_teacher_mask
+    else:
+        broadcast_targets = targets.unsqueeze(1).expand_as(token_predictions)
     mask = supervision_mask.unsqueeze(-1).to(dtype=token_predictions.dtype)
     denominator = mask.sum() * token_predictions.shape[-1]
     if float(denominator.item()) <= 0.0:
         raise ValueError("supervision objective must include at least one token")
     return ((token_predictions - broadcast_targets) ** 2 * mask).sum() / denominator
+
+
+def build_oracle_alpha_tokenwise_teacher_lookup(
+    *,
+    model,
+    examples: Sequence[RouterDistillationExample],
+    prompt_ids: Sequence[str],
+    prepend_bos: bool | None = None,
+) -> dict[str, tuple[torch.Tensor, torch.Tensor]]:
+    normalization_type = str(model.cfg.normalization_type).upper()
+    if normalization_type not in {"RMS", "RMSPRE"}:
+        raise ValueError(
+            "oracle-alpha tokenwise contribution teachers currently require "
+            "RMS-style final normalization"
+        )
+    if getattr(model.ln_final, "b", None) is not None:
+        raise ValueError(
+            "oracle-alpha tokenwise contribution teachers do not support a "
+            "final-norm bias term"
+        )
+    selected_examples = _examples_for_prompt_ids(
+        examples=examples,
+        prompt_ids=prompt_ids,
+    )
+    unembed = model.unembed.W_U.detach().cpu().to(dtype=torch.float32)
+    final_norm_weight_param = getattr(model.ln_final, "w", None)
+    if final_norm_weight_param is None:
+        final_norm_weight = torch.ones(unembed.shape[0], dtype=torch.float32)
+    else:
+        final_norm_weight = (
+            final_norm_weight_param.detach().cpu().to(dtype=torch.float32)
+        )
+    lookup: dict[str, tuple[torch.Tensor, torch.Tensor]] = {}
+    for example in selected_examples:
+        residual_stack, source_labels, token_ids = _fixed_residual_sources(
+            model=model,
+            prompt=example.prompt,
+            prepend_bos=prepend_bos,
+        )
+        residual_stack = residual_stack.detach().cpu().to(dtype=torch.float32)
+        token_ids = token_ids.detach().cpu().to(dtype=torch.long)
+        if tuple(source_labels) != tuple(example.source_labels):
+            raise ValueError(
+                f"source labels for {example.prompt_id!r} do not match the saved export"
+            )
+        if not torch.equal(token_ids, example.token_ids):
+            raise ValueError(
+                f"token ids for {example.prompt_id!r} do not match the saved export"
+            )
+        lookup[example.prompt_id] = (
+            tokenwise_oracle_alpha_target_logit_contribution_targets(
+                residual_stack=residual_stack,
+                final_alpha=example.final_alpha,
+                token_ids=token_ids,
+                final_norm_weight=final_norm_weight,
+                unembed=unembed,
+                eps=float(model.cfg.eps),
+            )
+        )
+    return lookup
+
+
+def _collate_tokenwise_teacher_targets(
+    *,
+    examples: Sequence[RouterDistillationExample],
+    tokenwise_teacher_lookup: Mapping[str, tuple[torch.Tensor, torch.Tensor]],
+    max_tokens: int,
+    target_dim: int,
+    device: torch.device,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    teacher_targets = torch.zeros(
+        (len(examples), max_tokens, target_dim),
+        dtype=torch.float32,
+        device=device,
+    )
+    teacher_mask = torch.zeros(
+        (len(examples), max_tokens),
+        dtype=torch.bool,
+        device=device,
+    )
+    for batch_index, example in enumerate(examples):
+        try:
+            prompt_teacher_targets, prompt_teacher_mask = tokenwise_teacher_lookup[
+                example.prompt_id
+            ]
+        except KeyError as error:
+            raise ValueError(
+                f"missing tokenwise teacher targets for prompt {example.prompt_id!r}"
+            ) from error
+        if prompt_teacher_targets.ndim != 2:
+            raise ValueError("prompt_teacher_targets must have shape [pos, sources]")
+        if prompt_teacher_mask.ndim != 1:
+            raise ValueError("prompt_teacher_mask must have shape [pos]")
+        if prompt_teacher_targets.shape[0] != example.token_ids.shape[0]:
+            raise ValueError(
+                f"tokenwise teacher targets for {example.prompt_id!r} must match "
+                "the prompt token count"
+            )
+        if prompt_teacher_mask.shape[0] != example.token_ids.shape[0]:
+            raise ValueError(
+                f"tokenwise teacher mask for {example.prompt_id!r} must match the "
+                "prompt token count"
+            )
+        if prompt_teacher_targets.shape[1] != target_dim:
+            raise ValueError(
+                f"tokenwise teacher targets for {example.prompt_id!r} must match "
+                "the router target dimension"
+            )
+        num_tokens = int(prompt_teacher_targets.shape[0])
+        teacher_targets[batch_index, :num_tokens] = prompt_teacher_targets.to(
+            device=device,
+            dtype=torch.float32,
+        )
+        teacher_mask[batch_index, :num_tokens] = prompt_teacher_mask.to(
+            device=device,
+            dtype=torch.bool,
+        )
+    return teacher_targets, teacher_mask
 
 
 def _input_tensor_for_field(
@@ -945,6 +1158,8 @@ def _fit_router_model(
     batch_size: int,
     max_epochs: int,
     patience: int,
+    tokenwise_teacher_lookup: Mapping[str, tuple[torch.Tensor, torch.Tensor]]
+    | None = None,
     seed: int,
     device: torch.device,
 ) -> _FittedRouterArtifacts:
@@ -1011,6 +1226,18 @@ def _fit_router_model(
                 target_lookup=train_target_lookup,
                 device=device,
             )
+            tokenwise_teacher_targets = None
+            tokenwise_teacher_mask = None
+            if tokenwise_teacher_lookup is not None:
+                tokenwise_teacher_targets, tokenwise_teacher_mask = (
+                    _collate_tokenwise_teacher_targets(
+                        examples=batch_examples,
+                        tokenwise_teacher_lookup=tokenwise_teacher_lookup,
+                        max_tokens=int(states.shape[1]),
+                        target_dim=int(targets.shape[1]),
+                        device=device,
+                    )
+                )
             optimizer.zero_grad(set_to_none=True)
             token_logits = model.forward_token_logits(states)
             loss = router_supervision_loss(
@@ -1020,6 +1247,8 @@ def _fit_router_model(
                 aggregation=aggregation,
                 target_name=target_name,
                 supervision_objective=supervision_objective,
+                tokenwise_teacher_targets=tokenwise_teacher_targets,
+                tokenwise_teacher_mask=tokenwise_teacher_mask,
             )
             loss.backward()
             optimizer.step()
@@ -1136,6 +1365,8 @@ def _fit_router_for_input(
     max_epochs: int,
     patience: int,
     supervision_objective: str = "sequence_target_mse",
+    tokenwise_teacher_lookup: Mapping[str, tuple[torch.Tensor, torch.Tensor]]
+    | None = None,
     seed: int,
     device: torch.device,
 ) -> RouterDistillationInputSummary:
@@ -1153,6 +1384,7 @@ def _fit_router_for_input(
         batch_size=batch_size,
         max_epochs=max_epochs,
         patience=patience,
+        tokenwise_teacher_lookup=tokenwise_teacher_lookup,
         seed=seed,
         device=device,
     )
@@ -1348,6 +1580,8 @@ def compare_router_supervision_objectives(
     patience: int = 40,
     seed: int = 11,
     device: str = "cpu",
+    tokenwise_teacher_lookup: Mapping[str, tuple[torch.Tensor, torch.Tensor]]
+    | None = None,
     collection_id: str = "unknown",
     model_name: str = "unknown",
 ) -> RouterDistillationSupervisionComparisonSummary:
@@ -1394,6 +1628,7 @@ def compare_router_supervision_objectives(
             max_epochs=max_epochs,
             patience=patience,
             supervision_objective=supervision_objective,
+            tokenwise_teacher_lookup=tokenwise_teacher_lookup,
             seed=seed,
             device=torch_device,
         )
