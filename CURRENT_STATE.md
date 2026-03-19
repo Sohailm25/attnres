@@ -1177,13 +1177,32 @@
       - the next honest blocker is sequence aggregation before a blind capacity sweep or confirmatory router training
     - rerun note:
       - an exact-command rerun on MPS changed the saved summary hash and moved the exact values slightly, but preserved every qualitative conclusion: `oracle_alpha_logit_vector` stayed selected, `h_4[t]` stayed best, the ranking stayed unchanged, and the readiness gate still failed
+  - `resattn-914` now runs the first fixed-target aggregation comparison on the same saved Gemma pilot export:
+    - `validation/router_distillation.py` and `scripts/run_router_distillation_aggregation_comparison.py` now support aggregation comparison with `oracle_alpha_logit_vector` frozen
+    - the held-out pilot comparison reused the same stratified `192 / 64` train/eval split across all four combinations:
+      - inputs: `h_1[t]`, `h_4[t]`
+      - target: `oracle_alpha_logit_vector`
+      - aggregations: `mean_token_logits_then_softmax`, `last_token_logits_then_softmax`
+    - result:
+      - `mean + h_1[t]`: `R^2 = 0.2891`, mean JS `= 0.0867`
+      - `mean + h_4[t]`: `R^2 = 0.3116`, mean JS `= 0.0831`
+      - `last + h_1[t]`: `R^2 = 0.2294`, mean JS `= 0.0979`
+      - `last + h_4[t]`: `R^2 = 0.2639`, mean JS `= 0.0966`
+      - selected combination stayed `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t]`
+      - aggregation did not change the input ranking
+      - prereg readiness still failed (`R^2 < 0.5`)
+    - interpretation:
+      - this is a negative result for simple aggregation rescue on the saved prompt-only export
+      - the next honest Phase 6 blocker is now model capacity or router family rather than more blind aggregation churn
+    - rerun note:
+      - an exact-command rerun on MPS changed the summary hash and nudged the decimals, but `mean` stayed selected, `h_4[t]` stayed best, and readiness still failed
 
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
    - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
-   - the main active next step is `resattn-914`: compare sequence aggregation rules on the same saved pilot router-distillation export with `oracle_alpha_logit_vector` frozen
+   - the main active implementation step is now `resattn-3ak`: compare router capacity regimes on the same saved pilot export with `oracle_alpha_logit_vector` and `mean_token_logits_then_softmax` frozen
    - if another saved-artifact scientific sidecar is needed later, narrow it to `resattn-0kc`, the residual author `novel_title` split, rather than reopening the general frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`

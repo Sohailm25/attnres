@@ -15,6 +15,7 @@ class RouterDistillationTests(unittest.TestCase):
         from validation.router_distillation import (
             RouterDistillationExample,
             aggregate_token_logits_to_sequence_alpha,
+            compare_router_aggregations,
             compare_router_input_sources,
             compare_router_target_parameterizations,
             load_router_distillation_pilot_dataset,
@@ -26,6 +27,7 @@ class RouterDistillationTests(unittest.TestCase):
         cls.aggregate_token_logits_to_sequence_alpha = staticmethod(
             aggregate_token_logits_to_sequence_alpha
         )
+        cls.compare_router_aggregations = staticmethod(compare_router_aggregations)
         cls.compare_router_input_sources = staticmethod(compare_router_input_sources)
         cls.compare_router_target_parameterizations = staticmethod(
             compare_router_target_parameterizations
@@ -146,6 +148,26 @@ class RouterDistillationTests(unittest.TestCase):
         )
 
         expected = torch.softmax(torch.tensor([1.0, 0.0]), dim=0)
+        self.assertTrue(torch.allclose(expected, alpha, atol=1e-6))
+
+    def test_aggregate_token_logits_to_sequence_alpha_uses_last_token_logits_then_softmax(
+        self,
+    ) -> None:
+        token_logits = torch.tensor(
+            [
+                [2.0, 0.0],
+                [0.0, 2.0],
+                [1.0, 3.0],
+            ],
+            dtype=torch.float32,
+        )
+
+        alpha = self.aggregate_token_logits_to_sequence_alpha(
+            token_logits=token_logits,
+            aggregation="last_token_logits_then_softmax",
+        )
+
+        expected = torch.softmax(torch.tensor([1.0, 3.0]), dim=0)
         self.assertTrue(torch.allclose(expected, alpha, atol=1e-6))
 
     def test_stratified_router_train_eval_split_preserves_subcategory_balance(
@@ -314,6 +336,59 @@ class RouterDistillationTests(unittest.TestCase):
             {"h_1[t]", "h_4[t]"},
         )
 
+    def test_compare_router_aggregations_prefers_last_token_when_order_carries_signal(
+        self,
+    ) -> None:
+        examples = [
+            self._order_sensitive_example(
+                prompt_id=f"prompt-{index}",
+                subcategory=(
+                    "subcategory_capital_fact"
+                    if index < 4
+                    else "subcategory_author_fact"
+                    if index < 8
+                    else "subcategory_element_fact"
+                    if index < 12
+                    else "subcategory_city_fact"
+                ),
+                positive=(index % 2 == 0),
+            )
+            for index in range(16)
+        ]
+
+        comparison = self.compare_router_aggregations(
+            examples=examples,
+            candidate_input_fields=("h_1[t]",),
+            fixed_target_name="oracle_alpha_logit_vector",
+            candidate_aggregations=(
+                "mean_token_logits_then_softmax",
+                "last_token_logits_then_softmax",
+            ),
+            eval_fraction=0.25,
+            hidden_dim=8,
+            learning_rate=0.05,
+            max_epochs=250,
+            patience=40,
+            seed=11,
+            device="cpu",
+        )
+
+        self.assertEqual(
+            "last_token_logits_then_softmax",
+            comparison.selected_aggregation,
+        )
+        summaries = {
+            summary.aggregation: summary for summary in comparison.input_summaries
+        }
+        self.assertLess(
+            summaries["mean_token_logits_then_softmax"].eval_summary.r_squared,
+            0.2,
+        )
+        self.assertGreater(
+            summaries["last_token_logits_then_softmax"].eval_summary.r_squared,
+            0.8,
+        )
+
     def _synthetic_example(
         self,
         *,
@@ -344,6 +419,42 @@ class RouterDistillationTests(unittest.TestCase):
                     [0.0, 1.0],
                     [0.0, -1.0],
                     [0.0, 0.5],
+                ],
+                dtype=torch.float32,
+            ),
+            source_labels=("embed", "0_attn_out"),
+            final_alpha=final_alpha,
+        )
+
+    def _order_sensitive_example(
+        self,
+        *,
+        prompt_id: str,
+        subcategory: str,
+        positive: bool,
+    ):
+        final_alpha = torch.tensor(
+            [0.85, 0.15] if positive else [0.15, 0.85],
+            dtype=torch.float32,
+        )
+        first_token = [1.0, 0.0] if positive else [0.0, 1.0]
+        second_token = [0.0, 1.0] if positive else [1.0, 0.0]
+        return self.RouterDistillationExample(
+            prompt_id=prompt_id,
+            prompt=f"Prompt {prompt_id}",
+            split="pilot",
+            target_text=None,
+            tags=("oracle_alpha", "stratum_factual_recall", subcategory),
+            perturbation_names=("prompt_paraphrase",),
+            token_ids=torch.tensor([1, 2], dtype=torch.long),
+            h_1=torch.tensor(
+                [first_token, second_token],
+                dtype=torch.float32,
+            ),
+            h_4=torch.tensor(
+                [
+                    [0.5, 0.5],
+                    [0.5, 0.5],
                 ],
                 dtype=torch.float32,
             ),

@@ -1989,3 +1989,25 @@ Suggested entry format:
   - capital modes partition exactly into `direct+travel`, `map`, and `quiz`
   - element modes partition exactly into `notes+lab`, `direct`, and `periodic table`
   - covered author modes have frame-majority share `= 61 / 63 = 0.9683`
+
+## [2026-03-18T20:18:34-0500] The Obvious Aggregation Rescue Failed
+- Stage: router-distillation aggregation comparison
+- Feel of the Experiment: This is the right kind of negative result. It killed a plausible next excuse cleanly. The lane no longer gets to say “maybe the whole problem is just mean pooling” without stronger evidence.
+- Working Hypotheses:
+  - The next honest Phase 6 blocker is model capacity or router family, not another obvious aggregation variant on this fixed export.
+  - `h_4[t]` is still provisionally best, but the lane is not bottlenecked on the input choice right now.
+- Hunches and Guesses:
+  - Last-token-only is too narrow for this prompt-only export, but its failure still matters because it was the most defensible token-specific rescue to try first.
+  - A width comparison is now more likely to teach something than another hand-picked aggregation tweak.
+- Predictions:
+  - `resattn-3ak` should be the next main implementation step.
+  - If a larger width still fails badly, the next blocker will likely be router family rather than another scalar hyperparameter.
+- Surprises and Tensions:
+  - The negative result is fairly clean: both `h_1[t]` and `h_4[t]` get worse under `last_token`.
+  - MPS still nudges the decimals and hashes around, which is annoying, but the ordering held on rerun.
+- Confidence:
+  - high that `914` should close as a negative aggregation comparison
+  - medium-high that capacity is the next honest lever
+- Interesting facts:
+  - best retained pilot combination: `oracle_alpha_logit_vector + mean_token_logits_then_softmax + h_4[t]`
+  - rerun-stable ordering: `mean` stayed above `last` for both inputs
