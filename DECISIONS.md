@@ -1428,3 +1428,28 @@
   - `resattn-4hj` can close once the artifact lands.
   - `resattn-914` is now the next honest Phase 6 issue.
   - the repo should describe target geometry as a real solved sub-blocker and aggregation as the next active blocker.
+
+## [2026-03-18T19:31:01-0500] DECISION: Split the next-step order into one main scientific step and one main implementation step
+
+- Trigger: a repo-wide review across the saved Gemma oracle, pattern-analysis, regime-comparison, tool-breakage, safety, Figure 8, and Phase 6 pilot artifacts showed that the current ready-issue list underweights the strongest existing interpretability result.
+- Decision: treat `resattn-chz` as the main scientific next step and `resattn-914` as the main implementation next step. Do not let the ready queue imply that router implementation is the only top priority. Keep tool-breakage, safety, and Figure 8 as bounded secondary lanes.
+- Rationale:
+  - the strongest proved result in the repo is now on the primary Gemma spine:
+    - broad oracle improvement on `1024` confirm prompts
+    - positive held-out routed-loss recovery with positive `R^2`
+    - strong grouped/coarse structure
+    - strong factual-recall raw-source structure
+  - the most underexploited meaningful interpretability result is factual recall:
+    - best raw-source silhouette `= 0.4709`
+    - highly pure factual subcategory clusters
+    - multiple within-family factual route modes
+    - an existing but bounded bridge to the narrowed factual tool-breakage surface
+  - `resattn-914` is still important and scientifically aligned, but it is a pilot-stage router-design unblocker rather than the strongest current source of new thesis-level understanding
+  - the other major lanes are not the right main focus right now:
+    - tool-breakage is already frozen at a truthful mixed boundary
+    - the safety workflow is methodologically valid but still role-collapsed at the mediator-conditioned stage
+    - the current local Figure 8 proxy should stay frozen rather than be optimized further
+- Impact:
+  - `resattn-chz` should be opened and treated as the main scientific synthesis issue.
+  - `resattn-914` remains the next implementation issue for Phase 6.
+  - future sessions should stop interpreting the single ready implementation task as the full next-step order for the repo.

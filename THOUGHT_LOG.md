@@ -1922,3 +1922,25 @@ Suggested entry format:
   - raw-alpha `h_4[t]`: `R^2 = -0.0486`, mean JS `= 0.1565`
   - alpha-logit `h_4[t]`: `R^2 = 0.3028`, mean JS `= 0.0835`
   - input ranking stayed unchanged across targets
+## [2026-03-18T19:31:01-0500] The Ready Queue Is Not The Same Thing As The Best Scientific Next Step
+- Stage: repo-wide priority review
+- Feel of the Experiment: The repo has enough positive signal now that sequencing matters more than hustle. If I only follow the ready implementation issue, I risk underusing the strongest result we already have.
+- Working Hypotheses:
+  - The main scientific next step is factual-recall oracle synthesis on saved Gemma artifacts.
+  - The main implementation next step is still router aggregation on the saved pilot export.
+- Hunches and Guesses:
+  - The factual-recall route-mode story is closer to a meaningful interpretability finding than another immediate router pilot tweak.
+  - `resattn-914` is still worth doing soon, but it should not crowd out the strongest existing structure result.
+- Predictions:
+  - A careful factual-recall synthesis pass will sharpen the paper more than another pooled rerun in any secondary lane.
+  - Figure 8 and broader tool-breakage reruns would be a distraction right now unless a materially stronger proxy or bridge surface appears.
+- Surprises and Tensions:
+  - The repo already knows this in pieces, but the ready queue hid it: the strongest underexploited positive result is not the newest implementation lane.
+  - Safety is methodologically healthier than I expected, but still not the right main focus because the mediator-conditioned result remains role-collapsed.
+- Confidence:
+  - high that factual-recall synthesis should be the next scientific step
+  - high that `914` should stay next on the implementation side
+- Interesting facts:
+  - full `registry_v5` Gemma oracle improvement `= +1.6299` nats on `1024` confirm prompts
+  - factual-recall raw-source silhouette `= 0.4709`
+  - router pilot after target fix `R^2 = 0.3028`, still below the Phase 6 readiness gate

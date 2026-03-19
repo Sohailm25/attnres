@@ -1153,20 +1153,18 @@
 ## Immediate Next Steps
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
-2. Keep the Phase 6 lane at pilot-stage modeling design rather than moving to confirmatory router training:
-   - the saved `registry_v5` pilot export is now live and target geometry has been partially repaired on that fixed surface
-   - freeze `oracle_alpha_logit_vector` as the baseline target parameterization for the next pilot slice
-   - the next core implementation move is `resattn-914`: compare sequence aggregation rules on the same saved pilot export before a model-capacity sweep
-3. Keep the current donor-arm tool-breakage boundary frozen unless a stronger same-model donor claim becomes strategically necessary; `resattn-oi7` showed that the partial control collapse is mostly an ordering artifact but not the whole problem.
-4. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
+2. Treat the next scientific step and the next implementation step separately:
+   - the main scientific next step is `resattn-chz`: synthesize the saved factual-recall route modes on the `registry_v5` Gemma artifact, because that is currently the strongest underexploited interpretability result in the repo
+   - the main implementation next step is `resattn-914`: compare sequence aggregation rules on the same saved pilot router-distillation export with `oracle_alpha_logit_vector` frozen
+3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
    - strong grouped coarse structure
    - strong stratum-conditioned raw-source structure, especially factual recall
    Do not keep centering the thesis on a global raw `~8`-cluster story, because that gate is still unpassed.
-5. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
+4. Treat the primary-model regime-comparison result as part of the core story rather than a side lane:
    - softmax-constrained routing beat unconstrained and every tested top-k regime on all `128` confirm prompts
    - this is now part of the main evidence that competitive depth routing is meaningful on the primary spine
-6. Keep tool-breakage as a bounded extension lane:
+5. Keep tool-breakage as a bounded extension lane:
    - the active factual bridge surface is now `tool_breakage_factual_recall_v5`, not pooled `v4`
    - the fixed-alpha objection is now clearly weaker on `v5`
    - bridge coverage is now clean for capitals, elements, and non-outlier authors
@@ -1176,6 +1174,11 @@
    - the old moon-family sidecar is also now audited and frozen:
       - its miss is mostly prompt-style drift plus donor mismatch, not a clean family null
       - if moons ever reopen, prefer a moon-only prompt rewrite before donor remap
+6. Keep Figure 8 frozen on the current local proxy unless a materially more faithful proxy becomes immediately executable.
+7. Keep safety as the next extension lane after the two steps above rather than a parallel main lane:
+   - the mechanistic workflow is valid
+   - the current mediator-conditioned result is still role-collapsed
+   - broadening the safety claim before tightening the core oracle story would be a sequencing mistake
 7. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
