@@ -1,6 +1,6 @@
 # Current State
 
-**Last updated:** 2026-03-18
+**Last updated:** 2026-03-19
 **Updated by:** codex-gpt5
 **Status:** in_progress
 **Current phase:** Phase 2/3 - Primary-model oracle synthesis with bounded tool-breakage and safety extensions
@@ -1390,6 +1390,11 @@
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the current scientific boundary and the next implementation step separately:
    - the main active implementation step is `resattn-b4h`: diagnose whether exact-tokenwise failure is driven by within-prompt teacher variance or by sequence-aggregation mismatch before any broader tokenwise redesign is even considered
+   - the next bounded Phase 6 design follow-up is `resattn-y4m`: compare embedding-isolated block-compressed router targets on the saved Gemma pilot while preserving residual-style equal mixing as a special case
+   - use the AttnRes memoir only as a design constraint here, not as evidence:
+     - prefer compression that can still represent the residual baseline over sparse truncation that cannot
+     - test embedding as an isolated block explicitly rather than treating it as an incidental source-type artifact
+     - do not read trained AttnRes block choices as evidence that frozen-model raw-source routing must naturally realize `~8` clusters
    - the saved-artifact reasoning/math follow-up is now done:
      - reasoning/math is operation-dominated at the top cluster level but still heavily frame-conditioned inside each operation
      - that makes it a meaningful supporting result, not a better bridge lane than factual recall

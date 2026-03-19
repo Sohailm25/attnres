@@ -2232,3 +2232,27 @@ Suggested entry format:
   - high that reasoning/math is a real secondary positive
   - high that it should not displace factual recall as the main bridge lane
   - medium that the mixed cross-operation joins would repay a later targeted audit
+
+## [2026-03-19T08:40:03-0500] The AttnRes Memoir Is More Useful As Design Taste Than As Evidence
+- Stage: planning / synthesis
+- Feel of the Review: This was a good correction. The memoir is relevant, but not in the lazy way. It does not license stronger claims for our frozen-model results. It does sharpen what the next honest Phase 6 comparison should look like.
+- Working Hypotheses:
+  - If Phase 6 improves again, a more likely win is a compressed target that preserves residual-style equal mixing as a special case than a sparser target that cannot represent the baseline.
+  - Embedding being isolated as its own block is specific enough to test directly on the saved Gemma pilot surface.
+- Hunches and Guesses:
+  - The exact-teacher failure may be telling us that the trainable object wants a coarser but still competition-preserving target, not a more exact but noisier tokenwise teacher.
+  - A block-compressed target with embedding singled out could end up more trainable without needing to pretend the raw-source `~8`-cluster claim is solved.
+- Predictions:
+  - `resattn-b4h` should still run first because it tells us whether the failure is teacher variance or aggregation mismatch.
+  - If `b4h` does not kill target-design work entirely, the next honest comparison is embedding-isolated compression, not another width/family tweak.
+- Surprises and Tensions:
+  - The memoir's strongest overlap with our repo is not Figure 8. It is the compression-versus-sparsity argument and the embedding singleton choice.
+  - That creates a temptation to overread their `~8` block choice into our raw-cluster lane, which would be sloppy.
+- Confidence:
+  - high that the memoir should influence queue discipline
+  - high that it should not move any claim boundary by itself
+- Interesting facts:
+  - Their story explicitly says sliding-window style sparsity underperformed because it could not recover the residual baseline.
+  - Their block design isolates embedding and compresses the rest into a small number of blocks rather than dropping history outright.
+- Sidecar research:
+  - This is one of the cleaner external arguments for testing compressed Phase 6 teacher targets before any more open-ended architecture search.
