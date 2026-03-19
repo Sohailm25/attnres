@@ -1712,3 +1712,25 @@
   - `resattn-7xo` can close once the artifact lands.
   - `resattn-b4h` is now the next main Phase 6 issue.
   - future tokenwise-teacher work should start from diagnosing mismatch on the saved subset artifact before launching another expensive teacher-generation run.
+
+## [2026-03-19T10:25:00-0500] DECISION: Rebalance the queue toward saved-artifact oracle science plus one bounded Phase 6 diagnosis
+
+- Trigger: cross-session review after `resattn-7xo` showed that the queue exposed only the next Phase 6 implementation task, while the strongest established results in the repo still live on the saved primary-model Gemma oracle artifacts.
+- Decision: keep `resattn-b4h` as the next active implementation step, but explicitly add a parallel saved-artifact scientific follow-up, `resattn-v7h`, for reasoning/math route-mode analysis on the saved `registry_v5` confirm artifact. Do not reopen broad oracle reruns, pooled tool-breakage work, safety expansion, or Figure 8 rescue before those two steps are resolved.
+- Rationale:
+  - the strongest repo-level claims are already on the primary Gemma spine:
+    - `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1.md`
+    - `results/oracle_alpha/20260318-gemma2-registry-v5-synthesis-v1.md`
+    - `results/pattern_analysis/20260318-gemma2-registry-v5-pattern-analysis-v1.md`
+  - factual recall is already the best-understood structured stratum:
+    - `results/block_structure/20260318-gemma2-factual-recall-routing-synthesis-v1.md`
+    - `results/block_structure/20260318-gemma2-factual-route-mode-frame-audit-v1.md`
+  - reasoning/math is the second-strongest raw-source stratum (`silhouette = 0.2456`, oracle-beats-random resampling fraction `= 1.0`) and is now the clearest underexplored positive result that could add new interpretability signal without another expensive model run
+  - Phase 6 still matters, but the truthful next move is diagnosis, not another redesign:
+    - exact tokenwise teachers fail on the bounded subset
+    - the larger saved pilot still favors the repeated sequence-level all-token target
+  - keeping only `resattn-b4h` visible would let recent router-training work crowd out the stronger saved-artifact science
+- Impact:
+  - `resattn-b4h` remains the next active implementation task.
+  - `resattn-v7h` is now the next active saved-artifact scientific task.
+  - `CURRENT_STATE.md` and `journal/current_state.md` should make that dual ordering explicit so future sessions do not default to Phase 6 only.

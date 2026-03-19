@@ -1366,12 +1366,14 @@
 
 1. Keep the main oracle story fixed on the saved primary-model Gemma synthesis rather than launching another broad rerun by inertia.
 2. Treat the next scientific step and the next implementation step separately:
-   - the broad frame-versus-family question is now answered on saved artifacts: the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
+   - the main active implementation step is `resattn-b4h`: diagnose whether exact-tokenwise failure is driven by within-prompt teacher variance or by sequence-aggregation mismatch before any broader tokenwise redesign is even considered
+   - the main active saved-artifact scientific step is `resattn-v7h`: audit reasoning/math route modes on the saved `registry_v5` Gemma confirm artifact to see whether the second-strongest raw-source stratum contains interpretable task-like structure beyond the already-solved factual family-plus-frame result
    - the bounded family, approximate-teacher, and exact-teacher questions are now answered on the saved Gemma pilot surfaces:
      - under `all_tokens_target_mse`, the widened MLP regains a small held-out advantage over the linear head
      - the bounded shared-final-norm tokenwise teacher fails badly, while the matched next-token-position mask control is essentially a tie
      - the exact tokenwise teacher also fails on the bounded `32 / 16` deterministic subset, while the matched next-token-position mask gains only modestly on that smaller slice
-   - the main active implementation step is now `resattn-b4h`: diagnose whether exact-tokenwise failure is driven by within-prompt teacher variance or by sequence-aggregation mismatch before any broader tokenwise redesign is even considered
+   - the broad factual frame-versus-family question is already answered on saved artifacts:
+     - the strongest factual route-mode claim is family-plus-prompt-frame-conditioned, with only a small residual within-frame author-title split
    - the residual author `novel_title` split is now bounded as a lexical-surface sidecar rather than a standing open frame audit
 3. Keep centering the main oracle interpretation on what is actually strongest in the saved artifacts:
    - prereg-scale positive held-out routed-loss recovery on `google/gemma-2-2b`
@@ -1393,10 +1395,6 @@
       - if moons ever reopen, prefer a moon-only prompt rewrite before donor remap
 6. Keep Figure 8 frozen on the current local proxy unless a materially more faithful proxy becomes immediately executable.
 7. Keep safety as the next extension lane after the two steps above rather than a parallel main lane:
-   - the mechanistic workflow is valid
-   - the current mediator-conditioned result is still role-collapsed
-   - broadening the safety claim before tightening the core oracle story would be a sequencing mistake
-7. Keep safety as the next extension lane after the factual bridge analysis:
    - the aligned-Gemma workflow is methodologically strong
    - stronger safety-routing language remains blocked on broader prompt families that break the current role collapse
 8. Keep the strong Figure 8 lane frozen until a materially more faithful proxy path is concrete enough to execute immediately. The current local proxy has already done its epistemic job by preventing overclaiming.

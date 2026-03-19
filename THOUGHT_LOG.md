@@ -2192,3 +2192,23 @@ Suggested entry format:
   - `next_token_positions_sequence_target_mse`: `R^2 = 0.1803`, mean JS `= 0.0998`
   - `next_token_positions_exact_oracle_alpha_logit_mse`: `R^2 = -0.1126`, mean JS `= 0.1486`
   - rerun-stable subset hash: `ff6c608adfbb05dcf5895a11ce8740553304f9b2`
+
+## [2026-03-19T10:25:00-0500] The Queue Was Drifting Toward Phase 6 By Recency, Not By Strength
+- Stage: cross-session synthesis and reprioritization
+- Feel of the Review: The project is in better shape than the ready queue made it look. The strongest results are not the latest router-training negatives; they are the saved primary-model Gemma oracle artifacts plus the factual route-mode synthesis. The risk was not lack of progress. It was letting recency bias quietly narrow the whole project to Phase 6.
+- Working Hypotheses:
+  - `resattn-b4h` is still the next honest implementation step because it tells us whether the tokenwise-teacher path is misaligned or just too high-variance.
+  - the main underexplored science result is now reasoning/math, not another factual cleanup and not another broad oracle rerun.
+- Hunches and Guesses:
+  - reasoning/math may be the first place where the raw-source structure looks more task-like and less template-dominated than factual recall.
+  - if that stratum turns out to be mostly frame-driven too, that is still valuable because it tightens the overall interpretation boundary rather than just adding another positive story.
+- Predictions:
+  - `resattn-v7h` is worth doing even though it is saved-artifact-only, because it could materially sharpen what kind of interpretability signal the primary Gemma oracle is actually exposing.
+  - if `b4h` points mostly to aggregation mismatch, the right follow-up will be a bounded decoder/objective diagnosis, not a larger tokenwise export.
+- Surprises and Tensions:
+  - the queue having only `resattn-b4h` ready understated how much meaningful science is already sitting in saved artifacts.
+  - the project is now strongest when it says “primary-model effective depth mixture plus grouped and stratum-conditioned structure,” not when it chases the next training tweak.
+- Confidence:
+  - high that Figure 8 and tool-breakage should stay frozen at their current honest boundaries
+  - high that the next queue should expose both a scientific saved-artifact step and an implementation step
+  - medium-high that reasoning/math is the right underexplored science follow-up
