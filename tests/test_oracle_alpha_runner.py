@@ -324,7 +324,7 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             self.assertGreaterEqual(prediction.predicted_loss, 0.0)
             self.assertGreaterEqual(prediction.js_divergence_to_oracle, 0.0)
 
-    def test_predictiveness_check_uses_model_agnostic_mib_omission_rationale(
+    def test_predictiveness_check_uses_control_plan_mib_metadata(
         self,
     ) -> None:
         summary = self.run_oracle_alpha_predictiveness_check(
@@ -339,9 +339,8 @@ class OracleAlphaRunnerTests(unittest.TestCase):
             candidate_feature_sources=("mean_pooled_h_1[t]_resid_post_layer_0",),
         )
 
-        self.assertEqual("omitted", summary.mib_status)
-        self.assertNotIn("development-model", summary.mib_rationale)
-        self.assertIn("current runner stage", summary.mib_rationale)
+        self.assertEqual("planned", summary.mib_status)
+        self.assertIn("planned sanity benchmark", summary.mib_rationale.lower())
 
     def test_tuned_ridge_regularization_can_select_on_predicted_loss_improvement(
         self,

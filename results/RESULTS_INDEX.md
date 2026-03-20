@@ -25,6 +25,10 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Prereg-scale oracle-alpha campaign build-out | infrastructure | pass | `results/infrastructure/20260317-prereg-scale-campaign-buildout.md` |
 | Gemma-shaped `n << d` ridge runtime benchmark | infrastructure | pass | `results/infrastructure/20260318-gemma2-ridge-runtime-benchmark-b4q.md` |
 | Oracle campaign progress smoke for summary-stage observability | infrastructure | pass | `results/infrastructure/20260318-oracle-campaign-progress-smoke-9co.md` |
+| Paper-readiness claim matrix v1 | infrastructure | pass | `results/infrastructure/20260320-paper-readiness-claim-matrix-v1.md` |
+| Training-dynamics scope decision and writing checklist v1 | infrastructure | pass | `results/infrastructure/20260320-training-dynamics-scope-decision-and-writing-checklist-v1.md` |
+| Manuscript claim-to-artifact table v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-claim-to-artifact-table-v1.md` |
+| Manuscript skeleton v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-skeleton-v1.md` |
 
 ## Oracle Alpha
 
@@ -48,6 +52,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 primary-model held-out predictiveness check | oracle_alpha | mixed | `results/oracle_alpha/20260317-gemma2-heldout-predictiveness-check.md` |
 | Gemma-2 registry_v5 calibration v2 | oracle_alpha | positive | `results/oracle_alpha/20260318-gemma2-registry-v5-calibration-v2.md` |
 | Gemma-2 registry_v5 stratified campaign v1 | oracle_alpha | pass | `results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1.md` |
+| Resattn OIH MCQA anchor full v1 (73r-refreshed calibrated-static + MIB-plumbed) | oracle_alpha | mixed | `results/oracle_alpha/20260320-resattn-oih-full-v1.md` |
 
 ## Pattern Analysis
 
@@ -118,12 +123,14 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 route-mode-aware donor-arm decomposition v5 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-donor-arms-v5.md` |
 | Gemma-2 factual route-mode bridge v5 | tool_breakage | pass | `results/tool_breakage/20260318-gemma2-tool-breakage-factual-route-mode-bridge-v5.md` |
 | Gemma-2 donor geometry audit v5 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-donor-geometry-audit-v5.md` |
+| Gemma-2 route-mode dynamic counterfactual with seeded donor controls v1 | tool_breakage | mixed | `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1.md` |
 | Gemma-2 moon prompt-style audit v4 | tool_breakage | mixed | `results/tool_breakage/20260318-gemma2-tool-breakage-moon-style-audit-v4.md` |
 
 ## Training Dynamics
 
 | Artifact | Lane | Status | Path |
 |---|---|---|---|
+| Training-dynamics lane status and omission rationale v1 | training_dynamics | planning | `results/training_dynamics/20260320-training-dynamics-lane-status-v1.md` |
 
 ## Router Training
 
@@ -142,6 +149,15 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 router-distillation teacher-target comparison v1 | router_training | fail | `results/router_training/20260318-gemma2-router-distillation-teacher-target-comparison-v1.md` |
 | Gemma-2 router-distillation exact-teacher subset v1 | router_training | fail | `results/router_training/20260319-gemma2-router-distillation-exact-teacher-subset-v1.md` |
 | Gemma-2 router-distillation exact-teacher mismatch audit v1 | router_training | pass | `results/router_training/20260319-gemma2-router-distillation-exact-teacher-mismatch-audit-v1.md` |
+| Gemma-2 router-distillation block-compressed target pilot v1 | router_training | mixed | `results/router_training/20260320-gemma2-router-distillation-block-compressed-target-v1.md` |
+| Gemma-2 router-distillation block-compressed confirm v1 | router_training | partial | `results/router_training/20260321-gemma2-router-distillation-block-compressed-confirm-v1.md` |
+| Gemma-2 router-distillation block-compressed last-token pilot v1 | router_training | mixed | `results/router_training/20260321-gemma2-router-distillation-block-compressed-last-token-v1.md` |
+| Gemma-2 router-distillation block-split target confirm v1 | router_training | mixed | `results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1.md` |
+| Gemma-2 router-distillation block-split supervision comparison v1 | router_training | mixed | `results/router_training/20260323-gemma2-router-distillation-block-split-supervision-v1.md` |
+| Gemma-2 router-distillation hybrid late-third geometry v1 | router_training | fail | `results/router_training/20260323-gemma2-router-distillation-hybrid-late-third-v1.md` |
+| Gemma-2 router-distillation block-split target pilot v1 | router_training | mixed | `results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1.md` |
+| Gemma-2 router-distillation split export on `registry_v5` v1 | router_training | pass | `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-splits-v1.md` |
+| Gemma-2 router-distillation decisive Phase 6 pilot-to-confirm bundle v1 | router_training | mixed | `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1.md` |
 
 ## Safety Alignment
 
@@ -158,6 +174,8 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Gemma-2 IT broadened refusal-surface policy budget check v1 | safety_alignment | mixed | `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-policy-budget-check-v1.md` |
 | Gemma-2 IT broadened refusal-surface prohibition-style v1 | safety_alignment | mixed | `results/safety_alignment/20260318-gemma2it-refusal-surface-v2-prohibition-style-v1.md` |
 | Gemma-2 IT broadened mediator-conditioned routing v2 | safety_alignment | fail | `results/safety_alignment/20260318-gemma2it-mediator-conditioned-routing-v2.md` |
+| Gemma-2 IT refusal-surface v3 validation v3 | safety_alignment | pass | `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3.md` |
+| Gemma-2 IT mediator-conditioned routing v3 on refusal-surface v3 | safety_alignment | mixed | `results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3.md` |
 
 ## Figures
 

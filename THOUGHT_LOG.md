@@ -2282,3 +2282,81 @@ Suggested entry format:
   - mean exact-teacher entropy minus oracle entropy: `+0.3727`
 - Sidecar research:
   - This is the strongest internal argument yet for compression-over-sparsity in Phase 6: not because AttnRes used blocks, but because our exact tokenwise teachers are too internally inconsistent to be the trainable object we want.
+
+## [2026-03-20T11:45:00-0500] High-Leverage Plan Feels Cleaner Than the Old “One More Tweak” Loop
+- Stage: pre-paper prioritization and Phase 6 re-entry
+- Feel of the Review: The repo is in a strong place scientifically, but recent queue shape risked spending more cycles on local maxima. The new gameplan feels cleaner: one decisive Phase 6 bundle, one decisive tool-breakage control pass, one safety surface redesign, one external anchor package.
+- Working Hypotheses:
+  - If Phase 6 cannot clear `R^2 >= 0.5` on the scaled pilot-to-confirm bundle, additional geometry tweaks are unlikely to change the paper story this cycle.
+  - Tool-breakage value is now in route-mode-aware dynamic control adjudication, not another baseline rerun.
+  - Safety value is now in breaking role collapse by prompt design, not another v2 mediator replay.
+- Surprises and Tensions:
+  - The split export run was slower than the earlier pilot-only intuition but still very manageable on MPS.
+  - The biggest remaining risk feels methodological (confirm leakage and control alignment), not missing signal.
+- Confidence:
+  - high that the new high-leverage sequence is better than continuing ad hoc sweeps
+  - medium-high that `resattn-r7s` now has the right first slice in place (split-safe pilot+confirm exports)
+
+## [2026-03-20T11:50:32-0500] The Decisive Phase 6 Bundle Reduced Uncertainty, Not Blockers
+- Stage: Phase 6 adjudication
+- Feel of the Result: This was worth doing. The run bundle did exactly what it should: removed the “maybe we just need one bigger clean run” ambiguity. It did not rescue readiness.
+- Working Hypotheses:
+  - Router-distillation readiness is still blocked on this cycle for the retained objective family.
+  - The next value is in moving to tool-breakage/safety adjudication, not reopening Phase 6 geometry churn.
+- Surprises and Tensions:
+  - `h_4[t]` + `512` did improve over `256`, but by a modest amount.
+  - `h_1[t]` still lags and one confirm stratum goes negative, which is stronger evidence against an `h_1[t]`-centered readiness narrative.
+- Confidence:
+  - high that Phase 6 should remain mixed/blocked in paper language this cycle
+  - high that `resattn-88i` is now the right next high-leverage move
+
+## [2026-03-20T11:59:21-0500] Seeded Donors Removed the Easy Excuse, but Not the Mixed Read
+- Stage: tool-breakage donor-control adjudication
+- Feel of the Result: This is the result I wanted epistemically. We removed the obvious ordering artifact and the lane still did not become broadly positive against dynamic donors.
+- Working Hypotheses:
+  - The donor-arm limitation is now genuinely route-mode/family-heterogeneous rather than a bookkeeping bug.
+  - Safety surface redesign (`cv9`) is likely higher value than another donor rerun.
+- Surprises and Tensions:
+  - `prompt_permuted_alpha` moved close to parity, but `within_family` stayed materially negative.
+  - Fixed-alpha control remains strongly weaker, so the lane is not a null; it is specifically a mixed dynamic-control result.
+- Confidence:
+  - high that the tool-breakage donor boundary should stay mixed for this cycle
+  - high that next queue value is safety surface redesign, not another broad donor-arm pass
+
+## [2026-03-20T13:27:59-0500] OIH Is Real Now, But Static Baseline Calibration Is the Next Honesty Test
+- Stage: OIH execution (`cv9` closeout + `oih` full anchor)
+- Feel of the Result: Good progress, mixed confidence. `cv9` closed cleanly as a negative, which is scientifically useful. `oih` produced a real full-scale artifact quickly, but the primary pruned static baseline is so weak that it cannot carry the whole dynamic-vs-static claim by itself.
+- Working Hypotheses:
+  - The dynamic signal on the OIH surface is real (`predicted` and `oracle` both positive on confirm).
+  - The current ShortGPT-style pruning policy is likely over-harsh for this routed-mixture objective.
+  - Supplementary pilot-mean static policy is the better immediate comparator and should be explicit in interpretation.
+- Surprises and Tensions:
+  - Even with milder pruning (`0.10`), the pruned static baseline stayed strongly negative on all confirm prompts.
+  - Pilot-mean static baseline was much healthier and close enough to dynamic predicted to be informative.
+- Confidence:
+  - high that `cv9` should stay bounded negative
+  - medium-high that `oih` now meaningfully advances the external-anchor lane
+  - medium that the current pruned static definition should remain the primary reviewer-facing static baseline without one calibration follow-up
+
+## [2026-03-20T13:35:00-0500] Skeleton Lock Reduced Narrative Drift Risk
+- Stage: writing transition (`resattn-mfp`)
+- Feel of the Result: This was the right time to freeze structure. The project now has enough mixed edges that writing without an explicit skeleton would almost certainly drift into overstatement.
+- Working Hypotheses:
+  - Most remaining risk is wording calibration, not missing core evidence.
+  - `resattn-73r` is the key final leverage point before stronger OIH language.
+- Confidence:
+  - high that moving into skeleton-first drafting is correct now
+  - medium-high that static baseline calibration is the next technical bottleneck for external-anchor claims
+
+## [2026-03-20T13:55:14-0500] The OIH Calibration Pass Was Boring, but It Closed a Real Credibility Gap
+- Stage: OIH follow-up (`resattn-73r`)
+- Feel of the Result: This was operationally tedious but scientifically important. The full artifact now says what we wanted it to say without hand-wavy caveats: calibrated static is explicit, and MIB metadata matches the control plan.
+- Working Hypotheses:
+  - The OIH lane is now solid enough for manuscript integration without another immediate rerun.
+  - The real remaining work is synthesis and truthful claim calibration, not more static-baseline hacking.
+- Surprises and Tensions:
+  - The full rerun took close to 10 minutes even with cache reuse, so “just rerun quickly” is less true than it looked at first.
+  - The dynamic-over-calibrated margin is positive but small (`+0.0478`), which is useful but should keep language conservative.
+- Confidence:
+  - high that `resattn-73r` is complete as scoped
+  - medium-high that OIH now supports a bounded, reviewer-respectable dynamic-vs-static statement

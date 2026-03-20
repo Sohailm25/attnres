@@ -1420,13 +1420,6 @@ def build_oracle_alpha_predictiveness_summary(
         for prediction in eval_predictions
     ) / len(eval_predictions)
 
-    mib_rationale = (
-        "omitted for the current runner stage because the pilot/confirm prompt "
-        "registry is a custom local prompt slice rather than a benchmark-compatible "
-        "task surface, so a MIB-style sanity task would be artificial here; keep "
-        "the global MIB anchor planned for a later compatible lane"
-    )
-
     return OracleAlphaPredictivenessSummary(
         model_name=model.cfg.model_name,
         collection_id=collection_id,
@@ -1449,8 +1442,8 @@ def build_oracle_alpha_predictiveness_summary(
         eval_predictions=tuple(eval_predictions),
         predicted_mean_improvement_over_uniform=predicted_mean_improvement_over_uniform,
         oracle_mean_improvement_over_uniform=oracle_mean_improvement_over_uniform,
-        mib_status="omitted",
-        mib_rationale=mib_rationale,
+        mib_status=control_plan.mib_anchor.mib_status,
+        mib_rationale=control_plan.mib_anchor.rationale,
     )
 
 

@@ -40,3 +40,40 @@ plans:
         not yet have an oracle-alpha runner or a local MIB adapter, so the honest
         current control is a planned sanity benchmark rather than fake wiring.
       revisit_trigger: after_oracle_alpha_runner_exists
+
+  resattn_oih_mcqa_v1:
+    collection_id: resattn_oih_mcqa_v1
+    aggregation_unit: sequence
+    bootstrap_resamples: 1000
+    null_models:
+      - uniform
+      - random_dirichlet
+      - magnitude_proportional
+      - last_layer_only
+    stability_suite:
+      restart_seeds: [11, 17, 23]
+      prompt_perturbations:
+        - prompt_resample
+      report_metrics:
+        - mean_pairwise_js_divergence
+        - top1_source_agreement
+    predictiveness:
+      train_collection_id: resattn_oih_mcqa_v1
+      train_split: pilot
+      eval_collection_id: resattn_oih_mcqa_v1
+      eval_split: confirm
+      model_family: ridge_regression
+      target: block_compressed_alpha_logit_vector
+      features: cached_early_hidden_state_summary_or_prompt_features
+      primary_metric: mean_predicted_improvement_over_uniform
+      secondary_metric: mean_js_divergence
+      failure_action: weaken_claim
+    mib_anchor:
+      mib_status: planned
+      benchmark: MIB
+      sanity_task: mcqa_causal_localization_anchor_with_shortgpt_static_baseline
+      rationale: >
+        This collection is an explicit MIB-compatible multiple-choice anchor. It pairs
+        the existing oracle-alpha predictiveness path with a static block-influence
+        baseline so dynamic-versus-static evidence is evaluated on the same prompts.
+      revisit_trigger: after_first_oih_anchor_artifact

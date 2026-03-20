@@ -2323,3 +2323,394 @@ Use this file for execution checkpoints and transient notes. Every substantial l
 - Latest checkpoint: `N/A`
 - Anomalies: none; the exact-command rerun preserved the `summary.json` hash on MPS (`58819a5bf2eb7b34a3d90fe8959fbbc2bf91e3a4`).
 - Next step: close `resattn-b4h`, unblock `resattn-y4m`, and move Phase 6 to the embedding-isolated block-compressed target comparison.
+
+## [2026-03-19T10:27:03-0500] PRE-RUN: resattn-y4m block-compressed pilot
+- tmux session: N/A
+- Script: `scripts/run_router_distillation_pilot.py`
+- Command: `.venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260320-gemma2-router-distillation-block-compressed-target-v1 --candidate-input-fields 'h_4[t]' 'h_1[t]' --candidate-target-names block_compressed_alpha_logit_vector --aggregation mean_token_logits_then_softmax --hidden-dim 256 --learning-rate 1e-3 --weight-decay 1e-4 --batch-size 16 --max-epochs 300 --patience 40 --eval-fraction 0.25 --seed 11`
+- Config: `candidate_input_fields = ['h_4[t]', 'h_1[t]']`, `target = block_compressed_alpha_logit_vector`, `aggregation = mean_token_logits_then_softmax`, `hidden_dim = 256`, `weight_decay = 1e-4`
+- What I'm testing: whether the block-compressed target improves held-out loss/entropies on the saved Gemma pilot while preserving residual-style equal mixing as a special case.
+- Expected outcome: a summary JSON that captures the new target’s predictiveness plus any comparisons to the existing baselines.
+- Expected duration: ~20 minutes
+- Checkpoint path: N/A
+- Checkpoint cadence: N/A
+- Log path: `results/router_training/20260320-gemma2-router-distillation-block-compressed-target-v1/run.log`
+- Resume command: same as the above
+- Main confound to watch: the same pilot split already disfavors tokenwise teachers, so the block-compressed target may still fall short of the routed-loss gate even if descriptive metrics improve.
+- Implementation verified: YES - unit tests for the new target and router loss paths are green.
+- Status: LAUNCHING
+
+## [2026-03-19T10:28:05-0500] POST-RUN: resattn-y4m block-compressed pilot
+- Command: same as the pre-run line above
+- Outcome: SUCCESS
+- Key metric: `selected_input_field = h_4[t]`, `eval_r_squared = 0.1662`, `mean_js_divergence = 0.1205`, `eval_loss = 0.3432`
+- Artifacts saved: `results/router_training/20260320-gemma2-router-distillation-block-compressed-target-v1/summary.json`
+- Anomalies: none; the runtime summary matches the JSON root payload printed to stdout
+- Next step: digest the new summary, compare h_4 versus h_1 across block target, and decide whether this compressed target warrants confirm-phase analysis
+
+## [2026-03-19T11:40:30-0500] POST-RUN: resattn-y4m block-compressed confirm rerun
+- Command: `./.venv/bin/python - <<'PY' ...` (replayed the pilot train/eval split deterministically)
+- Outcome: SUCCESS
+- Key metric: confirm `R^2 = 0.1662`, mean JS = `0.1205`, eval loss = `0.3432`
+- Artifacts saved: `results/router_training/20260321-gemma2-router-distillation-block-compressed-confirm-v1/summary.json`
+- Anomalies: none; the replay used the same prompt IDs and matched the pilot numbers
+- Next step: compare this confirm summary with the pilot to inform whether the block target generalization is geometric or tuning-limited
+
+## [2026-03-19T12:14:00-0500] POST-RUN: resattn-y4m block-compressed last-token pilot
+- Command: `.venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260321-gemma2-router-distillation-block-compressed-last-token-v1 --candidate-input-fields 'h_4[t]' 'h_1[t]' --candidate-target-names block_compressed_alpha_logit_vector --aggregation last_token_logits_then_softmax --hidden-dim 256 --learning-rate 1e-3 --weight_decay=1e-4 --batch_size=16 --max_epochs=300 --patience=40 --eval_fraction=0.25 --seed=11`
+- Outcome: SUCCESS
+- Key metric: `selected_input_field = h_4[t]`, `eval_r_squared = 0.1327`, `mean_js_divergence = 0.1252`, `eval_loss = 0.3757`
+- Artifacts saved: `results/router_training/20260321-gemma2-router-distillation-block-compressed-last-token-v1/summary.json`
+- Anomalies: none; switching to last-token aggregation weakened the held-out fit
+- Next step: compare this aggregation variant to the mean-token pilot to decide whether to tune aggregation or change the target geometry
+## [2026-03-19T21:30:05.991479Z] PRE-RUN: resattn-y4m block-split target comparison
+- Command: `.venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1 --candidate-input-fields 'h_4[t]' --candidate-target-names block_compressed_alpha_logit_vector block_split_alpha_logit_vector --aggregation mean_token_logits_then_softmax --hidden-dim 256 --learning-rate 1e-3 --weight-decay 1e-4 --batch-size 16 --max-epochs 300 --patience 40 --seed 11 --device mps`
+- Device: `mps`
+- Model: `google/gemma-2-2b`
+- Data slice: `oracle_alpha_phase1_v1` pilot split, deterministically stratified eval fraction 0.25
+- Output path: `results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1/summary.json`
+- What I'm testing: whether block-split grouping (attn vs mlp within each layer) recovers the residual baseline more reliably than the previous block_compressed grouping under the same aggregation and supervision objective.
+- Expected outcome: clarify whether splitting attn/mlp within each block raises R^2/JS toward the readiness gate or leaves the target geometry insufficient.
+- Implementation verified: YES - prior `scripts/run_router_distillation_pilot.py` runs succeeded, the saved export matches previous runs.
+- Status: LAUNCHING
+## [2026-03-19T21:36:25.123456Z] POST-RUN: resattn-y4m block-split target comparison
+- Command: `.venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1 --candidate-input-fields 'h_4[t]' --candidate-target-names block_compressed_alpha_logit_vector block_split_alpha_logit_vector --aggregation mean_token_logits_then_softmax --hidden-dim 256 --learning-rate 1e-3 --weight-decay 1e-4 --batch-size 16 --max-epochs 300 --patience 40 --seed 11 --device mps`
+- Outcome: SUCCESS
+- Key metric: selected `block_split_alpha_logit_vector` with `R² = 0.3236`, `mean_js = 0.0837`; compressed target remained at `R² = 0.1662`, `mean_js = 0.1205`
+- Artifacts saved: `results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1/summary.json`, `results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1.md`
+- Anomalies: none
+- Next step: consider confirm-phase rerun or a hybrid grouping that keeps the residual baseline but splits only the most interpretable blocks
+## [2026-03-19T21:32:29.862139Z] PRE-RUN: resattn-y4m block-split confirm
+- Command: `.venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1 --candidate-input-fields 'h_4[t]' --candidate-target-names block_split_alpha_logit_vector --aggregation mean_token_logits_then_softmax --hidden-dim 256 --learning-rate 1e-3 --weight-decay 1e-4 --batch-size 16 --max-epochs 300 --patience 40 --seed 11 --device mps`
+- Device: `mps`
+- Model: `google/gemma-2-2b`
+- Data slice: `oracle_alpha_phase1_v1` pilot split, fixed 192/64 stratified prompts
+- Output path: `results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1/summary.json`
+- What I'm testing: confirm that `block_split_alpha_logit_vector` generalizes with `h_4[t]` on the held-out confirm subset, after the previous split-target pilot improved R².
+- Expected outcome: replicates or modestly improves `R² ≈ 0.3236`, `JS ≈ 0.0837`; if so, the target is ready for limited interpretability claims.
+- Implementation verified: YES - same burn-in script and template as prior pilot run.
+- Status: LAUNCHING
+## [2026-03-19T21:41:40.000000Z] POST-RUN: resattn-y4m block-split confirm
+- Command: `.venv/bin/python scripts/run_router_distillation_pilot.py --output-dir results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1 --candidate-input-fields 'h_4[t]' --candidate-target-names block_split_alpha_logit_vector --aggregation mean_token_logits_then_softmax --hidden-dim 256 --learning-rate 1e-3 --weight-decay 1e-4 --batch-size 16 --max-epochs 300 --patience 40 --seed 11 --device mps`
+- Outcome: SUCCESS
+- Key metric: held-out `R² = 0.3236`, `mean_js = 0.0837`, `eval_loss = 0.5688` for the split target, meeting the previous confirm target and staying below the prereg gate
+- Artifacts saved: `results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1/summary.json`, `results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1.md`
+- Anomalies: none; best epoch remained `7`
+- Next step: decide whether to escalate by mixing only selected blocks or by improving the optimization/loss objective before stepping toward claim-worthy interpretability statements
+## [2026-03-19T21:33:45Z] PRE-RUN: resattn-y4m block-split supervision comparison v1
+- Command: `.venv/bin/python - <<'PY' ... compare_router_supervision_objectives(fixed_input_field='h_4[t]', fixed_target_name='block_split_alpha_logit_vector', fixed_aggregation='mean_token_logits_then_softmax', fixed_router_family='mlp', candidate_supervision_objectives=('sequence_target_mse','all_tokens_target_mse')) ... PY`
+- Device: `mps`
+- Model: `google/gemma-2-2b`
+- Data slice: `oracle_alpha_phase1_v1` saved split from `results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1/summary.json` (`192/64` prompts)
+- Output path: `results/router_training/20260323-gemma2-router-distillation-block-split-supervision-v1/summary.json`
+- What I'm testing: whether richer all-token supervision improves held-out recovery for the new block-split target while keeping target geometry and split fixed.
+- Expected outcome: either all-token supervision improves `R^2`/JS enough to justify a new baseline, or sequence-level supervision stays best and the lane remains geometry-limited.
+- Implementation verified: YES - API path already exercised by prior supervision-objective runs; fixed-target block-split path now supported in runner.
+- Status: LAUNCHING
+## [2026-03-19T21:36:20Z] POST-RUN: resattn-y4m block-split supervision comparison v1
+- Command: `.venv/bin/python - <<'PY' ... compare_router_supervision_objectives(... candidate_supervision_objectives=('sequence_target_mse','all_tokens_target_mse')) ... PY`
+- Outcome: SUCCESS
+- Key metric: selected `all_tokens_target_mse` with held-out `R^2 = 0.4099`, mean JS = `0.0792` (vs sequence target `R^2 = 0.3236`, mean JS = `0.0837`)
+- Artifacts saved: `results/router_training/20260323-gemma2-router-distillation-block-split-supervision-v1/summary.json`, `results/router_training/20260323-gemma2-router-distillation-block-split-supervision-v1.md`
+- Anomalies: first execution attempt did not emit the artifact; rerunning the same comparison completed successfully and produced stable metrics
+- Next step: lock `block_split + all_tokens_target_mse` as the current bounded Phase 6 baseline and run one hybrid geometry refinement before broadening search
+## [2026-03-20T00:15:00Z] PRE-RUN: resattn-v2g hybrid late-third geometry comparison v1
+- Command: `.venv/bin/python - <<'PY' ... compare_router_families(...) for block_split_alpha_logit_vector and block_late_third_split_alpha_logit_vector with supervision_objective='all_tokens_target_mse' ... PY`
+- Device: `mps`
+- Model: `google/gemma-2-2b`
+- Data slice: frozen `192/64` prompt IDs from `results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1/summary.json`
+- Output path: `results/router_training/20260323-gemma2-router-distillation-hybrid-late-third-v1/summary.json`
+- What I'm testing: whether splitting only the late-third layers by attn/mlp (while keeping earlier layers block-compressed) improves held-out recovery beyond the full block-split baseline under all-token supervision.
+- Expected outcome: either hybrid geometry improves over block-split `R^2 = 0.4099` with similar or better JS, or full block-split remains best and the lane is still geometry-limited.
+- Implementation verified: YES - unit tests pass for the new hybrid target path in controls and router-distillation.
+- Status: LAUNCHING
+## [2026-03-20T00:20:00Z] POST-RUN: resattn-v2g hybrid late-third geometry comparison v1
+- Command: `.venv/bin/python - <<'PY' ... compare_router_families(...) for block_split_alpha_logit_vector vs block_late_third_split_alpha_logit_vector with supervision_objective='all_tokens_target_mse' ... PY`
+- Outcome: SUCCESS
+- Key metric: baseline remained best (`block_split`: `R^2 = 0.4099`, JS `= 0.0792`) while hybrid underperformed (`block_late_third_split`: `R^2 = 0.2555`, JS `= 0.1071`)
+- Artifacts saved: `results/router_training/20260323-gemma2-router-distillation-hybrid-late-third-v1/summary.json`, `results/router_training/20260323-gemma2-router-distillation-hybrid-late-third-v1.md`
+- Anomalies: none
+- Next step: freeze this hybrid geometry branch and keep `block_split + all_tokens_target_mse` as the bounded Phase 6 baseline
+
+## [2026-03-20T11:33:24-0500] PRE-RUN: resattn-r7s split-scoped router export (pilot + confirm) v1
+- tmux session: `N/A`
+- Script: `scripts/export_router_distillation_pilot_dataset.py`
+- Command: `.venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --split pilot --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260320-gemma2-router-distillation-registry-v5-export-pilot-v1` then `.venv/bin/python scripts/export_router_distillation_pilot_dataset.py --model-name google/gemma-2-2b --device mps --collection-id oracle_alpha_phase1_v1 --split confirm --campaign-dir results/oracle_alpha/20260318-gemma2-registry-v5-campaign-v1 --output-dir results/router_training/20260320-gemma2-router-distillation-registry-v5-export-confirm-v1`
+- Config: `model=google/gemma-2-2b`, `collection=oracle_alpha_phase1_v1`, `splits=pilot+confirm`, `source=registry_v5 saved oracle checkpoints`, `checkpointed prompt exports`
+- What I'm testing: whether the export path can now materialize both pilot and confirm router-distillation datasets from the saved oracle campaign without recomputing oracle optimization.
+- Expected outcome: two manifests/summaries with split-correct metadata and resumable per-prompt export checkpoints.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-{pilot,confirm}-v1/checkpoints/prompt_exports`
+- Checkpoint cadence: `per prompt`
+- Log path: `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-{pilot,confirm}-v1/run.log`
+- Resume command: rerun the exact split command for pilot or confirm
+- Main confound to watch: confirm export must use non-exploratory registry access; any exploratory-path leak means the split support is invalid.
+- Implementation verified: YES - split-aware export plumbing landed with passing targeted tests (`tests/test_router_training_export.py`).
+- Status: LAUNCHING
+
+## [2026-03-20T11:40:26-0500] POST-RUN: resattn-r7s split-scoped router export (pilot + confirm) v1
+- Outcome: SUCCESS
+- Key metric: split-aware export now materializes both saved oracle splits with resumable per-prompt checkpoints (`pilot=256` prompts, `confirm=1024` prompts), and both manifests correctly report split metadata.
+- Artifacts saved: `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-pilot-v1/summary.json`, `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-confirm-v1/summary.json`, plus both `dataset_manifest.json` files and split-scoped prompt-export checkpoints.
+- Latest checkpoint: `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-confirm-v1/checkpoints/prompt_exports`
+- Anomalies: none; wall-clock was `81.28s` for pilot export and `282.22s` for confirm export on MPS.
+- Next step: add fixed-epoch pilot-to-confirm evaluation path (no confirm-time model selection) for the decisive Phase 6 bundle.
+
+## [2026-03-20T11:47:01-0500] PRE-RUN: resattn-r7s decisive Phase 6 pilot-to-confirm bundle v1
+- tmux session: `N/A`
+- Script: `scripts/run_router_distillation_phase6_bundle.py`
+- Command: `.venv/bin/python scripts/run_router_distillation_phase6_bundle.py --pilot-export-dir results/router_training/20260320-gemma2-router-distillation-registry-v5-export-pilot-v1 --confirm-export-dir results/router_training/20260320-gemma2-router-distillation-registry-v5-export-confirm-v1 --frozen-split-summary results/router_training/20260323-gemma2-router-distillation-block-split-supervision-v1/summary.json --output-dir results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1 --device mps`
+- Config: `target=oracle_alpha_logit_vector`, `aggregation=mean_token_logits_then_softmax`, `family=mlp`, `supervision=all_tokens_target_mse`, frozen pilot train/eval IDs from the saved block-split supervision summary; rows `h_4[t]` hidden `256` (47 epochs), `h_4[t]` hidden `512` (34 epochs), and calibrated `h_1[t]` hidden `512`.
+- What I'm testing: whether the bounded no-confirm-leak Phase 6 bundle can materially shift confirm performance toward the prereg `R^2 >= 0.5` gate while preserving acceptable confirm JS and stratum-level behavior.
+- Expected outcome: one summary artifact with calibration epoch, row-level pilot/confirm metrics, and confirm stratum summaries for all three fixed rows.
+- Expected duration: ~10-30 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: accidental confirm leakage through training-time row selection; this runner must only use pilot IDs for calibration/selection and reserve confirm for final evaluation.
+- Implementation verified: YES - split exports are complete; runner script compiles under `.venv`.
+- Status: LAUNCHING
+
+## [2026-03-20T11:50:32-0500] POST-RUN: resattn-r7s decisive Phase 6 pilot-to-confirm bundle v1
+- Outcome: SUCCESS
+- Key metric: no row cleared readiness on confirm (`R^2 >= 0.5`), but `h_4[t]` + hidden `512` was best (`confirm R^2 = 0.2986`, mean JS `= 0.0966`); `h_1[t]` calibrated row underperformed and had one negative confirm stratum (`worst-stratum R^2 = -0.0402`).
+- Artifacts saved: `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1/summary.json`, `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1/run.log`
+- Latest checkpoint: `N/A`
+- Anomalies: none; fixed-epoch rows preserved `best_epoch == max_epochs` for the two fixed rows and the calibrated `h_1[t]` row used `97` epochs from pilot-only calibration.
+- Next step: write the bundle artifact and lock the truthful Phase 6 boundary (`mixed`, below prereg gate) before starting the next high-leverage issue.
+
+## [2026-03-20T11:56:24-0500] PRE-RUN: resattn-t4d seeded-derangement dynamic counterfactual v5
+- tmux session: `N/A`
+- Script: `scripts/run_tool_breakage_dynamic_counterfactual.py`
+- Command: `.venv/bin/python scripts/run_tool_breakage_dynamic_counterfactual.py --baseline-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-confirm-v5/summary.json --fixed-alpha-summary results/tool_breakage/20260318-gemma2-tool-breakage-route-mode-pilot-v5/summary.json --pairing-strategy seeded_derangement --pairing-seed 13 --output-dir results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1 --device mps`
+- Config: `model=google/gemma-2-2b`, `split=confirm`, `surface=tool_breakage_factual_recall_v5`, controls now use seeded prompt-order-independent donor assignment for `prompt_permuted_alpha`, `within_family_permuted_alpha`, and `cross_family_permuted_alpha`.
+- What I'm testing: whether removing the confirm-ordering collapse in donor controls changes the routed-vs-dynamic counterfactual conclusion on the narrowed route-mode surface.
+- Expected outcome: a full seeded-donor counterfactual summary and profile artifact on all `20` prompts.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/checkpoints/prompt_results`
+- Checkpoint cadence: `per prompt`
+- Log path: `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/run.log`
+- Resume command: rerun the exact command above
+- Main confound to watch: new donor controls must remain deterministic and avoid self-donor assignments; otherwise any metric shift is ambiguous.
+- Implementation verified: YES - targeted donor-control tests now pass with the new seeded derangement strategy (`tests/test_tool_breakage.py`).
+- Status: LAUNCHING
+
+## [2026-03-20T11:59:21-0500] POST-RUN: resattn-t4d seeded-derangement dynamic counterfactual v5
+- Outcome: SUCCESS
+- Key metric: seeded donor controls removed the exact-order collapse but did not rescue a broad dynamic-arm positive:
+  - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0343`
+  - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.2084`
+  - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.1344`
+  - fixed-alpha objection still cleared (`routed minus pilot_mean_alpha = +1.0898`)
+- Artifacts saved: `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/summary.json`, `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/profile.json`, plus prompt checkpoints and run log.
+- Latest checkpoint: `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/checkpoints/prompt_results`
+- Anomalies: none; run completed in `35.40s`.
+- Next step: write route-mode interpretation memo and lock whether `resattn-88i` stays mixed or needs one targeted follow-up (author-mode-focused) before closeout.
+
+## [2026-03-20T12:25:29-0500] PRE-RUN: resattn-cv9 safety refusal-surface v3 validation v1
+- tmux session: `resattn-cv9-v3`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v3 --max-new-tokens 96 --output-dir results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v1 --device mps`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v3`, `pilot_groups=3`, `confirm_groups=3`, `max_new_tokens=96`, `device=mps`.
+- What I'm testing: whether the v3 quartet surface stays behaviorally clean and keeps refusal/harmfulness localization quality before mediator-conditioned analysis.
+- Expected outcome: validation summary with refusal and harmfulness confirm pair accuracy at `1.0`, non-refusal pass near `>= 0.8889`, and stable localization layers near prior v2 values.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v1/checkpoints/prompt_residuals`
+- Checkpoint cadence: `per prompt`
+- Log path: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v1/run.log`
+- Resume command: rerun the exact command above inside `tmux` session `resattn-cv9-v3`
+- Main confound to watch: safe-reply prompts could leak refusal-style completions and fail behavior checks without invalidating localization.
+- Implementation verified: YES - targeted safety and registry tests pass after quartet-role support and v3 prompt collection additions.
+- Status: LAUNCHING
+
+## [2026-03-20T12:34:04-0500] PRE-RUN: resattn-cv9 safety refusal-surface v3 validation v2 semantics rerun
+- tmux session: `resattn-cv9-v3`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v3 --max-new-tokens 96 --output-dir results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v2 --device mps`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v3`, same prompts and mechanism stack as v1 with only tag-level behavior-mode semantics correction for safe-reply role.
+- What I'm testing: whether behavior cleanliness improves after treating safe-reply outputs as refusal-style non-refusal, while localization and separation metrics remain stable.
+- Expected outcome: refusal hit rates stay `1.0`, non-refusal pass rates increase to `>= 0.8889`, and localization remains near `refusal~22`, `harmfulness~18-25`.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v2/checkpoints/prompt_residuals`
+- Checkpoint cadence: `per prompt`
+- Log path: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v2/run.log`
+- Resume command: rerun the exact command above in `tmux` session `resattn-cv9-v3`
+- Main confound to watch: semantics cleanup could mask genuine behavior mismatch; mediator activity read must still be checked before any interpretation upgrade.
+- Implementation verified: YES - v1 summary identified exact failing prompts and all rerun edits are tag-level only.
+- Status: LAUNCHING
+
+## [2026-03-20T12:45:16-0500] PRE-RUN: resattn-cv9 safety refusal-surface v3 validation v3 clean rerun
+- tmux session: `resattn-cv9-v3`
+- Script: `scripts/run_refusal_feature_discovery_validation.py`
+- Command: `.venv/bin/python scripts/run_refusal_feature_discovery_validation.py --collection-id safety_refusal_surface_v3 --max-new-tokens 96 --output-dir results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3 --device mps`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v3`, `pilot_groups=3`, `confirm_groups=3`, `max_new_tokens=96`, fresh output directory to avoid checkpoint reuse.
+- What I'm testing: whether the v3 surface clears behavior/localization gates on a complete fresh run after the partial v2 launch.
+- Expected outcome: `summary.json` present with refusal hit rates `=1.0`, non-refusal pass `>=0.8889`, and confirm pair accuracies `=1.0`.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3/checkpoints/prompt_residuals`
+- Checkpoint cadence: `per prompt`
+- Log path: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3/run.log`
+- Resume command: rerun the exact command above in `tmux` session `resattn-cv9-v3`
+- Main confound to watch: stale cached checkpoints from prior runs can silently mask semantics changes if output dirs are reused.
+- Implementation verified: YES - current code + tests support optional `safe_reply` grouping and tag-aware behavior-mode expectations.
+- Status: LAUNCHING
+
+## [2026-03-20T12:51:46-0500] POST-RUN: resattn-cv9 safety refusal-surface v3 validation v3 clean rerun
+- Outcome: SUCCESS
+- Key metric: behavior and mechanistic gates all cleared (`refusal hit pilot/confirm=1.0`, `non-refusal pass pilot/confirm=1.0`, confirm pair accuracy for refusal and harmfulness `=1.0`, direction cosine `=-0.0162`).
+- Artifacts saved: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3/summary.json`, plus `24` prompt residual checkpoints under `checkpoints/prompt_residuals/`.
+- Latest checkpoint: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3/checkpoints/prompt_residuals`
+- Anomalies: none; fresh-output rerun resolved prior partial-launch ambiguity.
+- Next step: launch mediator-conditioned routing analysis on the same `safety_refusal_surface_v3` surface.
+
+## [2026-03-20T12:51:46-0500] PRE-RUN: resattn-cv9 mediator-conditioned routing v3
+- tmux session: `resattn-cv9-v3`
+- Script: `scripts/run_mediator_conditioned_safety_routing_analysis.py`
+- Command: `.venv/bin/python scripts/run_mediator_conditioned_safety_routing_analysis.py --collection-id safety_refusal_surface_v3 --max-new-tokens 96 --output-dir results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3 --device mps`
+- Config: `model=google/gemma-2-2b-it`, `collection=safety_refusal_surface_v3`, `pilot_groups=3`, `confirm_groups=3`, `max_new_tokens=96`, fresh output directory.
+- What I'm testing: whether the mediator-active confirm partition now includes non-refusal roles after the v3 role-surface redesign.
+- Expected outcome: mediator-active role counts include at least one non-refusal role; stronger target is `>=2/3` active `safe_reply` prompts.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3/checkpoints/prompt_residuals`
+- Checkpoint cadence: `per prompt`
+- Log path: `results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3/run.log`
+- Resume command: rerun the exact command above in `tmux` session `resattn-cv9-v3`
+- Main confound to watch: thresholding can collapse to all-active or all-inactive, which would invalidate mediator partition interpretation.
+- Implementation verified: YES - validation v3 gates are clean on the same prompt surface and code path.
+- Status: LAUNCHING
+
+## [2026-03-20T12:57:10-0500] POST-RUN: resattn-cv9 mediator-conditioned routing v3
+- Outcome: SUCCESS
+- Key metric: mediator partition remained role-collapsed on confirm (`active_count=3`, `inactive_count=9`) with active roles `{'refusal': 3}` and all non-refusal roles inactive (`{'harmful_context': 3, 'benign': 3, 'safe_reply': 3}`).
+- Artifacts saved: `results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3/summary.json`, plus `24` prompt residual checkpoints under `checkpoints/prompt_residuals/`.
+- Latest checkpoint: `results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3/checkpoints/prompt_residuals`
+- Anomalies: none; run completed cleanly with non-degenerate thresholding.
+- Next step: keep `cv9` as a bounded negative for mediator-role expansion and move to `resattn-oih` implementation.
+
+## [2026-03-20T13:08:03-0500] PRE-RUN: resattn-oih mcqa anchor smoke v1
+- tmux session: `resattn-oih-smoke-v1`
+- Script: `scripts/run_resattn_oih.py`
+- Command: `.venv/bin/python scripts/run_resattn_oih.py --collection-id resattn_oih_mcqa_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260320-resattn-oih-smoke-v1 --max-train-sequences 8 --max-eval-sequences 4 --optimization-steps 10 --learning-rate 0.1 --seed 11 --feature-source position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat --target-name block_compressed_alpha_logit_vector --prune-fraction 0.25`
+- Config: `model=google/gemma-2-2b`, `collection=resattn_oih_mcqa_v1`, smoke split `8/4`, predictiveness target `block_compressed_alpha_logit_vector`, static baseline prune fraction `0.25`.
+- What I'm testing: end-to-end validity of the new `oih` lane plumbing (registry/control plan, oracle campaign path, static block-influence fit/eval, combined summary output).
+- Expected outcome: successful run with `oih_summary.json`, campaign artifacts, and non-empty static baseline fit/eval sections.
+- Expected duration: ~5-20 minutes
+- Checkpoint path: `results/oracle_alpha/20260320-resattn-oih-smoke-v1/checkpoints/{oracle_runs,feature_vectors}`
+- Checkpoint cadence: `per prompt and per feature source`
+- Log path: `results/oracle_alpha/20260320-resattn-oih-smoke-v1/run.log`
+- Resume command: rerun the exact command above in tmux session `resattn-oih-smoke-v1`
+- Main confound to watch: tokenization/model defaults mismatch could silently run on the wrong collection/model or produce incompatible source labels across prompts.
+- Implementation verified: YES - targeted registry/control/baseline unit tests pass.
+- Status: LAUNCHING
+
+## [2026-03-20T13:10:59-0500] POST-RUN: resattn-oih mcqa anchor smoke v1
+- Outcome: SUCCESS
+- Key metric: end-to-end lane executed and produced combined output; smoke metrics were `predicted improvement = +0.2465`, `oracle improvement = +0.4670`, `r_squared = -0.7761`, `mean_js = 0.0363`, while static block-influence baseline was strongly negative on this tiny eval slice (`mean improvement = -5.4004`, `0/4` positive).
+- Artifacts saved: `results/oracle_alpha/20260320-resattn-oih-smoke-v1/oih_summary.json`, `predictiveness_summary.json`, `campaign_manifest.json`, `oracle_train_run.json`, `oracle_eval_run.json`, `predictiveness_progress.json`, and checkpoint directories.
+- Latest checkpoint: `results/oracle_alpha/20260320-resattn-oih-smoke-v1/checkpoints`
+- Anomalies: first launch failed due unquoted `h_4[t]` feature-source shell glob; relaunched successfully with quoted value.
+- Next step: run a full-split `110/50` artifact with a milder static prune fraction to check whether static underperformance is robust or an over-pruning artifact.
+
+## [2026-03-20T13:11:14-0500] PRE-RUN: resattn-oih mcqa anchor full v1
+- tmux session: `resattn-oih-full-v1`
+- Script: `scripts/run_resattn_oih.py`
+- Command: `.venv/bin/python scripts/run_resattn_oih.py --collection-id resattn_oih_mcqa_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260320-resattn-oih-full-v1 --max-train-sequences 110 --max-eval-sequences 50 --optimization-steps 20 --learning-rate 0.1 --seed 11 --feature-source 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --target-name block_compressed_alpha_logit_vector --prune-fraction 0.10`
+- Config: `model=google/gemma-2-2b`, `collection=resattn_oih_mcqa_v1`, full split `110/50`, predictiveness target `block_compressed_alpha_logit_vector`, static baseline prune fraction `0.10`.
+- What I'm testing: first claim-bearing OIH anchor artifact comparing oracle/predicted dynamic routing against a static block-influence baseline on the same MIB-compatible MCQA surface.
+- Expected outcome: full `oih_summary.json` with stable dynamic metrics and a non-trivial static baseline comparison on `50` confirm prompts.
+- Expected duration: ~20-90 minutes
+- Checkpoint path: `results/oracle_alpha/20260320-resattn-oih-full-v1/checkpoints/{oracle_runs,feature_vectors}`
+- Checkpoint cadence: `per prompt and per feature source`
+- Log path: `results/oracle_alpha/20260320-resattn-oih-full-v1/run.log`
+- Resume command: rerun the exact command above in tmux session `resattn-oih-full-v1`
+- Main confound to watch: static baseline may remain overly weak even with milder pruning, which would weaken dynamic-vs-static interpretation strength.
+- Implementation verified: YES - full pipeline smoke succeeded and produced all expected artifacts.
+- Status: LAUNCHING
+
+## [2026-03-20T13:27:06-0500] PRE-RUN: resattn-oih pilot-mean-alpha static eval (posthoc)
+- tmux session: `N/A`
+- Script: ad hoc `.venv/bin/python` reuse of `validation.shortgpt_baseline.evaluate_static_block_influence_baseline`
+- Command: `.venv/bin/python - <<'PY' ... load oracle_train_run.json, compute pilot mean alpha, evaluate on `50` confirm prompts, write `pilot_mean_alpha_static_eval.json` ... PY`
+- Config: `model=google/gemma-2-2b`, `collection=resattn_oih_mcqa_v1`, eval split `50`, static policy `pilot mean alpha from train oracle final_alpha`.
+- What I'm testing: whether a stronger static policy (pilot-mean alpha) remains clearly below dynamic predicted/oracle performance, to contextualize the very weak ShortGPT-style pruned baseline.
+- Expected outcome: saved JSON artifact with mean improvement over uniform and positive-prompt count.
+- Expected duration: ~5-10 minutes
+- Checkpoint path: `N/A`
+- Checkpoint cadence: `N/A`
+- Log path: `N/A`
+- Resume command: rerun the exact ad hoc command
+- Main confound to watch: this is an analysis-only posthoc check and must be labeled supplementary rather than replacing the primary static baseline definition.
+- Implementation verified: YES - full OIH run outputs and baseline evaluator already exist.
+- Status: LAUNCHING
+
+## [2026-03-20T13:27:59-0500] POST-RUN: resattn-oih mcqa anchor full v1
+- Outcome: SUCCESS
+- Key metric: full dynamic-oracle anchor is positive on confirm (`predicted improvement = +0.2290`, `oracle improvement = +0.5709`, `R^2 = 0.0906`, `mean JS = 0.0758`) while the primary ShortGPT-style static pruned baseline stayed strongly negative (`mean improvement = -3.5916`, `0/50` positive).
+- Artifacts saved: `results/oracle_alpha/20260320-resattn-oih-full-v1/oih_summary.json`, `predictiveness_summary.json`, `campaign_manifest.json`, `oracle_train_run.json`, `oracle_eval_run.json`, `predictiveness_progress.json`, plus checkpoint directories.
+- Latest checkpoint: `results/oracle_alpha/20260320-resattn-oih-full-v1/checkpoints`
+- Anomalies: none at full run scale; progress reporting and checkpointing behaved as expected.
+- Next step: contextualize the weak primary static baseline with a supplementary stronger static check (pilot-mean-alpha) before final claim language.
+
+## [2026-03-20T13:27:59-0500] POST-RUN: resattn-oih pilot-mean-alpha static eval (posthoc)
+- Outcome: SUCCESS
+- Key metric: supplementary static `pilot_mean_alpha` baseline is meaningfully positive on confirm (`mean improvement = +0.1813`, `49/50` positive) but still below predicted dynamic (`+0.2290`) and well below oracle (`+0.5709`).
+- Artifacts saved: `results/oracle_alpha/20260320-resattn-oih-full-v1/pilot_mean_alpha_static_eval.json`
+- Latest checkpoint: `N/A`
+- Anomalies: none
+- Next step: write OIH artifact memo with explicit primary-vs-supplementary static baseline interpretation and then update state docs/index.
+
+## [2026-03-20T13:38:07-0500] PRE-RUN: resattn-73r oih calibrated-static smoke v1
+- tmux session: `resattn-oih-73r-smoke-v1`
+- Script: `scripts/run_resattn_oih.py`
+- Command: `.venv/bin/python scripts/run_resattn_oih.py --collection-id resattn_oih_mcqa_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260320-resattn-oih-73r-smoke-v1 --max-train-sequences 2 --max-eval-sequences 2 --optimization-steps 4 --learning-rate 0.1 --seed 11 --feature-source 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --target-name block_compressed_alpha_logit_vector --prune-fraction 0.10`
+- Config: tiny smoke split `2/2`; verifies new calibrated static baseline fields and control-plan-driven MIB metadata in summary outputs.
+- What I'm testing: that `oih_summary.json` now includes `pilot_mean_alpha_static_eval`, `calibrated_static_baseline`, and calibrated comparison deltas, while predictiveness summary reflects control-plan `mib_status/rationale`.
+- Expected outcome: successful smoke artifact with non-empty calibrated static section and no schema/runtime errors.
+- Expected duration: ~5-15 minutes
+- Checkpoint path: `results/oracle_alpha/20260320-resattn-oih-73r-smoke-v1/checkpoints`
+- Checkpoint cadence: `per prompt and per feature source`
+- Log path: `results/oracle_alpha/20260320-resattn-oih-73r-smoke-v1/run.log`
+- Resume command: rerun the exact command above in tmux session `resattn-oih-73r-smoke-v1`
+- Main confound to watch: tiny split can produce unstable metrics; this run is schema/plumbing validation only.
+- Implementation verified: YES - targeted tests pass for MIB metadata plumbing and new static-baseline helpers.
+- Status: LAUNCHING
+
+## [2026-03-20T13:41:28-0500] POST-RUN: resattn-73r oih calibrated-static smoke v1
+- Outcome: SUCCESS
+- Key metric: summary plumbing is now visible end-to-end (`predictiveness mib_status=planned`, `predicted improvement=+0.0372`, `oracle improvement=+0.3168`, `mean JS=0.0199`), with calibrated static selecting `pilot_mean_alpha` (`+0.0771`) over pruned static (`-4.6948`).
+- Artifacts saved: `results/oracle_alpha/20260320-resattn-oih-73r-smoke-v1/oih_summary.json`, `predictiveness_summary.json`, `campaign_manifest.json`, `oracle_train_run.json`, `oracle_eval_run.json`, `predictiveness_progress.json`, and checkpoint directories.
+- Latest checkpoint: `results/oracle_alpha/20260320-resattn-oih-73r-smoke-v1/checkpoints`
+- Anomalies: none
+- Next step: rerun the full `110/50` OIH artifact with cache reuse so the main `20260320-resattn-oih-full-v1` summary reflects the new calibrated-static comparator and control-plan MIB metadata.
+
+## [2026-03-20T13:41:28-0500] PRE-RUN: resattn-73r oih calibrated-static full rerun v1
+- tmux session: `resattn-oih-73r-full-v1`
+- Script: `scripts/run_resattn_oih.py`
+- Command: `.venv/bin/python scripts/run_resattn_oih.py --collection-id resattn_oih_mcqa_v1 --model-name google/gemma-2-2b --device mps --output-dir results/oracle_alpha/20260320-resattn-oih-full-v1 --max-train-sequences 110 --max-eval-sequences 50 --optimization-steps 20 --learning-rate 0.1 --seed 11 --feature-source 'position_thirds_mean_pooled_h_4[t]_resid_post_layer_3_concat' --target-name block_compressed_alpha_logit_vector --prune-fraction 0.10`
+- Config: full split `110/50`, same frozen `oih` settings as prior anchor; run intended as cached rerun to refresh summary schema and MIB/static calibration fields.
+- What I'm testing: whether the existing full OIH directory can be reused/resumed and emit updated `oih_summary.json` with calibrated static baseline and control-plan MIB metadata.
+- Expected outcome: successful full rerun with updated summary fields while preserving the original dynamic-oracle signal.
+- Expected duration: ~5-45 minutes (cache reuse expected)
+- Checkpoint path: `results/oracle_alpha/20260320-resattn-oih-full-v1/checkpoints/{oracle_runs,feature_vectors}`
+- Checkpoint cadence: `per prompt and per feature source`
+- Log path: `results/oracle_alpha/20260320-resattn-oih-full-v1/run-73r-rerun.log`
+- Resume command: rerun the exact command above in tmux session `resattn-oih-73r-full-v1`
+- Main confound to watch: stale summary reuse could hide missing field updates if the runner exits early without rewriting outputs.
+- Implementation verified: YES - smoke rerun produced the new calibrated-static and MIB fields in `oih_summary.json`.
+- Status: LAUNCHING
+
+## [2026-03-20T13:55:14-0500] POST-RUN: resattn-73r oih calibrated-static full rerun v1
+- Outcome: SUCCESS
+- Key metric: refreshed full artifact now carries calibrated static + control-plan MIB fields without changing core dynamic signal:
+  - `predicted improvement = +0.2290`
+  - `oracle improvement = +0.5709`
+  - `R^2 = 0.0906`
+  - `mean JS = 0.0758`
+  - `mib_status = planned`
+  - calibrated static selected `pilot_mean_alpha` with `+0.1813` (vs pruned static `-3.5916`)
+  - dynamic minus calibrated static `= +0.0478`
+- Artifacts saved: updated `results/oracle_alpha/20260320-resattn-oih-full-v1/oih_summary.json`, updated `predictiveness_summary.json`, `run-73r-rerun.log` (plus existing campaign/checkpoint files).
+- Latest checkpoint: `results/oracle_alpha/20260320-resattn-oih-full-v1/checkpoints`
+- Anomalies: first tmux launch came up idle and was relaunched explicitly via `send-keys`; final run completed cleanly (`real 589.47s`).
+- Next step: mark `resattn-73r` complete and update state/docs/manuscript language to use calibrated-static and control-plan MIB plumbing.

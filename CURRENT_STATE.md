@@ -1,6 +1,6 @@
 # Current State
 
-**Last updated:** 2026-03-19
+**Last updated:** 2026-03-20
 **Updated by:** codex-gpt5
 **Status:** in_progress
 **Current phase:** Phase 2/3 - Primary-model oracle synthesis with bounded tool-breakage and safety extensions
@@ -37,6 +37,24 @@
   - clear a stability suite and an out-of-sample predictiveness check before high-claim interpretation
   - require a controlled dynamic-routing counterfactual for the strong tool-breakage claim
   - separate harmfulness from refusal and localize safety layers before mediator-conditioned safety claims
+- `known`: the latest high-leverage execution pass now has a complete `cv9` adjudication plus a first full `oih` anchor artifact:
+  - `resattn-cv9`:
+    - validation v3 on `safety_refusal_surface_v3` cleared behavior/localization gates (`refusal hit pilot/confirm = 1.0`, `non-refusal pass pilot/confirm = 1.0`, confirm pair accuracies `= 1.0`, direction cosine `= -0.0162`)
+    - mediator-conditioned routing v3 remained role-collapsed on confirm (`active roles = refusal only`, all `safe_reply/harmful_context/benign` inactive)
+    - interpretation: safety role-collapse remains a bounded negative for stronger mediator-expansion claims
+  - `resattn-oih`:
+    - new `resattn_oih_mcqa_v1` collection and control plan are now in-repo and generator-backed
+    - full `110/50` anchor run produced a positive dynamic held-out signal (`predicted +0.2290`, `oracle +0.5709`, `R^2 = 0.0906`, `mean JS = 0.0758`)
+    - `resattn-73r` rerun now lands calibrated-static and MIB-status plumbing on the same full artifact path:
+      - pruned static baseline remains very weak (`-3.5916`, `0/50` positive)
+      - `pilot_mean_alpha` static policy is positive (`+0.1813`, `49/50` positive)
+      - calibrated static comparator selects `pilot_mean_alpha`, and dynamic predicted remains above calibrated static (`+0.0478`)
+      - predictiveness summary now reflects control-plan MIB metadata (`mib_status=planned`)
+    - interpretation: the external-anchor lane is now real and calibration-plumbed; strong language should still use calibrated-static deltas rather than pruned-static alone
+- `known`: the first manuscript skeleton is now locked and registered:
+  - `results/infrastructure/20260320-manuscript-skeleton-v1.md`
+  - section ordering, claim placement, caveat placement, and non-claim language are now explicit for drafting
+  - immediate writing-adjacent `resattn-73r` blocker is now cleared on the existing full OIH artifact
 - `known`: the Phase 1 dependency freeze has landed:
   - `requirements.txt` now pins the direct stack used for Phase 1
   - `requirements.lock.txt` captures the fully resolved transitive environment
@@ -1413,7 +1431,37 @@
    - `resattn-b4h` is now done:
      - exact-tokenwise failure on the saved subset is better explained by within-prompt teacher variance than by sequence-aggregation mismatch
      - prompt-mean exact teachers are already substantially better aligned to the sequence-level oracle than last-position teachers, so another aggregation tweak is not the next honest move
-   - the main active implementation step is now `resattn-y4m`: compare embedding-isolated block-compressed router targets on the saved Gemma pilot while preserving residual-style equal mixing as a special case
+   - `resattn-r7s` is now executed as a decisive Phase 6 adjudication:
+     - split-aware router exports landed for both saved oracle splits:
+       - `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-pilot-v1/summary.json` (`256`)
+       - `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-confirm-v1/summary.json` (`1024`)
+       - write-up: `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-splits-v1.md`
+     - the fixed-row pilot-to-confirm bundle is now complete:
+       - artifact: `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1.md`
+       - best confirm row stayed below readiness:
+         - `h_4[t]`, hidden `512`: confirm `R^2 = 0.2986`, mean JS `= 0.0966`
+       - no row cleared `R^2 >= 0.5`; `h_1[t]` row remained weaker and had a negative worst stratum
+     - interpretation: Phase 6 remains mixed/blocked for strong claim language in this cycle
+   - `resattn-88i` is now also executed:
+     - donor-control pairing now supports `seeded_derangement` for prompt-order-independent assignment
+     - seeded rerun artifact:
+       - `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1.md`
+     - the ordering collapse is reduced, but pooled dynamic donor controls remain mixed/negative while fixed-alpha remains clearly weaker
+     - interpretation: tool-breakage donor-arm boundary stays mixed; next active high-leverage issue is now `resattn-cv9`
+   - `resattn-y4m` is now treated as completed bounded groundwork for `resattn-r7s` rather than the active step
+     - the block-compressed target pilot just finished on the saved export (`results/router_training/20260320-gemma2-router-distillation-block-compressed-target-v1/summary.json`), with `h_4[t]` beating `h_1[t]` but an eval `R^2 = 0.1662`, mean JS divergence = `0.1205`, and eval loss = `0.3432`
+     - a confirm-phase replay using the same prompt IDs repeated those exact metrics (`results/router_training/20260321-gemma2-router-distillation-block-compressed-confirm-v1/summary.json`), confirming there was no random split artifact
+     - a variant that switches the token aggregation to `last_token_logits_then_softmax` pulled the eval `R^2` down to `0.1327` and raised mean JS to `0.1252`, so the compression still misses the prereg gate even after trying a harder aggregation (`results/router_training/20260321-gemma2-router-distillation-block-compressed-last-token-v1/summary.json`)
+     - updated pilots now show the split target (`results/router_training/20260322-gemma2-router-distillation-block-split-targets-v1/summary.json`) improving the confirm metrics to `R^2 = 0.3236`, mean JS = `0.0837`, followed by a dedicated confirm rerun (`results/router_training/20260323-gemma2-router-distillation-block-split-confirm-v1/summary.json`) that reproduces the same numbers; the lane is still below the `R^2 ≥ 0.5` gate but the improvement is stable
+     - a fixed-split supervision comparison on the same block-split target now selects `all_tokens_target_mse` over `sequence_target_mse` (`R^2 = 0.4099` vs `0.3236`; mean JS `= 0.0792` vs `0.0837`) in `results/router_training/20260323-gemma2-router-distillation-block-split-supervision-v1/summary.json`
+     - one bounded hybrid-geometry refinement has now been tested and rejected: splitting only the late-third layers (`block_late_third_split_alpha_logit_vector`) under the same frozen split and all-token supervision underperformed the full block-split baseline (`R^2 = 0.2555`, mean JS `= 0.1071` versus baseline `R^2 = 0.4099`, mean JS `= 0.0792`) in `results/router_training/20260323-gemma2-router-distillation-hybrid-late-third-v1/summary.json`
+     - interpretation: the block compression family remains below `R^2 > 0.5`, but the strongest bounded Phase 6 point is now stably `block_split_alpha_logit_vector + all_tokens_target_mse`; further ad hoc geometry sweeps should stay frozen unless a new hypothesis is materially stronger than this failed late-third hybrid
+   - the paper-readiness synthesis pass is now started:
+     - a claim-evidence matrix is saved in `results/infrastructure/20260320-paper-readiness-claim-matrix-v1.md`
+     - a manuscript-ready claim-to-artifact appendix table is saved in `results/infrastructure/20260320-manuscript-claim-to-artifact-table-v1.md`
+     - the training-dynamics lane now has an explicit status artifact (`results/training_dynamics/20260320-training-dynamics-lane-status-v1.md`) instead of an implicit empty section
+     - the current draft-cycle scope decision is now explicit: training dynamics is out-of-scope for claim-bearing language in this cycle, with required non-claim wording and a final writing checklist in `results/infrastructure/20260320-training-dynamics-scope-decision-and-writing-checklist-v1.md`
+     - interpretation: the remaining writing blockers are now explicit claim-boundary decisions, not missing bookkeeping
    - use the AttnRes memoir only as a design constraint here, not as evidence:
      - prefer compression that can still represent the residual baseline over sparse truncation that cannot
      - test embedding as an isolated block explicitly rather than treating it as an incidental source-type artifact

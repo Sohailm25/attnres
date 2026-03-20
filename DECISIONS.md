@@ -1818,3 +1818,197 @@
   - `resattn-b4h` can close once the artifact lands.
   - `resattn-y4m` becomes the main active Phase 6 issue.
   - future Phase 6 work should prefer coarser competition-preserving compression targets over more exact tokenwise-teacher fidelity on the current saved pilot surface.
+
+## [2026-03-19T16:40:00-0500] DECISION: Promote `block_split_alpha_logit_vector + all_tokens_target_mse` as the bounded Phase 6 baseline for `resattn-y4m`
+
+- Trigger: after the block-compressed and block-split confirm artifacts landed, `resattn-y4m` still sat below the prereg `R^2 > 0.5` gate and needed one more bounded design move that changed supervision without reopening architecture or split choices.
+- Decision: keep the block-split target geometry and frozen `192 / 64` prompt IDs fixed, compare `sequence_target_mse` versus `all_tokens_target_mse`, and promote `all_tokens_target_mse` as the current bounded baseline for this lane.
+- Rationale:
+  - the fixed-split comparison is positive and stable:
+    - `sequence_target_mse`: `R^2 = 0.3236`, mean JS `= 0.0837`
+    - `all_tokens_target_mse`: `R^2 = 0.4099`, mean JS `= 0.0792`
+  - the gain is large enough to matter (`ΔR^2 = +0.0862`) without changing target geometry or family, so this is a stronger signal than another broad search iteration
+  - the lane still misses readiness, so the claim boundary remains unchanged: this is a bounded improvement, not a claim-bearing endpoint
+- Impact:
+  - `resattn-y4m` should now treat `block_split_alpha_logit_vector + all_tokens_target_mse` as the local baseline.
+  - the next honest move is one hybrid geometry refinement with supervision objective locked, not another aggregation rerun or broad architecture sweep.
+
+## [2026-03-20T00:22:00-0500] DECISION: Close `resattn-v2g` as a negative hybrid-geometry result and freeze ad hoc Phase 6 geometry sweeps
+
+- Trigger: `resattn-v2g` ran the planned bounded hybrid geometry refinement on the frozen block-split baseline, with supervision locked to `all_tokens_target_mse` and all other settings fixed.
+- Decision: close `resattn-v2g` as a negative result for this geometry branch. Keep `block_split_alpha_logit_vector + all_tokens_target_mse` as the active bounded Phase 6 baseline. Freeze further ad hoc geometry sweeps unless a stronger hypothesis appears.
+- Rationale:
+  - full block-split baseline remained best on the same frozen `192 / 64` split:
+    - `block_split_alpha_logit_vector`: `R^2 = 0.4099`, mean JS `= 0.0792`
+    - `block_late_third_split_alpha_logit_vector`: `R^2 = 0.2555`, mean JS `= 0.1071`
+  - the hybrid variant underperformed on both primary and secondary metrics, so it does not justify another local geometry branch from this family.
+  - despite improvements from supervision and split targets, the lane still misses readiness (`R^2 < 0.5`), so this remains bounded evidence rather than claim-bearing completion.
+- Impact:
+  - `resattn-v2g` can close once artifacts are registered.
+  - Phase 6 geometry search should pause; next honest work is synthesis/claim-boundary packaging or a materially different target hypothesis.
+
+## [2026-03-20T00:35:00-0500] DECISION: Move from Phase 6 geometry iteration to paper-readiness synthesis tracking
+
+- Trigger: `resattn-y4m` and `resattn-v2g` resolved the bounded geometry variants with a stable best local baseline (`block_split_alpha_logit_vector + all_tokens_target_mse`) that still misses readiness.
+- Decision: start explicit paper-readiness synthesis now via a claim-evidence matrix and explicit lane-status notes, rather than opening another ad hoc geometry branch.
+- Rationale:
+  - the latest bounded hybrid geometry underperformed on the same frozen split, so another local geometry tweak is unlikely to change the paper-level conclusion materially
+  - the highest-value remaining work is now clarity: freeze supported claims, mixed claims, blocked claims, and non-claims so writing can begin without drift
+  - the training-dynamics lane was still implicit/empty; making its status explicit prevents accidental omission
+- Impact:
+  - `results/infrastructure/20260320-paper-readiness-claim-matrix-v1.md` becomes the current claim-boundary reference
+  - `results/training_dynamics/20260320-training-dynamics-lane-status-v1.md` records the lane as planning with explicit include/exclude decision point
+  - subsequent issue work should prioritize paper-readiness packaging and final scope decisions over new exploratory Phase 6 geometry variants
+
+## [2026-03-20T00:50:00-0500] DECISION: Exclude training-dynamics from claim-bearing scope for the current manuscript cycle
+
+- Trigger: paper-readiness synthesis found no claim-bearing `training_dynamics` artifact while the core primary-model oracle story is already strong enough to draft with explicit claim boundaries.
+- Decision: mark `training_dynamics` out-of-scope for claim-bearing language in this cycle, document explicit non-claim wording, and proceed with writing on the supported/mixed core lanes.
+- Rationale:
+  - adding a late under-validated checkpoint lane now would risk lowering methodological quality
+  - the main manuscript core does not require training-dynamics evidence to be coherent
+  - explicit non-claim language is more truthful than implicit omission
+- Impact:
+  - `results/infrastructure/20260320-training-dynamics-scope-decision-and-writing-checklist-v1.md` becomes the current scope lock for drafting
+  - training-dynamics remains a future-work lane unless a dedicated checkpoint artifact is later produced
+
+## [2026-03-20T01:00:00-0500] DECISION: Add a manuscript claim-to-artifact appendix table before drafting text
+
+- Trigger: after claim matrix and scope decisions landed, the next risk was claim drift during writing.
+- Decision: create a standalone manuscript claim-to-artifact table limited to supported/mixed in-scope claims plus explicit non-claims.
+- Rationale:
+- keeping claims tied to explicit artifact paths lowers accidental overstatement risk
+- a drafting table is faster to use during writing than repeatedly re-parsing broad state documents
+- Impact:
+- `results/infrastructure/20260320-manuscript-claim-to-artifact-table-v1.md` is now the drafting reference for claims and caveats.
+
+## [2026-03-20T11:40:26-0500] DECISION: Start `resattn-r7s` with split-scoped router exports before the decisive Phase 6 bundle
+
+- Trigger: the high-leverage gameplan (`history/20260320-high-leverage-moves-gameplan-v1.md`) set `resattn-r7s` as the first execution move and the smallest required slice was split-safe export plumbing for pilot-to-confirm evaluation.
+- Decision: land split-aware router export first and run it on the saved Gemma `registry_v5` oracle campaign (`pilot` + `confirm`) before adding the fixed-epoch Phase 6 training bundle path.
+- Rationale:
+  - Phase 6 decisions should not proceed on pilot-only exports when the decisive run is explicitly pilot-to-confirm.
+  - The previous export path was pilot-only; extending it to split-scoped export removes avoidable data plumbing risk early.
+  - The new runs succeeded on the saved campaign without rerunning oracle optimization:
+    - pilot export: `256` prompts in `81.28s`
+    - confirm export: `1024` prompts in `282.22s`
+    - both manifests and summaries now carry split-correct metadata.
+  - targeted tests for the new split path pass (`tests/test_router_training_export.py`).
+- Impact:
+  - the repo now has split-scoped router-distillation exports at:
+    - `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-pilot-v1/`
+    - `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-confirm-v1/`
+  - artifact write-up is saved at:
+    - `results/router_training/20260320-gemma2-router-distillation-registry-v5-export-splits-v1.md`
+  - next `resattn-r7s` step is fixed-epoch pilot-train/confirm-eval training rows with no confirm-time selection.
+
+## [2026-03-20T11:50:32-0500] DECISION: Treat the decisive Phase 6 pilot-to-confirm bundle as a bounded mixed result and keep readiness blocked
+
+- Trigger: `resattn-r7s` ran the fixed-row pilot-to-confirm bundle on split-scoped `registry_v5` exports:
+  - `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1/summary.json`
+  - `results/router_training/20260320-gemma2-router-distillation-phase6-bundle-v1.md`
+- Decision: keep Phase 6 below readiness for this cycle. Do not reopen ad hoc geometry sweeps from this result. Promote the truthful baseline read as:
+  - least-bad row remains `h_4[t]` + hidden `512`,
+  - but the lane remains mixed and below prereg gate.
+- Rationale:
+  - no row cleared readiness (`R^2 >= 0.5`) on confirm:
+    - `h_4[t]` hidden `256`: confirm `R^2 = 0.2815`, mean JS `= 0.0985`
+    - `h_4[t]` hidden `512`: confirm `R^2 = 0.2986`, mean JS `= 0.0966`
+    - `h_1[t]` hidden `512` (pilot-calibrated): confirm `R^2 = 0.2404`, mean JS `= 0.1033`
+  - width helps only modestly inside this bounded family (`+0.0171` confirm `R^2` from `256` to `512` on `h_4[t]`), not enough to change lane status.
+  - `h_1[t]` remains weaker and includes one negative stratum-level confirm fit (`worst-stratum R^2 = -0.0402`), so this does not support an `h_1[t]`-centered readiness story.
+- Impact:
+  - Phase 6 stays `mixed`/blocked for strong claim language in this manuscript cycle.
+  - `resattn-r7s` can close as a decisive negative/mixed adjudication once state docs and issue tracking are updated.
+  - next high-leverage queue step should move to `resattn-88i` rather than another Phase 6 sweep.
+
+## [2026-03-20T11:59:21-0500] DECISION: Keep tool-breakage donor-arm boundary mixed after seeded donor rerun
+
+- Trigger: `resattn-88i` reran the dynamic counterfactual on `tool_breakage_factual_recall_v5` with prompt-order-independent seeded donor assignment:
+  - `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/summary.json`
+  - `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1/profile.json`
+  - write-up: `results/tool_breakage/20260320-gemma2-tool-breakage-route-mode-dynamic-seeded-v1.md`
+- Decision: keep the donor-arm conclusion mixed. Do not upgrade to a broad prompt-specific dynamic-control positive claim.
+- Rationale:
+  - removing ordering collapse did not rescue pooled dynamic-arm deltas:
+    - routed minus `prompt_permuted_alpha` mean tuned KL `= -0.0343`
+    - routed minus `within_family_permuted_alpha` mean tuned KL `= -0.2084`
+    - routed minus `cross_family_permuted_alpha` mean tuned KL `= -0.1344`
+  - fixed-alpha objection still remains clearly weaker:
+    - routed minus `pilot_mean_alpha` mean tuned KL `= +1.0898`
+  - route-mode heterogeneity remains strong, with persistent author blockers (especially `route_mode_author_cluster_12`).
+- Impact:
+  - the bounded same-model tool-breakage story remains:
+    - positive routed-vs-original baseline on `v5`,
+    - positive routed-vs-fixed-alpha control,
+    - mixed routed-vs-dynamic donor controls with route-mode heterogeneity.
+  - unless a narrowly justified author-mode follow-up appears, this lane should be treated as adjudicated and the queue should move to `resattn-cv9`.
+
+## [2026-03-20T12:57:10-0500] DECISION: Close `resattn-cv9` as a bounded negative on mediator role-collapse despite clean validation
+
+- Trigger: fresh `safety_refusal_surface_v3` reruns are complete:
+  - validation: `results/safety_alignment/20260320-gemma2it-refusal-surface-v3-validation-v3/summary.json`
+  - mediator: `results/safety_alignment/20260320-gemma2it-mediator-conditioned-routing-v3/summary.json`
+- Decision: close `resattn-cv9` as methodologically clean but negative for the strong mediator-expansion claim.
+- Rationale:
+  - validation gates now clear cleanly on a fresh run:
+    - refusal hit rates pilot/confirm `= 1.0`
+    - non-refusal pass rates pilot/confirm `= 1.0`
+    - refusal and harmfulness confirm pair accuracy `= 1.0`
+  - mediator partition remains role-collapsed on confirm:
+    - active prompts `= 3`, all `refusal`
+    - inactive prompts `= 9`, split exactly across `harmful_context`, `benign`, and `safe_reply`
+  - this directly fails the intended `cv9` success condition (non-refusal mediator-active prompts) even after role-surface redesign and clean rerun discipline.
+- Impact:
+  - safety lane remains mixed/bounded for manuscript claims.
+  - no additional immediate safety prompt-surface redesign should run before deciding whether a different mediator definition is scientifically justified.
+
+## [2026-03-20T13:27:59-0500] DECISION: Accept first full `resattn-oih` anchor artifact and carry a two-baseline interpretation boundary
+
+- Trigger: full `resattn-oih` run completed:
+  - primary artifact: `results/oracle_alpha/20260320-resattn-oih-full-v1/oih_summary.json`
+  - supplementary static check: `results/oracle_alpha/20260320-resattn-oih-full-v1/pilot_mean_alpha_static_eval.json`
+- Decision: treat this as the first valid external-anchor artifact, but interpret dynamic-vs-static results with two explicit baselines:
+  - primary ShortGPT-style pruned baseline (weak),
+  - supplementary pilot-mean-alpha static baseline (stronger, still below dynamic).
+- Rationale:
+  - dynamic held-out signal is positive on confirm (`predicted +0.2290`, `oracle +0.5709`, `R^2 = 0.0906`).
+  - the pruned static baseline is too weak alone for strong dynamic-vs-static rhetoric (`-3.5916`, `0/50` positive).
+  - supplementary pilot-mean-alpha static policy is materially stronger (`+0.1813`, `49/50` positive) and still trails dynamic predicted, giving a more credible comparison boundary.
+- Impact:
+  - `resattn-oih` advances from planned to executed.
+  - writing should avoid relying only on the weak pruned static baseline.
+  - queue should include a focused follow-up on static-baseline calibration and MIB-status plumbing before final strong dynamic-vs-static claim language.
+
+## [2026-03-20T13:35:00-0500] DECISION: Close `resattn-mfp` with manuscript skeleton lock and explicit extension-lane caveat placement
+
+- Trigger: first manuscript skeleton artifact is now written from the locked claim matrix and updated extension-lane outputs:
+  - `results/infrastructure/20260320-manuscript-skeleton-v1.md`
+- Decision: close `resattn-mfp` as complete for the “first skeleton” milestone.
+- Rationale:
+  - section ordering, claim placement, and caveat placement are now explicit and tied to concrete artifacts.
+  - the skeleton incorporates new `cv9` and `oih` outcomes:
+    - safety mediator role-collapse remains a bounded negative.
+    - OIH dynamic-vs-static comparison remains mixed due static-baseline calibration sensitivity.
+  - this gives a writing-ready structure without forcing stronger language than current evidence supports.
+- Impact:
+  - paper drafting can proceed from a stable section map and non-claim box.
+  - next queue priority shifts to `resattn-73r` (static baseline calibration + MIB-status plumbing) before stronger OIH claim language.
+
+## [2026-03-20T13:55:14-0500] DECISION: Close `resattn-73r` by refreshing the full OIH artifact in place with calibrated-static and control-plan MIB plumbing
+
+- Trigger: `resattn-73r` required two concrete fixes on the live OIH lane:
+  - static baseline calibration should not rely only on the weak pruned baseline
+  - `mib_status` in summary output should come from the saved control plan, not hardcoded omission text
+- Decision: rerun `scripts/run_resattn_oih.py` on the existing full output directory (`results/oracle_alpha/20260320-resattn-oih-full-v1`) and treat that path as the canonical refreshed artifact once the new summary fields were present.
+- Rationale:
+  - the refreshed full artifact now includes:
+    - `pilot_mean_alpha_static_eval`
+    - `calibrated_static_baseline`
+    - calibrated dynamic-vs-static comparison deltas
+  - control-plan MIB metadata now propagates to the OIH summary (`mib_status=planned`) as intended.
+  - core dynamic-oracle metrics remained unchanged, so this is a calibration/plumbing correction rather than a moving-target rerun.
+- Impact:
+  - `resattn-73r` can close with a concrete artifact update rather than an isolated smoke-only proof.
+  - manuscript language can use calibrated-static deltas (`predicted minus calibrated static = +0.0478`) and avoid over-reliance on the pruned-static gap.
+  - no additional OIH redesign is required unless a new methodological defect is found.

@@ -66,6 +66,20 @@ class OracleAlphaControlTests(unittest.TestCase):
         )
         self.assertEqual("mean_js_divergence", plan.predictiveness.secondary_metric)
 
+    def test_resattn_oih_mcqa_control_plan_is_registered(self) -> None:
+        registry = self.load_oracle_alpha_control_registry()
+        plan = registry.plans["resattn_oih_mcqa_v1"]
+
+        self.assertEqual("resattn_oih_mcqa_v1", plan.collection_id)
+        self.assertEqual("pilot", plan.predictiveness.train_split)
+        self.assertEqual("confirm", plan.predictiveness.eval_split)
+        self.assertEqual(
+            "block_compressed_alpha_logit_vector",
+            plan.predictiveness.target,
+        )
+        self.assertEqual("planned", plan.mib_anchor.mib_status)
+        self.assertEqual("MIB", plan.mib_anchor.benchmark)
+
     def test_alpha_logit_target_round_trips_simplex_distributions(self) -> None:
         distributions = [
             [0.20, 0.30, 0.50],
@@ -144,6 +158,107 @@ class OracleAlphaControlTests(unittest.TestCase):
         )
 
         self.assertEqual((1, 8), transformed.shape)
+        self.assertAlmostEqual(1.0, sum(recovered[0]), places=6)
+        for original_value, recovered_value in zip(
+            distributions[0],
+            recovered[0],
+            strict=True,
+        ):
+            self.assertAlmostEqual(original_value, recovered_value, places=6)
+
+    def test_block_compressed_logit_target_round_trips_with_templates(self) -> None:
+        source_labels = (
+            "embed",
+            "0_attn_out",
+            "0_mlp_out",
+            "1_attn_out",
+            "1_mlp_out",
+        )
+        distributions = [
+            [0.20, 0.10, 0.10, 0.30, 0.30],
+        ]
+
+        transformed = self.alpha_target_matrix(
+            target_name="block_compressed_alpha_logit_vector",
+            distributions=distributions,
+            source_labels=source_labels,
+        )
+        recovered = self.alpha_target_predictions_to_distributions(
+            target_name="block_compressed_alpha_logit_vector",
+            predictions=transformed.tolist(),
+            source_labels=source_labels,
+            train_distributions=distributions,
+        )
+
+        self.assertEqual((1, 3), transformed.shape)
+        self.assertAlmostEqual(1.0, sum(recovered[0]), places=6)
+        for original_value, recovered_value in zip(
+            distributions[0],
+            recovered[0],
+            strict=True,
+        ):
+            self.assertAlmostEqual(original_value, recovered_value, places=6)
+
+    def test_block_split_logit_target_round_trips_with_templates(self) -> None:
+        source_labels = (
+            "embed",
+            "0_attn_out",
+            "0_mlp_out",
+            "1_attn_out",
+            "1_mlp_out",
+        )
+        distributions = [
+            [0.18, 0.07, 0.05, 0.30, 0.40],
+        ]
+
+        transformed = self.alpha_target_matrix(
+            target_name="block_split_alpha_logit_vector",
+            distributions=distributions,
+            source_labels=source_labels,
+        )
+        recovered = self.alpha_target_predictions_to_distributions(
+            target_name="block_split_alpha_logit_vector",
+            predictions=transformed.tolist(),
+            source_labels=source_labels,
+            train_distributions=distributions,
+        )
+
+        self.assertEqual((1, 5), transformed.shape)
+        self.assertAlmostEqual(1.0, sum(recovered[0]), places=6)
+        for original_value, recovered_value in zip(
+            distributions[0],
+            recovered[0],
+            strict=True,
+        ):
+            self.assertAlmostEqual(original_value, recovered_value, places=6)
+
+    def test_block_late_third_split_logit_target_round_trips_with_templates(
+        self,
+    ) -> None:
+        source_labels = (
+            "embed",
+            "0_attn_out",
+            "0_mlp_out",
+            "1_attn_out",
+            "1_mlp_out",
+        )
+        distributions = [
+            [0.16, 0.09, 0.11, 0.28, 0.36],
+        ]
+
+        transformed = self.alpha_target_matrix(
+            target_name="block_late_third_split_alpha_logit_vector",
+            distributions=distributions,
+            source_labels=source_labels,
+        )
+        recovered = self.alpha_target_predictions_to_distributions(
+            target_name="block_late_third_split_alpha_logit_vector",
+            predictions=transformed.tolist(),
+            source_labels=source_labels,
+            train_distributions=distributions,
+        )
+
+        self.assertEqual((1, 4), transformed.shape)
         self.assertAlmostEqual(1.0, sum(recovered[0]), places=6)
         for original_value, recovered_value in zip(
             distributions[0],
