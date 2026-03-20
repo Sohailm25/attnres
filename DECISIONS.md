@@ -2039,3 +2039,30 @@
 - Impact:
   - queue continuity remains explicit in `bd`.
   - drafting can proceed to reviewer-ready form without diluting current scientific boundaries.
+
+## [2026-03-20T14:20:11-0500] DECISION: Close `resattn-ca1` with manuscript draft v2 that hard-codes C1-C6 tables/figures and mixed-lane caveat language
+
+- Trigger: `resattn-ca1` required a second writing pass that inserts concrete table/figure placeholders and tightens claim wording for mixed lanes without adding experiments.
+- Decision: add `results/infrastructure/20260320-manuscript-draft-pass-v2.md` and register it as the current writing artifact for reviewer-facing narrative refinement.
+- Rationale:
+  - manuscript v1 prose existed, but did not yet include explicit insert-ready tables/figures tied to exact C1-C6 metrics.
+  - v2 now includes:
+    - Table 1 with C1-C3 anchors,
+    - Table 2 with C4-C6 mixed-lane boundaries,
+    - explicit figure placeholders for regime, structure, and extension-lane panels,
+    - tightened caveat copy blocks for tool-breakage, safety, and OIH.
+  - this improves communication fidelity without reopening any experimental lane.
+- Impact:
+  - `resattn-ca1` can close.
+  - next writing step should focus on manuscript polish/layout and figure assembly, not first-order claim re-scoping.
+
+## [2026-03-20T14:20:11-0500] DECISION: Open `resattn-57z` for manuscript polish and reviewer packet export
+
+- Trigger: after `resattn-ca1` close, the writing queue was empty again.
+- Decision: create `resattn-57z` for final prose compression, caveat consistency pass, and a reviewer-facing packet artifact.
+- Rationale:
+  - the current draft now has the right evidence structure; remaining risk is communication efficiency and consistency.
+  - packaging a reviewer packet is higher leverage than initiating new experiments at this stage.
+- Impact:
+  - writing queue stays explicit and contiguous.
+  - next step remains writing-focused unless review uncovers a concrete methodological defect.

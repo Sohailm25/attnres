@@ -58,7 +58,10 @@
   - `resattn-lmp` now lands the first prose manuscript draft pass:
     - `results/infrastructure/20260320-manuscript-draft-pass-v1.md`
     - prose now includes bounded intro/method/results/discussion text with calibrated OIH (`+0.0478` dynamic minus calibrated static) and updated cv9/tool-breakage mixed-lane boundaries
-  - next ready writing issue is `resattn-ca1` (figure/table insertion plus claim-language tightening)
+  - `resattn-ca1` now lands manuscript refinement v2:
+    - `results/infrastructure/20260320-manuscript-draft-pass-v2.md`
+    - concrete table/figure placeholders now carry exact C1-C6 metrics, and mixed-lane caveat wording is tightened for tool-breakage, safety, and OIH
+  - next ready writing issue is `resattn-57z` (manuscript polish v3: section compression and reviewer packet export)
 - `known`: the Phase 1 dependency freeze has landed:
   - `requirements.txt` now pins the direct stack used for Phase 1
   - `requirements.lock.txt` captures the fully resolved transitive environment

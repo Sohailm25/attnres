@@ -2382,3 +2382,20 @@ Suggested entry format:
   - Any new run should now have a specific defect-trigger, not just “more signal” intuition.
 - Confidence:
   - high that `resattn-ca1` is the right immediate next issue
+
+## [2026-03-20T14:20:11-0500] Draft v2 Finally Feels Reviewer-Consumable
+- Stage: manuscript refinement (`resattn-ca1`)
+- Feel of the Result: The v2 pass is materially better than v1 for external readers because the key claims now sit in table-ready form with exact numbers, not just prose paragraphs.
+- Working Hypotheses:
+  - The next bottleneck is visual packaging and compression, not evidence discovery.
+  - If reviewers push back now, it is more likely on interpretation boundaries than missing metrics.
+- Confidence:
+  - high that table/figure placeholder integration was worth doing immediately
+  - medium-high that the narrative is now stable enough for external feedback
+
+## [2026-03-20T14:20:11-0500] Queueing Reviewer-Packet Work Keeps Us Honest
+- Stage: post-refinement planning
+- Feel of the Decision: Good discipline move. Instead of letting the queue drift, we now have a concrete polish/export task.
+- Working Hypotheses:
+  - A compact reviewer packet will expose any remaining overclaim risk quickly.
+  - If there is a hidden weakness left, it will likely be in wording consistency, not missing experiments.

@@ -30,6 +30,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Manuscript claim-to-artifact table v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-claim-to-artifact-table-v1.md` |
 | Manuscript skeleton v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-skeleton-v1.md` |
 | Manuscript draft pass v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-draft-pass-v1.md` |
+| Manuscript draft pass v2 (figure/table integrated) | infrastructure | pass | `results/infrastructure/20260320-manuscript-draft-pass-v2.md` |
 
 ## Oracle Alpha
 
