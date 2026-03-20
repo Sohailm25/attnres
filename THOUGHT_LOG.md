@@ -2360,3 +2360,25 @@ Suggested entry format:
 - Confidence:
   - high that `resattn-73r` is complete as scoped
   - medium-high that OIH now supports a bounded, reviewer-respectable dynamic-vs-static statement
+
+## [2026-03-20T14:20:11-0500] First Prose Pass Reduced “Paper Anxiety” More Than Another Experiment Would
+- Stage: manuscript drafting (`resattn-lmp`)
+- Feel of the Result: This was the right next step. The draft now exists as actual prose with claim boundaries baked in, which is more useful than another incremental run at this point.
+- Working Hypotheses:
+  - The main remaining risk is wording calibration and figure/table clarity, not missing core evidence.
+  - A bounded mixed-lane narrative is now viable without over-selling tool-breakage or safety.
+- Surprises and Tensions:
+  - The biggest practical drift risk was older claim tables referencing pre-v3 safety/tool-breakage artifacts; syncing those references was necessary for draft integrity.
+  - OIH reads much cleaner once calibrated-static deltas are used directly instead of arguing from the weak pruned baseline.
+- Confidence:
+  - high that moving from skeleton to prose was the highest-leverage next move
+  - medium-high that the current draft supports external review without immediate new runs
+
+## [2026-03-20T14:20:11-0500] The Next Good Move Is Communication Fidelity, Not More Compute
+- Stage: post-draft queue shaping
+- Feel of the Decision: Opening a writing-refinement issue right away felt cleaner than letting the queue go empty and drifting back into run-first behavior.
+- Working Hypotheses:
+  - Figure/table insertion and wording calibration will increase reviewer trust more than another medium-scale run right now.
+  - Any new run should now have a specific defect-trigger, not just “more signal” intuition.
+- Confidence:
+  - high that `resattn-ca1` is the right immediate next issue

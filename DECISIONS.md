@@ -2012,3 +2012,30 @@
   - `resattn-73r` can close with a concrete artifact update rather than an isolated smoke-only proof.
   - manuscript language can use calibrated-static deltas (`predicted minus calibrated static = +0.0478`) and avoid over-reliance on the pruned-static gap.
   - no additional OIH redesign is required unless a new methodological defect is found.
+
+## [2026-03-20T14:20:11-0500] DECISION: Close `resattn-lmp` with a first prose manuscript draft pass anchored to calibrated OIH and bounded mixed lanes
+
+- Trigger: after `resattn-mfp` and `resattn-73r`, the next ready task was to convert the locked skeleton into concrete draft prose while preserving prereg and claim-boundary discipline.
+- Decision: add `results/infrastructure/20260320-manuscript-draft-pass-v1.md` as the first prose draft artifact and align supporting writing docs to current lane boundaries.
+- Rationale:
+  - writing risk had shifted from missing structure to claim drift; a concrete draft anchored to current artifacts is higher leverage than another exploratory run.
+  - the draft now explicitly carries:
+    - calibrated OIH language (`dynamic minus calibrated static = +0.0478`)
+    - bounded tool-breakage language (mixed under seeded dynamic donor controls)
+    - bounded safety language (clean v3 validation with refusal-only mediator-active partition)
+  - non-claims are explicit in draft prose (no frozen-model equivalence to trained routing, no strong Figure 8 trained-routing alignment, no Phase 6 readiness claim, no training-dynamics claim this cycle).
+- Impact:
+  - the manuscript lane advances from structural skeleton to concrete prose.
+  - subsequent writing work can focus on revision/clarity and figure-table integration, not first-pass section construction.
+  - `resattn-lmp` can close once state/session/index bookkeeping is synced.
+
+## [2026-03-20T14:20:11-0500] DECISION: Open `resattn-ca1` as the next writing-stage issue instead of reopening experiment lanes
+
+- Trigger: after `resattn-lmp` closed, no ready issues remained.
+- Decision: create `resattn-ca1` for manuscript refinement v2 (figure/table insertion and caveat-language tightening), with no new experiment launches by default.
+- Rationale:
+  - the highest-leverage next step is quality of presentation and claim calibration on existing evidence.
+  - core mixed-lane boundaries are already established; reruns should require a concrete methodological defect rather than momentum.
+- Impact:
+  - queue continuity remains explicit in `bd`.
+  - drafting can proceed to reviewer-ready form without diluting current scientific boundaries.

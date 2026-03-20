@@ -29,6 +29,7 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Training-dynamics scope decision and writing checklist v1 | infrastructure | pass | `results/infrastructure/20260320-training-dynamics-scope-decision-and-writing-checklist-v1.md` |
 | Manuscript claim-to-artifact table v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-claim-to-artifact-table-v1.md` |
 | Manuscript skeleton v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-skeleton-v1.md` |
+| Manuscript draft pass v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-draft-pass-v1.md` |
 
 ## Oracle Alpha
 
