@@ -55,6 +55,7 @@
   - `results/infrastructure/20260320-manuscript-skeleton-v1.md`
   - section ordering, claim placement, caveat placement, and non-claim language are now explicit for drafting
   - immediate writing-adjacent `resattn-73r` blocker is now cleared on the existing full OIH artifact
+  - next ready issue after this closeout is `resattn-lmp` (first manuscript draft pass from the locked skeleton with calibrated OIH/cv9 claim boundaries)
 - `known`: the Phase 1 dependency freeze has landed:
   - `requirements.txt` now pins the direct stack used for Phase 1
   - `requirements.lock.txt` captures the fully resolved transitive environment
