@@ -2399,3 +2399,16 @@ Suggested entry format:
 - Working Hypotheses:
   - A compact reviewer packet will expose any remaining overclaim risk quickly.
   - If there is a hidden weakness left, it will likely be in wording consistency, not missing experiments.
+
+## [2026-03-20T14:20:11-0500] Reviewer Packet Export Feels Like the Right Stopping Point Before Fresh Feedback
+- Stage: writing packaging (`resattn-57z`)
+- Feel of the Result: This pass turned the writing bundle into something a reviewer can actually consume quickly, which should produce better criticism than sending raw evolving draft files.
+- Working Hypotheses:
+  - The next major gains now depend on reviewer critique quality, not additional solo polishing.
+  - If objections appear, they will likely target mixed-lane interpretation sharpness.
+
+## [2026-03-20T14:20:11-0500] Waiting on External Critique Is Now the Most Rational Constraint
+- Stage: queue gating
+- Feel of the Decision: opening a feedback-integration issue and stopping there feels disciplined; anything else now would be guesswork.
+- Working Hypotheses:
+  - External review will likely reveal wording-level improvements we cannot simulate internally.

@@ -61,7 +61,11 @@
   - `resattn-ca1` now lands manuscript refinement v2:
     - `results/infrastructure/20260320-manuscript-draft-pass-v2.md`
     - concrete table/figure placeholders now carry exact C1-C6 metrics, and mixed-lane caveat wording is tightened for tool-breakage, safety, and OIH
-  - next ready writing issue is `resattn-57z` (manuscript polish v3: section compression and reviewer packet export)
+  - `resattn-57z` now lands manuscript polish v3:
+    - compressed draft: `results/infrastructure/20260320-manuscript-draft-pass-v3.md`
+    - reviewer packet: `results/infrastructure/20260320-reviewer-packet-v1.md`
+    - writing surface now includes reviewer-targeted artifacts without reopening experiment lanes
+  - next ready issue is `resattn-08z` (integrate external reviewer feedback on the packet)
 - `known`: the Phase 1 dependency freeze has landed:
   - `requirements.txt` now pins the direct stack used for Phase 1
   - `requirements.lock.txt` captures the fully resolved transitive environment

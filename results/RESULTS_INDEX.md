@@ -31,6 +31,8 @@ Register every experimental artifact here. Never delete entries; mark superseded
 | Manuscript skeleton v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-skeleton-v1.md` |
 | Manuscript draft pass v1 | infrastructure | pass | `results/infrastructure/20260320-manuscript-draft-pass-v1.md` |
 | Manuscript draft pass v2 (figure/table integrated) | infrastructure | pass | `results/infrastructure/20260320-manuscript-draft-pass-v2.md` |
+| Manuscript draft pass v3 (compressed reviewer-facing draft) | infrastructure | pass | `results/infrastructure/20260320-manuscript-draft-pass-v3.md` |
+| External reviewer packet v1 | infrastructure | pass | `results/infrastructure/20260320-reviewer-packet-v1.md` |
 
 ## Oracle Alpha
 

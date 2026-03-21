@@ -2066,3 +2066,26 @@
 - Impact:
   - writing queue stays explicit and contiguous.
   - next step remains writing-focused unless review uncovers a concrete methodological defect.
+
+## [2026-03-20T14:20:11-0500] DECISION: Close `resattn-57z` with compressed draft v3 and reviewer packet export
+
+- Trigger: `resattn-57z` asked for section compression, caveat consistency, and a reviewer-facing export artifact.
+- Decision: land two writing artifacts:
+  - `results/infrastructure/20260320-manuscript-draft-pass-v3.md`
+  - `results/infrastructure/20260320-reviewer-packet-v1.md`
+- Rationale:
+  - v2 already had claim/metric placeholders; the missing step was reviewer efficiency.
+  - a compressed draft plus a packet-level memo improves external feedback quality without changing scientific scope.
+- Impact:
+  - `resattn-57z` can close.
+  - next writing queue item should focus on revision after reviewer feedback or final manuscript assembly.
+
+## [2026-03-20T14:20:11-0500] DECISION: Open `resattn-08z` as the feedback-integration gate before further manuscript polishing
+
+- Trigger: reviewer packet export is complete and the next highest-value move depends on external critique.
+- Decision: create `resattn-08z` to integrate external reviewer feedback with explicit change logging.
+- Rationale:
+  - continuing solo polish before feedback risks local optimization.
+  - explicit feedback-integration tracking keeps claim-boundary adjustments auditable.
+- Impact:
+  - the queue now waits on reviewer input rather than speculative rewrites.
